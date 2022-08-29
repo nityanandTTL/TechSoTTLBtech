@@ -4,6 +4,17 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class OrderHistoryDetails implements Parcelable {
+    public static final Creator<OrderHistoryDetails> CREATOR = new Creator<OrderHistoryDetails>() {
+        @Override
+        public OrderHistoryDetails createFromParcel(Parcel in) {
+            return new OrderHistoryDetails(in);
+        }
+
+        @Override
+        public OrderHistoryDetails[] newArray(int size) {
+            return new OrderHistoryDetails[size];
+        }
+    };
     private String OrdHistory;
 
     public OrderHistoryDetails() {
@@ -22,18 +33,6 @@ public class OrderHistoryDetails implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<OrderHistoryDetails> CREATOR = new Creator<OrderHistoryDetails>() {
-        @Override
-        public OrderHistoryDetails createFromParcel(Parcel in) {
-            return new OrderHistoryDetails(in);
-        }
-
-        @Override
-        public OrderHistoryDetails[] newArray(int size) {
-            return new OrderHistoryDetails[size];
-        }
-    };
 
     public String getOrdHistory() {
         return OrdHistory;

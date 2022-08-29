@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background"
-    android:paddingBottom="5dp"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
-    android:paddingTop="5dp"
     android:orientation="vertical"
+    android:paddingLeft="5dp"
+    android:paddingTop="5dp"
+    android:paddingRight="5dp"
+    android:paddingBottom="5dp"
     tools:context=".btechapp.activity.Chat">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -22,38 +22,41 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" >
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
             <ImageView
-                android:visibility="gone"
                 android:id="@+id/img_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:contentDescription="back button"
                 android:src="@drawable/ic_arrow_back_white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/txt_header_text"
-                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_15"
                 android:text="Chat with"
+                android:textColor="@android:color/white"
                 android:textSize="@dimen/_12sdp"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:textStyle="bold" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
+
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_weight="20"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView">
+        android:layout_weight="20">
 
         <LinearLayout
+            android:id="@+id/layout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/layout1"
-            android:background="@drawable/background">
+            android:background="@drawable/background"
+            android:orientation="vertical">
 
         </LinearLayout>
     </ScrollView>
@@ -62,6 +65,6 @@
         layout="@layout/message_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp"
+        android:gravity="bottom" />
 </LinearLayout>

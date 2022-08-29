@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class MaterialorderRequestModel {
 
-String BTechId;
+    String BTechId;
     String BTTransactionCode;
     String OrderId;
     String FinalStatus;
@@ -64,7 +64,6 @@ String BTechId;
     public void setMaterialDetails(ArrayList<MaterialOrderDataModel> materialDetails) {
         MaterialDetails = materialDetails;
     }
-
 
 
 }

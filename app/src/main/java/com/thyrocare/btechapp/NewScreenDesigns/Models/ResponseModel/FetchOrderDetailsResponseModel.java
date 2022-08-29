@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 
 
-    public class FetchOrderDetailsResponseModel {
+public class FetchOrderDetailsResponseModel {
     private ArrayList<OrderVisitDetailsModel> orderVisitDetails;
 
     public ArrayList<OrderVisitDetailsModel> getOrderVisitDetails() {

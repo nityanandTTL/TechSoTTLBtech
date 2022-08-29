@@ -7,7 +7,18 @@ import android.os.Parcelable;
  * Created by Orion on 5/8/2017.
  */
 
-public class BeneficiaryTestWiseClinicalHistoryModel implements Parcelable{
+public class BeneficiaryTestWiseClinicalHistoryModel implements Parcelable {
+    public static final Creator<BeneficiaryTestWiseClinicalHistoryModel> CREATOR = new Creator<BeneficiaryTestWiseClinicalHistoryModel>() {
+        @Override
+        public BeneficiaryTestWiseClinicalHistoryModel createFromParcel(Parcel in) {
+            return new BeneficiaryTestWiseClinicalHistoryModel(in);
+        }
+
+        @Override
+        public BeneficiaryTestWiseClinicalHistoryModel[] newArray(int size) {
+            return new BeneficiaryTestWiseClinicalHistoryModel[size];
+        }
+    };
     private int BenId;
     private int ClinicalHistoryId;
     private String Test;
@@ -32,18 +43,6 @@ public class BeneficiaryTestWiseClinicalHistoryModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BeneficiaryTestWiseClinicalHistoryModel> CREATOR = new Creator<BeneficiaryTestWiseClinicalHistoryModel>() {
-        @Override
-        public BeneficiaryTestWiseClinicalHistoryModel createFromParcel(Parcel in) {
-            return new BeneficiaryTestWiseClinicalHistoryModel(in);
-        }
-
-        @Override
-        public BeneficiaryTestWiseClinicalHistoryModel[] newArray(int size) {
-            return new BeneficiaryTestWiseClinicalHistoryModel[size];
-        }
-    };
 
     public int getBenId() {
         return BenId;
@@ -71,8 +70,8 @@ public class BeneficiaryTestWiseClinicalHistoryModel implements Parcelable{
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof BeneficiaryTestWiseClinicalHistoryModel){
-            if(((BeneficiaryTestWiseClinicalHistoryModel) obj).getClinicalHistoryId()== getClinicalHistoryId() && ((BeneficiaryTestWiseClinicalHistoryModel) obj).getTest().equals(getTest())){
+        if (obj instanceof BeneficiaryTestWiseClinicalHistoryModel) {
+            if (((BeneficiaryTestWiseClinicalHistoryModel) obj).getClinicalHistoryId() == getClinicalHistoryId() && ((BeneficiaryTestWiseClinicalHistoryModel) obj).getTest().equals(getTest())) {
                 return true;
             }
         }

@@ -34,6 +34,13 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.Su
  */
 
 public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdapter {
+    ArrayList<String> newDistest;
+    String selectedTest;
+    boolean isAddBen, isPePartner;
+    ArrayList<String> DisTest;
+    int ArraySize;
+    AppPreferenceManager appPreferenceManager;
+    ArrayList<String> strArray;
     private Activity activity;
     private AlertDialog.Builder alertDialogBuilder;
     private Global globalclass;
@@ -42,13 +49,6 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
     private ArrayList<GetPETestResponseModel.DataDTO> peselectedTestsList;
     private RemoveSelectedTestFromListDelegate_new removeSelectedTestFromListDelegate;
     private LayoutInflater layoutInflater;
-    ArrayList<String> newDistest;
-    String selectedTest;
-    boolean isAddBen, isPePartner;
-    ArrayList<String> DisTest;
-    int ArraySize;
-    AppPreferenceManager appPreferenceManager;
-    ArrayList<String> strArray;
 
     public DisplaySelectedTestsListForCancellationAdapter_new(Activity activity, boolean b, ArrayList<TestRateMasterModel> selectedTestsListArr, ArrayList<GetPETestResponseModel.DataDTO> peselectedTestsList, String selectedTestCode, RemoveSelectedTestFromListDelegate_new removeSelectedTestFromListDelegate) {
         this.activity = activity;

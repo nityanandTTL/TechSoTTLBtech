@@ -29,16 +29,16 @@
                 app:cardElevation="@dimen/_5sdp">
 
 
-                    <TextView
-                        android:id="@+id/tv_serum"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:hint="SERUM"
-                        android:padding="@dimen/_2sdp"
-                        android:textAlignment="center"
-                        android:textColor="@color/grey"
-                        android:textSize="@dimen/_10sdp" />
+                <TextView
+                    android:id="@+id/tv_serum"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:hint="SERUM"
+                    android:padding="@dimen/_2sdp"
+                    android:textAlignment="center"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/_10sdp" />
 
             </androidx.cardview.widget.CardView>
 
@@ -52,16 +52,16 @@
                 app:cardCornerRadius="@dimen/_5sdp"
                 app:cardElevation="@dimen/_5sdp">
 
-                    <TextView
-                        android:id="@+id/tv_edta"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:hint="EDTA"
-                        android:padding="@dimen/_2sdp"
-                        android:textAlignment="center"
-                        android:textColor="@color/grey"
-                        android:textSize="@dimen/_10sdp" />
+                <TextView
+                    android:id="@+id/tv_edta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:hint="EDTA"
+                    android:padding="@dimen/_2sdp"
+                    android:textAlignment="center"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/_10sdp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -74,16 +74,16 @@
                 app:cardCornerRadius="@dimen/_5sdp"
                 app:cardElevation="@dimen/_5sdp">
 
-                    <TextView
-                        android:id="@+id/tv_urine"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:hint="URINE"
-                        android:padding="@dimen/_2sdp"
-                        android:textAlignment="center"
-                        android:textColor="@color/grey"
-                        android:textSize="@dimen/_10sdp" />
+                <TextView
+                    android:id="@+id/tv_urine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:hint="URINE"
+                    android:padding="@dimen/_2sdp"
+                    android:textAlignment="center"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/_10sdp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -96,16 +96,16 @@
                 app:cardCornerRadius="@dimen/_5sdp"
                 app:cardElevation="@dimen/_5sdp">
 
-                    <TextView
-                        android:id="@+id/tv_flouride"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:hint="FLUORIDE"
-                        android:padding="@dimen/_2sdp"
-                        android:textAlignment="center"
-                        android:textColor="@color/grey"
-                        android:textSize="@dimen/_10sdp" />
+                <TextView
+                    android:id="@+id/tv_flouride"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:hint="FLUORIDE"
+                    android:padding="@dimen/_2sdp"
+                    android:textAlignment="center"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/_10sdp" />
 
             </androidx.cardview.widget.CardView>
 
@@ -121,22 +121,23 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_lith"
                 android:layout_width="0dp"
-                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_2sdp"
                 android:layout_weight="1"
+                android:visibility="gone"
                 app:cardCornerRadius="@dimen/_5sdp"
                 app:cardElevation="@dimen/_5sdp">
-                    <TextView
-                        android:id="@+id/tv_lith"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:hint="LITHIUM HEPARIN"
-                        android:padding="@dimen/_2sdp"
-                        android:textAlignment="center"
-                        android:textColor="@color/grey"
-                        android:textSize="@dimen/_10sdp" />
+
+                <TextView
+                    android:id="@+id/tv_lith"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:hint="LITHIUM HEPARIN"
+                    android:padding="@dimen/_2sdp"
+                    android:textAlignment="center"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/_10sdp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -164,8 +165,8 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_other"
                 android:layout_width="0dp"
-                android:layout_gravity="center"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_margin="@dimen/_2sdp"
                 android:layout_weight="1"
                 android:visibility="gone"
@@ -191,10 +192,10 @@
 
 
     <LinearLayout
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"

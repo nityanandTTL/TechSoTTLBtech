@@ -7,9 +7,19 @@ import android.os.Parcelable;
  * Created by e4904@thyrocare.com on 23/3/18.
  */
 
-public class EmailgetModel implements Parcelable
-{
+public class EmailgetModel implements Parcelable {
 
+    public static final Creator<EmailgetModel> CREATOR = new Creator<EmailgetModel>() {
+        @Override
+        public EmailgetModel createFromParcel(Parcel in) {
+            return new EmailgetModel(in);
+        }
+
+        @Override
+        public EmailgetModel[] newArray(int size) {
+            return new EmailgetModel[size];
+        }
+    };
     private String result;
     private String reason;
     private String disposable;
@@ -23,7 +33,6 @@ public class EmailgetModel implements Parcelable
     private String did_you_mean;
     private String success;
     private String message;
-
 
     protected EmailgetModel(Parcel in) {
         result = in.readString();
@@ -62,18 +71,6 @@ public class EmailgetModel implements Parcelable
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<EmailgetModel> CREATOR = new Creator<EmailgetModel>() {
-        @Override
-        public EmailgetModel createFromParcel(Parcel in) {
-            return new EmailgetModel(in);
-        }
-
-        @Override
-        public EmailgetModel[] newArray(int size) {
-            return new EmailgetModel[size];
-        }
-    };
 
     public String getResult() {
         return result;

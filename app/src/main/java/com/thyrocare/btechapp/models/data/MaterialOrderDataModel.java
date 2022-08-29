@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class MaterialOrderDataModel extends BaseModel implements Parcelable {
+    public static final Creator<MaterialOrderDataModel> CREATOR = new Creator<MaterialOrderDataModel>() {
+        @Override
+        public MaterialOrderDataModel createFromParcel(Parcel in) {
+            return new MaterialOrderDataModel(in);
+        }
+
+        @Override
+        public MaterialOrderDataModel[] newArray(int size) {
+            return new MaterialOrderDataModel[size];
+        }
+    };
     Integer MaterialId;
     Integer OrderQty;
     Integer Status;
@@ -16,7 +27,7 @@ public class MaterialOrderDataModel extends BaseModel implements Parcelable {
     String item_UnitSize;
 
     public MaterialOrderDataModel() {
-        super ();
+        super();
     }
 
     protected MaterialOrderDataModel(Parcel in) {
@@ -46,18 +57,6 @@ public class MaterialOrderDataModel extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<MaterialOrderDataModel> CREATOR = new Creator<MaterialOrderDataModel>() {
-        @Override
-        public MaterialOrderDataModel createFromParcel(Parcel in) {
-            return new MaterialOrderDataModel(in);
-        }
-
-        @Override
-        public MaterialOrderDataModel[] newArray(int size) {
-            return new MaterialOrderDataModel[size];
-        }
-    };
 
     public Integer getMaterialId() {
         return MaterialId;
@@ -95,6 +94,10 @@ public class MaterialOrderDataModel extends BaseModel implements Parcelable {
         return item_UnitCost;
     }
 
+    public void setItem_UnitCost(String item_UnitCost) {
+        this.item_UnitCost = item_UnitCost;
+    }
+
     public String getItem_UnitSize() {
         return item_UnitSize;
     }
@@ -103,14 +106,10 @@ public class MaterialOrderDataModel extends BaseModel implements Parcelable {
         this.item_UnitSize = item_UnitSize;
     }
 
-    public void setItem_UnitCost(String item_UnitCost) {
-        this.item_UnitCost = item_UnitCost;
-    }
-
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof MaterialOrderDataModel){
-            if(((MaterialOrderDataModel) obj).getMaterialId().equals(getMaterialId())){
+        if (obj instanceof MaterialOrderDataModel) {
+            if (((MaterialOrderDataModel) obj).getMaterialId().equals(getMaterialId())) {
                 return true;
             }
         }

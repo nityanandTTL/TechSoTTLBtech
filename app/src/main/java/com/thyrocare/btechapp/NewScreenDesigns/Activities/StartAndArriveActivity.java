@@ -1835,7 +1835,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 @Override
                 public void onCallCustomer() {
                     if (isNetworkAvailable(mActivity) && cd.isConnectingToInternet()) {
-                        if (!InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getPhone())) {
+                        if (!InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getPhone()) &&
+                                (!InputUtils.CheckEqualIgnoreCase(orderDetailsModel.getAllOrderdetails().get(0).getMobile(), orderDetailsModel.getAllOrderdetails().get(0).getPhone()))) {
                             openTwoContactNoDialog(orderDetailsModel);
                         } else {
                             CallPatchRequestAPI(orderDetailsModel, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
@@ -1845,7 +1846,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                         TastyToast.makeText(mActivity, CheckInternetConnectionMsg, TastyToast.LENGTH_LONG, TastyToast.INFO);
                     }
 
-                    /*if (isNetworkAvailable(mActivity)) {
+                   /* if (isNetworkAvailable(mActivity)) {
                         CallgetDispositionApi(orderDetailsModel);
                     } else {
                         TastyToast.makeText(mActivity, CheckInternetConnectionMsg, TastyToast.LENGTH_LONG, TastyToast.INFO);
@@ -1993,9 +1994,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
 //        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.60);
         dialog_ready.getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        if (!mActivity.isFinishing()) {
-            dialog_ready.show();
-        }
 
         ImageView img_cnc = (ImageView) dialog_ready.findViewById(R.id.img_cnc);
         img_cnc.setVisibility(View.GONE);
@@ -2185,7 +2183,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 }
             }
         });
-
+        dialog_ready.show();
     }
 
     private void displayBottomsheet(ArrayList<GetRemarksResponseModel> arrayList) {
@@ -3532,11 +3530,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
             try {
                 globalclass.hideProgressDialog(mActivity);
                 if (statusCode == 200) {
-                    if (dialog_ready != null) {
-                        if (dialog_ready.isShowing()) {
-                            dialog_ready.dismiss();
-                        }
+                    if (dialog_ready.isShowing()) {
+                        dialog_ready.dismiss();
                     }
+                    dialog_ready.dismiss();
                     TastyToast.makeText(mActivity, "" + res, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                 } else {
                     TastyToast.makeText(mActivity, "" + res, TastyToast.LENGTH_LONG, TastyToast.ERROR);

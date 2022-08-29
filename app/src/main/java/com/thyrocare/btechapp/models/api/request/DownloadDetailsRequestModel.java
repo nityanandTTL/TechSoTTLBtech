@@ -9,12 +9,28 @@ import android.os.Parcelable;
 
 public class DownloadDetailsRequestModel implements Parcelable {
 
+    public static final Creator<DownloadDetailsRequestModel> CREATOR = new Creator<DownloadDetailsRequestModel>() {
+        @Override
+        public DownloadDetailsRequestModel createFromParcel(Parcel in) {
+            return new DownloadDetailsRequestModel(in);
+        }
+
+        @Override
+        public DownloadDetailsRequestModel[] newArray(int size) {
+            return new DownloadDetailsRequestModel[size];
+        }
+    };
     private int BtechID;
     private int Version;
 
     protected DownloadDetailsRequestModel(Parcel in) {
         BtechID = in.readInt();
         Version = in.readInt();
+    }
+
+    public DownloadDetailsRequestModel() {
+
+
     }
 
     @Override
@@ -27,18 +43,6 @@ public class DownloadDetailsRequestModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<DownloadDetailsRequestModel> CREATOR = new Creator<DownloadDetailsRequestModel>() {
-        @Override
-        public DownloadDetailsRequestModel createFromParcel(Parcel in) {
-            return new DownloadDetailsRequestModel(in);
-        }
-
-        @Override
-        public DownloadDetailsRequestModel[] newArray(int size) {
-            return new DownloadDetailsRequestModel[size];
-        }
-    };
 
     public int getBtechID() {
         return BtechID;
@@ -54,11 +58,5 @@ public class DownloadDetailsRequestModel implements Parcelable {
 
     public void setVersion(int version) {
         Version = version;
-    }
-
-    public DownloadDetailsRequestModel() {
-
-
-
     }
 }

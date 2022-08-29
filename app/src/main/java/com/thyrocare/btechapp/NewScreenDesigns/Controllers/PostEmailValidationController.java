@@ -20,7 +20,6 @@ import retrofit2.Response;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 
 
-
 public class PostEmailValidationController {
 
 

@@ -262,7 +262,7 @@ public class ExpandableTestMasterListDisplayAdapter_new extends BaseExpandableLi
                         tempselectedTests = new ArrayList<>();
                         tempselectedTests1 = new ArrayList<>();
 
-                        if (testRateMasterModel.getChldtests()!=null) {
+                        if (testRateMasterModel.getChldtests() != null) {
                             for (int i = 0; i < testRateMasterModel.getChldtests().size(); i++) {
                                 //tejas t -----------------------------
                                 for (int j = 0; j < selectedTests.size(); j++) {
@@ -301,7 +301,7 @@ public class ExpandableTestMasterListDisplayAdapter_new extends BaseExpandableLi
                             alertDialogBuilder = new AlertDialog.Builder(activity);
                             alertDialogBuilder
 //                                    .setMessage(Html.fromHtml("As " + "<b>" + slectedpackage + "</b>" + " already includes " + "<b>" + cartproduct + "</b>" + " test(s),We have removed " + "<b>" + cartproduct + "</b>" + " test(s) from your Selected test list"))
-                                    .setMessage(Html.fromHtml( "<b>" + cartproduct  + "</b>" + " has been upgraded to " + "<b>" + slectedpackage + "</b>"))
+                                    .setMessage(Html.fromHtml("<b>" + cartproduct + "</b>" + " has been upgraded to " + "<b>" + slectedpackage + "</b>"))
                                     .setCancelable(true)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
@@ -342,20 +342,6 @@ public class ExpandableTestMasterListDisplayAdapter_new extends BaseExpandableLi
         });
 
         return convertView;
-    }
-
-
-    private class ViewParentHolder {
-        TextView txtHeader;
-    }
-
-    private class ViewChildHolder {
-        ImageView img_test_type;
-        ImageView imgCheck, imgChecked;
-        TextView txt_test, txt_dis_amt;
-        boolean isSelectedDueToParent;
-        String parentTestCode;
-        ImageView imgTestFasting;
     }
 
     private boolean checkIfOfferExists(ArrayList<TestRateMasterModel> selTests) {
@@ -416,5 +402,18 @@ public class ExpandableTestMasterListDisplayAdapter_new extends BaseExpandableLi
         Logger.verbose("FilteredListSizeAfterFilter: " + String.valueOf(filteredList.size()));
         notifyDataSetChanged();
 
+    }
+
+    private class ViewParentHolder {
+        TextView txtHeader;
+    }
+
+    private class ViewChildHolder {
+        ImageView img_test_type;
+        ImageView imgCheck, imgChecked;
+        TextView txt_test, txt_dis_amt;
+        boolean isSelectedDueToParent;
+        String parentTestCode;
+        ImageView imgTestFasting;
     }
 }

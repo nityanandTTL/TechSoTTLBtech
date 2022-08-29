@@ -46,7 +46,7 @@ public class RetroFit_APIClient {
         return apiClient;
     }
 
-    public Retrofit getClient(final Activity mActivity ,final String BASE_URL) {
+    public Retrofit getClient(final Activity mActivity, final String BASE_URL) {
         appPreferenceManager = new AppPreferenceManager(mActivity);
         OkHttpClient.Builder client = new OkHttpClient.Builder();
 
@@ -68,10 +68,10 @@ public class RetroFit_APIClient {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request request;
-                if (BASE_URL.equalsIgnoreCase(EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))) && appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getAPISessionKey())){
+                if (BASE_URL.equalsIgnoreCase(EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))) && appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
                     request = chain.request().newBuilder().addHeader(Constants.HEADER_USER_AGENT, Global.getHeaderValue(mActivity))
-                            .addHeader(AbstractApiModel.AUTHORIZATION,"Bearer "+appPreferenceManager.getAPISessionKey()).build();
-                }else {
+                            .addHeader(AbstractApiModel.AUTHORIZATION, "Bearer " + appPreferenceManager.getAPISessionKey()).build();
+                } else {
                     request = chain.request().newBuilder().addHeader(Constants.HEADER_USER_AGENT, Global.getHeaderValue(mActivity)).build();
                 }
 
@@ -117,7 +117,7 @@ public class RetroFit_APIClient {
         return retrofit;
     }
 
-    public Retrofit getClient(final Context context , final String BASE_URL) {
+    public Retrofit getClient(final Context context, final String BASE_URL) {
         appPreferenceManager = new AppPreferenceManager(context);
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
@@ -139,10 +139,10 @@ public class RetroFit_APIClient {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request request;
-                if (BASE_URL.equalsIgnoreCase(EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))) && appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getAPISessionKey())){
+                if (BASE_URL.equalsIgnoreCase(EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))) && appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
                     request = chain.request().newBuilder().addHeader(Constants.HEADER_USER_AGENT, Global.getHeaderValue(context))
-                            .addHeader(AbstractApiModel.AUTHORIZATION,"Bearer "+appPreferenceManager.getAPISessionKey()).build();
-                }else {
+                            .addHeader(AbstractApiModel.AUTHORIZATION, "Bearer " + appPreferenceManager.getAPISessionKey()).build();
+                } else {
                     request = chain.request().newBuilder().addHeader(Constants.HEADER_USER_AGENT, Global.getHeaderValue(context)).build();
                 }
 

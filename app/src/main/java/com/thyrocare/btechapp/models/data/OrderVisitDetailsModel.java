@@ -1,7 +1,6 @@
 package com.thyrocare.btechapp.models.data;
 
 
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -14,6 +13,17 @@ import java.util.ArrayList;
 
 public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
 
+    public static final Creator<OrderVisitDetailsModel> CREATOR = new Creator<OrderVisitDetailsModel>() {
+        @Override
+        public OrderVisitDetailsModel createFromParcel(Parcel in) {
+            return new OrderVisitDetailsModel(in);
+        }
+
+        @Override
+        public OrderVisitDetailsModel[] newArray(int size) {
+            return new OrderVisitDetailsModel[size];
+        }
+    };
     private String VisitId;
     private String Slot;
     private String Response;
@@ -41,19 +51,6 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
         BtechName = in.readString();
         Address = in.readString();
     }
-
-    public static final Creator<OrderVisitDetailsModel> CREATOR = new Creator<OrderVisitDetailsModel>() {
-        @Override
-        public OrderVisitDetailsModel createFromParcel(Parcel in) {
-            return new OrderVisitDetailsModel(in);
-        }
-
-        @Override
-        public OrderVisitDetailsModel[] newArray(int size) {
-            return new OrderVisitDetailsModel[size];
-        }
-    };
-
 
     public String getBtechName() {
         return BtechName;

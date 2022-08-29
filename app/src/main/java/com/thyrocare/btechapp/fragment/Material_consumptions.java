@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -45,20 +47,20 @@ import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 public class Material_consumptions extends Fragment {
 
-    static Material_consumptions fragment;
     public static final String TAG_FRAGMENT = "Material_consumptions";
+    static Material_consumptions fragment;
     Spinner select_type;
-    private View rootView;
-    private ArrayList<MaterialOrderDataModel> materialsOrderArr = new ArrayList<>();
     LinearLayout material_distribution, material_table, current;
     String Category = "204";
     EditText searchbar;
+    TableLayout materialordertable;
+    private View rootView;
+    private ArrayList<MaterialOrderDataModel> materialsOrderArr = new ArrayList<>();
     private ArrayList<MaterialDetailsModel> materialDetailsModels;
     private MaterialINVResponseModel materialINVResponseModel;
     private OnFragmentInteractionListener mListener;
     private ArrayList<FinalMaterialModel> finalMaterialModelsArr;
     private ArrayList<FinalMaterialModel> Filterarraylst;
-    TableLayout materialordertable;
     private Activity activity;
     private Global global;
     private AppPreferenceManager appPreferenceManager;
@@ -174,12 +176,6 @@ public class Material_consumptions extends Fragment {
         mListener = null;
     }
 
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
     private void fetchMaterialsDetails2() {
 
         if (isNetworkAvailable(getContext())) {
@@ -206,6 +202,7 @@ public class Material_consumptions extends Fragment {
                     fetchMaterialsINV2();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<MaterialDetailsModel>> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -213,7 +210,6 @@ public class Material_consumptions extends Fragment {
             }
         });
     }
-
 
     private void fetchMaterialsINV2() {
         if (isNetworkAvailable(getContext())) {
@@ -237,6 +233,7 @@ public class Material_consumptions extends Fragment {
                     fetchData();
                 }
             }
+
             @Override
             public void onFailure(Call<MaterialINVResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -244,7 +241,6 @@ public class Material_consumptions extends Fragment {
             }
         });
     }
-
 
     private void fetchData() {
         ArrayList<Integer> insertedMaterialIDs = new ArrayList<>();
@@ -378,6 +374,11 @@ public class Material_consumptions extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
 
 

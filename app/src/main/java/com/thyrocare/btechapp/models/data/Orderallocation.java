@@ -10,17 +10,30 @@ import android.os.Parcelable;
 public class Orderallocation implements Parcelable {
 
 
+    public static final Creator<Orderallocation> CREATOR = new Creator<Orderallocation>() {
+        @Override
+        public Orderallocation createFromParcel(Parcel in) {
+            return new Orderallocation(in);
+        }
+
+        @Override
+        public Orderallocation[] newArray(int size) {
+            return new Orderallocation[size];
+        }
+    };
     private int BtechId;
     private String BtechName;
     private String Pincode;
     private String Mobile;
-
 
     protected Orderallocation(Parcel in) {
         BtechId = in.readInt();
         BtechName = in.readString();
         Pincode = in.readString();
         Mobile = in.readString();
+    }
+
+    public Orderallocation() {
     }
 
     @Override
@@ -35,18 +48,6 @@ public class Orderallocation implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<Orderallocation> CREATOR = new Creator<Orderallocation>() {
-        @Override
-        public Orderallocation createFromParcel(Parcel in) {
-            return new Orderallocation(in);
-        }
-
-        @Override
-        public Orderallocation[] newArray(int size) {
-            return new Orderallocation[size];
-        }
-    };
 
     public int getBtechId() {
         return BtechId;
@@ -78,8 +79,5 @@ public class Orderallocation implements Parcelable {
 
     public void setMobile(String mobile) {
         Mobile = mobile;
-    }
-
-    public Orderallocation() {
     }
 }

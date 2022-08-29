@@ -8,7 +8,18 @@ import android.os.Parcelable;
  */
 
 class SampleTypeModel implements Parcelable {
-    private String sampleType,Tests;
+    public static final Creator<SampleTypeModel> CREATOR = new Creator<SampleTypeModel>() {
+        @Override
+        public SampleTypeModel createFromParcel(Parcel in) {
+            return new SampleTypeModel(in);
+        }
+
+        @Override
+        public SampleTypeModel[] newArray(int size) {
+            return new SampleTypeModel[size];
+        }
+    };
+    private String sampleType, Tests;
 
     protected SampleTypeModel(Parcel in) {
         sampleType = in.readString();
@@ -25,18 +36,6 @@ class SampleTypeModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SampleTypeModel> CREATOR = new Creator<SampleTypeModel>() {
-        @Override
-        public SampleTypeModel createFromParcel(Parcel in) {
-            return new SampleTypeModel(in);
-        }
-
-        @Override
-        public SampleTypeModel[] newArray(int size) {
-            return new SampleTypeModel[size];
-        }
-    };
 
     public String getSampleType() {
         return sampleType;

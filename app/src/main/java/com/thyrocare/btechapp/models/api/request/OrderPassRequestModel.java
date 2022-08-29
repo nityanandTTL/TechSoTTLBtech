@@ -9,6 +9,17 @@ import android.os.Parcelable;
 
 public class OrderPassRequestModel implements Parcelable {
 
+    public static final Creator<OrderPassRequestModel> CREATOR = new Creator<OrderPassRequestModel>() {
+        @Override
+        public OrderPassRequestModel createFromParcel(Parcel in) {
+            return new OrderPassRequestModel(in);
+        }
+
+        @Override
+        public OrderPassRequestModel[] newArray(int size) {
+            return new OrderPassRequestModel[size];
+        }
+    };
     private int BtechId;
     private String VisitId;
     private String Mobile;
@@ -21,6 +32,9 @@ public class OrderPassRequestModel implements Parcelable {
         Mobile = in.readString();
         OTP = in.readString();
         OTPStatus = in.readString();
+    }
+
+    public OrderPassRequestModel() {
     }
 
     @Override
@@ -36,18 +50,6 @@ public class OrderPassRequestModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<OrderPassRequestModel> CREATOR = new Creator<OrderPassRequestModel>() {
-        @Override
-        public OrderPassRequestModel createFromParcel(Parcel in) {
-            return new OrderPassRequestModel(in);
-        }
-
-        @Override
-        public OrderPassRequestModel[] newArray(int size) {
-            return new OrderPassRequestModel[size];
-        }
-    };
 
     public int getBtechId() {
         return BtechId;
@@ -87,9 +89,6 @@ public class OrderPassRequestModel implements Parcelable {
 
     public void setOTPStatus(String OTPStatus) {
         this.OTPStatus = OTPStatus;
-    }
-
-    public OrderPassRequestModel() {
     }
 
 

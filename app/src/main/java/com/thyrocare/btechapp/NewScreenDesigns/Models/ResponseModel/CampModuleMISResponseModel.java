@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public class CampModuleMISResponseModel implements Serializable {
 
 
-
     String response;
     String responseID;
     ArrayList<Output> Output;
@@ -36,14 +35,14 @@ public class CampModuleMISResponseModel implements Serializable {
     }
 
     public static class Output {
-        String  patientID;
-        String  name;
-        String  sct;
-        String  vialImage;
-        String  barcode;
-        String  sourceCode;
-        String  UniqueId;
-        String  CampID;
+        String patientID;
+        String name;
+        String sct;
+        String vialImage;
+        String barcode;
+        String sourceCode;
+        String UniqueId;
+        String CampID;
 
         public String getPatientID() {
             return patientID;

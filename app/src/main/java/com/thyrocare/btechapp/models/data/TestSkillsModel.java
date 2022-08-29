@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class TestSkillsModel extends BaseModel implements Parcelable {
+    public static final Creator<TestSkillsModel> CREATOR = new Creator<TestSkillsModel>() {
+        @Override
+        public TestSkillsModel createFromParcel(Parcel in) {
+            return new TestSkillsModel(in);
+        }
+
+        @Override
+        public TestSkillsModel[] newArray(int size) {
+            return new TestSkillsModel[size];
+        }
+    };
     private int SkillId;
     private String Skill;
 
@@ -32,18 +43,6 @@ public class TestSkillsModel extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<TestSkillsModel> CREATOR = new Creator<TestSkillsModel>() {
-        @Override
-        public TestSkillsModel createFromParcel(Parcel in) {
-            return new TestSkillsModel(in);
-        }
-
-        @Override
-        public TestSkillsModel[] newArray(int size) {
-            return new TestSkillsModel[size];
-        }
-    };
 
     public int getSkillId() {
         return SkillId;

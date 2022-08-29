@@ -10,9 +10,20 @@ import java.util.ArrayList;
  */
 
 public class CampDetailModel implements Parcelable {
-    private int Id,  ExpectedCrowd, ExpectedBtech, Leader,BrandId, Amount;
+    public static final Creator<CampDetailModel> CREATOR = new Creator<CampDetailModel>() {
+        @Override
+        public CampDetailModel createFromParcel(Parcel in) {
+            return new CampDetailModel(in);
+        }
+
+        @Override
+        public CampDetailModel[] newArray(int size) {
+            return new CampDetailModel[size];
+        }
+    };
+    private int Id, ExpectedCrowd, ExpectedBtech, Leader, BrandId, Amount;
     private String LeaderContactNo;
-    private String CampId, VisitId, CampDate, Location, Status,CampName,LeaderName,PayType;
+    private String CampId, VisitId, CampDate, Location, Status, CampName, LeaderName, PayType;
     private boolean InventoryAssign, isStarted;
     private String CampDateTime, BookedBy, Product, QRCode;
     private ArrayList<CampBtechModel> btechs;
@@ -54,6 +65,10 @@ public class CampDetailModel implements Parcelable {
         Pincode = in.readString();
     }
 
+    public CampDetailModel() {
+
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(Id);
@@ -90,18 +105,6 @@ public class CampDetailModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<CampDetailModel> CREATOR = new Creator<CampDetailModel>() {
-        @Override
-        public CampDetailModel createFromParcel(Parcel in) {
-            return new CampDetailModel(in);
-        }
-
-        @Override
-        public CampDetailModel[] newArray(int size) {
-            return new CampDetailModel[size];
-        }
-    };
 
     public String getPincode() {
         return Pincode;
@@ -167,8 +170,6 @@ public class CampDetailModel implements Parcelable {
         CampName = campName;
     }
 
-
-
     public boolean isAccepted() {
         return IsAccepted;
     }
@@ -183,10 +184,6 @@ public class CampDetailModel implements Parcelable {
 
     public void setStarted(boolean started) {
         isStarted = started;
-    }
-
-    public CampDetailModel() {
-
     }
 
     public int getAmount() {

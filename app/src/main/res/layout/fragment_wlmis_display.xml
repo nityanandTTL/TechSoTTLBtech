@@ -21,16 +21,16 @@
 
         <Button
             android:id="@+id/btn_daily"
-            android:layout_margin="@dimen/dp_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_5"
             android:text="Daily Pickup MIS" />
 
         <Button
-            android:layout_margin="@dimen/dp_5"
             android:id="@+id/btn_dateWise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_5"
             android:text="Date Wise Pickup" />
 
     </LinearLayout>
@@ -41,8 +41,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/hh"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -62,10 +62,10 @@
 
                 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/tr_itlcrh"
-                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="visible">
 
                     <TextView
                         android:layout_width="0dp"
@@ -146,10 +146,10 @@
 
                 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/tr_itlcrh_dateWise"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0dp"
@@ -174,9 +174,6 @@
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="14dp"
                         android:textStyle="bold" />
-
-
-
 
 
                     <TextView

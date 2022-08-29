@@ -4,14 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/default_toolbar"
-        android:id="@+id/appbarLayout"/>
+    <include
+        android:id="@+id/appbarLayout"
+        layout="@layout/default_toolbar" />
 
     <FrameLayout
-        android:layout_below="@id/appbarLayout"
         android:id="@+id/fl_payments"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/appbarLayout"
         android:layout_gravity="center">
 
     </FrameLayout>

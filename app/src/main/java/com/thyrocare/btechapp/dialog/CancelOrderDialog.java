@@ -19,14 +19,14 @@ import com.thyrocare.btechapp.utils.app.InputUtils;
  */
 
 public class CancelOrderDialog extends Dialog implements View.OnClickListener {
+    public static LinearLayout ll_reason_for_cancel, ll_enter_otp;
     private Activity activity;
     private Dialog d;
-    private Button btn_yes, btn_no,btn_send_otp;
-    private EditText edt_remark,edt_otp;
-    public static LinearLayout ll_reason_for_cancel,ll_enter_otp;
-
+    private Button btn_yes, btn_no, btn_send_otp;
+    private EditText edt_remark, edt_otp;
     private OrderCancelDialogButtonClickedDelegate orderCancelDialogButtonClickedDelegate;
     private OrderDetailsModel orderDetailsModel;
+
     public CancelOrderDialog(Activity activity, OrderCancelDialogButtonClickedDelegate orderCancelDialogButtonClickedDelegate, OrderDetailsModel orderDetailsModel) {
         super(activity);
         this.activity = activity;
@@ -52,10 +52,10 @@ public class CancelOrderDialog extends Dialog implements View.OnClickListener {
         btn_yes = (Button) findViewById(R.id.btn_yes);
         btn_no = (Button) findViewById(R.id.btn_no);
         edt_remark = (EditText) findViewById(R.id.edt_remark);
-        ll_enter_otp=(LinearLayout)findViewById(R.id.ll_enter_otp);
-        ll_reason_for_cancel=(LinearLayout)findViewById(R.id.ll_reason_for_cancel);
-        edt_otp=(EditText)findViewById(R.id.edt_otp);
-        btn_send_otp=(Button)findViewById(R.id.btn_send_otp);
+        ll_enter_otp = (LinearLayout) findViewById(R.id.ll_enter_otp);
+        ll_reason_for_cancel = (LinearLayout) findViewById(R.id.ll_reason_for_cancel);
+        edt_otp = (EditText) findViewById(R.id.edt_otp);
+        btn_send_otp = (Button) findViewById(R.id.btn_send_otp);
         ll_enter_otp.setVisibility(View.GONE);
         ll_reason_for_cancel.setVisibility(View.VISIBLE);
     }
@@ -64,25 +64,24 @@ public class CancelOrderDialog extends Dialog implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_yes) {
-            if(!InputUtils.isNull(edt_remark.getText().toString().trim())) {
-                if(edt_remark.getText().toString().length()>=10) {
-                    orderCancelDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, edt_remark.getText().toString().trim(),12);
+            if (!InputUtils.isNull(edt_remark.getText().toString().trim())) {
+                if (edt_remark.getText().toString().length() >= 10) {
+                    orderCancelDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, edt_remark.getText().toString().trim(), 12);
                     dismiss();
-                }
-                else{
+                } else {
                     edt_remark.requestFocus();
                     edt_remark.setError("Remarks should be atleast 10 characters long");
                 }
-            }else{
-                Toast.makeText(activity, R.string.enter_remarks,Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
             }
         }
-        if(v.getId()==R.id.btn_no){
+        if (v.getId() == R.id.btn_no) {
             orderCancelDialogButtonClickedDelegate.onCancelButtonClicked();
             dismiss();
         }
-        if(v.getId()==R.id.btn_send_otp){
-            orderCancelDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel,edt_otp.getText().toString().trim(),2);
+        if (v.getId() == R.id.btn_send_otp) {
+            orderCancelDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, edt_otp.getText().toString().trim(), 2);
             dismiss();
         }
     }

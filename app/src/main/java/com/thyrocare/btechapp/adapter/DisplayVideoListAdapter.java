@@ -78,7 +78,6 @@ public class DisplayVideoListAdapter extends RecyclerView.Adapter<DisplayVideoLi
         global.DisplayImagewithoutDefaultImage(activity, VideosArylist.get(position).getImageurl(), myViewHolder.img_thumbnail);
 
 
-
         myViewHolder.rel_main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,6 +102,18 @@ public class DisplayVideoListAdapter extends RecyclerView.Adapter<DisplayVideoLi
         return VideosArylist.size();
     }
 
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public Bitmap createVideoThumbNail(String path) {
+        return ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MICRO_KIND);
+    }
+
+    public interface OnItemClickListener {
+        void OnVideoItemSelected(ArrayList<VideosResponseModel.Outputlang> VideoArrylist, VideosResponseModel.Outputlang SelectedVideo);
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         CardView rel_main;
@@ -121,16 +132,5 @@ public class DisplayVideoListAdapter extends RecyclerView.Adapter<DisplayVideoLi
             GIF_VideoPlaying = (GifImageView) itemView.findViewById(R.id.GIF_VideoPlaying);
 
         }
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
-    }
-
-    public interface OnItemClickListener {
-        void OnVideoItemSelected(ArrayList<VideosResponseModel.Outputlang> VideoArrylist, VideosResponseModel.Outputlang SelectedVideo);
-    }
-    public Bitmap createVideoThumbNail(String path){
-        return ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MICRO_KIND);
     }
 }

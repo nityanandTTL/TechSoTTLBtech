@@ -12,6 +12,17 @@ import java.util.ArrayList;
 
 public class SampleDropDetailsbyTSPLMEDetailsModel implements Parcelable {
 
+    public static final Creator<SampleDropDetailsbyTSPLMEDetailsModel> CREATOR = new Creator<SampleDropDetailsbyTSPLMEDetailsModel>() {
+        @Override
+        public SampleDropDetailsbyTSPLMEDetailsModel createFromParcel(Parcel in) {
+            return new SampleDropDetailsbyTSPLMEDetailsModel(in);
+        }
+
+        @Override
+        public SampleDropDetailsbyTSPLMEDetailsModel[] newArray(int size) {
+            return new SampleDropDetailsbyTSPLMEDetailsModel[size];
+        }
+    };
     private int LMEUserId;
     private String TSPOLCId;
     private String SourceCode;
@@ -19,7 +30,6 @@ public class SampleDropDetailsbyTSPLMEDetailsModel implements Parcelable {
     private String Address;
     private String Pincode;
     private ArrayList<SampleDropBarcodeList> BarcodeList;
-
 
     protected SampleDropDetailsbyTSPLMEDetailsModel(Parcel in) {
         LMEUserId = in.readInt();
@@ -44,18 +54,6 @@ public class SampleDropDetailsbyTSPLMEDetailsModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SampleDropDetailsbyTSPLMEDetailsModel> CREATOR = new Creator<SampleDropDetailsbyTSPLMEDetailsModel>() {
-        @Override
-        public SampleDropDetailsbyTSPLMEDetailsModel createFromParcel(Parcel in) {
-            return new SampleDropDetailsbyTSPLMEDetailsModel(in);
-        }
-
-        @Override
-        public SampleDropDetailsbyTSPLMEDetailsModel[] newArray(int size) {
-            return new SampleDropDetailsbyTSPLMEDetailsModel[size];
-        }
-    };
 
     public int getLMEUserId() {
         return LMEUserId;

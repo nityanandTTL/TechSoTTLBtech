@@ -41,28 +41,6 @@ public class QrCodeBasedBarcodeScanAdapter extends RecyclerView.Adapter<QrCodeBa
 
     }
 
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_serumtype, txtSampleType,txtSampleTypeRBS,edtBarcode;
-        LinearLayout lin_sampleType;
-        ImageView imgScan,imgDelete;
-
-        public MyViewHolder(View view) {
-            super(view);
-            tv_serumtype = (TextView) view.findViewById(R.id.tv_serumtype);
-            txtSampleType = (TextView) view.findViewById(R.id.txt_sample_type);
-            lin_sampleType = (LinearLayout) view.findViewById(R.id.lin_sampleType);
-            txtSampleTypeRBS = (TextView) view.findViewById(R.id.txt_sample_type_rb);
-            edtBarcode = (TextView) view.findViewById(R.id.edt_barcode);
-            imgScan = (ImageView) view.findViewById(R.id.scan_barcode_button);
-            imgDelete = (ImageView) view.findViewById(R.id.imgDelete);
-
-            txtSampleType.setSelected(true);
-            txtSampleTypeRBS.setSelected(true);
-
-        }
-    }
-
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -94,7 +72,7 @@ public class QrCodeBasedBarcodeScanAdapter extends RecyclerView.Adapter<QrCodeBa
         holder.txtSampleType.setText(barcodedetailArylist.get(position).getSampleType());
 
         if (patientDetailsModel.getProduct().equalsIgnoreCase("RBS,PPBS") || patientDetailsModel.getProduct().equalsIgnoreCase("PPBS,RBS")) {
-            if (barcodedetailArylist.get(position).getSampleType().equalsIgnoreCase("FLUORIDE-R")){
+            if (barcodedetailArylist.get(position).getSampleType().equalsIgnoreCase("FLUORIDE-R")) {
                 holder.txtSampleType.setText("FLUORIDE RBS");
             }
         }
@@ -121,14 +99,14 @@ public class QrCodeBasedBarcodeScanAdapter extends RecyclerView.Adapter<QrCodeBa
 
 
         if (!TextUtils.isEmpty(barcodedetailArylist.get(position).getBarcode())) {
-            holder.edtBarcode.setText("  "+barcodedetailArylist.get(position).getBarcode()+"  ");
+            holder.edtBarcode.setText("  " + barcodedetailArylist.get(position).getBarcode() + "  ");
             holder.imgScan.setVisibility(View.GONE);
             holder.imgDelete.setVisibility(View.VISIBLE);
         } else {
             holder.imgScan.setVisibility(View.VISIBLE);
             holder.imgDelete.setVisibility(View.GONE);
         }
-        holder.edtBarcode.setText(!InputUtils.isNull(barcodedetailArylist.get(position).getBarcode()) ? "  "+barcodedetailArylist.get(position).getBarcode()+"  " : "");
+        holder.edtBarcode.setText(!InputUtils.isNull(barcodedetailArylist.get(position).getBarcode()) ? "  " + barcodedetailArylist.get(position).getBarcode() + "  " : "");
 
         final int finalI = position;
         initListeners(holder, position, finalI);
@@ -138,7 +116,7 @@ public class QrCodeBasedBarcodeScanAdapter extends RecyclerView.Adapter<QrCodeBa
         holder.imgScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onClickListeners != null){
+                if (onClickListeners != null) {
                     onClickListeners.onBarcodeScanClicked(barcodedetailArylist.get(position).getSampleType(), finalI);
                 }
             }
@@ -147,8 +125,8 @@ public class QrCodeBasedBarcodeScanAdapter extends RecyclerView.Adapter<QrCodeBa
         holder.edtBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onClickListeners != null){
-                    onClickListeners.onBarcodeScanClicked(barcodedetailArylist.get(position).getSampleType(),finalI);
+                if (onClickListeners != null) {
+                    onClickListeners.onBarcodeScanClicked(barcodedetailArylist.get(position).getSampleType(), finalI);
                 }
             }
         });
@@ -174,7 +152,29 @@ public class QrCodeBasedBarcodeScanAdapter extends RecyclerView.Adapter<QrCodeBa
 
     public interface OnItemClickListener {
         void onBarcodeScanClicked(String SampleType, int barcodePosition);
+
         void onBarcodeDelete(String barcode);
 
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView tv_serumtype, txtSampleType, txtSampleTypeRBS, edtBarcode;
+        LinearLayout lin_sampleType;
+        ImageView imgScan, imgDelete;
+
+        public MyViewHolder(View view) {
+            super(view);
+            tv_serumtype = (TextView) view.findViewById(R.id.tv_serumtype);
+            txtSampleType = (TextView) view.findViewById(R.id.txt_sample_type);
+            lin_sampleType = (LinearLayout) view.findViewById(R.id.lin_sampleType);
+            txtSampleTypeRBS = (TextView) view.findViewById(R.id.txt_sample_type_rb);
+            edtBarcode = (TextView) view.findViewById(R.id.edt_barcode);
+            imgScan = (ImageView) view.findViewById(R.id.scan_barcode_button);
+            imgDelete = (ImageView) view.findViewById(R.id.imgDelete);
+
+            txtSampleType.setSelected(true);
+            txtSampleTypeRBS.setSelected(true);
+
+        }
     }
 }

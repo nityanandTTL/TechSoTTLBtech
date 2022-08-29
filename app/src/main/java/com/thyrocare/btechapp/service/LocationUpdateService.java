@@ -13,9 +13,11 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Action;
+
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -33,7 +35,6 @@ import com.thyrocare.btechapp.dao.models.OrderDetailsDao;
 import com.thyrocare.btechapp.models.api.request.ChatRequestModel;
 import com.thyrocare.btechapp.models.data.AcceptOrderNotfiDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
-
 
 
 import com.thyrocare.btechapp.network.ResponseParser;
@@ -64,29 +65,27 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 
 public class LocationUpdateService extends IntentService {
     private static final String TAG = LocationUpdateService.class.getSimpleName();
-    public Handler mHandler;
     private static final String TAG_CHAT = "TAG_CHAT";
-    private ArrayList<ChatRequestModel> chatRequestModels;
-
+    public Handler mHandler;
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      * <p>
      * Used to name the worker thread, important only for debugging.
      */
     AppPreferenceManager appPreferenceManager;
+    int firtTime = 0;
 
 
     //neha g--------------
-
-    private boolean isFetchingOrders = false;
-    int firtTime = 0;
-    private OrderDetailsDao orderDetailsDao;
-    private DhbDao dhbDao;
     Long time, currenttime;
     String finaltime = "";
     int hr = 0;
     int minnew = 0;
     ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels;
+    private ArrayList<ChatRequestModel> chatRequestModels;
+    private boolean isFetchingOrders = false;
+    private OrderDetailsDao orderDetailsDao;
+    private DhbDao dhbDao;
     private String todate = "";
     private ArrayList<AcceptOrderNotfiDetailsModel> materialDetailsModels;
     private Context activity;
@@ -157,14 +156,6 @@ public class LocationUpdateService extends IntentService {
     }
 
 
-
-
-
-
-
-
-
-
     //todo neha
     //tejas t----------------------------------------------------------------------
 
@@ -203,6 +194,7 @@ public class LocationUpdateService extends IntentService {
                     Toast.makeText(activity, SomethingWentwrngMsg, LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Toast.makeText(activity, SomethingWentwrngMsg, LENGTH_SHORT).show();
@@ -265,6 +257,7 @@ public class LocationUpdateService extends IntentService {
                     Toast.makeText(activity, SomethingWentwrngMsg, LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Toast.makeText(activity, SomethingWentwrngMsg, LENGTH_SHORT).show();
@@ -310,7 +303,7 @@ public class LocationUpdateService extends IntentService {
                 if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
 //                    Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
 
-                    if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBT_ROLE_ID)|| appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.TSP_ROLE_ID)) {
+                    if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBT_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.TSP_ROLE_ID)) {
 //                        CallgetAcceptOrderNotificationApi();
                     }
                 } else {

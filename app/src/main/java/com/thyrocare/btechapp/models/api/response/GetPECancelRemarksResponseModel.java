@@ -5,6 +5,17 @@ import android.os.Parcelable;
 
 public class GetPECancelRemarksResponseModel implements Parcelable {
 
+    public static final Creator<GetPECancelRemarksResponseModel> CREATOR = new Creator<GetPECancelRemarksResponseModel>() {
+        @Override
+        public GetPECancelRemarksResponseModel createFromParcel(Parcel in) {
+            return new GetPECancelRemarksResponseModel(in);
+        }
+
+        @Override
+        public GetPECancelRemarksResponseModel[] newArray(int size) {
+            return new GetPECancelRemarksResponseModel[size];
+        }
+    };
     /**
      * Id : 283
      * Reason : False/Duplicate Booking
@@ -21,18 +32,6 @@ public class GetPECancelRemarksResponseModel implements Parcelable {
         }
         Reason = in.readString();
     }
-
-    public static final Creator<GetPECancelRemarksResponseModel> CREATOR = new Creator<GetPECancelRemarksResponseModel>() {
-        @Override
-        public GetPECancelRemarksResponseModel createFromParcel(Parcel in) {
-            return new GetPECancelRemarksResponseModel(in);
-        }
-
-        @Override
-        public GetPECancelRemarksResponseModel[] newArray(int size) {
-            return new GetPECancelRemarksResponseModel[size];
-        }
-    };
 
     public Integer getId() {
         return Id;

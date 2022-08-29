@@ -10,6 +10,17 @@ import java.util.ArrayList;
  */
 
 public class BrandMasterModel extends BaseModel implements Parcelable {
+    public static final Creator<BrandMasterModel> CREATOR = new Creator<BrandMasterModel>() {
+        @Override
+        public BrandMasterModel createFromParcel(Parcel in) {
+            return new BrandMasterModel(in);
+        }
+
+        @Override
+        public BrandMasterModel[] newArray(int size) {
+            return new BrandMasterModel[size];
+        }
+    };
     private int BrandId;
     private String BrandName;
     private String BrandAddress;
@@ -23,6 +34,21 @@ public class BrandMasterModel extends BaseModel implements Parcelable {
     private String Response;
 
     public BrandMasterModel() {
+    }
+
+    protected BrandMasterModel(Parcel in) {
+        super(in);
+        BrandId = in.readInt();
+        BrandName = in.readString();
+        BrandAddress = in.readString();
+        cancellationFee = in.readInt();
+        bookingInterval = in.readInt();
+        collectionInterval = in.readInt();
+        isAuthentication = in.readByte() != 0;
+        Wallet = in.readByte() != 0;
+        multiplePayments = in.readByte() != 0;
+        crncydetls = in.createTypedArrayList(BrandCurrencyModel.CREATOR);
+        Response = in.readString();
     }
 
     public int getBrandId() {
@@ -113,21 +139,6 @@ public class BrandMasterModel extends BaseModel implements Parcelable {
         Response = response;
     }
 
-    protected BrandMasterModel(Parcel in) {
-        super(in);
-        BrandId = in.readInt();
-        BrandName = in.readString();
-        BrandAddress = in.readString();
-        cancellationFee = in.readInt();
-        bookingInterval = in.readInt();
-        collectionInterval = in.readInt();
-        isAuthentication = in.readByte() != 0;
-        Wallet = in.readByte() != 0;
-        multiplePayments = in.readByte() != 0;
-        crncydetls = in.createTypedArrayList(BrandCurrencyModel.CREATOR);
-        Response = in.readString();
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
@@ -149,20 +160,8 @@ public class BrandMasterModel extends BaseModel implements Parcelable {
         return 0;
     }
 
-    public static final Creator<BrandMasterModel> CREATOR = new Creator<BrandMasterModel>() {
-        @Override
-        public BrandMasterModel createFromParcel(Parcel in) {
-            return new BrandMasterModel(in);
-        }
-
-        @Override
-        public BrandMasterModel[] newArray(int size) {
-            return new BrandMasterModel[size];
-        }
-    };
-
     @Override
     public String toString() {
-        return  BrandName;
+        return BrandName;
     }
 }

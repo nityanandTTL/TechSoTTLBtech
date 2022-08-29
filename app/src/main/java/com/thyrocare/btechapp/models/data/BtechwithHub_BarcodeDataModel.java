@@ -9,6 +9,17 @@ import android.os.Parcelable;
 
 public class BtechwithHub_BarcodeDataModel implements Parcelable {
 
+    public static final Creator<BtechwithHub_BarcodeDataModel> CREATOR = new Creator<BtechwithHub_BarcodeDataModel>() {
+        @Override
+        public BtechwithHub_BarcodeDataModel createFromParcel(Parcel in) {
+            return new BtechwithHub_BarcodeDataModel(in);
+        }
+
+        @Override
+        public BtechwithHub_BarcodeDataModel[] newArray(int size) {
+            return new BtechwithHub_BarcodeDataModel[size];
+        }
+    };
     private int BtechID;
     private String BtechName;
     private String Barcode;
@@ -42,18 +53,6 @@ public class BtechwithHub_BarcodeDataModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BtechwithHub_BarcodeDataModel> CREATOR = new Creator<BtechwithHub_BarcodeDataModel>() {
-        @Override
-        public BtechwithHub_BarcodeDataModel createFromParcel(Parcel in) {
-            return new BtechwithHub_BarcodeDataModel(in);
-        }
-
-        @Override
-        public BtechwithHub_BarcodeDataModel[] newArray(int size) {
-            return new BtechwithHub_BarcodeDataModel[size];
-        }
-    };
 
     public String getLatitude() {
         return Latitude;

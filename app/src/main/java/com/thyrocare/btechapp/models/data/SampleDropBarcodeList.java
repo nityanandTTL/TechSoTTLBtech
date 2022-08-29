@@ -7,7 +7,18 @@ import android.os.Parcelable;
  * Created by e5233@thyrocare.com on 13/8/18.
  */
 
-public class SampleDropBarcodeList  implements Parcelable {
+public class SampleDropBarcodeList implements Parcelable {
+    public static final Creator<SampleDropBarcodeList> CREATOR = new Creator<SampleDropBarcodeList>() {
+        @Override
+        public SampleDropBarcodeList createFromParcel(Parcel in) {
+            return new SampleDropBarcodeList(in);
+        }
+
+        @Override
+        public SampleDropBarcodeList[] newArray(int size) {
+            return new SampleDropBarcodeList[size];
+        }
+    };
     private int SampleDropId;
     private String MasterBarcode;
     private String ScannedBarcode;
@@ -56,18 +67,6 @@ public class SampleDropBarcodeList  implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SampleDropBarcodeList> CREATOR = new Creator<SampleDropBarcodeList>() {
-        @Override
-        public SampleDropBarcodeList createFromParcel(Parcel in) {
-            return new SampleDropBarcodeList(in);
-        }
-
-        @Override
-        public SampleDropBarcodeList[] newArray(int size) {
-            return new SampleDropBarcodeList[size];
-        }
-    };
 
     public int getSampleDropId() {
         return SampleDropId;

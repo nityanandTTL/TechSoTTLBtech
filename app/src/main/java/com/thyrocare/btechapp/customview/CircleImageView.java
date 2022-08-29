@@ -1,19 +1,19 @@
     /*
- * Copyright 2014 - 2017 Henning Dodenhof
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.thyrocare.btechapp.customview;
+     * Copyright 2014 - 2017 Henning Dodenhof
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *     http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    package com.thyrocare.btechapp.customview;
 
     import android.content.Context;
     import android.content.res.TypedArray;
@@ -196,7 +196,6 @@ package com.thyrocare.btechapp.customview;
          * Return the color drawn behind the circle-shaped drawable.
          *
          * @return The color drawn behind the drawable
-         *
          * @deprecated Fill color support is going to be removed in the future
          */
         @Deprecated
@@ -209,7 +208,6 @@ package com.thyrocare.btechapp.customview;
          * this has no effect if the drawable is opaque or no drawable is set.
          *
          * @param fillColor The color to be drawn behind the drawable
-         *
          * @deprecated Fill color support is going to be removed in the future
          */
         @Deprecated
@@ -229,7 +227,6 @@ package com.thyrocare.btechapp.customview;
          *
          * @param fillColorRes The color resource to be resolved to a color and
          *                     drawn behind the drawable
-         *
          * @deprecated Fill color support is going to be removed in the future
          */
         @Deprecated
@@ -301,6 +298,11 @@ package com.thyrocare.btechapp.customview;
         }
 
         @Override
+        public ColorFilter getColorFilter() {
+            return mColorFilter;
+        }
+
+        @Override
         public void setColorFilter(ColorFilter cf) {
             if (cf == mColorFilter) {
                 return;
@@ -309,11 +311,6 @@ package com.thyrocare.btechapp.customview;
             mColorFilter = cf;
             applyColorFilter();
             invalidate();
-        }
-
-        @Override
-        public ColorFilter getColorFilter() {
-            return mColorFilter;
         }
 
         private void applyColorFilter() {
@@ -406,7 +403,7 @@ package com.thyrocare.btechapp.customview;
         }
 
         private RectF calculateBounds() {
-            int availableWidth  = getWidth() - getPaddingLeft() - getPaddingRight();
+            int availableWidth = getWidth() - getPaddingLeft() - getPaddingRight();
             int availableHeight = getHeight() - getPaddingTop() - getPaddingBottom();
 
             int sideLength = Math.min(availableWidth, availableHeight);

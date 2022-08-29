@@ -31,164 +31,164 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class FileUploadAsyncTask extends AsyncTask<Void, Integer, String>{
+public class FileUploadAsyncTask extends AsyncTask<Void, Integer, String> {
 
-	private static DefaultHttpClient httpClient;
-	private FileUploadApiDelegate delegate;
-	private long totalSize;
-	private HttpPost httpPost;
-	private HashMap<String, String> fileMap;
-	private HashMap<String, String> stringMap;
-	private ProgressUpdateDialog progressUpdateDialog;
-	private Activity activity;
-	private Context context;
-	private String fileUploadUrl;
-	private int statusCode;
+    private static DefaultHttpClient httpClient;
+    private FileUploadApiDelegate delegate;
+    private long totalSize;
+    private HttpPost httpPost;
+    private HashMap<String, String> fileMap;
+    private HashMap<String, String> stringMap;
+    private ProgressUpdateDialog progressUpdateDialog;
+    private Activity activity;
+    private Context context;
+    private String fileUploadUrl;
+    private int statusCode;
 
-	public FileUploadAsyncTask() {
+    public FileUploadAsyncTask() {
 
-	}
+    }
 
-	public FileUploadAsyncTask(FileUploadApiDelegate delegate,
-	                           HashMap<String, String> fileMap, HashMap<String, String> stringMap) {
-		super();
+    public FileUploadAsyncTask(FileUploadApiDelegate delegate,
+                               HashMap<String, String> fileMap, HashMap<String, String> stringMap) {
+        super();
 
-		this.delegate = delegate;
-		this.fileMap = fileMap;
-		this.stringMap = stringMap;
-	}
+        this.delegate = delegate;
+        this.fileMap = fileMap;
+        this.stringMap = stringMap;
+    }
 
-	public FileUploadAsyncTask(FileUploadApiDelegate delegate,
-	                           HashMap<String, String> fileMap) {
-		super();
-		this.delegate = delegate;
-		this.fileMap = fileMap;
-	}
+    public FileUploadAsyncTask(FileUploadApiDelegate delegate,
+                               HashMap<String, String> fileMap) {
+        super();
+        this.delegate = delegate;
+        this.fileMap = fileMap;
+    }
 
-	public static void cancelHttpClient() {
+    public static void cancelHttpClient() {
 
-		if (httpClient != null){
-			httpClient.getConnectionManager().shutdown();
-		}
-	}
+        if (httpClient != null) {
+            httpClient.getConnectionManager().shutdown();
+        }
+    }
 
-	public void setDelegate(FileUploadApiDelegate delegate) {
-		this.delegate = delegate;
-	}
+    public void setDelegate(FileUploadApiDelegate delegate) {
+        this.delegate = delegate;
+    }
 
-	public void setFileMap(HashMap<String, String> fileMap) {
-		this.fileMap = fileMap;
-	}
+    public void setFileMap(HashMap<String, String> fileMap) {
+        this.fileMap = fileMap;
+    }
 
-	public void setStringMap(HashMap<String, String> stringMap) {
-		this.stringMap = stringMap;
-	}
+    public void setStringMap(HashMap<String, String> stringMap) {
+        this.stringMap = stringMap;
+    }
 
-	public void addFilePart(String fileKey, String filePath) {
+    public void addFilePart(String fileKey, String filePath) {
 
-		if (fileMap == null){
-			fileMap = new HashMap<String, String>();
-		}
+        if (fileMap == null) {
+            fileMap = new HashMap<String, String>();
+        }
 
-		fileMap.put(fileKey, filePath);
+        fileMap.put(fileKey, filePath);
 
-	}
+    }
 
-	public void addStringPart(String key, String value) {
+    public void addStringPart(String key, String value) {
 
-		if (stringMap == null){
-			stringMap = new HashMap<String, String>();
-		}
+        if (stringMap == null) {
+            stringMap = new HashMap<String, String>();
+        }
 
-		stringMap.put(key, value);
-	}
+        stringMap.put(key, value);
+    }
 
-	public void setActivity(Activity activity) {
-		this.activity = activity;
-	}
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
-	public void setContext(Context context) {
-		this.context = context;
-	}
+    public void setContext(Context context) {
+        this.context = context;
+    }
 
-	public String getFileUploadUrl() {
-		return fileUploadUrl;
-	}
+    public String getFileUploadUrl() {
+        return fileUploadUrl;
+    }
 
-	public void setFileUploadUrl(String fileUploadUrl) {
-		this.fileUploadUrl = fileUploadUrl;
-	}
+    public void setFileUploadUrl(String fileUploadUrl) {
+        this.fileUploadUrl = fileUploadUrl;
+    }
 
-	@Override
-	protected void onPreExecute() {
-		super.onPreExecute();
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
 
-		delegate.preExecute();
+        delegate.preExecute();
 
-		if (activity != null){
+        if (activity != null) {
 
-			progressUpdateDialog = new ProgressUpdateDialog(activity);
+            progressUpdateDialog = new ProgressUpdateDialog(activity);
 
-			progressUpdateDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            progressUpdateDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-			progressUpdateDialog.setCanceledOnTouchOutside(false);
+            progressUpdateDialog.setCanceledOnTouchOutside(false);
 
-			progressUpdateDialog.setCancelable(false);
+            progressUpdateDialog.setCancelable(false);
 
-			progressUpdateDialog.show();
-		}
-	}
+            progressUpdateDialog.show();
+        }
+    }
 
-	@Override
-	protected String doInBackground(Void ... params) {
+    @Override
+    protected String doInBackground(Void... params) {
 
-		String error = "Error :";
+        String error = "Error :";
 
-		android.os.Process.setThreadPriority(12);
+        android.os.Process.setThreadPriority(12);
 
-		String serverResponse;
-		CustomMultipartEntity multipartContent = null;
-		try {
-			httpClient = new DefaultHttpClient();
-			HttpContext httpContext = new BasicHttpContext();
+        String serverResponse;
+        CustomMultipartEntity multipartContent = null;
+        try {
+            httpClient = new DefaultHttpClient();
+            HttpContext httpContext = new BasicHttpContext();
 
-			httpPost = new HttpPost(fileUploadUrl);
+            httpPost = new HttpPost(fileUploadUrl);
 
-			httpPost.addHeader(AbstractApiModel.X_API_KEY, new AppPreferenceManager(activity).getAPISessionKey());
+            httpPost.addHeader(AbstractApiModel.X_API_KEY, new AppPreferenceManager(activity).getAPISessionKey());
 
-			multipartContent = new CustomMultipartEntity(
+            multipartContent = new CustomMultipartEntity(
 
-			        new CustomMultipartEntity.ProgressListener() {
+                    new CustomMultipartEntity.ProgressListener() {
 
-				@Override
-				public void transferred(long num) {
-				        publishProgress((int) ((num / (float) totalSize) * 100));
-				}
-			});
+                        @Override
+                        public void transferred(long num) {
+                            publishProgress((int) ((num / (float) totalSize) * 100));
+                        }
+                    });
 
-			if (fileMap != null){
+            if (fileMap != null) {
 
-				Iterator<Map.Entry<String, String> > it = fileMap.entrySet()
-				                                          .iterator();
-				while (it.hasNext()){
-					Map.Entry<String, String> pairs = (Map.Entry<String, String>)it
-					                                  .next();
+                Iterator<Map.Entry<String, String>> it = fileMap.entrySet()
+                        .iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, String> pairs = (Map.Entry<String, String>) it
+                            .next();
 
-					File file = new File(pairs.getValue());
-					BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
-					ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                    File file = new File(pairs.getValue());
+                    BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
+                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-					int nRead;
-					byte[] data = new byte[16384];
+                    int nRead;
+                    byte[] data = new byte[16384];
 
-					while ((nRead = bufferedInputStream.read(data, 0, data.length)) != -1){
-						buffer.write(data, 0, nRead);
-					}
+                    while ((nRead = bufferedInputStream.read(data, 0, data.length)) != -1) {
+                        buffer.write(data, 0, nRead);
+                    }
 
-					buffer.flush();
+                    buffer.flush();
 
-					multipartContent.addPart(file.getName(),
-					                         new ByteArrayBody(buffer.toByteArray(),"image/jpeg", file.getName()));
+                    multipartContent.addPart(file.getName(),
+                            new ByteArrayBody(buffer.toByteArray(), "image/jpeg", file.getName()));
 
 //					BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 //					Bitmap imageBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
@@ -203,114 +203,114 @@ public class FileUploadAsyncTask extends AsyncTask<Void, Integer, String>{
 //					multipartContent.addPart(pairs.getKey(), new FileBody(
 //					                                 new File(pairs.getValue())));
 
-					it.remove(); // avoids a ConcurrentModificationException
-				}
+                    it.remove(); // avoids a ConcurrentModificationException
+                }
 
-			}
+            }
 
-			if (stringMap != null){
+            if (stringMap != null) {
 
-				Iterator<Map.Entry<String, String> > it = stringMap.entrySet()
-				                                          .iterator();
-				while (it.hasNext()){
-					Map.Entry<String, String> pairs = (Map.Entry<String, String>)it
-					                                  .next();
+                Iterator<Map.Entry<String, String>> it = stringMap.entrySet()
+                        .iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, String> pairs = (Map.Entry<String, String>) it
+                            .next();
 
-					multipartContent.addPart(pairs.getKey(), new StringBody(
-					                                 pairs.getValue()));
+                    multipartContent.addPart(pairs.getKey(), new StringBody(
+                            pairs.getValue()));
 
-					it.remove(); // avoids a ConcurrentModificationException
-				}
+                    it.remove(); // avoids a ConcurrentModificationException
+                }
 
-			}
+            }
 
-			totalSize = multipartContent.getContentLength();
+            totalSize = multipartContent.getContentLength();
 
-			httpPost.setEntity(multipartContent);
-			HttpResponse response = httpClient.execute(httpPost, httpContext);
-			serverResponse = EntityUtils.toString(response.getEntity());
-			statusCode = response.getStatusLine().getStatusCode();
+            httpPost.setEntity(multipartContent);
+            HttpResponse response = httpClient.execute(httpPost, httpContext);
+            serverResponse = EntityUtils.toString(response.getEntity());
+            statusCode = response.getStatusLine().getStatusCode();
 
-			return serverResponse;
+            return serverResponse;
 
-		} catch (ClientProtocolException e){
-			error = e + e.getMessage();
-			e.printStackTrace();
-		} catch (ParseException e){
-			error = e + e.getMessage();
-			e.printStackTrace();
-		} catch (IOException e){
-			error = e + e.getMessage();
-			e.printStackTrace();
-		} catch (Exception e){
-			error = e + e.getMessage();
-			e.printStackTrace();
-		} finally {
+        } catch (ClientProtocolException e) {
+            error = e + e.getMessage();
+            e.printStackTrace();
+        } catch (ParseException e) {
+            error = e + e.getMessage();
+            e.printStackTrace();
+        } catch (IOException e) {
+            error = e + e.getMessage();
+            e.printStackTrace();
+        } catch (Exception e) {
+            error = e + e.getMessage();
+            e.printStackTrace();
+        } finally {
 
-			try {
-				multipartContent.consumeContent();
-			} catch (UnsupportedOperationException e){
-				e.printStackTrace();
-				e.printStackTrace();
-			} catch (IOException e){
-				e.printStackTrace();
-				e.printStackTrace();
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-		}
+            try {
+                multipartContent.consumeContent();
+            } catch (UnsupportedOperationException e) {
+                e.printStackTrace();
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-		return error;
-	}
+        return error;
+    }
 
-	@Override
-	protected void onPostExecute(String jsonPostResponse) {
+    @Override
+    protected void onPostExecute(String jsonPostResponse) {
 
-		if (activity != null && progressUpdateDialog != null){
+        if (activity != null && progressUpdateDialog != null) {
 
-			progressUpdateDialog.dismiss();
-		}
+            progressUpdateDialog.dismiss();
+        }
 
-		if (jsonPostResponse.startsWith("Error")){
+        if (jsonPostResponse.startsWith("Error")) {
 
-			delegate.onError(jsonPostResponse);
+            delegate.onError(jsonPostResponse);
 
-			return;
+            return;
 
-		}
+        }
 
-		try {
-			delegate.postExecute(jsonPostResponse, statusCode);
-		} catch (JsonSyntaxException jsonSyntaxException){
-			jsonSyntaxException.printStackTrace();
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+        try {
+            delegate.postExecute(jsonPostResponse, statusCode);
+        } catch (JsonSyntaxException jsonSyntaxException) {
+            jsonSyntaxException.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	}
+    }
 
-	@Override
-	protected void onProgressUpdate(Integer ... values) {
-		if (progressUpdateDialog != null){
-			progressUpdateDialog.setProgressBar(values[0]);
-		}
-		delegate.publishProgress(values);
-		super.onProgressUpdate(values);
-	}
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        if (progressUpdateDialog != null) {
+            progressUpdateDialog.setProgressBar(values[0]);
+        }
+        delegate.publishProgress(values);
+        super.onProgressUpdate(values);
+    }
 
-	@Override
-	protected void onCancelled() {
-		super.onCancelled();
-	}
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+    }
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void execute(AsyncTask<Void, Integer, String> as) {
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void execute(AsyncTask<Void, Integer, String> as) {
 
-		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR1){
-			as.execute();
-		} else {
-			as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		}
-	}
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            as.execute();
+        } else {
+            as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
 
 }

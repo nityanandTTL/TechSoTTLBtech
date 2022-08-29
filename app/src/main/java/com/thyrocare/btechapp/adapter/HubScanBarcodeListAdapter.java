@@ -30,30 +30,6 @@ public class HubScanBarcodeListAdapter extends RecyclerView.Adapter<HubScanBarco
     private List<HubBarcodeModel> barcodeModels;
     private Activity activity;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView sample_type_name;
-        TextView editBarcode;
-        ImageView imgGreenTick;
-        ImageView imgRedCross;
-        View itemView;
-        LinearLayout ll_edt_barcode;
-
-        private MyViewHolder(View view) {
-            super(view);
-            this.itemView = view;
-            initComp(view);
-        }
-
-        private void initComp(View view) {
-            sample_type_name = (TextView) view.findViewById(R.id.sample_type_name);
-            editBarcode = (TextView) view.findViewById(R.id.editbarcode);
-            ll_edt_barcode = (LinearLayout) view.findViewById(R.id.ll_edt_barcode);
-            imgGreenTick = (ImageView) view.findViewById(R.id.scanned_status_green);
-            imgRedCross = (ImageView) view.findViewById(R.id.scanned_status_red);
-        }
-    }
-
-
     public HubScanBarcodeListAdapter(List<HubBarcodeModel> barcodeModels, Activity activity) {
         this.barcodeModels = barcodeModels;
         this.activity = activity;
@@ -114,5 +90,28 @@ public class HubScanBarcodeListAdapter extends RecyclerView.Adapter<HubScanBarco
     @Override
     public int getItemCount() {
         return barcodeModels.size();
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView sample_type_name;
+        TextView editBarcode;
+        ImageView imgGreenTick;
+        ImageView imgRedCross;
+        View itemView;
+        LinearLayout ll_edt_barcode;
+
+        private MyViewHolder(View view) {
+            super(view);
+            this.itemView = view;
+            initComp(view);
+        }
+
+        private void initComp(View view) {
+            sample_type_name = (TextView) view.findViewById(R.id.sample_type_name);
+            editBarcode = (TextView) view.findViewById(R.id.editbarcode);
+            ll_edt_barcode = (LinearLayout) view.findViewById(R.id.ll_edt_barcode);
+            imgGreenTick = (ImageView) view.findViewById(R.id.scanned_status_green);
+            imgRedCross = (ImageView) view.findViewById(R.id.scanned_status_red);
+        }
     }
 }

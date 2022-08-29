@@ -407,7 +407,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 
     private void initTestListViewPE() {
         if (FlagADDEditBen && peTestArraylist != null && peTestArraylist.size() > 0) {
-            displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), peTestArraylist, peselectedTestsList,isM);
+            displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), peTestArraylist, peselectedTestsList, isM);
             displayAllTestApdter.setOnItemClickListener(new DisplayAllTestApdter.OnClickListeners() {
                 @Override
                 public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
@@ -427,7 +427,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
             recycle_TestList.setVisibility(View.VISIBLE);
             tv_noDatafound.setVisibility(View.GONE);
         } else if (!FlagADDEditBen && peselectedTestsList != null && peselectedTestsList.size() > 0) {
-            displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), peTestArraylist, peselectedTestsList,isM);
+            displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), peTestArraylist, peselectedTestsList, isM);
             displayAllTestApdter.setOnItemClickListener(new DisplayAllTestApdter.OnClickListeners() {
                 @Override
                 public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
@@ -448,7 +448,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
             tv_noDatafound.setVisibility(View.GONE);
         } else if (test_edit_PE) {
             peselectedTestsList = new ArrayList<>();
-            displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), peTestArraylist, peselectedTestsList,isM);
+            displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), peTestArraylist, peselectedTestsList, isM);
             displayAllTestApdter.setOnItemClickListener(new DisplayAllTestApdter.OnClickListeners() {
                 @Override
                 public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {

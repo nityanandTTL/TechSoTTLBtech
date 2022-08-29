@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -55,6 +56,7 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.adapter.LMEBarcodescanListListAdapter;
+
 import application.ApplicationController;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -91,8 +93,14 @@ import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 public class LMEMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
 
-    private static final String TAG = LMEMapDisplayFragmentActivity.class.getSimpleName();
     public static final String TAG_FRAGMENT = LMEMapDisplayFragmentActivity.class.getSimpleName();
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private static final String TAG = LMEMapDisplayFragmentActivity.class.getSimpleName();
+    TextView txt_code, txt_name, txt_address;
+    LMEMapDisplayFragmentActivity mLMEMapDisplayFragmentActivity;
+    LinearLayout ll_scan_master_barcode;
+    RecyclerView recy_barcode_list;
+    Spinner sp_location;
     private GoogleMap mMap;
     private ArrayList<LatLng> MarkerPoints;
     private GoogleApiClient mGoogleApiClient;
@@ -100,13 +108,9 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
     private Marker mCurrLocationMarker;
     private ArrayList<HUBBTechModel> hubbTechModels;
     private LocationRequest mLocationRequest;
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private Button btn_startaccept;
-
     private FragmentActivity activity;
     private SampleDropDetailsbyTSPLMEDetailsModel mSampleDropDetailsbyTSPLMEDetailsModel;
-    TextView txt_code, txt_name, txt_address;
-
     private AppPreferenceManager appPreferenceManager;
     private Geocoder geocoder;
     private List<Address> addresses;
@@ -114,18 +118,26 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
     private int Integertotaldiff;
     private boolean isStarted = false;
     private LatLng mAddressLatLong;
-    LMEMapDisplayFragmentActivity mLMEMapDisplayFragmentActivity;
-    LinearLayout ll_scan_master_barcode;
     private IntentIntegrator intentIntegrator;
     private String master_scanned_barcode = "";
-    RecyclerView recy_barcode_list;
     private LMEBarcodescanListListAdapter mLMEBarcodescanListListAdapter;
-    Spinner sp_location;
     private ArrayList<LocationMasterModel> mLocationmaster;
     private ArrayList<String> LocationStringListArr;
     private int pos_id = 0;
     private String mLocation_str = "";
     private Global globalclass;
+
+    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        float dist = (float) (earthRadius * c);
+        return dist;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -157,7 +169,6 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
         }
     }
 
-
     private void setListeners() {
         btn_startaccept.setOnClickListener(this);
         double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
@@ -169,7 +180,7 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
         StringBuilder result = new StringBuilder();
         try {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses.size() > 0) {
                 //   Toast.makeText(getApplicationContext(),"Address:"+addresses+"",Toast.LENGTH_SHORT).show();
                 Address address = addresses.get(0);
@@ -311,7 +322,6 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
         return url;
     }
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -600,37 +610,6 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
         finish();
     }
 
-    // Fetches data from url passed
-    private class FetchUrl extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... url) {
-
-            // For storing data from web service
-            String data = "";
-
-            try {
-                // Fetching the data from web service
-                data = downloadUrl(url[0]);
-                MessageLogger.LogDebug("Background Task data", data.toString());
-            } catch (Exception e) {
-                MessageLogger.LogDebug("Background Task", e.toString());
-            }
-            return data;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            ParserTask parserTask = new ParserTask();
-
-            // Invokes the thread for parsing the JSON data
-            parserTask.execute(result);
-
-        }
-    }
-
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
@@ -667,6 +646,154 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
             urlConnection.disconnect();
         }
         return data;
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(activity)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted. Do the
+                    // contacts-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(activity,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        if (mGoogleApiClient == null) {
+                            buildGoogleApiClient();
+                        }
+                        mMap.setMyLocationEnabled(true);
+                    }
+
+                } else {
+
+                    // Permission denied, Disable the functionality that depends on activity permission.
+                    Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
+    private void CallgetLocationMasterApi() {
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        Call<ArrayList<LocationMasterModel>> responseCall = apiInterface.CallgetLocationMasterApi();
+        responseCall.enqueue(new Callback<ArrayList<LocationMasterModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<LocationMasterModel>> call, retrofit2.Response<ArrayList<LocationMasterModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    mLocationmaster = response.body();
+                    if (mLocationmaster != null) {
+                        if (mLocationmaster.size() != 0) {
+                            setSpinnerDialog(mLocationmaster);
+                        } else {
+                            Okdialog("Something went wrong.");
+                        }
+                    } else {
+                        Okdialog("Something went wrong.");
+                    }
+                } else {
+                    Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<LocationMasterModel>> call, Throwable t) {
+                Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setSpinnerDialog(final ArrayList<LocationMasterModel> mLocationmaster) {
+        LocationStringListArr = new ArrayList<>();
+        LocationStringListArr.add("" + BundleConstants.locationText);
+        for (LocationMasterModel btsCodeDataModell :
+                mLocationmaster) {
+            LocationStringListArr.add(btsCodeDataModell.getLocationType());
+        }
+
+        if (LocationStringListArr.size() != 0) {
+            ArrayAdapter<String> spinneradapter51 = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, LocationStringListArr);
+            spinneradapter51.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sp_location.setAdapter(spinneradapter51);
+
+            sp_location.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (position == 0) {
+                        pos_id = position;
+                        mLocation_str = "";
+                    } else {
+                        pos_id = Integer.parseInt(mLocationmaster.get(position - 1).getId());
+                        mLocation_str = mLocationmaster.get(position - 1).getLocationType();
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+    }
+
+    public void Okdialog(String msg) {
+        android.app.AlertDialog.Builder builder1 = new android.app.AlertDialog.Builder(activity);
+        builder1.setTitle("");
+        builder1.setMessage(msg);
+        builder1.setCancelable(false);
+        builder1.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                activity.finish();
+            }
+        });
+        android.app.AlertDialog alert11 = builder1.create();
+        alert11.show();
+    }
+
+    // Fetches data from url passed
+    private class FetchUrl extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... url) {
+
+            // For storing data from web service
+            String data = "";
+
+            try {
+                // Fetching the data from web service
+                data = downloadUrl(url[0]);
+                MessageLogger.LogDebug("Background Task data", data.toString());
+            } catch (Exception e) {
+                MessageLogger.LogDebug("Background Task", e.toString());
+            }
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            ParserTask parserTask = new ParserTask();
+
+            // Invokes the thread for parsing the JSON data
+            parserTask.execute(result);
+
+        }
     }
 
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
@@ -740,133 +867,5 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
                 MessageLogger.LogDebug("onPostExecute", "without Polylines drawn");
             }
         }
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(activity)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted. Do the
-                    // contacts-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(activity,
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-
-                        if (mGoogleApiClient == null) {
-                            buildGoogleApiClient();
-                        }
-                        mMap.setMyLocationEnabled(true);
-                    }
-
-                } else {
-
-                    // Permission denied, Disable the functionality that depends on activity permission.
-                    Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-        }
-    }
-
-    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
-        double earthRadius = 6371000; //meters
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLng = Math.toRadians(lng2 - lng1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        float dist = (float) (earthRadius * c);
-        return dist;
-    }
-
-    private void CallgetLocationMasterApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-        Call<ArrayList<LocationMasterModel>> responseCall = apiInterface.CallgetLocationMasterApi();
-        responseCall.enqueue(new Callback<ArrayList<LocationMasterModel>>() {
-            @Override
-            public void onResponse(Call<ArrayList<LocationMasterModel>> call, retrofit2.Response<ArrayList<LocationMasterModel>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    mLocationmaster = response.body();
-                    if (mLocationmaster != null) {
-                        if (mLocationmaster.size() != 0) {
-                            setSpinnerDialog(mLocationmaster);
-                        } else {
-                            Okdialog("Something went wrong.");
-                        }
-                    } else {
-                        Okdialog("Something went wrong.");
-                    }
-                } else {
-                    Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<ArrayList<LocationMasterModel>> call, Throwable t) {
-                Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void setSpinnerDialog(final ArrayList<LocationMasterModel> mLocationmaster) {
-        LocationStringListArr = new ArrayList<>();
-        LocationStringListArr.add("" + BundleConstants.locationText);
-        for (LocationMasterModel btsCodeDataModell :
-                mLocationmaster) {
-            LocationStringListArr.add(btsCodeDataModell.getLocationType());
-        }
-
-        if (LocationStringListArr.size() != 0) {
-            ArrayAdapter<String> spinneradapter51 = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, LocationStringListArr);
-            spinneradapter51.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            sp_location.setAdapter(spinneradapter51);
-
-            sp_location.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (position == 0) {
-                        pos_id = position;
-                        mLocation_str = "";
-                    } else {
-                        pos_id = Integer.parseInt(mLocationmaster.get(position - 1).getId());
-                        mLocation_str = mLocationmaster.get(position - 1).getLocationType();
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-        }
-    }
-
-    public void Okdialog(String msg) {
-        android.app.AlertDialog.Builder builder1 = new android.app.AlertDialog.Builder(activity);
-        builder1.setTitle("");
-        builder1.setMessage(msg);
-        builder1.setCancelable(false);
-        builder1.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-                activity.finish();
-            }
-        });
-        android.app.AlertDialog alert11 = builder1.create();
-        alert11.show();
     }
 }

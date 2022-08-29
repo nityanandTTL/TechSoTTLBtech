@@ -62,6 +62,8 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     Activity mActivity;
+    Global globalclass;
+    ConnectionDetector cd;
     private EditText edtUserID, edtPassword;
     private Button btn_login;
     private AlertDialog.Builder alertDialogBuilder;
@@ -69,9 +71,7 @@ public class LoginActivity extends AppCompatActivity {
     private Cursor c1;
     private String PasswordtoVerify = "";
     private SharedPreferences prefs_user;
-    Global globalclass;
     private TextView forget_password;
-    ConnectionDetector cd;
     private AppPreferenceManager appPreferenceManager;
     private ImageView img_password_toggle_id;
     private boolean showpassword = false;
@@ -88,9 +88,9 @@ public class LoginActivity extends AppCompatActivity {
         globalclass = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);
 
-        if (getIntent().hasExtra("ScreenCategory")){
+        if (getIntent().hasExtra("ScreenCategory")) {
             int category = getIntent().getExtras().getInt("ScreenCategory");
-            if (category==Constants.LogoutID)
+            if (category == Constants.LogoutID)
                 new LogUserActivityTagging(mActivity, "LOGOUT", "");
         }
 
@@ -262,7 +262,7 @@ public class LoginActivity extends AppCompatActivity {
             appPreferenceManager.setAPISessionKey(responseModel.getAccess_token());
             appPreferenceManager.setLoginResponseModel(responseModel);
             appPreferenceManager.setAccess_Token(responseModel.getAccess_token());
-            System.out.println("fsfsfsfsfsffdsfffffffffffffffffffff"+appPreferenceManager.getLoginResponseModel().getAccess_token());
+            System.out.println("fsfsfsfsfsffdsfffffffffffffffffffff" + appPreferenceManager.getLoginResponseModel().getAccess_token());
             CallBtechWiseVersionTrackerAPI();
             PostToken();
 
@@ -306,7 +306,7 @@ public class LoginActivity extends AppCompatActivity {
     private void setCleverTapLoginDetails(LoginResponseModel responseModel) {
         HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
         profileUpdate.put("Name", responseModel.getName());    // String
-/*        profileUpdate.put("Identity", responseModel.getMobile());    */  // String or number
+        /*        profileUpdate.put("Identity", responseModel.getMobile());    */  // String or number
         profileUpdate.put("Identity", "8451079482");      // String or number
         profileUpdate.put("Email", responseModel.getEmailId()); // Email address of the user
         profileUpdate.put("Phone", "+91" + responseModel.getMobile());   // Phone (with the country code, starting with +)
@@ -318,7 +318,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (Constants.clevertapDefaultInstance != null) {
             Constants.clevertapDefaultInstance.onUserLogin(profileUpdate);
-            System.out.println("CLEVERTAP ID>>>>>>>>>>>"+Constants.clevertapDefaultInstance.getCleverTapID());
+            System.out.println("CLEVERTAP ID>>>>>>>>>>>" + Constants.clevertapDefaultInstance.getCleverTapID());
         }
     }
 

@@ -9,10 +9,21 @@ import java.util.ArrayList;
  * Created by Orion on 5/15/2017.
  */
 
-public class CampAllOrderDetailsModel implements Parcelable{
-    private int BrandId, Margin, Discount,  ReportHC, AmountDue,Distance;
-    private String OrderNo, Address, Pincode, Mobile, Email, PayType,  Status,Refcode ;
-    private double Longitude,Latitude;
+public class CampAllOrderDetailsModel implements Parcelable {
+    public static final Creator<CampAllOrderDetailsModel> CREATOR = new Creator<CampAllOrderDetailsModel>() {
+        @Override
+        public CampAllOrderDetailsModel createFromParcel(Parcel in) {
+            return new CampAllOrderDetailsModel(in);
+        }
+
+        @Override
+        public CampAllOrderDetailsModel[] newArray(int size) {
+            return new CampAllOrderDetailsModel[size];
+        }
+    };
+    private int BrandId, Margin, Discount, ReportHC, AmountDue, Distance;
+    private String OrderNo, Address, Pincode, Mobile, Email, PayType, Status, Refcode;
+    private double Longitude, Latitude;
     private ArrayList<CampDetailsBenMasterModel> benMaster;
 
     protected CampAllOrderDetailsModel(Parcel in) {
@@ -33,6 +44,10 @@ public class CampAllOrderDetailsModel implements Parcelable{
         Longitude = in.readDouble();
         Latitude = in.readDouble();
         benMaster = in.createTypedArrayList(CampDetailsBenMasterModel.CREATOR);
+    }
+
+    public CampAllOrderDetailsModel() {
+        // Required empty public constructor
     }
 
     @Override
@@ -61,26 +76,6 @@ public class CampAllOrderDetailsModel implements Parcelable{
         return 0;
     }
 
-    public static final Creator<CampAllOrderDetailsModel> CREATOR = new Creator<CampAllOrderDetailsModel>() {
-        @Override
-        public CampAllOrderDetailsModel createFromParcel(Parcel in) {
-            return new CampAllOrderDetailsModel(in);
-        }
-
-        @Override
-        public CampAllOrderDetailsModel[] newArray(int size) {
-            return new CampAllOrderDetailsModel[size];
-        }
-    };
-
-    public void setRefcode(String refcode) {
-        Refcode = refcode;
-    }
-
-    public CampAllOrderDetailsModel() {
-        // Required empty public constructor
-    }
-
     public int getBrandId() {
         return BrandId;
     }
@@ -107,6 +102,10 @@ public class CampAllOrderDetailsModel implements Parcelable{
 
     public String getRefcode() {
         return Refcode;
+    }
+
+    public void setRefcode(String refcode) {
+        Refcode = refcode;
     }
 
     public int getReportHC() {

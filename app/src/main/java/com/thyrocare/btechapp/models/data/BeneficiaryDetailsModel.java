@@ -12,6 +12,17 @@ import java.util.ArrayList;
  */
 
 public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
+    public static final Creator<BeneficiaryDetailsModel> CREATOR = new Creator<BeneficiaryDetailsModel>() {
+        @Override
+        public BeneficiaryDetailsModel createFromParcel(Parcel in) {
+            return new BeneficiaryDetailsModel(in);
+        }
+
+        @Override
+        public BeneficiaryDetailsModel[] newArray(int size) {
+            return new BeneficiaryDetailsModel[size];
+        }
+    };
     private int benId;
     private String OrderNo;
     private String Name;
@@ -42,7 +53,6 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         super();
         Age = 1;
     }
-
 
     protected BeneficiaryDetailsModel(Parcel in) {
         super(in);
@@ -105,19 +115,6 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BeneficiaryDetailsModel> CREATOR = new Creator<BeneficiaryDetailsModel>() {
-        @Override
-        public BeneficiaryDetailsModel createFromParcel(Parcel in) {
-            return new BeneficiaryDetailsModel(in);
-        }
-
-        @Override
-        public BeneficiaryDetailsModel[] newArray(int size) {
-            return new BeneficiaryDetailsModel[size];
-        }
-    };
-
 
     public int getBenId() {
         return benId;

@@ -2,8 +2,10 @@ package com.thyrocare.btechapp.adapter;
 
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,19 +49,19 @@ public class DialogMaterialListAdapter extends RecyclerView.Adapter<DialogMateri
     @Override
     public void onBindViewHolder(DialogMaterialListAdapter.MyViewHolder holder, final int pos) {
 
-        if (!InputUtils.isNull(materialOrders.get(pos).getItem_UnitSize())){
-            holder.txt_finalitem.setText(""+materialOrders.get(pos).getItem_name()+" ("+materialOrders.get(pos).getItem_UnitSize()+")");
-        }else{
-            holder.txt_finalitem.setText(""+materialOrders.get(pos).getItem_name());
+        if (!InputUtils.isNull(materialOrders.get(pos).getItem_UnitSize())) {
+            holder.txt_finalitem.setText("" + materialOrders.get(pos).getItem_name() + " (" + materialOrders.get(pos).getItem_UnitSize() + ")");
+        } else {
+            holder.txt_finalitem.setText("" + materialOrders.get(pos).getItem_name());
         }
 
-        holder.edit_quantity.setText(""+materialOrders.get(pos).getOrderQty());
-        holder.txt_rate.setText(""+materialOrders.get(pos).getItem_UnitCost());
+        holder.edit_quantity.setText("" + materialOrders.get(pos).getOrderQty());
+        holder.txt_rate.setText("" + materialOrders.get(pos).getItem_UnitCost());
 
         Float temprate = Float.parseFloat(materialOrders.get(pos).getItem_UnitCost().toString());
         Float total = temprate * (Float.parseFloat(String.valueOf(materialOrders.get(pos).getOrderQty())));
 
-        holder.txt_total.setText(""+total);
+        holder.txt_total.setText("" + total);
 
     }
 
@@ -71,6 +73,7 @@ public class DialogMaterialListAdapter extends RecyclerView.Adapter<DialogMateri
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView txt_finalitem, txt_total, edit_quantity, txt_rate;
+
         public MyViewHolder(View view) {
             super(view);
 

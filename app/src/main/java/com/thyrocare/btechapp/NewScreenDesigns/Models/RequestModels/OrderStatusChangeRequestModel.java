@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class OrderStatusChangeRequestModel implements Parcelable {
+    public static final Creator<OrderStatusChangeRequestModel> CREATOR = new Creator<OrderStatusChangeRequestModel>() {
+        @Override
+        public OrderStatusChangeRequestModel createFromParcel(Parcel in) {
+            return new OrderStatusChangeRequestModel(in);
+        }
+
+        @Override
+        public OrderStatusChangeRequestModel[] newArray(int size) {
+            return new OrderStatusChangeRequestModel[size];
+        }
+    };
     String Remarks;
     String Id;
     int Status;
@@ -35,18 +46,6 @@ public class OrderStatusChangeRequestModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<OrderStatusChangeRequestModel> CREATOR = new Creator<OrderStatusChangeRequestModel>() {
-        @Override
-        public OrderStatusChangeRequestModel createFromParcel(Parcel in) {
-            return new OrderStatusChangeRequestModel(in);
-        }
-
-        @Override
-        public OrderStatusChangeRequestModel[] newArray(int size) {
-            return new OrderStatusChangeRequestModel[size];
-        }
-    };
 
     public String getRemarks() {
         return Remarks;

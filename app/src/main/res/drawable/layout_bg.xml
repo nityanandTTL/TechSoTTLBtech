@@ -5,6 +5,10 @@
         android:endColor="@color/btn_purple_end_grd"
         android:startColor="@color/btn_purple_start_grd" />
 
-    <corners android:radius="10dip"/>
-    <padding android:left="0dip" android:top="0dip" android:right="0dip" android:bottom="0dip" />
+    <corners android:radius="10dip" />
+    <padding
+        android:bottom="0dip"
+        android:left="0dip"
+        android:right="0dip"
+        android:top="0dip" />
 </shape>

@@ -7,10 +7,22 @@ import android.os.Parcelable;
  * Created by Orion on 5/10/2017.
  */
 
-public class CampBtechModel implements Parcelable{
+public class CampBtechModel implements Parcelable {
+    public static final Creator<CampBtechModel> CREATOR = new Creator<CampBtechModel>() {
+        @Override
+        public CampBtechModel createFromParcel(Parcel in) {
+            return new CampBtechModel(in);
+        }
+
+        @Override
+        public CampBtechModel[] newArray(int size) {
+            return new CampBtechModel[size];
+        }
+    };
     private int BtechId;
     private String Mobile;
     private String Status;
+    private String Name;
 
     public CampBtechModel() {
     }
@@ -35,18 +47,6 @@ public class CampBtechModel implements Parcelable{
         return 0;
     }
 
-    public static final Creator<CampBtechModel> CREATOR = new Creator<CampBtechModel>() {
-        @Override
-        public CampBtechModel createFromParcel(Parcel in) {
-            return new CampBtechModel(in);
-        }
-
-        @Override
-        public CampBtechModel[] newArray(int size) {
-            return new CampBtechModel[size];
-        }
-    };
-
     public String getName() {
         return Name;
     }
@@ -54,8 +54,6 @@ public class CampBtechModel implements Parcelable{
     public void setName(String name) {
         Name = name;
     }
-
-    private String Name;
 
     public int getBtechId() {
         return BtechId;

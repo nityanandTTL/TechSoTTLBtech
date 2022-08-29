@@ -8,5 +8,6 @@ import com.thyrocare.btechapp.models.data.BtechClientsModel;
 
 public interface BtechClientDetailsAdapterOnItemClickDelegate {
     void onItemClick(BtechClientsModel btechClientsModel);
-    void onItemCallClick(BtechClientsModel btechClientsModel,int position);
+
+    void onItemCallClick(BtechClientsModel btechClientsModel, int position);
 }

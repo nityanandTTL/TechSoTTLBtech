@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+
 import androidx.core.app.ActivityCompat;
 
 import android.view.LayoutInflater;
@@ -40,12 +41,13 @@ import java.util.HashSet;
 
 public class CampListDetailDisplayAdapter extends BaseAdapter {
     private static final String TAG = CampListDetailDisplayAdapter.class.getSimpleName();
+    String[] testsList;
     private HomeScreenActivity activity;
     private ArrayList<CampDetailModel> campDetailModelList;
     private CampListDisplayRecyclerViewAdapterDelegate campListDisplayRecyclerViewAdapterDelegate;
     private HashSet<Integer> unfoldedIndexes = new HashSet<>();
     private LayoutInflater layoutInflater;
-    String[] testsList;
+
     public CampListDetailDisplayAdapter(HomeScreenActivity activity,
                                         ArrayList<CampDetailModel> campDetailModelList,
                                         CampListDisplayRecyclerViewAdapterDelegate campListDisplayRecyclerViewAdapterDelegate) {
@@ -127,9 +129,9 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
         if (campDetailModelList.size() > pos) {
             String upperString1 = "" + campDetailModelList.get(pos).getLocation();
             holder.tv_location.setText(upperString1);
-            String upperString = ""+ campDetailModelList.get(pos).getLocation();
+            String upperString = "" + campDetailModelList.get(pos).getLocation();
             holder.txt_location.setText(upperString);
-            String campName="" + campDetailModelList.get(pos).getCampName();
+            String campName = "" + campDetailModelList.get(pos).getCampName();
             holder.tvName.setSelected(true);
             holder.tvName.setText(campName);
             holder.txt_name.setText(campName);
@@ -138,17 +140,17 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             if (campDetailModelList.get(pos).getExpectedCrowd() == 0) {
                 holder.tv_expected_crowd.setVisibility(View.GONE);
             }
-            String test="" + campDetailModelList.get(pos).getProduct();
+            String test = "" + campDetailModelList.get(pos).getProduct();
             holder.tv_expected_crowd.setText("Expected Crowd: " + campDetailModelList.get(pos).getExpectedCrowd());
             holder.txt_name.setText("" + campDetailModelList.get(pos).getCampName());
             if (campDetailModelList.get(pos).isAccepted()) {
                 holder.img_accept.setVisibility(View.GONE);
                 holder.btn_start.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 holder.img_accept.setVisibility(View.VISIBLE);
                 holder.btn_start.setVisibility(View.GONE);
             }
-            if ( !campDetailModelList.get(pos).isStarted()) {
+            if (!campDetailModelList.get(pos).isStarted()) {
                 holder.btn_start.setVisibility(View.VISIBLE);
                 holder.btn_arrived.setVisibility(View.GONE);
             } else {
@@ -179,7 +181,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
                             intent.setData(Uri.parse("tel:" + campDetailModelList.get(pos).getBtechs().get(pos).getMobile()));
                             activity.startActivity(intent);
 
-                    }
+                        }
                     });
                     tv_status.setText("Status: " + campDetailModelList.get(pos).getBtechs().get(i).getStatus());
                     holder.ll_btechs.addView(v, i, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -199,42 +201,6 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
 
     }
 
-    private class FoldingCellViewHolder {
-        TextView tvName, tv_leader, tv_location, tv_expected_crowd, tv_test;
-        TextView txt_name, txt_location ;
-        LinearLayout ll_btechs;
-        HorizontalScrollView sc_ll_btechs;
-        ImageView tv_call_leader;
-        Button btn_start, btn_arrived ,img_accept;
-        FoldingCell cell;
-
-        int ids_check[];
-        boolean bool_check[];
-
-        FoldingCellViewHolder(View itemView) {
-            initUI(itemView);
-        }
-
-        private void initUI(View itemView) {
-            tv_test=(TextView)itemView.findViewById(R.id.tv_test);
-            String tests = campDetailModelList.get(0).getProduct();
-            testsList = tests.split(",");
-            tv_test.setText("Test/Product: " + testsList[0]);
-            cell = (FoldingCell) itemView.findViewById(R.id.item_camp_folding_cell);
-            tv_leader = (TextView) itemView.findViewById(R.id.tv_leader);
-            tv_location = (TextView) itemView.findViewById(R.id.tv_location);
-            txt_location=(TextView)itemView.findViewById(R.id.txt_location);
-            tv_expected_crowd = (TextView) itemView.findViewById(R.id.tv_expected_crowd);
-            btn_start = (Button) itemView.findViewById(R.id.btn_start);
-            tvName = (TextView) itemView.findViewById(R.id.tv_name);
-            txt_name = (TextView) itemView.findViewById(R.id.txt_name);
-            img_accept = (Button) itemView.findViewById(R.id.img_accept);
-            ll_btechs = (LinearLayout) itemView.findViewById(R.id.ll_btechs);
-            sc_ll_btechs=(HorizontalScrollView)itemView.findViewById(R.id.sc_ll_btechs);
-            btn_arrived = (Button) itemView.findViewById(R.id.btn_arrived);
-            tv_call_leader = (ImageView) itemView.findViewById(R.id.tv_call_leader);
-        }
-    }
     // simple methods for register cell state changes
     private void registerToggle(int position) {
         if (unfoldedIndexes.contains(position))
@@ -249,6 +215,43 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
 
     private void registerUnfold(int position) {
         unfoldedIndexes.add(position);
+    }
+
+    private class FoldingCellViewHolder {
+        TextView tvName, tv_leader, tv_location, tv_expected_crowd, tv_test;
+        TextView txt_name, txt_location;
+        LinearLayout ll_btechs;
+        HorizontalScrollView sc_ll_btechs;
+        ImageView tv_call_leader;
+        Button btn_start, btn_arrived, img_accept;
+        FoldingCell cell;
+
+        int ids_check[];
+        boolean bool_check[];
+
+        FoldingCellViewHolder(View itemView) {
+            initUI(itemView);
+        }
+
+        private void initUI(View itemView) {
+            tv_test = (TextView) itemView.findViewById(R.id.tv_test);
+            String tests = campDetailModelList.get(0).getProduct();
+            testsList = tests.split(",");
+            tv_test.setText("Test/Product: " + testsList[0]);
+            cell = (FoldingCell) itemView.findViewById(R.id.item_camp_folding_cell);
+            tv_leader = (TextView) itemView.findViewById(R.id.tv_leader);
+            tv_location = (TextView) itemView.findViewById(R.id.tv_location);
+            txt_location = (TextView) itemView.findViewById(R.id.txt_location);
+            tv_expected_crowd = (TextView) itemView.findViewById(R.id.tv_expected_crowd);
+            btn_start = (Button) itemView.findViewById(R.id.btn_start);
+            tvName = (TextView) itemView.findViewById(R.id.tv_name);
+            txt_name = (TextView) itemView.findViewById(R.id.txt_name);
+            img_accept = (Button) itemView.findViewById(R.id.img_accept);
+            ll_btechs = (LinearLayout) itemView.findViewById(R.id.ll_btechs);
+            sc_ll_btechs = (HorizontalScrollView) itemView.findViewById(R.id.sc_ll_btechs);
+            btn_arrived = (Button) itemView.findViewById(R.id.btn_arrived);
+            tv_call_leader = (ImageView) itemView.findViewById(R.id.tv_call_leader);
+        }
     }
 
 

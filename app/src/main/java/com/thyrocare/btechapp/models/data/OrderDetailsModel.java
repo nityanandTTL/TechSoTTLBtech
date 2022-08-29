@@ -12,6 +12,17 @@ import java.util.ArrayList;
  */
 
 public class OrderDetailsModel extends BaseModel implements Parcelable {
+    public static final Creator<OrderDetailsModel> CREATOR = new Creator<OrderDetailsModel>() {
+        @Override
+        public OrderDetailsModel createFromParcel(Parcel in) {
+            return new OrderDetailsModel(in);
+        }
+
+        @Override
+        public OrderDetailsModel[] newArray(int size) {
+            return new OrderDetailsModel[size];
+        }
+    };
     private int BrandId;//
     private String OrderNo;//
     private String Timestamp;
@@ -73,17 +84,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private boolean isPEPartner;
     private boolean isPEDSAOrder;
     private boolean IsPEDSATCPhlebo;
-
-    public String getPhone() {
-        return Phone;
-    }
-
-    public void setPhone(String phone) {
-        Phone = phone;
-    }
-
     private String Phone;
-
 
     protected OrderDetailsModel(Parcel in) {
         super(in);
@@ -147,6 +148,19 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         PPE_AlertMsg = in.readString();
         timeSlot = in.readString();
         Phone = in.readString();
+    }
+
+
+    public OrderDetailsModel() {
+        super();
+    }
+
+    public String getPhone() {
+        return Phone;
+    }
+
+    public void setPhone(String phone) {
+        Phone = phone;
     }
 
     @Override
@@ -219,18 +233,6 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         return 0;
     }
 
-    public static final Creator<OrderDetailsModel> CREATOR = new Creator<OrderDetailsModel>() {
-        @Override
-        public OrderDetailsModel createFromParcel(Parcel in) {
-            return new OrderDetailsModel(in);
-        }
-
-        @Override
-        public OrderDetailsModel[] newArray(int size) {
-            return new OrderDetailsModel[size];
-        }
-    };
-
     public String getTimestamp() {
         return Timestamp;
     }
@@ -249,6 +251,10 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public boolean isKCF() {
         return isKCF;
+    }
+
+    public void setKCF(boolean KCF) {
+        isKCF = KCF;
     }
 
     public boolean isISHclOrder() {
@@ -299,10 +305,6 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         IsPEDSATCPhlebo = IsPEDSATCPhlebo;
     }
 
-    public void setKCF(boolean KCF) {
-        isKCF = KCF;
-    }
-
     public boolean isDirectVisit() {
         return DirectVisit;
     }
@@ -341,10 +343,6 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public void setCampId(String campId) {
         CampId = campId;
-    }
-
-    public OrderDetailsModel() {
-        super();
     }
 
     public String getServicetype() {

@@ -512,11 +512,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/_20sdp"
                 android:layout_weight="2"
                 android:text="Quick Links"
                 android:textColor="@color/text_color_grey"
                 android:textSize="@dimen/_16sdp"
-                android:layout_marginRight="@dimen/_20sdp"
                 android:textStyle="bold" />
 
             <ImageView
@@ -531,10 +531,10 @@
 
 
         <View
-            android:layout_marginTop="@dimen/_10sdp"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
             android:background="@color/grey_2" />
 
@@ -562,8 +562,8 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_schedule" />
 
                 <TextView
@@ -596,8 +596,8 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_order" />
 
                 <TextView
@@ -630,8 +630,8 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_served" />
 
                 <TextView
@@ -685,8 +685,8 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_hub" />
 
                 <TextView
@@ -719,8 +719,8 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_lead" />
 
                 <TextView
@@ -753,8 +753,8 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_pick_order" />
 
                 <TextView
@@ -779,11 +779,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_20sdp"
             android:text="Others"
             android:textColor="@color/text_color_grey"
             android:textSize="@dimen/_16sdp"
-            android:textStyle="bold"
-            android:layout_margin="@dimen/_20sdp"/>
+            android:textStyle="bold" />
 
 
         <View
@@ -817,8 +817,8 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_hcw" />
 
                 <TextView
@@ -851,8 +851,8 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_pass" />
 
                 <TextView
@@ -885,8 +885,8 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_feedback_new" />
 
                 <TextView
@@ -940,8 +940,8 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_video" />
 
                 <TextView
@@ -974,8 +974,8 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_certif" />
 
                 <TextView
@@ -1008,8 +1008,8 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_log" />
 
                 <TextView

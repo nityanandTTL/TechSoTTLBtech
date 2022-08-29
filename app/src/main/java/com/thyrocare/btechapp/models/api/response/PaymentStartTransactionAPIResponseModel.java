@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class PaymentStartTransactionAPIResponseModel implements Parcelable {
+    public static final Creator<PaymentStartTransactionAPIResponseModel> CREATOR = new Creator<PaymentStartTransactionAPIResponseModel>() {
+        @Override
+        public PaymentStartTransactionAPIResponseModel createFromParcel(Parcel in) {
+            return new PaymentStartTransactionAPIResponseModel(in);
+        }
+
+        @Override
+        public PaymentStartTransactionAPIResponseModel[] newArray(int size) {
+            return new PaymentStartTransactionAPIResponseModel[size];
+        }
+    };
     private String ResponseCode;
     private String TransactionId;
     private String ResponseMessage;
@@ -15,6 +26,14 @@ public class PaymentStartTransactionAPIResponseModel implements Parcelable {
     private PaymentProcessAPIResponseModel ReqParameters;
 
     public PaymentStartTransactionAPIResponseModel() {
+    }
+
+    protected PaymentStartTransactionAPIResponseModel(Parcel in) {
+        ResponseCode = in.readString();
+        TransactionId = in.readString();
+        ResponseMessage = in.readString();
+        tokenData = in.readString();
+        ReqParameters = in.readParcelable(PaymentProcessAPIResponseModel.class.getClassLoader());
     }
 
     public String getResponseCode() {
@@ -57,14 +76,6 @@ public class PaymentStartTransactionAPIResponseModel implements Parcelable {
         ReqParameters = reqParameters;
     }
 
-    protected PaymentStartTransactionAPIResponseModel(Parcel in) {
-        ResponseCode = in.readString();
-        TransactionId = in.readString();
-        ResponseMessage = in.readString();
-        tokenData = in.readString();
-        ReqParameters = in.readParcelable(PaymentProcessAPIResponseModel.class.getClassLoader());
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(ResponseCode);
@@ -78,16 +89,4 @@ public class PaymentStartTransactionAPIResponseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<PaymentStartTransactionAPIResponseModel> CREATOR = new Creator<PaymentStartTransactionAPIResponseModel>() {
-        @Override
-        public PaymentStartTransactionAPIResponseModel createFromParcel(Parcel in) {
-            return new PaymentStartTransactionAPIResponseModel(in);
-        }
-
-        @Override
-        public PaymentStartTransactionAPIResponseModel[] newArray(int size) {
-            return new PaymentStartTransactionAPIResponseModel[size];
-        }
-    };
 }

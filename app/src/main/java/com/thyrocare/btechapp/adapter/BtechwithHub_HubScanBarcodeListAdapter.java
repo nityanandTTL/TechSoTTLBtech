@@ -27,32 +27,6 @@ public class BtechwithHub_HubScanBarcodeListAdapter extends RecyclerView.Adapter
     private ArrayList<BtechwithHub_BarcodeDataModel> barcodeModels;
     private Activity activity;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView btech_name;
-        TextView barcodetype;
-        TextView editBarcode;
-        ImageView imgGreenTick;
-        ImageView imgRedCross;
-        View itemView;
-
-        private MyViewHolder(View view) {
-            super(view);
-            this.itemView = view;
-            initComp(view);
-        }
-
-        private void initComp(View view) {
-
-            btech_name = (TextView) view.findViewById(R.id.btech_name);
-            barcodetype = (TextView) view.findViewById(R.id.barcodetype);
-            editBarcode = (TextView) view.findViewById(R.id.editbarcode);
-            imgGreenTick = (ImageView) view.findViewById(R.id.scanned_status_green);
-            imgRedCross = (ImageView) view.findViewById(R.id.scanned_status_red);
-
-        }
-    }
-
-
     public BtechwithHub_HubScanBarcodeListAdapter(ArrayList<BtechwithHub_BarcodeDataModel> barcodeModels, Activity activity) {
         this.barcodeModels = barcodeModels;
         this.activity = activity;
@@ -92,5 +66,30 @@ public class BtechwithHub_HubScanBarcodeListAdapter extends RecyclerView.Adapter
     @Override
     public int getItemCount() {
         return barcodeModels.size();
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView btech_name;
+        TextView barcodetype;
+        TextView editBarcode;
+        ImageView imgGreenTick;
+        ImageView imgRedCross;
+        View itemView;
+
+        private MyViewHolder(View view) {
+            super(view);
+            this.itemView = view;
+            initComp(view);
+        }
+
+        private void initComp(View view) {
+
+            btech_name = (TextView) view.findViewById(R.id.btech_name);
+            barcodetype = (TextView) view.findViewById(R.id.barcodetype);
+            editBarcode = (TextView) view.findViewById(R.id.editbarcode);
+            imgGreenTick = (ImageView) view.findViewById(R.id.scanned_status_green);
+            imgRedCross = (ImageView) view.findViewById(R.id.scanned_status_red);
+
+        }
     }
 }

@@ -7,7 +7,18 @@ import android.os.Parcelable;
  * Created by Orion on 5/16/2017.
  */
 
-public class PaymentNameValueModel implements Parcelable{
+public class PaymentNameValueModel implements Parcelable {
+    public static final Creator<PaymentNameValueModel> CREATOR = new Creator<PaymentNameValueModel>() {
+        @Override
+        public PaymentNameValueModel createFromParcel(Parcel in) {
+            return new PaymentNameValueModel(in);
+        }
+
+        @Override
+        public PaymentNameValueModel[] newArray(int size) {
+            return new PaymentNameValueModel[size];
+        }
+    };
     private String Key;
     private String Value;
     private String Required;
@@ -35,18 +46,6 @@ public class PaymentNameValueModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<PaymentNameValueModel> CREATOR = new Creator<PaymentNameValueModel>() {
-        @Override
-        public PaymentNameValueModel createFromParcel(Parcel in) {
-            return new PaymentNameValueModel(in);
-        }
-
-        @Override
-        public PaymentNameValueModel[] newArray(int size) {
-            return new PaymentNameValueModel[size];
-        }
-    };
 
     public String getKey() {
         return Key;

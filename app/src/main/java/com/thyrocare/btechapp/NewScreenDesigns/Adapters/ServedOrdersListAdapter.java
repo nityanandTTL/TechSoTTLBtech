@@ -47,24 +47,6 @@ public class ServedOrdersListAdapter extends RecyclerView.Adapter<ServedOrdersLi
         appPreferenceManager = new AppPreferenceManager(mActivity);
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_Name, tv_OrderID, tv_barcodes, tv_Bencount, tv_Fasting, tv_Order_status, tv_orderAmount, tv_sample_location;
-        RelativeLayout rl_receipt;
-
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tv_Name = (TextView) itemView.findViewById(R.id.tv_Name);
-            tv_OrderID = (TextView) itemView.findViewById(R.id.tv_OrderID);
-            tv_barcodes = (TextView) itemView.findViewById(R.id.tv_barcodes);
-            tv_Bencount = (TextView) itemView.findViewById(R.id.tv_Bencount);
-            tv_Fasting = (TextView) itemView.findViewById(R.id.tv_Fasting);
-            tv_Order_status = (TextView) itemView.findViewById(R.id.tv_Order_status);
-            tv_orderAmount = (TextView) itemView.findViewById(R.id.tv_orderAmount);
-            tv_sample_location = itemView.findViewById(R.id.tv_sample_location);
-            rl_receipt = itemView.findViewById(R.id.rl_receipt);
-        }
-    }
-
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -96,9 +78,9 @@ public class ServedOrdersListAdapter extends RecyclerView.Adapter<ServedOrdersLi
         holder.tv_orderAmount.setText("" + ServedOrderArylist.get(position).getAmountCollected());
         holder.tv_Bencount.setText("(" + ServedOrderArylist.get(position).getBenCount() + " Ben)");
 
-        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             holder.rl_receipt.setVisibility(View.INVISIBLE);
-        }else{
+        } else {
             holder.rl_receipt.setVisibility(View.VISIBLE);
         }
 
@@ -170,5 +152,23 @@ public class ServedOrdersListAdapter extends RecyclerView.Adapter<ServedOrdersLi
         void onCallbuttonClicked(String mobilenumber);
 
         void onReceiptDownloadClicked(String Orderno);
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView tv_Name, tv_OrderID, tv_barcodes, tv_Bencount, tv_Fasting, tv_Order_status, tv_orderAmount, tv_sample_location;
+        RelativeLayout rl_receipt;
+
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tv_Name = (TextView) itemView.findViewById(R.id.tv_Name);
+            tv_OrderID = (TextView) itemView.findViewById(R.id.tv_OrderID);
+            tv_barcodes = (TextView) itemView.findViewById(R.id.tv_barcodes);
+            tv_Bencount = (TextView) itemView.findViewById(R.id.tv_Bencount);
+            tv_Fasting = (TextView) itemView.findViewById(R.id.tv_Fasting);
+            tv_Order_status = (TextView) itemView.findViewById(R.id.tv_Order_status);
+            tv_orderAmount = (TextView) itemView.findViewById(R.id.tv_orderAmount);
+            tv_sample_location = itemView.findViewById(R.id.tv_sample_location);
+            rl_receipt = itemView.findViewById(R.id.rl_receipt);
+        }
     }
 }

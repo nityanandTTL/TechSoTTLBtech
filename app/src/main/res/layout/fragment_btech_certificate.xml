@@ -5,14 +5,15 @@
     android:layout_height="match_parent"
     tools:context=".NewScreenDesigns.Fragments.BtechCertificateFragment">
 
-    <include layout="@layout/default_toolbar"
-        android:id="@+id/appbarLayout"/>
+    <include
+        android:id="@+id/appbarLayout"
+        layout="@layout/default_toolbar" />
 
     <com.tmall.ultraviewpager.UltraViewPager
-        android:layout_below="@id/appbarLayout"
         android:id="@+id/ultra_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/appbarLayout"
         android:layout_centerInParent="true"
         android:background="@color/black" />
 

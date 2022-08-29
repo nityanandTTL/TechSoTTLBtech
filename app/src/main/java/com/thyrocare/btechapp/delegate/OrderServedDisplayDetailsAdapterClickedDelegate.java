@@ -5,5 +5,5 @@ package com.thyrocare.btechapp.delegate;
  */
 
 public interface OrderServedDisplayDetailsAdapterClickedDelegate {
-    void onCallCustomer(String customerMobile,String orderNo);
+    void onCallCustomer(String customerMobile, String orderNo);
 }

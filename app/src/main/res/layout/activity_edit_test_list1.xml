@@ -5,17 +5,16 @@
     android:orientation="vertical"
     android:padding="@dimen/dp_10">
 
-   <TextView
+    <TextView
         android:id="@+id/txtClose"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="@dimen/_30sdp"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_marginStart="@dimen/dp_10"
-       android:layout_marginLeft="@dimen/dp_10"
-       android:layout_alignParentEnd="true"
-       android:layout_alignParentRight="true"
-        android:background="@drawable/ic_dialog_close_light"
-       />
+        android:layout_marginLeft="@dimen/dp_10"
+        android:background="@drawable/ic_dialog_close_light" />
 
     <LinearLayout
         android:id="@+id/search_option"
@@ -42,8 +41,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/ll_btn"
         android:layout_below="@+id/search_option"
-        android:layout_marginBottom="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_10"
         android:groupIndicator="@null">
 
     </ExpandableListView>

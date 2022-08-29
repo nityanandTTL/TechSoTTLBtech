@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class BtechMaterialInventoryModel extends BaseModel implements Parcelable {
+    public static final Creator<BtechMaterialInventoryModel> CREATOR = new Creator<BtechMaterialInventoryModel>() {
+        @Override
+        public BtechMaterialInventoryModel createFromParcel(Parcel in) {
+            return new BtechMaterialInventoryModel(in);
+        }
+
+        @Override
+        public BtechMaterialInventoryModel[] newArray(int size) {
+            return new BtechMaterialInventoryModel[size];
+        }
+    };
     String MaterialID;
     String MaterialName;
     String VirtualStock;
@@ -38,16 +49,4 @@ public class BtechMaterialInventoryModel extends BaseModel implements Parcelable
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BtechMaterialInventoryModel> CREATOR = new Creator<BtechMaterialInventoryModel>() {
-        @Override
-        public BtechMaterialInventoryModel createFromParcel(Parcel in) {
-            return new BtechMaterialInventoryModel(in);
-        }
-
-        @Override
-        public BtechMaterialInventoryModel[] newArray(int size) {
-            return new BtechMaterialInventoryModel[size];
-        }
-    };
 }

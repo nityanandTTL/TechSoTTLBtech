@@ -1,20 +1,29 @@
 package com.thyrocare.btechapp.activity;
 
+import static android.app.PendingIntent.getActivity;
+
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
+import android.text.style.UnderlineSpan;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +43,8 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.JsonObject;
+import com.thyrocare.btechapp.BtechInterfaces.AppInterfaces;
+import com.thyrocare.btechapp.Controller.PEQrCodeController;
 import com.thyrocare.btechapp.Controller.PayTMController;
 import com.thyrocare.btechapp.Controller.PayTMVerifyController;
 import com.thyrocare.btechapp.Controller.WOEController;
@@ -53,11 +64,14 @@ import com.thyrocare.btechapp.models.api.request.PEPaymentRequestModel;
 import com.thyrocare.btechapp.models.api.request.PayTMRequestModel;
 import com.thyrocare.btechapp.models.api.request.PayTMVerifyRequestModel;
 import com.thyrocare.btechapp.models.api.response.PEPaymentResponseModel;
+import com.thyrocare.btechapp.models.api.response.PEQrCodeResponse;
+import com.thyrocare.btechapp.models.api.response.PEVerifyQRResponseModel;
 import com.thyrocare.btechapp.models.api.response.PayTMResponseModel;
 import com.thyrocare.btechapp.models.api.response.PayTMVerifyResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentStartTransactionAPIResponseModel;
+import com.thyrocare.btechapp.models.api.response.UpdatePaymentResponseModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryBarcodeDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryLabAlertsModel;
@@ -80,6 +94,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -98,6 +114,16 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 
 public class PaymentsActivity extends AbstractActivity {
     LinearLayout llPayWithCashTitle, llPayWithCash, llPaymentModes, llPaymentGateway;
+    int buttonDecider = 0;
+    EditText edtPaymentUserInputs;
+    ConnectionDetector cd;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
+    CheckoutWoeActivity checkoutWoeActivity;
+    ArrayList<BeneficiaryDetailsModel> beneficaryWiseArylst;
+    String test, location, address, newTimeaddTwoHrs = "", newTimeaddTwoHalfHrs = "";
+    boolean isRetryActive = false;
+    int retryPaymentCount = 0;
     private OrderVisitDetailsModel orderDetailsModel;
     private Activity activity;
     private AppPreferenceManager appPreferenceManager;
@@ -114,22 +140,15 @@ public class PaymentsActivity extends AbstractActivity {
     private String BillingPin = "";
     private String BillingMob = "";
     private String BillingEmail = "";
+    private CountDownTimer retryPaymentTimer;
     private PaymentStartTransactionAPIResponseModel paymentStartTransactionAPIResponseModel;
     private PaymentDoCaptureResponseAPIResponseModel paymentDoCaptureResponseAPIResponseModel;
     private boolean doubleBackToExitPressedOnce = false;
-    int buttonDecider = 0;
     private int ModeId = 0;
-    EditText edtPaymentUserInputs;
     private Global global;
-    ConnectionDetector cd;
-    TextView tv_toolbar;
-    ImageView iv_back, iv_home;
-    CheckoutWoeActivity checkoutWoeActivity;
-    ArrayList<BeneficiaryDetailsModel> beneficaryWiseArylst;
     private RecyclerView recy_paymentmode;
     private int PaymentMode;
     private int totalAmountPayable = 0;
-    String test, location, address, newTimeaddTwoHrs = "", newTimeaddTwoHalfHrs = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -265,7 +284,7 @@ public class PaymentsActivity extends AbstractActivity {
     }
 
     private void callPEPaymentModeAPI(final PEPaymentRequestModel pePaymentRequestModel) {
-
+        //pe verify payment
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<PEPaymentResponseModel> responseCall = apiInterface.PEVerifyPayment(pePaymentRequestModel);
         global.showProgressDialog(activity, "Please wait..");
@@ -306,15 +325,15 @@ public class PaymentsActivity extends AbstractActivity {
                                             callPEPaymentModeAPI(pePaymentRequestModel);
                                         }
                                     }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    Intent intent = new Intent();
-                                    intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                                    setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                    finish();
-                                }
-                            }).show();
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            Intent intent = new Intent();
+                                            intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                            setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                            finish();
+                                        }
+                                    }).show();
                         }
                     } else {
                         Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
@@ -533,7 +552,23 @@ public class PaymentsActivity extends AbstractActivity {
 //                        callPaytmLinkAPI();
                     }
                 });
+                //abhay QR view--->
+               /* View viewQRCode = activity.getLayoutInflater().inflate(R.layout.paymentsgateway_row_items, null);
+                TextView tv_ModeName = (TextView) viewQRCode.findViewById(R.id.txt_paymentModename);
+                ImageView iv_ModeImg = (ImageView) viewQRCode.findViewById(R.id.img_ident);
+                LinearLayout ll_QRCode = (LinearLayout) viewQRCode.findViewById(R.id.ll_rowmainelmnt);
 
+                iv_ModeImg.setBackground(activity.getResources().getDrawable(R.drawable.ic_baseline_qr_code_scanner_24));
+                tv_ModeName.setText("QR Code");
+                ll_QRCode.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //TODO add qr code api call here
+                        fetchPEQRCodeResponseFromAPI();
+                    }
+                });
+
+                llPaymentModes.addView(viewQRCode);*/
                 llPaymentModes.addView(ViewPaytmLink);
             } else {
                 View dynamicListview = activity.getLayoutInflater().inflate(R.layout.payment_recy, null);
@@ -567,6 +602,149 @@ public class PaymentsActivity extends AbstractActivity {
         }
     }
 
+    private void fetchPEQRCodeResponseFromAPI() {
+        PEQrCodeController qrCodeController = new PEQrCodeController(activity);
+
+        qrCodeController.callPEQrcodeApi(OrderNo, appPreferenceManager.getLoginResponseModel().getAccess_token(), new AppInterfaces.getPEQRApiResponse() {
+
+            @Override
+            public void onResponse(PEQrCodeResponse response) {
+                View vpp = getLayoutInflater().inflate(R.layout.pe_qr_code, null);
+                //image to bit
+                byte[] decodedString = Base64.decode(response.getData().getImage(), Base64.DEFAULT);
+                Bitmap bmp = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                ImageView qr_img = vpp.findViewById(R.id.iv_qr_code);
+                Button qr_verifyPayment = vpp.findViewById(R.id.btn_verify_payment);
+
+                qr_img.setImageBitmap(bmp);
+                flPayments.addView(vpp);
+                llPaymentModes.setVisibility(View.GONE);
+                qr_verifyPayment.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+
+                        peVerifyQRHandler(qrCodeController);
+
+                    }
+
+                });
+
+            }
+        });
+
+
+    }
+
+    private void peVerifyQRHandler(PEQrCodeController qrCodeController) {
+        retryPaymentCount++;
+        isRetryActive = false;
+        qrCodeController.callPEverifyQR(OrderNo, new AppInterfaces.getPEQRVerifyApiResponse() {
+            @Override
+            public void onResponse(PEVerifyQRResponseModel response) {
+                if (InputUtils.CheckEqualIgnoreCase(response.data.status, "success")) {
+                    qrCodeController.updatePayment(OrderNo, new AppInterfaces.getUpdatePaymentResponse() {
+                        @Override
+                        public void onResponse(UpdatePaymentResponseModel updatePaymentResponseModelresponse) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            if (updatePaymentResponseModelresponse.getResponse().equalsIgnoreCase("success")) {
+                                builder.setTitle("Payment Status")
+                                        .setCancelable(false)
+                                        .setMessage("Payment " + response.data.status)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent intent = new Intent();
+                                                intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
+                                                setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                                finish();
+                                            }
+                                        }).show();
+                            } else {
+                                retryQRPaymentDialog(qrCodeController);
+                            }
+                        }
+                    });
+                } else {
+                    retryQRPaymentDialog(qrCodeController);
+                }
+            }
+        });
+    }
+
+    private void retryQRPaymentDialog(PEQrCodeController qrCodeController) {
+        Dialog verifyPaymentDialog = new Dialog(activity);
+        verifyPaymentDialog.setContentView(R.layout.qr_code_verifiy_payment_dialog);
+        verifyPaymentDialog.setCancelable(false);
+        verifyPaymentDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        TextView tvRetryTimer = (TextView) verifyPaymentDialog.findViewById(R.id.tv_retry_timer);
+        TextView tvClose = (TextView) verifyPaymentDialog.findViewById(R.id.tv_close);
+        TextView tvRetry = (TextView) verifyPaymentDialog.findViewById(R.id.tv_retry);
+        verifyPaymentDialog.show();
+        if (retryPaymentCount > 2) {
+            tvClose.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
+        new CountDownTimer(20000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                String text = String.format(Locale.getDefault(), "Retry After %02d seconds",
+                        (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60) + 1);
+                tvRetryTimer.setText(text);
+            }
+
+            @Override
+            public void onFinish() {
+                tvRetryTimer.setText("");
+                tvRetry.setTextColor(getResources().getColor(R.color.colorPrimary));
+                isRetryActive = true;
+            }
+        }.start();
+        tvRetry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isRetryActive) {
+                    verifyPaymentDialog.dismiss();
+                    peVerifyQRHandler(qrCodeController);
+                }
+            }
+        });
+        tvClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (retryPaymentCount > 2) {
+                    verifyPaymentDialog.dismiss();
+                    Intent intent = new Intent();
+                    intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                    setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                    finish();
+                } else {
+//                                Toast.makeText(activity, "Please verify atleast two times to enable close button", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    //    private void startTimer() {
+//        retryPaymentTimer = new CountDownTimer(60000, 1000) {
+//            public void onTick(long millisUntilFinished) {
+//                tv_reSendMobileOTP.setText("Didn't receive OTP? \nPlease Wait: " + millisUntilFinished / 1000);
+//                tv_reSendMobileOTP.setTextColor(getResources().getColor(R.color.black));
+//
+//                tv_reSendMobileOTP.setEnabled(false);
+//                //here you can have your logic to set text to edittext
+//            }
+//
+//            public void onFinish() {
+//                tv_reSendMobileOTP.setEnabled(true);
+//                tv_reSendMobileOTP.setTextColor(getResources().getColor(R.color.colorPrimary));
+//                String mystring = new String("Resend OTP");
+//                SpannableString content = new SpannableString(mystring);
+//                content.setSpan(new UnderlineSpan(), 0, mystring.length(), 0);
+//                tv_reSendMobileOTP.setText(content);
+//            }
+//        };
+//    }
     private void fetchTransactionResponsePEonStartTransaction() {
         JsonObject jsonRequest = new JsonObject();
         try {
@@ -905,9 +1083,9 @@ public class PaymentsActivity extends AbstractActivity {
                                                 callPEPaymentModeAPI(pePaymentRequestModel);
                                             }
                                         }).setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
                                         /*Intent intent = new Intent();
                                         intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
                                         setResult(BundleConstants.PAYMENTS_FINISH, intent);
@@ -917,8 +1095,8 @@ public class PaymentsActivity extends AbstractActivity {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);*/
-                                    }
-                                }).show();
+                                            }
+                                        }).show();
                             } else {
                                 // mobileflag = 0;
                                 if (NarrationId == 1 || NarrationId == 3) {
@@ -947,14 +1125,14 @@ public class PaymentsActivity extends AbstractActivity {
                                                     fetchDoCaptureResponse(true);
                                                 }
                                             }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Intent intent = new Intent();
-                                            intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                                            setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                            finish();
-                                        }
-                                    }).show();
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Intent intent = new Intent();
+                                                    intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                                    setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                                    finish();
+                                                }
+                                            }).show();
                                 } else {
                                     initDoCaptureResponseData();
                                 }
@@ -1011,15 +1189,15 @@ public class PaymentsActivity extends AbstractActivity {
                                             callPEPaymentModeAPI(pePaymentRequestModel);
                                         }
                                     }).setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
                                     /*Intent intent = new Intent();
                                     intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
                                     setResult(BundleConstants.PAYMENTS_FINISH, intent);
                                     finish();*/
-                                }
-                            })/*.setNeutralButton("Retry", new DialogInterface.OnClickListener() {
+                                        }
+                                    })/*.setNeutralButton("Retry", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
@@ -1223,6 +1401,7 @@ public class PaymentsActivity extends AbstractActivity {
 
 
     private void CallgetDoCaptureResponseRequestApi(JsonObject jsonRequest, String URL) {
+        // TC verify payment
         try {
             PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
             Call<PaymentDoCaptureResponseAPIResponseModel> responseCall = apiInterface.CallgetDoCaptureResponseRequestApi(URL, jsonRequest);
@@ -1271,11 +1450,11 @@ public class PaymentsActivity extends AbstractActivity {
                                                     }
                                                 }
                                             }).setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            fetchRecheckResponseData();
-                                        }
-                                    }).show();
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    fetchRecheckResponseData();
+                                                }
+                                            }).show();
                                     break;
                                 }
                                 default: {
@@ -1481,11 +1660,11 @@ public class PaymentsActivity extends AbstractActivity {
                                 callVerifyAPI(orderNo);
                             }
                         }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1525,50 +1704,18 @@ public class PaymentsActivity extends AbstractActivity {
                                 callVerifyAPI(orderNo);
                             }
                         }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        Intent intent = new Intent();
-                        intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                        finish();
-                    }
-                }).show();
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Intent intent = new Intent();
+                                intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                finish();
+                            }
+                        }).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public class CheckPaymentStatusResponseReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null && intent.getAction() != null) {
-                if (intent.getAction().equals(AppConstants.CHECK_PAYMENT_RESPONSE_ACTION_IN_PROGRESS)) {
-                    //TODO show indeterminate Progress circle
-                } else if (intent.getAction().equals(AppConstants.CHECK_PAYMENT_RESPONSE_ACTION_DONE)) {
-                    if (intent.getExtras() != null) {
-                        boolean isIssueFoundInSync = false;
-                        if (intent.getExtras().containsKey(AppConstants.CHECK_PAYMENT_RESPONSE_ISSUE_FOUND)) {
-                            isIssueFoundInSync = intent.getExtras().getBoolean(AppConstants.CHECK_PAYMENT_RESPONSE_ISSUE_FOUND);
-                        }
-
-                        if (isCheckPaymentResponseServiceIsInProgress()) {
-                            stopCheckPaymentResponseService();
-                        }
-
-                        if (isIssueFoundInSync) {
-                            Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(activity, getResources().getString(R.string.sync_done_master_table), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                } else if (intent.getAction().equals(AppConstants.CHECK_PAYMENT_RESPONSE_ACTION_NO_DATA)) {
-                    Toast.makeText(activity, getResources().getString(R.string.sync_no_data), Toast.LENGTH_SHORT).show();
-                }
-            }
         }
     }
 
@@ -1612,6 +1759,38 @@ public class PaymentsActivity extends AbstractActivity {
             Logger.error(">> ....." + newTimeaddTwoHalfHrs);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public class CheckPaymentStatusResponseReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null && intent.getAction() != null) {
+                if (intent.getAction().equals(AppConstants.CHECK_PAYMENT_RESPONSE_ACTION_IN_PROGRESS)) {
+                    //TODO show indeterminate Progress circle
+                } else if (intent.getAction().equals(AppConstants.CHECK_PAYMENT_RESPONSE_ACTION_DONE)) {
+                    if (intent.getExtras() != null) {
+                        boolean isIssueFoundInSync = false;
+                        if (intent.getExtras().containsKey(AppConstants.CHECK_PAYMENT_RESPONSE_ISSUE_FOUND)) {
+                            isIssueFoundInSync = intent.getExtras().getBoolean(AppConstants.CHECK_PAYMENT_RESPONSE_ISSUE_FOUND);
+                        }
+
+                        if (isCheckPaymentResponseServiceIsInProgress()) {
+                            stopCheckPaymentResponseService();
+                        }
+
+                        if (isIssueFoundInSync) {
+                            Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(activity, getResources().getString(R.string.sync_done_master_table), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                } else if (intent.getAction().equals(AppConstants.CHECK_PAYMENT_RESPONSE_ACTION_NO_DATA)) {
+                    Toast.makeText(activity, getResources().getString(R.string.sync_no_data), Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 

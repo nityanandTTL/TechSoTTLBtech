@@ -9,7 +9,7 @@
 
     <item android:state_enabled="true">
         <shape android:shape="rectangle">
-            <padding android:bottom="@dimen/dp_5"  android:top="@dimen/dp_5" />
+            <padding android:bottom="@dimen/dp_5" android:top="@dimen/dp_5" />
             <solid android:color="#FFFFFF" />
             <stroke android:width="2dp" android:color="@color/contentBadgeTitle" />
         </shape>

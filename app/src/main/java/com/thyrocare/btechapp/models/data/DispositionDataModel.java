@@ -11,6 +11,17 @@ import java.util.ArrayList;
 
 public class DispositionDataModel extends BaseModel implements Parcelable {
 
+    public static final Creator<DispositionDataModel> CREATOR = new Creator<DispositionDataModel>() {
+        @Override
+        public DispositionDataModel createFromParcel(Parcel in) {
+            return new DispositionDataModel(in);
+        }
+
+        @Override
+        public DispositionDataModel[] newArray(int size) {
+            return new DispositionDataModel[size];
+        }
+    };
     private ArrayList<DispositionDetailsModel> allDisp;
     private String Response;
 
@@ -33,18 +44,6 @@ public class DispositionDataModel extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<DispositionDataModel> CREATOR = new Creator<DispositionDataModel>() {
-        @Override
-        public DispositionDataModel createFromParcel(Parcel in) {
-            return new DispositionDataModel(in);
-        }
-
-        @Override
-        public DispositionDataModel[] newArray(int size) {
-            return new DispositionDataModel[size];
-        }
-    };
 
     public ArrayList<DispositionDetailsModel> getAllDisp() {
         return allDisp;

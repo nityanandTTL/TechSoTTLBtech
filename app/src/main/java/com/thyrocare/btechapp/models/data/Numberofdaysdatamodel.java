@@ -10,8 +10,7 @@ public class Numberofdaysdatamodel {
     private int Day3;
     private int Day4;
 
-    private Numberofdaysdatamodel()
-    {
+    private Numberofdaysdatamodel() {
         //Prevent default constructor
     }
 

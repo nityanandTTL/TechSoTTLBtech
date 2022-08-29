@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class OrderBookingResponseBeneficiaryModel implements Parcelable {
+    public static final Creator<OrderBookingResponseBeneficiaryModel> CREATOR = new Creator<OrderBookingResponseBeneficiaryModel>() {
+        @Override
+        public OrderBookingResponseBeneficiaryModel createFromParcel(Parcel in) {
+            return new OrderBookingResponseBeneficiaryModel(in);
+        }
+
+        @Override
+        public OrderBookingResponseBeneficiaryModel[] newArray(int size) {
+            return new OrderBookingResponseBeneficiaryModel[size];
+        }
+    };
     private String oldBenIds;
     private String newBenIds;
 
@@ -29,18 +40,6 @@ public class OrderBookingResponseBeneficiaryModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<OrderBookingResponseBeneficiaryModel> CREATOR = new Creator<OrderBookingResponseBeneficiaryModel>() {
-        @Override
-        public OrderBookingResponseBeneficiaryModel createFromParcel(Parcel in) {
-            return new OrderBookingResponseBeneficiaryModel(in);
-        }
-
-        @Override
-        public OrderBookingResponseBeneficiaryModel[] newArray(int size) {
-            return new OrderBookingResponseBeneficiaryModel[size];
-        }
-    };
 
     public String getOldBenIds() {
         return oldBenIds;

@@ -7,15 +7,7 @@ import android.os.Parcelable;
  * Created by Orion on 7/4/2017.
  */
 
-public class Tsp_SendMode_DataModel implements Parcelable{
-
-    private int ModeId;
-    private String Mode;
-
-    public Tsp_SendMode_DataModel(Parcel in) {
-        ModeId = in.readInt();
-        Mode = in.readString();
-    }
+public class Tsp_SendMode_DataModel implements Parcelable {
 
     public static final Creator<Tsp_SendMode_DataModel> CREATOR = new Creator<Tsp_SendMode_DataModel>() {
         @Override
@@ -28,6 +20,13 @@ public class Tsp_SendMode_DataModel implements Parcelable{
             return new Tsp_SendMode_DataModel[size];
         }
     };
+    private int ModeId;
+    private String Mode;
+
+    public Tsp_SendMode_DataModel(Parcel in) {
+        ModeId = in.readInt();
+        Mode = in.readString();
+    }
 
     public Tsp_SendMode_DataModel() {
 

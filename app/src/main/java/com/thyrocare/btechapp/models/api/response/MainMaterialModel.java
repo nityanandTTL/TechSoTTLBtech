@@ -3,7 +3,7 @@ package com.thyrocare.btechapp.models.api.response;
 import java.util.ArrayList;
 
 public class MainMaterialModel {
-    String Code,Response,ResponseId;
+    String Code, Response, ResponseId;
     ArrayList<MaterialDetailsModel2> MaterialDetails;
 
     public MainMaterialModel() {

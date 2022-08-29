@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -51,7 +52,6 @@ import com.thyrocare.btechapp.models.api.request.OlcStartRequestModel;
 import com.thyrocare.btechapp.models.data.BtechClientsModel;
 
 
-
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.api.NetworkUtils;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
@@ -85,15 +85,15 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 
 public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
 
-    private static final String TAG = OLCPickupDetailMapDisplayFragmentActivity.class.getSimpleName();
     public static final String TAG_FRAGMENT = OLCPickupDetailMapDisplayFragmentActivity.class.getSimpleName();
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private static final String TAG = OLCPickupDetailMapDisplayFragmentActivity.class.getSimpleName();
     private GoogleMap mMap;
     private ArrayList<LatLng> MarkerPoints;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private Marker mCurrLocationMarker;
     private LocationRequest mLocationRequest;
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private Button btn_startNav, btn_arrived;
 
     private FragmentActivity activity;
@@ -101,17 +101,30 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
 
     private TextView txtName, txtAge, txtSrNo, txtAadharNo;
     private ImageView imgRelease, imgDistance;
-    private TextView txtDistance,txtorder_no,txt_title;
+    private TextView txtDistance, txtorder_no, txt_title;
     private TextView txtAddress;
     private AppPreferenceManager appPreferenceManager;
     private Geocoder geocoder;
     private List<Address> addresses;
     private ImageView title_aadhar_icon, title_distance_icon;
-    private double destlat,destlong,currentlat,currentlong;
+    private double destlat, destlong, currentlat, currentlong;
     private int Integertotaldiff;
     private boolean isStarted = false;
     private LinearLayout llCall;
     private Global global;
+
+    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        float dist = (float) (earthRadius * c);
+
+        return dist;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,11 +146,10 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
 
     }
 
-
     private void setListeners() {
         btn_arrived.setOnClickListener(this);
         btn_startNav.setOnClickListener(this);
-        double totaldist = distFrom(currentlat,currentlong,destlat,destlong);
+        double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
 
         Integertotaldiff = (int) totaldist;
 //        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
@@ -162,8 +174,8 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
     }
 
     private void initUI() {
-        txtorder_no=(TextView) findViewById(R.id.tv_orderno);
-        txt_title=(TextView) findViewById(R.id.oderno_title);
+        txtorder_no = (TextView) findViewById(R.id.tv_orderno);
+        txt_title = (TextView) findViewById(R.id.oderno_title);
         btn_arrived = (Button) findViewById(R.id.btn_arrived);
         btn_startNav = (Button) findViewById(R.id.btn_startNav);
         txtName = (TextView) findViewById(R.id.txt_name);
@@ -217,8 +229,8 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
                     }
                     MarkerPoints.add(currentLocation);
                     Logger.error("btechClientsModel lat" + btechClientsModel.getLatitude() + "long " + btechClientsModel.getLongitude());
-                    destlat= Double.parseDouble(btechClientsModel.getLatitude());
-                    destlong= Double.parseDouble(btechClientsModel.getLongitude());
+                    destlat = Double.parseDouble(btechClientsModel.getLatitude());
+                    destlong = Double.parseDouble(btechClientsModel.getLongitude());
 //                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
                     LatLng destTempLocation = new LatLng(destlat, destlong);
@@ -262,7 +274,6 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
         return url;
     }
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -341,8 +352,8 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
-        currentlat=location.getLatitude();
-        currentlong=location.getLongitude();
+        currentlat = location.getLatitude();
+        currentlong = location.getLongitude();
 
 //        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
 //        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
@@ -390,38 +401,6 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
         title_distance_icon.setVisibility(View.VISIBLE);
     }
 
-
-    // Fetches data from url passed
-    private class FetchUrl extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... url) {
-
-            // For storing data from web service
-            String data = "";
-
-            try {
-                // Fetching the data from web service
-                data = downloadUrl(url[0]);
-                MessageLogger.LogDebug("Background Task data", data.toString());
-            } catch (Exception e) {
-                MessageLogger.LogDebug("Background Task", e.toString());
-            }
-            return data;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            ParserTask parserTask = new ParserTask();
-
-            // Invokes the thread for parsing the JSON data
-            parserTask.execute(result);
-
-        }
-    }
-
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
@@ -458,78 +437,6 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
             urlConnection.disconnect();
         }
         return data;
-    }
-
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
-
-        // Parsing the data in non-ui thread
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
-
-            JSONObject jObject;
-            List<List<HashMap<String, String>>> routes = null;
-
-            try {
-                jObject = new JSONObject(jsonData[0]);
-                MessageLogger.LogDebug("ParserTask", jsonData[0].toString());
-                DataParser parser = new DataParser();
-                MessageLogger.LogDebug("ParserTask", parser.toString());
-
-                // Starts parsing data
-                routes = parser.parse(jObject);
-                MessageLogger.LogDebug("ParserTask", "Executing routes");
-                MessageLogger.LogDebug("ParserTask", routes.toString());
-
-            } catch (Exception e) {
-                MessageLogger.LogDebug("ParserTask", e.toString());
-                e.printStackTrace();
-            }
-            return routes;
-        }
-
-        // Executes in UI thread, after the parsing process
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-            ArrayList<LatLng> points;
-            PolylineOptions lineOptions = null;
-if(result!=null){
-    // Traversing through all the routes
-    for (int i = 0; i < result.size(); i++) {
-        points = new ArrayList<>();
-        lineOptions = new PolylineOptions();
-
-        // Fetching i-th route
-        List<HashMap<String, String>> path = result.get(i);
-
-        // Fetching all the points in i-th route
-        for (int j = 0; j < path.size(); j++) {
-            HashMap<String, String> point = path.get(j);
-
-            double lat = Double.parseDouble(point.get("lat"));
-            double lng = Double.parseDouble(point.get("lng"));
-            LatLng position = new LatLng(lat, lng);
-
-            points.add(position);
-        }
-
-        // Adding all the points in the route to LineOptions
-        lineOptions.addAll(points);
-        lineOptions.width(10);
-        lineOptions.color(Color.RED);
-
-        MessageLogger.LogDebug("onPostExecute", "onPostExecute lineoptions decoded");
-
-    }
-
-    // Drawing polyline in the Google Map for the i-th route
-    if (lineOptions != null) {
-        mMap.addPolyline(lineOptions);
-    } else {
-        MessageLogger.LogDebug("onPostExecute", "without Polylines drawn");
-    }
-}
-
-        }
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -606,21 +513,22 @@ if(result!=null){
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
-                    if (olcStartRequestModel.getType() == 3){
+                    if (olcStartRequestModel.getType() == 3) {
                         Intent intentResult = new Intent();
                         intentResult.putExtra(BundleConstants.BTECH_CLIENTS_MODEL, btechClientsModel);
                         setResult(BundleConstants.BCMD_ARRIVED, intentResult);
                         finish();
-                    }else{
+                    } else {
                         btn_startNav.setVisibility(View.GONE);
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q="+destlat+","+destlong));
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + destlat + "," + destlong));
                         startActivity(intent);
                         btn_arrived.setVisibility(View.VISIBLE);
                     }
-                }else{
+                } else {
                     global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -633,7 +541,7 @@ if(result!=null){
                               boolean shouldAdd, String destinationFragmetTag, int frameLayoutContainerId, String CurrentFragmentTag) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction ft = manager.beginTransaction();
-        if (shouldAnimate){
+        if (shouldAnimate) {
             // ft.setCustomAnimations(R.animator.fragment_slide_left_enter,
             // R.animator.fragment_slide_left_exit,
             // R.animator.fragment_slide_right_enter,
@@ -644,7 +552,7 @@ if(result!=null){
 
         //ft.add(R.id.fr_layout_container, fragment, TAG_FRAGMENT);
 
-        if (shouldAdd){
+        if (shouldAdd) {
 			/*
 			 * here you can create named backstack for realize another logic.
 			   <<<<<<< HEAD
@@ -664,29 +572,120 @@ if(result!=null){
 			 */
             ft.addToBackStack(destinationFragmetTag);
         } else {
-			/*
-			 * and remove named backstack:
-			 * manager.popBackStack("name of your backstack",
-			 * FragmentManager.POP_BACK_STACK_INCLUSIVE); or remove whole:
-			 * manager.popBackStack(null,
-			 * FragmentManager.POP_BACK_STACK_INCLUSIVE);
-			 */
+            /*
+             * and remove named backstack:
+             * manager.popBackStack("name of your backstack",
+             * FragmentManager.POP_BACK_STACK_INCLUSIVE); or remove whole:
+             * manager.popBackStack(null,
+             * FragmentManager.POP_BACK_STACK_INCLUSIVE);
+             */
             manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
 
         ft.commit();
     }
-    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
-        double earthRadius = 6371000; //meters
-        double dLat = Math.toRadians(lat2-lat1);
-        double dLng = Math.toRadians(lng2-lng1);
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLng/2) * Math.sin(dLng/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        float dist = (float) (earthRadius * c);
 
-        return dist;
+    // Fetches data from url passed
+    private class FetchUrl extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... url) {
+
+            // For storing data from web service
+            String data = "";
+
+            try {
+                // Fetching the data from web service
+                data = downloadUrl(url[0]);
+                MessageLogger.LogDebug("Background Task data", data.toString());
+            } catch (Exception e) {
+                MessageLogger.LogDebug("Background Task", e.toString());
+            }
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            ParserTask parserTask = new ParserTask();
+
+            // Invokes the thread for parsing the JSON data
+            parserTask.execute(result);
+
+        }
+    }
+
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
+
+        // Parsing the data in non-ui thread
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+
+            JSONObject jObject;
+            List<List<HashMap<String, String>>> routes = null;
+
+            try {
+                jObject = new JSONObject(jsonData[0]);
+                MessageLogger.LogDebug("ParserTask", jsonData[0].toString());
+                DataParser parser = new DataParser();
+                MessageLogger.LogDebug("ParserTask", parser.toString());
+
+                // Starts parsing data
+                routes = parser.parse(jObject);
+                MessageLogger.LogDebug("ParserTask", "Executing routes");
+                MessageLogger.LogDebug("ParserTask", routes.toString());
+
+            } catch (Exception e) {
+                MessageLogger.LogDebug("ParserTask", e.toString());
+                e.printStackTrace();
+            }
+            return routes;
+        }
+
+        // Executes in UI thread, after the parsing process
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+            ArrayList<LatLng> points;
+            PolylineOptions lineOptions = null;
+            if (result != null) {
+                // Traversing through all the routes
+                for (int i = 0; i < result.size(); i++) {
+                    points = new ArrayList<>();
+                    lineOptions = new PolylineOptions();
+
+                    // Fetching i-th route
+                    List<HashMap<String, String>> path = result.get(i);
+
+                    // Fetching all the points in i-th route
+                    for (int j = 0; j < path.size(); j++) {
+                        HashMap<String, String> point = path.get(j);
+
+                        double lat = Double.parseDouble(point.get("lat"));
+                        double lng = Double.parseDouble(point.get("lng"));
+                        LatLng position = new LatLng(lat, lng);
+
+                        points.add(position);
+                    }
+
+                    // Adding all the points in the route to LineOptions
+                    lineOptions.addAll(points);
+                    lineOptions.width(10);
+                    lineOptions.color(Color.RED);
+
+                    MessageLogger.LogDebug("onPostExecute", "onPostExecute lineoptions decoded");
+
+                }
+
+                // Drawing polyline in the Google Map for the i-th route
+                if (lineOptions != null) {
+                    mMap.addPolyline(lineOptions);
+                } else {
+                    MessageLogger.LogDebug("onPostExecute", "without Polylines drawn");
+                }
+            }
+
+        }
     }
 
    /* @Override

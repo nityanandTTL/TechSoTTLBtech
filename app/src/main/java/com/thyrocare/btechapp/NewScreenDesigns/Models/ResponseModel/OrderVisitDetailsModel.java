@@ -9,6 +9,17 @@ import java.util.ArrayList;
 
 public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
 
+    public static final Creator<OrderVisitDetailsModel> CREATOR = new Creator<OrderVisitDetailsModel>() {
+        @Override
+        public OrderVisitDetailsModel createFromParcel(Parcel in) {
+            return new OrderVisitDetailsModel(in);
+        }
+
+        @Override
+        public OrderVisitDetailsModel[] newArray(int size) {
+            return new OrderVisitDetailsModel[size];
+        }
+    };
     private String VisitId;
     private String Slot;
     private String Response;
@@ -34,18 +45,6 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
         AppointmentDate = in.readString();
         BtechName = in.readString();
     }
-
-    public static final Creator<OrderVisitDetailsModel> CREATOR = new Creator<OrderVisitDetailsModel>() {
-        @Override
-        public OrderVisitDetailsModel createFromParcel(Parcel in) {
-            return new OrderVisitDetailsModel(in);
-        }
-
-        @Override
-        public OrderVisitDetailsModel[] newArray(int size) {
-            return new OrderVisitDetailsModel[size];
-        }
-    };
 
     public String getBtechName() {
         return BtechName;

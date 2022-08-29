@@ -48,8 +48,7 @@ public class HCWController {
                             } else {
                                 globalClass.showCustomToast(activity, "" + hcwResponseModel.getMsg());
                             }
-                        }
-                        else {
+                        } else {
                             globalClass.showCustomToast(activity, "Something went wrong. Try after sometime");
                         }
                     } catch (Exception e) {

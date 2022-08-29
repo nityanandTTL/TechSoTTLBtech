@@ -40,9 +40,9 @@ public class OtpListenerUtil {
                 MessageLogger.PrintMsg("On OnFailure");
             }
         });
-        if (!isBroardcastReceiverRegistered){
+        if (!isBroardcastReceiverRegistered) {
             registerBroadcastReceiver();
-        }else{
+        } else {
             mActivity.unregisterReceiver(smsBroadcastReceiver);
             registerBroadcastReceiver();
         }
@@ -72,14 +72,14 @@ public class OtpListenerUtil {
         String OTP = "";
         Pattern pattern = Pattern.compile("(|^)\\d{4}");
         Matcher matcher = pattern.matcher(message);
-        if (matcher.find()){
+        if (matcher.find()) {
             OTP = matcher.group(0);
         }
-        return  OTP;
+        return OTP;
     }
 
     public static void UnregisteredReceiver() {
-        if (isBroardcastReceiverRegistered){
+        if (isBroardcastReceiverRegistered) {
             isBroardcastReceiverRegistered = false;
             mActivity.unregisterReceiver(smsBroadcastReceiver);
         }

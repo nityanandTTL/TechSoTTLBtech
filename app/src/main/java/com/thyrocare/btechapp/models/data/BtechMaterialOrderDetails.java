@@ -11,12 +11,30 @@ import java.util.ArrayList;
 
 public class BtechMaterialOrderDetails extends BaseModel implements Parcelable {
 
+    public static final Creator<BtechMaterialOrderDetails> CREATOR = new Creator<BtechMaterialOrderDetails>() {
+        @Override
+        public BtechMaterialOrderDetails createFromParcel(Parcel in) {
+            return new BtechMaterialOrderDetails(in);
+        }
+
+        @Override
+        public BtechMaterialOrderDetails[] newArray(int size) {
+            return new BtechMaterialOrderDetails[size];
+        }
+    };
     private String OrderDate;
     private int OrderID;
     private ArrayList<OrderMaterialDetails> OMDtls;
 
     public BtechMaterialOrderDetails() {
         super();
+    }
+
+    protected BtechMaterialOrderDetails(Parcel in) {
+        super(in);
+        OrderDate = in.readString();
+        OrderID = in.readInt();
+        OMDtls = in.createTypedArrayList(OrderMaterialDetails.CREATOR);
     }
 
     public String getOrderDate() {
@@ -43,13 +61,6 @@ public class BtechMaterialOrderDetails extends BaseModel implements Parcelable {
         this.OMDtls = OMDtls;
     }
 
-    protected BtechMaterialOrderDetails(Parcel in) {
-        super(in);
-        OrderDate = in.readString();
-        OrderID = in.readInt();
-        OMDtls = in.createTypedArrayList(OrderMaterialDetails.CREATOR);
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
@@ -62,16 +73,4 @@ public class BtechMaterialOrderDetails extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BtechMaterialOrderDetails> CREATOR = new Creator<BtechMaterialOrderDetails>() {
-        @Override
-        public BtechMaterialOrderDetails createFromParcel(Parcel in) {
-            return new BtechMaterialOrderDetails(in);
-        }
-
-        @Override
-        public BtechMaterialOrderDetails[] newArray(int size) {
-            return new BtechMaterialOrderDetails[size];
-        }
-    };
 }

@@ -16,7 +16,7 @@ public class PermissionUtils {
     public static void AsKPermissionatSplashScreen(final Activity activity, PermissionListener permissionListener) {
         TedPermission.with(activity)
                 .setPermissions(android.Manifest.permission.ACCESS_FINE_LOCATION,
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION )
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 .setRationaleMessage(ConstantsMessages.PermissionRequiredMsg)
                 .setRationaleConfirmText("OK")
                 .setDeniedMessage(ConstantsMessages.PermissionRejectedMsg)
@@ -33,7 +33,7 @@ public class PermissionUtils {
                 .setPermissionListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-                        if (permissionListener != null){
+                        if (permissionListener != null) {
                             permissionListener.onPermissionGranted();
                         }
                     }
@@ -55,7 +55,7 @@ public class PermissionUtils {
                 .setPermissionListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-                        if (permissionListener != null){
+                        if (permissionListener != null) {
                             permissionListener.onPermissionGranted();
                         }
                     }
@@ -77,7 +77,7 @@ public class PermissionUtils {
                 .setPermissionListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-                        if (permissionListener != null){
+                        if (permissionListener != null) {
                             permissionListener.onPermissionGranted();
                         }
                     }
@@ -100,7 +100,7 @@ public class PermissionUtils {
                 .setPermissionListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-                        if (permissionListener != null){
+                        if (permissionListener != null) {
                             permissionListener.onPermissionGranted();
                         }
                     }
@@ -122,7 +122,7 @@ public class PermissionUtils {
                 .setPermissionListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-                        if (permissionListener != null){
+                        if (permissionListener != null) {
                             permissionListener.onPermissionGranted();
                         }
                     }
@@ -144,7 +144,7 @@ public class PermissionUtils {
                 .setPermissionListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-                        if (permissionListener != null){
+                        if (permissionListener != null) {
                             permissionListener.onPermissionGranted();
                         }
                     }
@@ -159,14 +159,14 @@ public class PermissionUtils {
 
     public static void AsKPermissionToCall(final Activity activity, final OnPermissionSuccessListener permissionListener) {
         TedPermission.with(activity)
-                .setPermissions( android.Manifest.permission.CALL_PHONE, android.Manifest.permission.ACCESS_NETWORK_STATE)
+                .setPermissions(android.Manifest.permission.CALL_PHONE, android.Manifest.permission.ACCESS_NETWORK_STATE)
                 .setRationaleMessage("We need permission to call from your device.")
                 .setRationaleConfirmText("OK")
                 .setDeniedMessage(ConstantsMessages.PermissionRejectedMsg)
                 .setPermissionListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-                        if (permissionListener != null){
+                        if (permissionListener != null) {
                             permissionListener.onPermissionGranted();
                         }
                     }
@@ -188,7 +188,7 @@ public class PermissionUtils {
                 .setPermissionListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-                        if (permissionListener != null){
+                        if (permissionListener != null) {
                             permissionListener.onPermissionGranted();
                         }
                     }
@@ -210,7 +210,7 @@ public class PermissionUtils {
                 .setPermissionListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-                        if (permissionListener != null){
+                        if (permissionListener != null) {
                             permissionListener.onPermissionGranted();
                         }
                     }
@@ -233,7 +233,7 @@ public class PermissionUtils {
                 .setPermissionListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-                        if (permissionListener != null){
+                        if (permissionListener != null) {
                             permissionListener.onPermissionGranted();
                         }
                     }
@@ -251,7 +251,7 @@ public class PermissionUtils {
         this.onPermissionSuccessListener = onPermissionSuccessListener;
     }
 
-    public interface OnPermissionSuccessListener  {
+    public interface OnPermissionSuccessListener {
         void onPermissionGranted();
     }
 }

@@ -11,108 +11,108 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-	public static final String DB_NAME = "dhb_db";
+    public static final String DB_NAME = "dhb_db";
 
-	public static final int DB_VERSION = 15;
+    public static final int DB_VERSION = 15;
 
-	private static DbHelper dbHelper;
+    private static DbHelper dbHelper;
 
-	public Context context;
+    public Context context;
 
-	private SQLiteDatabase mDatabase;
+    private SQLiteDatabase mDatabase;
 
-	private AtomicInteger mOpenCounter = new AtomicInteger();
+    private AtomicInteger mOpenCounter = new AtomicInteger();
 
-	private OperationResult migrationResult = new OperationResult(
-	        OperationResult.OPERATION_SUCCESSFUL);
+    private OperationResult migrationResult = new OperationResult(
+            OperationResult.OPERATION_SUCCESSFUL);
 
-	public static synchronized DbHelper sharedDbHelper() {
-		if (dbHelper == null){
-			throw new IllegalStateException(
-			              "DbHelper is not initialized. Did you forget to call DbHelper.init(Context context) method?");
-		}
-
-		return dbHelper;
-	}
-
-	public static void init(Context context) {
-		dbHelper = new DbHelper(context);
-	}
-
-	public DbHelper(Context context) {
-		super(context, DB_NAME, null, DB_VERSION);
-		this.context = context;
+    public DbHelper(Context context) {
+        super(context, DB_NAME, null, DB_VERSION);
+        this.context = context;
 //        Logger.debug("Database Path : " + context.getDatabasePath(DB_NAME).getAbsolutePath());
-	}
+    }
 
-	@Override
-	public void onCreate(SQLiteDatabase db) {
-		DbMigrationHelper migrationHelper = new DbMigrationHelper(db, context.getApplicationContext());
-		OperationResult result = migrationHelper.migrateToDbVersion(1);
-		migrationResult = result;
+    public static synchronized DbHelper sharedDbHelper() {
+        if (dbHelper == null) {
+            throw new IllegalStateException(
+                    "DbHelper is not initialized. Did you forget to call DbHelper.init(Context context) method?");
+        }
 
-		int currentRequiredVersion = DB_VERSION;
+        return dbHelper;
+    }
 
-		if (currentRequiredVersion > 1){
-			result = migrationHelper.upgradeToVersion(1, currentRequiredVersion);
-			migrationResult = result;
-		}
+    public static void init(Context context) {
+        dbHelper = new DbHelper(context);
+    }
 
-		if (migrationResult.getResult() == OperationResult.OPERATION_SUCCESSFUL){
-			Logger.info("Successfully created DB with starting version: "
-			            + currentRequiredVersion);
-			Logger.debug("Successfully created DB with starting version: ");
-		} else {
-			Logger.info("Failed to create DB with starting version: "
-			            + currentRequiredVersion);
-			Logger.debug("Failed to create DB with starting version: \"");
-		}
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        DbMigrationHelper migrationHelper = new DbMigrationHelper(db, context.getApplicationContext());
+        OperationResult result = migrationHelper.migrateToDbVersion(1);
+        migrationResult = result;
 
-	}
+        int currentRequiredVersion = DB_VERSION;
 
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (currentRequiredVersion > 1) {
+            result = migrationHelper.upgradeToVersion(1, currentRequiredVersion);
+            migrationResult = result;
+        }
 
-		DbMigrationHelper migrationHelper = new DbMigrationHelper(db, context.getApplicationContext());
-		OperationResult result = migrationHelper.upgradeToVersion(oldVersion,
-		                                                          newVersion);
-		migrationResult = result;
+        if (migrationResult.getResult() == OperationResult.OPERATION_SUCCESSFUL) {
+            Logger.info("Successfully created DB with starting version: "
+                    + currentRequiredVersion);
+            Logger.debug("Successfully created DB with starting version: ");
+        } else {
+            Logger.info("Failed to create DB with starting version: "
+                    + currentRequiredVersion);
+            Logger.debug("Failed to create DB with starting version: \"");
+        }
 
-		if (migrationResult.getResult() == OperationResult.OPERATION_SUCCESSFUL){
-			Logger.info("Successfully migrated DB with from version: "
-			            + oldVersion + " to " + newVersion);
-		} else {
-			Logger.info("Failed to migrated DB with from version: "
-			            + oldVersion + " to " + newVersion);
-		}
-	}
+    }
 
-	public OperationResult getMigrationResult() {
-		return migrationResult;
-	}
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-	public synchronized SQLiteDatabase openDatabase() {
-		if (mOpenCounter.incrementAndGet() == 1){
-			// Opening new database
-			mDatabase = dbHelper.getWritableDatabase();
+        DbMigrationHelper migrationHelper = new DbMigrationHelper(db, context.getApplicationContext());
+        OperationResult result = migrationHelper.upgradeToVersion(oldVersion,
+                newVersion);
+        migrationResult = result;
 
-		}
+        if (migrationResult.getResult() == OperationResult.OPERATION_SUCCESSFUL) {
+            Logger.info("Successfully migrated DB with from version: "
+                    + oldVersion + " to " + newVersion);
+        } else {
+            Logger.info("Failed to migrated DB with from version: "
+                    + oldVersion + " to " + newVersion);
+        }
+    }
 
-		if (mDatabase == null || (mDatabase != null && !mDatabase.isOpen())){
+    public OperationResult getMigrationResult() {
+        return migrationResult;
+    }
 
-			mDatabase = dbHelper.getWritableDatabase();
+    public synchronized SQLiteDatabase openDatabase() {
+        if (mOpenCounter.incrementAndGet() == 1) {
+            // Opening new database
+            mDatabase = dbHelper.getWritableDatabase();
 
-		}
+        }
 
-		return mDatabase;
-	}
+        if (mDatabase == null || (mDatabase != null && !mDatabase.isOpen())) {
 
-	public synchronized void closeDatabase() {
-		if (mOpenCounter.decrementAndGet() == 0){
-			// Closing database
-			mDatabase.close();
+            mDatabase = dbHelper.getWritableDatabase();
 
-		}
-	}
+        }
+
+        return mDatabase;
+    }
+
+    public synchronized void closeDatabase() {
+        if (mOpenCounter.decrementAndGet() == 0) {
+            // Closing database
+            mDatabase.close();
+
+        }
+    }
 
 }

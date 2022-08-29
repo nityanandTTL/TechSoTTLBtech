@@ -69,7 +69,7 @@ public class TSPLMESampleDropController {
     public void CallGetSampleDropDetailsbyTSPLME(String Id, int batch_f) {
 
         if (isNetworkAvailable(mContext)) {
-            CallgetSampleDropDetailsbyTSPLMEApi(Id,batch_f);
+            CallgetSampleDropDetailsbyTSPLMEApi(Id, batch_f);
         } else {
             Toast.makeText(mContext, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
         }
@@ -87,7 +87,7 @@ public class TSPLMESampleDropController {
     private void CallgetSampleDropDetailsbyTSPLMEApi(String Id, int batch_f) {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.Dcrp_Hex(mContext.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>> responseCall = apiInterface.CallgetSampleDropDetailsbyTSPLMEApi(Id, batch_f);
-        globalclass.showProgressDialog(mContext,"Please wait..");
+        globalclass.showProgressDialog(mContext, "Please wait..");
         responseCall.enqueue(new Callback<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>>() {
             @Override
             public void onResponse(Call<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>> call, retrofit2.Response<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>> response) {
@@ -116,6 +116,7 @@ public class TSPLMESampleDropController {
                     Toast.makeText(mContext, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>> call, Throwable t) {
                 globalclass.hideProgressDialogg();
@@ -125,26 +126,27 @@ public class TSPLMESampleDropController {
     }
 
 
-    private void CallPostScannedMasterBarcodebyLMEAPI(SendScannedbarcodeLME[] n){
+    private void CallPostScannedMasterBarcodebyLMEAPI(SendScannedbarcodeLME[] n) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.Dcrp_Hex(mContext.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallPostScannedMasterBarcodebyLMEAPI(n);
-        globalclass.showProgressDialog(mContext,"Please wait..");
+        globalclass.showProgressDialog(mContext, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 globalclass.hideProgressDialogg();
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     TastyToast.makeText(mContext, "" + response.body(), TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
                     if (flag == 1) {
                         mLME_OrdersDisplayFragment.StartButtonClickedSuccess();
                     } else if (flag == 3) {
                         mLMEMapDisplayFragmentActivity.EndButtonClickedSuccess();
                     }
-                }else{
+                } else {
                     Toast.makeText(mContext, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalclass.hideProgressDialogg();
@@ -164,7 +166,7 @@ public class TSPLMESampleDropController {
     private void CallgetWLMISApi(String Id) {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.Dcrp_Hex(mContext.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<WLMISDetailsModel>> responseCall = apiInterface.CallgetWLMISApi(Id);
-        globalclass.showProgressDialog(mContext,"Please wait..");
+        globalclass.showProgressDialog(mContext, "Please wait..");
         responseCall.enqueue(new Callback<ArrayList<WLMISDetailsModel>>() {
             @Override
             public void onResponse(Call<ArrayList<WLMISDetailsModel>> call, retrofit2.Response<ArrayList<WLMISDetailsModel>> response) {
@@ -192,6 +194,7 @@ public class TSPLMESampleDropController {
                     Toast.makeText(mContext, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<WLMISDetailsModel>> call, Throwable t) {
                 globalclass.hideProgressDialogg();
@@ -212,7 +215,7 @@ public class TSPLMESampleDropController {
     private void CallgetWLMISDateWiseApi(String Id) {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.Dcrp_Hex(mContext.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<DateWiseWLMISDetailsModel>> responseCall = apiInterface.CallgetWLMISDateWiseApi(Id);
-        globalclass.showProgressDialog(mContext,"Please wait..");
+        globalclass.showProgressDialog(mContext, "Please wait..");
         responseCall.enqueue(new Callback<ArrayList<DateWiseWLMISDetailsModel>>() {
             @Override
             public void onResponse(Call<ArrayList<DateWiseWLMISDetailsModel>> call, retrofit2.Response<ArrayList<DateWiseWLMISDetailsModel>> response) {
@@ -240,6 +243,7 @@ public class TSPLMESampleDropController {
                     Toast.makeText(mContext, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<DateWiseWLMISDetailsModel>> call, Throwable t) {
                 globalclass.hideProgressDialogg();

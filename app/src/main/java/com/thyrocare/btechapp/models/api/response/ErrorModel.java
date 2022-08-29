@@ -3,68 +3,63 @@ package com.thyrocare.btechapp.models.api.response;
 
 public class ErrorModel {
 
-	// @SerializedName("TYPE")
-	private String CustomErrorCode;
+    // @SerializedName("TYPE")
+    private String CustomErrorCode;
 
-	// @SerializedName("MESSAGE")
-	private String Message;
+    // @SerializedName("MESSAGE")
+    private String Message;
+    private String Response;
+    // @SerializedName("STATUSCODE")
+    private int status;
+    private long id;
+    private long errorId;
 
-	public String getResponse() {
-		return Response;
-	}
+    public String getResponse() {
+        return Response;
+    }
 
-	public void setResponse(String response) {
-		Response = response;
-	}
+    public void setResponse(String response) {
+        Response = response;
+    }
 
-	private String Response;
+    public String getCustomErrorCode() {
+        return CustomErrorCode;
+    }
 
-	// @SerializedName("STATUSCODE")
-	private int status;
+    public void setCustomErrorCode(String customErrorCode) {
+        this.CustomErrorCode = customErrorCode;
+    }
 
-	private long id;
+    public String getMessage() {
+        return Message;
+    }
 
-	private long errorId;
+    public void setMessage(String message) {
+        this.Message = message;
+    }
 
+    public int getStatus() {
+        return status;
+    }
 
-	public String getCustomErrorCode() {
-		return CustomErrorCode;
-	}
+    public void setStatus(int statusCode) {
+        this.status = statusCode;
+    }
 
-	public void setCustomErrorCode(String customErrorCode) {
-		this.CustomErrorCode = customErrorCode;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public String getMessage() {
-		return Message;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setMessage(String message) {
-		this.Message = message;
-	}
+    public long getErrorId() {
+        return errorId;
+    }
 
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int statusCode) {
-		this.status = statusCode;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public long getErrorId() {
-		return errorId;
-	}
-
-	public void setErrorId(long errorId) {
-		this.errorId = errorId;
-	}
+    public void setErrorId(long errorId) {
+        this.errorId = errorId;
+    }
 
 }

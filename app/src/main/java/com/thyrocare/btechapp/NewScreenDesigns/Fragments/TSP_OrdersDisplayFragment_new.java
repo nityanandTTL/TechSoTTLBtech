@@ -97,16 +97,19 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
  */
 public class TSP_OrdersDisplayFragment_new extends AppCompatActivity {
     public static final String TAG_FRAGMENT = TSP_OrdersDisplayFragment_new.class.getSimpleName();
+    private static SwipeRefreshLayout swipeRefreshLayout;
     Activity activity;
     Global global;
     ConnectionDetector connectionDetector;
     LinearLayoutManager linearLayoutManager;
-    private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels;
     OrderDetailsModel orderDetailsModel;
     AppPreferenceManager appPreferenceManager;
+    Dialog dialog_ready;
+    TextView tv_toolbar;
+    ImageView iv_home, iv_back;
+    private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels;
     private RecyclerView recyOrderList;
     private TextView txtNoRecord, txtEstDistance, txtEstEarnings, txtEstKits;
-    private static SwipeRefreshLayout swipeRefreshLayout;
     private TSP_OrderDisplayAdapterNew tsp_orderDisplayAdapter_new;
     private ConfirmRequestReleaseDialog crr;
     private ArrayList<DispositionDetailsModel> remarksDataModelsarr;
@@ -114,12 +117,8 @@ public class TSP_OrdersDisplayFragment_new extends AppCompatActivity {
     private ArrayList<String> remarks_notc_arr;
     private DispositionDetailsModel remarksDataModel;
     private String remarks_notc_str = "";
-
-    Dialog dialog_ready;
     private int DispositionStatusCode;
     private ProgressDialog progressDialog;
-    TextView tv_toolbar;
-    ImageView iv_home,iv_back;
 
     /*public TSP_OrdersDisplayFragment_new() {
         // Required empty public constructor
@@ -705,6 +704,75 @@ public class TSP_OrdersDisplayFragment_new extends AppCompatActivity {
         });
     }
 
+    private void CallInitialiseProgressDialog() {
+        if (activity != null) {
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("");
+            progressDialog.setMessage("Please wait...");
+            progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            progressDialog.setCancelable(true);
+            progressDialog.setCanceledOnTouchOutside(false);
+            try {
+                progressDialog.show();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void CallCloseProgressDialog() {
+        try {
+
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void callOrderStatusChangeApi(OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
+
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
+        global.showProgressDialog(activity, getResources().getString(R.string.progress_message_changing_order_status_please_wait));
+
+        responseCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                global.hideProgressDialog(activity);
+                if (response.code() == 200 || response.code() == 204) {
+                    TastyToast.makeText(activity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                    fetchData();
+                } else {
+                    try {
+                        Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                global.hideProgressDialog(activity);
+                Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (connectionDetector.isConnectingToInternet()) {
+            fetchData();
+        } else {
+            global.showCustomToast(activity, CHECK_INTERNET_CONN, Toast.LENGTH_SHORT);
+        }
+    }
+
     public class Btech_AsyncLoadBookingFreqApi extends AsyncTask<Void, Void, String> {
 
         SetDispositionDataModel setDispositionDataModel;
@@ -797,34 +865,6 @@ public class TSP_OrdersDisplayFragment_new extends AppCompatActivity {
         }
     }
 
-    private void CallInitialiseProgressDialog() {
-        if (activity != null) {
-            progressDialog = new ProgressDialog(activity);
-            progressDialog.setTitle("");
-            progressDialog.setMessage("Please wait...");
-            progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            progressDialog.setCancelable(true);
-            progressDialog.setCanceledOnTouchOutside(false);
-            try {
-                progressDialog.show();
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void CallCloseProgressDialog() {
-        try {
-
-            if (progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public class CConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
         @Override
         public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
@@ -844,48 +884,6 @@ public class TSP_OrdersDisplayFragment_new extends AppCompatActivity {
         @Override
         public void onCancelButtonClicked() {
 
-        }
-    }
-
-    private void callOrderStatusChangeApi(OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
-
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
-        global.showProgressDialog(activity, getResources().getString(R.string.progress_message_changing_order_status_please_wait));
-
-        responseCall.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog(activity);
-                if (response.code() == 200 || response.code() == 204) {
-                    TastyToast.makeText(activity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-                    fetchData();
-                } else {
-                    try {
-                        Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog(activity);
-                Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (connectionDetector.isConnectingToInternet()) {
-            fetchData();
-        } else {
-            global.showCustomToast(activity, CHECK_INTERNET_CONN, Toast.LENGTH_SHORT);
         }
     }
 }

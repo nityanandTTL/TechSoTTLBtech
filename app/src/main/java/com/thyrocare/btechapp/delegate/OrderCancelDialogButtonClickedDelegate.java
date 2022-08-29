@@ -7,5 +7,6 @@ import com.thyrocare.btechapp.models.data.OrderDetailsModel;
  */
 public interface OrderCancelDialogButtonClickedDelegate {
     void onOkButtonClicked(OrderDetailsModel orderVisitDetailsModel, String remark, int status);
+
     void onCancelButtonClicked();
 }

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_marginTop="10dp"
     android:id="@+id/ll_view_btech"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/ll_layout_title_select_tests"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/popup_background">
+        android:background="@drawable/popup_background"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/txt_header"

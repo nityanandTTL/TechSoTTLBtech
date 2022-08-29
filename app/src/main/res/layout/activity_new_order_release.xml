@@ -21,15 +21,15 @@
         android:id="@+id/edt_other"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/ll_main"
         android:layout_margin="@dimen/_5sdp"
-        android:paddingTop="@dimen/_2sdp"
-        android:paddingLeft="@dimen/_10sdp"
         android:background="@drawable/editbox_bg"
         android:gravity="start"
-        android:lines="4"
         android:hint="Enter remarks*"
+        android:lines="4"
         android:maxLines="4"
-        android:layout_above="@+id/ll_main"
+        android:paddingLeft="@dimen/_10sdp"
+        android:paddingTop="@dimen/_2sdp"
         android:visibility="gone" />
 
     <LinearLayout

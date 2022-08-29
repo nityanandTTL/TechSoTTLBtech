@@ -47,15 +47,15 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SO
 
 public class KIOSK_Scanner_Activity extends AppCompatActivity {
 
-    private CardView cdView_ScanQRCode;
+    public static final String TAG_FRAGMENT = "KIOSK_Scanner_Activity";
     Activity mActivity;
     KIOSK_Scanner_Activity mKIOSK_Scanner_Activity;
+    TextView tv_toolbar;
+    ImageView iv_home, iv_back;
+    private CardView cdView_ScanQRCode;
     private Global global;
     private AppPreferenceManager appPreferenceManager;
     private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels = new ArrayList<>();
-    public static final String TAG_FRAGMENT = "KIOSK_Scanner_Activity";
-    TextView tv_toolbar;
-    ImageView iv_home, iv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,10 +169,10 @@ public class KIOSK_Scanner_Activity extends AppCompatActivity {
                         FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
 
                         if (CheckisServiced(fetchOrderDetailsResponseModel)) {
-                            if(fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).getStatus().toString().trim().equalsIgnoreCase("serviced")){
+                            if (fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).getStatus().toString().trim().equalsIgnoreCase("serviced")) {
                                 global.showCustomToast(mActivity, "Order is already served", Toast.LENGTH_LONG);
                             }
-                            if (fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).getStatus().toString().trim().equalsIgnoreCase("cancelled")){
+                            if (fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).getStatus().toString().trim().equalsIgnoreCase("cancelled")) {
                                 global.showCustomToast(mActivity, "Order is cancelled", Toast.LENGTH_LONG);
                             }
 
@@ -237,7 +237,7 @@ public class KIOSK_Scanner_Activity extends AppCompatActivity {
                     if (fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails() != null) {
                         if (fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0) != null) {
                             if (fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).getStatus() != null) {
-                                if (fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).getStatus().toString().trim().equalsIgnoreCase("serviced") || fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).getStatus().toString().trim().equalsIgnoreCase("cancelled") ) {
+                                if (fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).getStatus().toString().trim().equalsIgnoreCase("serviced") || fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).getStatus().toString().trim().equalsIgnoreCase("cancelled")) {
                                     return true;
                                 }
                             }

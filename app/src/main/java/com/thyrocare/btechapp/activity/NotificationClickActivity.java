@@ -146,27 +146,6 @@ public class NotificationClickActivity extends AppCompatActivity {
         }
     }
 
-    public class CConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
-        @Override
-        public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
-
-            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
-            orderStatusChangeRequestModel.setId(NotifSlotID);
-            orderStatusChangeRequestModel.setRemarks(remarks);
-            orderStatusChangeRequestModel.setStatus(27);
-            if (isNetworkAvailable(mActivity)) {
-                callOrderStatusChangeApi(orderStatusChangeRequestModel);
-            } else {
-                TastyToast.makeText(mContext, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-            }
-        }
-
-        @Override
-        public void onCancelButtonClicked() {
-            CallRestartApp();
-        }
-    }
-
     private void callOrderStatusChangeApi(final OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
@@ -220,6 +199,27 @@ public class NotificationClickActivity extends AppCompatActivity {
             }
         }, 100);
 
+    }
+
+    public class CConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
+        @Override
+        public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
+
+            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
+            orderStatusChangeRequestModel.setId(NotifSlotID);
+            orderStatusChangeRequestModel.setRemarks(remarks);
+            orderStatusChangeRequestModel.setStatus(27);
+            if (isNetworkAvailable(mActivity)) {
+                callOrderStatusChangeApi(orderStatusChangeRequestModel);
+            } else {
+                TastyToast.makeText(mContext, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            }
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+            CallRestartApp();
+        }
     }
 
 }

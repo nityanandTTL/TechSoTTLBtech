@@ -69,10 +69,16 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 public class Leave_intimation_fragment_new extends AppCompatActivity {
 
     public static final String TAG_FRAGMENT = "LEAVE_INTIMATION";
+    Button btn_submit_leave_id;
+    String btech_id = "";
+    ArrayList<GetResponse_NatureLeaveModel> getResponse_natureLeaveModel;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
+    boolean isNBT;
+    int screenFlag = 0;
     private Activity mActivity;
     private ConnectionDetector cd;
     private Button btn_apply_leaves_id, btn_applied_leaved_id;
-    Button btn_submit_leave_id;
     private RadioGroup radio_group_id;
     private RadioButton radio_one_day_id, radio_more_day_id;
     private TextView tv_from_date_id, tv_to_day_id, tv_display_from_date_id;
@@ -86,18 +92,12 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
     private String todate, remarks;
     private LeaveIntimation_SubmitModel leaveIntimation_submitModel;
     private int days = 1;
-    String btech_id = "";
     private Global global;
     private RelativeLayout rl_applyforleave_id;
     private RecyclerView.LayoutManager layoutManager;
     private LinearLayout ll_layout_from_date_id, ll_layout_to_date_id, ll_layout_remark_id, ll_showapplied_leaved, ll_spinner_nature_id, ll_datepicker_2_id, ll_datepicker_1_id, ll_spinner_nbt;
     private RecyclerView rv_show_applied_leaves_id;
-    ArrayList<GetResponse_NatureLeaveModel> getResponse_natureLeaveModel;
     private AppPreferenceManager appPreferenceManager;
-    TextView tv_toolbar;
-    ImageView iv_back, iv_home;
-    boolean isNBT;
-    int screenFlag = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -219,9 +219,9 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
                 btn_apply_leaves_id.setBackground(mActivity.getResources().getDrawable(R.drawable.background_btn_orange_));
                 btn_applied_leaved_id.setTextColor(getResources().getColor(R.color.bg_new_color));
                 btn_apply_leaves_id.setTextColor(getResources().getColor(R.color.white));
-                if (InputUtils.CheckEqualIgnoreCase(appPreferenceManager.getLoginResponseModel().getRole(),Constants.TSP_ROLE_ID)){
+                if (InputUtils.CheckEqualIgnoreCase(appPreferenceManager.getLoginResponseModel().getRole(), Constants.TSP_ROLE_ID)) {
                     ll_spinner_nbt.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     ll_spinner_nbt.setVisibility(View.GONE);
                 }
                 rl_applyforleave_id.setVisibility(View.VISIBLE);

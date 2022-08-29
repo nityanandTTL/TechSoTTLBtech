@@ -11,26 +11,7 @@ import java.util.ArrayList;
  * Created by E4904 on 9/1/2017.
  */
 
-public class OrderPassresponseModel implements Parcelable{
-
-    private ArrayList <Orderallocation> orderAllocation;
-    private String Response;
-
-    protected OrderPassresponseModel(Parcel in) {
-        orderAllocation = in.createTypedArrayList(Orderallocation.CREATOR);
-        Response = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeTypedList(orderAllocation);
-        dest.writeString(Response);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+public class OrderPassresponseModel implements Parcelable {
 
     public static final Creator<OrderPassresponseModel> CREATOR = new Creator<OrderPassresponseModel>() {
         @Override
@@ -43,6 +24,27 @@ public class OrderPassresponseModel implements Parcelable{
             return new OrderPassresponseModel[size];
         }
     };
+    private ArrayList<Orderallocation> orderAllocation;
+    private String Response;
+
+    protected OrderPassresponseModel(Parcel in) {
+        orderAllocation = in.createTypedArrayList(Orderallocation.CREATOR);
+        Response = in.readString();
+    }
+
+    public OrderPassresponseModel() {
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(orderAllocation);
+        dest.writeString(Response);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
     public ArrayList<Orderallocation> getOrderAllocation() {
         return orderAllocation;
@@ -58,9 +60,6 @@ public class OrderPassresponseModel implements Parcelable{
 
     public void setResponse(String response) {
         Response = response;
-    }
-
-    public OrderPassresponseModel() {
     }
 
 }

@@ -108,13 +108,13 @@ public class PickupOrderAdapter extends RecyclerView.Adapter<PickupOrderAdapter.
         }
     }
 
-    public interface OnItemClickListener {
-        void onClientNameClicked(PickupOrderResponseModel.PickupordersDTO pickupordersDTO);
-    }
-
     @Override
     public int getItemCount() {
         return pickupordersDTOS.size();
+    }
+
+    public interface OnItemClickListener {
+        void onClientNameClicked(PickupOrderResponseModel.PickupordersDTO pickupordersDTO);
     }
 
     public class PickupList extends RecyclerView.ViewHolder {

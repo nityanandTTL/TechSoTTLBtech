@@ -113,7 +113,7 @@ public class ServedOrderResponseModel {
         }
     }
 
-    public class btchBracodeDtl{
+    public class btchBracodeDtl {
 
         String Barcode;
 

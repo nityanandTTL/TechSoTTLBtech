@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class CartAPIResponseBeneficiariesModel implements Parcelable {
+    public static final Creator<CartAPIResponseBeneficiariesModel> CREATOR = new Creator<CartAPIResponseBeneficiariesModel>() {
+        @Override
+        public CartAPIResponseBeneficiariesModel createFromParcel(Parcel in) {
+            return new CartAPIResponseBeneficiariesModel(in);
+        }
+
+        @Override
+        public CartAPIResponseBeneficiariesModel[] newArray(int size) {
+            return new CartAPIResponseBeneficiariesModel[size];
+        }
+    };
     private String OrderNo;
     private int BenId;
     private String Tests;
@@ -35,18 +46,6 @@ public class CartAPIResponseBeneficiariesModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<CartAPIResponseBeneficiariesModel> CREATOR = new Creator<CartAPIResponseBeneficiariesModel>() {
-        @Override
-        public CartAPIResponseBeneficiariesModel createFromParcel(Parcel in) {
-            return new CartAPIResponseBeneficiariesModel(in);
-        }
-
-        @Override
-        public CartAPIResponseBeneficiariesModel[] newArray(int size) {
-            return new CartAPIResponseBeneficiariesModel[size];
-        }
-    };
 
     public String getOrderNo() {
         return OrderNo;

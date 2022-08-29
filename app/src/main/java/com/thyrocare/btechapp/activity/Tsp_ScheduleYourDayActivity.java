@@ -3,7 +3,9 @@ package com.thyrocare.btechapp.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AlertDialog;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -56,22 +58,22 @@ public class Tsp_ScheduleYourDayActivity extends AbstractActivity {
 
     public static final String TAG_FRAGMENT = "Tsp_ScheduleYourDayActivity";
     Tsp_ScheduleYourDayActivity activity;
-    private ArrayList<TSPNBT_AvilModel> TSP_NBTAvailArr;
     TextView txt_sh_msg;
     Button txt_no, txt_yes, btn_proceed;
     LinearLayout ll_slots_display;
     GridView gv_slots;
-    private ArrayList<SlotModel> slotsArr;
-    private ArrayList<SlotModel> selectedSlotsArr;
-    private SlotsDisplayAdapter slotsDisplayAdapter;
     int CounterFlag = 1;
     String NBTName = "";
     String NBT_Id = "";
     String NBT_date = "";
     String NBT_date_pass = "";
-    private Global global;
     TextView tv_toolbar;
-    ImageView iv_back,iv_home;
+    ImageView iv_back, iv_home;
+    private ArrayList<TSPNBT_AvilModel> TSP_NBTAvailArr;
+    private ArrayList<SlotModel> slotsArr;
+    private ArrayList<SlotModel> selectedSlotsArr;
+    private SlotsDisplayAdapter slotsDisplayAdapter;
+    private Global global;
 
     public Tsp_ScheduleYourDayActivity() {
         // Required empty public constructor
@@ -199,7 +201,7 @@ public class Tsp_ScheduleYourDayActivity extends AbstractActivity {
                                 setBtechAvailabilityAPIRequestModel.setAvailableDate(NBT_date_pass);
 
                                 if (isNetworkAvailable(activity)) {
-                                    callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel,false);
+                                    callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel, false);
                                 } else {
                                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                 }
@@ -245,7 +247,7 @@ public class Tsp_ScheduleYourDayActivity extends AbstractActivity {
                 setBtechAvailabilityAPIRequestModel.setAvailableDate(NBT_date_pass);
 
                 if (isNetworkAvailable(activity)) {
-                    callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel,true);
+                    callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel, true);
                 } else {
                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                 }
@@ -265,7 +267,7 @@ public class Tsp_ScheduleYourDayActivity extends AbstractActivity {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful()) {
                     CounterFlag++;
-                    TastyToast.makeText(activity,  "Availability set Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                    TastyToast.makeText(activity, "Availability set Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     // Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
                     if (isAvailable) {
                         if (CounterFlag > TSP_NBTAvailArr.size()) {
@@ -278,10 +280,10 @@ public class Tsp_ScheduleYourDayActivity extends AbstractActivity {
                     } else {
                         ShowData();
                     }
-                }else if (response.code() == 401) {
+                } else if (response.code() == 401) {
                     CallLogOutFromDevice();
                 } else {
-                    TastyToast.makeText(activity,  "Failed to set Availability", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                    TastyToast.makeText(activity, "Failed to set Availability", TastyToast.LENGTH_LONG, TastyToast.ERROR);
                     //  Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -297,8 +299,8 @@ public class Tsp_ScheduleYourDayActivity extends AbstractActivity {
     public void CallLogOutFromDevice() {
         try {
             TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
-             new LogUserActivityTagging(activity, LOGOUT,"");
-                    appPreferenceManager.clearAllPreferences();
+            new LogUserActivityTagging(activity, LOGOUT, "");
+            appPreferenceManager.clearAllPreferences();
             try {
                 new DhbDao(activity).deleteTablesonLogout();
             } catch (Exception e) {
@@ -354,8 +356,8 @@ public class Tsp_ScheduleYourDayActivity extends AbstractActivity {
         if (isNetworkAvailable(activity)) {
             CallFetchSlotDetailsApi();
         } else {
-            TastyToast.makeText(activity,  "Please check internet connection", TastyToast.LENGTH_LONG, TastyToast.ERROR);
-           // Toast.makeText(activity, getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, "Please check internet connection", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            // Toast.makeText(activity, getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -379,9 +381,9 @@ public class Tsp_ScheduleYourDayActivity extends AbstractActivity {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<SlotModel>> responseCall = apiInterface.CallFetchSlotDetailsApi(NBT_Id);
         global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback< ArrayList<SlotModel>>() {
+        responseCall.enqueue(new Callback<ArrayList<SlotModel>>() {
             @Override
-            public void onResponse(Call< ArrayList<SlotModel>> call, retrofit2.Response< ArrayList<SlotModel>> response) {
+            public void onResponse(Call<ArrayList<SlotModel>> call, retrofit2.Response<ArrayList<SlotModel>> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     txt_no.setVisibility(View.VISIBLE);
@@ -401,7 +403,7 @@ public class Tsp_ScheduleYourDayActivity extends AbstractActivity {
             }
 
             @Override
-            public void onFailure(Call< ArrayList<SlotModel>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<SlotModel>> call, Throwable t) {
                 global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }

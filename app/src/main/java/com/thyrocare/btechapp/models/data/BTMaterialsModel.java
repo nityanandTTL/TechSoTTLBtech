@@ -7,8 +7,38 @@ import android.os.Parcelable;
  * Created by Orion on 5/2/2017.
  */
 
-public class BTMaterialsModel extends BaseModel implements Parcelable
-{
+public class BTMaterialsModel extends BaseModel implements Parcelable {
+    public static final Creator<BTMaterialsModel> CREATOR = new Creator<BTMaterialsModel>() {
+        @Override
+        public BTMaterialsModel createFromParcel(Parcel in) {
+            return new BTMaterialsModel(in);
+        }
+
+        @Override
+        public BTMaterialsModel[] newArray(int size) {
+            return new BTMaterialsModel[size];
+        }
+    };
+    String MaterialID;
+    String MaterialName;
+    String VirtualStock;
+    String LastUpdated;
+
+    public BTMaterialsModel() {
+        super();
+        VirtualStock = "0";
+    }
+
+    protected BTMaterialsModel(Parcel in) {
+        super(in);
+        MaterialID = in.readString();
+        MaterialName = in.readString();
+        VirtualStock = in.readString();
+        LastUpdated = in.readString();
+
+
+    }
+
     public String getMaterialID() {
         return MaterialID;
     }
@@ -41,27 +71,6 @@ public class BTMaterialsModel extends BaseModel implements Parcelable
         LastUpdated = lastUpdated;
     }
 
-    String MaterialID;
-    String MaterialName;
-    String VirtualStock;
-    String LastUpdated;
-
-    public BTMaterialsModel() {
-        super ();
-        VirtualStock = "0";
-    }
-
-    protected BTMaterialsModel(Parcel in) {
-        super(in);
-        MaterialID = in.readString();
-        MaterialName = in.readString();
-        VirtualStock = in.readString();
-        LastUpdated = in.readString();
-
-
-
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
@@ -70,25 +79,11 @@ public class BTMaterialsModel extends BaseModel implements Parcelable
         dest.writeString(VirtualStock);
         dest.writeString(LastUpdated);
     }
+
     @Override
     public int describeContents() {
         return 0;
     }
-
-        public static final Creator<BTMaterialsModel> CREATOR = new Creator<BTMaterialsModel>() {
-            @Override
-            public BTMaterialsModel createFromParcel(Parcel in) {
-                return new BTMaterialsModel(in);
-            }
-
-            @Override
-            public BTMaterialsModel[] newArray(int size) {
-                return new BTMaterialsModel[size];
-            }
-        };
-
-
-
 
 
 }

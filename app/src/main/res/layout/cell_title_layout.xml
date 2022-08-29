@@ -34,9 +34,9 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:background="@drawable/purple_btn_bg"
+            android:backgroundTint="@color/bg_new_color"
             android:gravity="center"
             android:text="1"
-            android:backgroundTint="@color/bg_new_color"
             android:textColor="@android:color/white"
             android:textSize="26sp" />
 

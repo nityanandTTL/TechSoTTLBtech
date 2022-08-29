@@ -45,23 +45,6 @@ public class CampWOE_MIS_Adpter extends RecyclerView.Adapter<CampWOE_MIS_Adpter.
         this.filterArryList = CampWOEMisArrayList;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_patientId, tv_sct,tv_Name_ageGender,tv_vailPhoto,tv_Barcode;
-        LinearLayout lin_main;
-
-        public MyViewHolder(View view) {
-            super(view);
-
-            tv_patientId = (TextView) view.findViewById(R.id.tv_patientId);
-            tv_sct = (TextView) view.findViewById(R.id.tv_sct);
-            tv_Name_ageGender = (TextView) view.findViewById(R.id.tv_Name_ageGender);
-            tv_vailPhoto = (TextView) view.findViewById(R.id.tv_vailPhoto);
-            tv_Barcode = (TextView) view.findViewById(R.id.tv_Barcode);
-            lin_main = (LinearLayout) view.findViewById(R.id.lin_main);
-
-        }
-    }
-
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -73,7 +56,7 @@ public class CampWOE_MIS_Adpter extends RecyclerView.Adapter<CampWOE_MIS_Adpter.
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
 
         holder.tv_patientId.setText(filterArryList.get(position).getPatientID());
-        holder.tv_sct.setText(DateUtil.Req_Date_Req(filterArryList.get(position).getSct(),"MM/dd/yyyy hh:mm:ss a","dd/MM/yyyy  HH:mm"));
+        holder.tv_sct.setText(DateUtil.Req_Date_Req(filterArryList.get(position).getSct(), "MM/dd/yyyy hh:mm:ss a", "dd/MM/yyyy  HH:mm"));
         holder.tv_Name_ageGender.setText(filterArryList.get(position).getName());
         /*List<String> items = null;
         try {
@@ -96,9 +79,9 @@ public class CampWOE_MIS_Adpter extends RecyclerView.Adapter<CampWOE_MIS_Adpter.
         holder.tv_Barcode.setText(filterArryList.get(position).getBarcode());
 
 
-        if (StringUtils.isNull(filterArryList.get(position).getVialImage())){
+        if (StringUtils.isNull(filterArryList.get(position).getVialImage())) {
             holder.tv_vailPhoto.setText(Html.fromHtml("<u>Upload Vial Image</u>"));
-        }else{
+        } else {
             holder.tv_vailPhoto.setText(Html.fromHtml("<u>Vial Image</u>"));
         }
 
@@ -112,10 +95,10 @@ public class CampWOE_MIS_Adpter extends RecyclerView.Adapter<CampWOE_MIS_Adpter.
         holder.tv_vailPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!StringUtils.isNull(filterArryList.get(position).getVialImage())){
-                    globalClass.OpenImageDialog(filterArryList.get(position).getVialImage(),activity,true);
-                }else{
-                    if (onClickListeners != null){
+                if (!StringUtils.isNull(filterArryList.get(position).getVialImage())) {
+                    globalClass.OpenImageDialog(filterArryList.get(position).getVialImage(), activity, true);
+                } else {
+                    if (onClickListeners != null) {
                         onClickListeners.onUploadVialImageClicked(filterArryList.get(position));
                     }
                 }
@@ -136,7 +119,7 @@ public class CampWOE_MIS_Adpter extends RecyclerView.Adapter<CampWOE_MIS_Adpter.
         if (query.isEmpty()) {
             filterArryList = new ArrayList<>();
             filterArryList.addAll(CampWOEMisArrayList);
-            if (onClickListeners != null){
+            if (onClickListeners != null) {
                 onClickListeners.onFilter(true);
             }
         } else {
@@ -153,11 +136,11 @@ public class CampWOE_MIS_Adpter extends RecyclerView.Adapter<CampWOE_MIS_Adpter.
             }
             if (newList.size() > 0) {
                 filterArryList.addAll(newList);
-                if (onClickListeners != null){
+                if (onClickListeners != null) {
                     onClickListeners.onFilter(true);
                 }
-            }else{
-                if (onClickListeners != null){
+            } else {
+                if (onClickListeners != null) {
                     onClickListeners.onFilter(false);
                 }
             }
@@ -165,17 +148,34 @@ public class CampWOE_MIS_Adpter extends RecyclerView.Adapter<CampWOE_MIS_Adpter.
         notifyDataSetChanged();
     }
 
-
-
     public void setOnItemClickListener(OnClickListeners onClickListeners) {
         this.onClickListeners = onClickListeners;
     }
 
+
     public interface OnClickListeners {
 
         void onFilter(boolean isDataavailable);
+
         void onUploadVialImageClicked(CampModuleMISResponseModel.Output output);
 
 
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView tv_patientId, tv_sct, tv_Name_ageGender, tv_vailPhoto, tv_Barcode;
+        LinearLayout lin_main;
+
+        public MyViewHolder(View view) {
+            super(view);
+
+            tv_patientId = (TextView) view.findViewById(R.id.tv_patientId);
+            tv_sct = (TextView) view.findViewById(R.id.tv_sct);
+            tv_Name_ageGender = (TextView) view.findViewById(R.id.tv_Name_ageGender);
+            tv_vailPhoto = (TextView) view.findViewById(R.id.tv_vailPhoto);
+            tv_Barcode = (TextView) view.findViewById(R.id.tv_Barcode);
+            lin_main = (LinearLayout) view.findViewById(R.id.lin_main);
+
+        }
     }
 }

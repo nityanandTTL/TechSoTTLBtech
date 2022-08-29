@@ -59,6 +59,9 @@ import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 public class ScheduleYourDayActivity3 extends AbstractActivity {
 
     public static final String TAG_FRAGMENT = "SCHEDULE_YOUR_DAY_FRAGMENT";
+    String value;
+    String tomorrowAsString;
+    Switch btn_switch;
     private ScheduleYourDayActivity3 activity;
     private AppPreferenceManager appPreferenceManager;
     private Button txtNo, txtYes;
@@ -74,11 +77,8 @@ public class ScheduleYourDayActivity3 extends AbstractActivity {
     private String lasScheduleDate;
     private String today;
     private int camefrom = 3;
-    String value;
-    String tomorrowAsString;
     private String disableNo = "";
     private Global global;
-    Switch btn_switch;
 
     public ScheduleYourDayActivity3() {
         // Required empty public constructor

@@ -11,8 +11,19 @@ import com.thyrocare.btechapp.models.data.BeneficiaryTestWiseClinicalHistoryMode
 
 import java.util.ArrayList;
 
-public class BeneficaryWiseScanbarcodeModel implements Parcelable{
+public class BeneficaryWiseScanbarcodeModel implements Parcelable {
 
+    public static final Creator<BeneficaryWiseScanbarcodeModel> CREATOR = new Creator<BeneficaryWiseScanbarcodeModel>() {
+        @Override
+        public BeneficaryWiseScanbarcodeModel createFromParcel(Parcel in) {
+            return new BeneficaryWiseScanbarcodeModel(in);
+        }
+
+        @Override
+        public BeneficaryWiseScanbarcodeModel[] newArray(int size) {
+            return new BeneficaryWiseScanbarcodeModel[size];
+        }
+    };
     private int benId;
     private String OrderNo;
     private String Name;
@@ -60,18 +71,6 @@ public class BeneficaryWiseScanbarcodeModel implements Parcelable{
         isAddBen = in.readByte() != 0;
         isTRF = in.readByte() != 0;
     }
-
-    public static final Creator<BeneficaryWiseScanbarcodeModel> CREATOR = new Creator<BeneficaryWiseScanbarcodeModel>() {
-        @Override
-        public BeneficaryWiseScanbarcodeModel createFromParcel(Parcel in) {
-            return new BeneficaryWiseScanbarcodeModel(in);
-        }
-
-        @Override
-        public BeneficaryWiseScanbarcodeModel[] newArray(int size) {
-            return new BeneficaryWiseScanbarcodeModel[size];
-        }
-    };
 
     @Override
     public int describeContents() {

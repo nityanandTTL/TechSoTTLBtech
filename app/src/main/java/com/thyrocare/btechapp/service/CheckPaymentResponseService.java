@@ -4,7 +4,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+
 import androidx.annotation.Nullable;
+
 import android.widget.Toast;
 
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
@@ -27,10 +29,10 @@ import retrofit2.Response;
 
 public class CheckPaymentResponseService extends Service {
 
+    private static final int retryCountMax = 5;
     private Context context;
     private AppPreferenceManager appPreferenceManager;
     private int retryCount = 0;
-    private static final int retryCountMax = 5;
     private boolean isIssueFound = false;
     private int serviceId;
     private String jsonRequest;
@@ -38,15 +40,15 @@ public class CheckPaymentResponseService extends Service {
     private boolean isRecheckComplete = false;
     private Global global;
 
+    public CheckPaymentResponseService() {
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
         global = new Global(context);
         appPreferenceManager = new AppPreferenceManager(context);
-    }
-
-    public CheckPaymentResponseService() {
     }
 
     @Nullable
@@ -63,12 +65,12 @@ public class CheckPaymentResponseService extends Service {
         serviceId = startId;
         jsonRequest = intent.getExtras().getString(BundleConstants.PAYMENTS_RECHECK_REQUEST);
         recheckResponseURL = intent.getExtras().getString(BundleConstants.PAYMENTS_RECHECK_REQUEST_URL);
-        if (appPreferenceManager.getLoginResponseModel()==null){
+        if (appPreferenceManager.getLoginResponseModel() == null) {
             broadcastSyncIssue();
             stopSelf(serviceId);
         }
 
-        if (NetworkUtils.isNetworkAvailable(getApplicationContext())){
+        if (NetworkUtils.isNetworkAvailable(getApplicationContext())) {
             isIssueFound = false;
             broadcastSyncProgress(true);
             startRecheckingPaymentResponse();
@@ -81,35 +83,36 @@ public class CheckPaymentResponseService extends Service {
     }
 
     private void startRecheckingPaymentResponse() {
-        if(!isRecheckComplete||retryCount<=retryCountMax){
-            callRecheckPaymentResponseAPI(jsonRequest,recheckResponseURL);
+        if (!isRecheckComplete || retryCount <= retryCountMax) {
+            callRecheckPaymentResponseAPI(jsonRequest, recheckResponseURL);
         }
         broadcastSyncDone();
         stopSelf(serviceId);
     }
 
     private void callRecheckPaymentResponseAPI(String jsonRequest, String recheckResponseURL) {
-        if(NetworkUtils.isNetworkAvailable(getApplicationContext())){
-            CallgetRecheckPaymentResponseRequestApi(jsonRequest,recheckResponseURL);
-        } else{
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+        if (NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+            CallgetRecheckPaymentResponseRequestApi(jsonRequest, recheckResponseURL);
+        } else {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void CallgetRecheckPaymentResponseRequestApi(String jsonRequest, String URL){
+    private void CallgetRecheckPaymentResponseRequestApi(String jsonRequest, String URL) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<String> responseCall = apiInterface.CallgetRecheckPaymentResponseRequestApi(URL,jsonRequest);
-        global.showProgressDialog(context,"Please wait..");
+        Call<String> responseCall = apiInterface.CallgetRecheckPaymentResponseRequestApi(URL, jsonRequest);
+        global.showProgressDialog(context, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 global.hideProgressDialogg();
-                if (response.isSuccessful()){
-                    Toast.makeText(context, !StringUtils.isNull(response.body()) ? response.body() : ConstantsMessages.SOMETHING_WENT_WRONG,Toast.LENGTH_SHORT).show();
-                }else{
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, !StringUtils.isNull(response.body()) ? response.body() : ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
+                } else {
                     Toast.makeText(context, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialogg();
@@ -148,6 +151,7 @@ public class CheckPaymentResponseService extends Service {
         intent.setAction(AppConstants.CHECK_PAYMENT_RESPONSE_ACTION_ISSUE);
         sendBroadcast(intent);
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

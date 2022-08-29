@@ -100,15 +100,15 @@
             android:textStyle="bold" />
 
         <EditText
-            android:inputType="number"
-            android:digits="01234567890"
             android:id="@+id/edt_otp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_10"
             android:layout_weight="1"
             android:background="@android:color/white"
+            android:digits="01234567890"
             android:hint="Please enter OTP"
+            android:inputType="number"
             android:padding="10dp"
             android:paddingStart="@dimen/dp_10"
             android:singleLine="true"

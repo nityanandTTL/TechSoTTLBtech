@@ -5,6 +5,7 @@ package com.thyrocare.btechapp.delegate;
  */
 
 public interface OlcMasterBarcodeScanAdapterDelegate {
-     void onScanClick(int position);
-     void onAddClick(int position);
+    void onScanClick(int position);
+
+    void onAddClick(int position);
 }

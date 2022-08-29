@@ -26,6 +26,18 @@ public class CartAPIRequestModel implements Parcelable {
     };
     String VisitId;
     String Distance;
+    int DisAmtDue;
+    ArrayList<CartRequestOrderModel> orders;
+    ArrayList<CartRequestBeneficiaryModel> beneficiaries;
+    public CartAPIRequestModel() {
+    }
+    protected CartAPIRequestModel(Parcel in) {
+        VisitId = in.readString();
+        Distance = in.readString();
+        DisAmtDue = in.readInt();
+        orders = in.createTypedArrayList(CartRequestOrderModel.CREATOR);
+        beneficiaries = in.createTypedArrayList(CartRequestBeneficiaryModel.CREATOR);
+    }
 
     public int getDisAmtDue() {
         return DisAmtDue;
@@ -33,21 +45,6 @@ public class CartAPIRequestModel implements Parcelable {
 
     public void setDisAmtDue(int disAmtDue) {
         DisAmtDue = disAmtDue;
-    }
-
-    int DisAmtDue;
-    ArrayList<CartRequestOrderModel> orders;
-    ArrayList<CartRequestBeneficiaryModel> beneficiaries;
-
-    public CartAPIRequestModel() {
-    }
-
-    protected CartAPIRequestModel(Parcel in) {
-        VisitId = in.readString();
-        Distance = in.readString();
-        DisAmtDue = in.readInt();
-        orders = in.createTypedArrayList(CartRequestOrderModel.CREATOR);
-        beneficiaries = in.createTypedArrayList(CartRequestBeneficiaryModel.CREATOR);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.thyrocare.btechapp.models.api.response;
 
 public class ResponseClientEntryModel {
-    String Response,message,docStatus,ResId;
+    String Response, message, docStatus, ResId;
 
     public String getResponse() {
         return Response;

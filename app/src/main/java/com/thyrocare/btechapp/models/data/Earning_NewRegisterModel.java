@@ -10,6 +10,17 @@ import android.os.Parcelable;
 public class Earning_NewRegisterModel implements Parcelable {
 
 
+    public static final Creator<Earning_NewRegisterModel> CREATOR = new Creator<Earning_NewRegisterModel>() {
+        @Override
+        public Earning_NewRegisterModel createFromParcel(Parcel in) {
+            return new Earning_NewRegisterModel(in);
+        }
+
+        @Override
+        public Earning_NewRegisterModel[] newArray(int size) {
+            return new Earning_NewRegisterModel[size];
+        }
+    };
     private int BtechId;
     private String BtechName;
     private int FastingOrders;
@@ -29,18 +40,6 @@ public class Earning_NewRegisterModel implements Parcelable {
         CreditDate = in.readString();
         CreditedAmount = in.readInt();
     }
-
-    public static final Creator<Earning_NewRegisterModel> CREATOR = new Creator<Earning_NewRegisterModel>() {
-        @Override
-        public Earning_NewRegisterModel createFromParcel(Parcel in) {
-            return new Earning_NewRegisterModel(in);
-        }
-
-        @Override
-        public Earning_NewRegisterModel[] newArray(int size) {
-            return new Earning_NewRegisterModel[size];
-        }
-    };
 
     public Earning_NewRegisterModel() {
 

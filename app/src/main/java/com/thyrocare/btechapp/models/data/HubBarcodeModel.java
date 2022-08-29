@@ -10,6 +10,12 @@ public class HubBarcodeModel {
     private String SCT;
     private String Latitude;
     private String Location;
+    private String Longitude;
+    private boolean IsScanned;
+
+    public HubBarcodeModel() {
+        IsScanned = false;
+    }
 
     public String getLatitude() {
         return Latitude;
@@ -25,13 +31,6 @@ public class HubBarcodeModel {
 
     public void setLongitude(String longitude) {
         Longitude = longitude;
-    }
-
-    private String Longitude;
-    private boolean IsScanned;
-
-    public HubBarcodeModel() {
-        IsScanned = false;
     }
 
     public String getBarcode() {

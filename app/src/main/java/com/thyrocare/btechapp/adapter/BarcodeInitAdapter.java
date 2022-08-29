@@ -40,32 +40,6 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
         this.benposition = benposition;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_serumtype, txtSampleType, txtSampleTypeRBS, edtBarcode, edt_barcode_confirm;
-        LinearLayout lin_sampleType, ll_sample_type;
-        ImageView imgScan, imgDelete, imgScanConfirm, imgDeleteconfirm;
-
-        public MyViewHolder(View view) {
-            super(view);
-            tv_serumtype = (TextView) view.findViewById(R.id.tv_serumtype);
-            txtSampleType = (TextView) view.findViewById(R.id.txt_sample_type);
-            lin_sampleType = (LinearLayout) view.findViewById(R.id.lin_sampleType);
-            ll_sample_type = (LinearLayout) view.findViewById(R.id.ll_sample_type);
-            txtSampleTypeRBS = (TextView) view.findViewById(R.id.txt_sample_type_rb);
-            edtBarcode = (TextView) view.findViewById(R.id.edt_barcode);
-            imgScan = (ImageView) view.findViewById(R.id.scan_barcode_button);
-            imgDelete = (ImageView) view.findViewById(R.id.imgDelete);
-            imgDeleteconfirm = (ImageView) view.findViewById(R.id.imgDeleteconfirm);
-
-            edt_barcode_confirm = view.findViewById(R.id.edt_barcode_confirm);
-            imgScanConfirm = view.findViewById(R.id.scan_barcode_button_confirm);
-
-            txtSampleType.setSelected(true);
-            txtSampleTypeRBS.setSelected(true);
-
-        }
-    }
-
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -218,5 +192,31 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
         void onBarcodeScanClickedConfirm(String SampleType, int BenID, int barcodePosition, int BenPosition);
 
         void onBarcodeDelete(String barcode, int BenPosition, String isflag);
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView tv_serumtype, txtSampleType, txtSampleTypeRBS, edtBarcode, edt_barcode_confirm;
+        LinearLayout lin_sampleType, ll_sample_type;
+        ImageView imgScan, imgDelete, imgScanConfirm, imgDeleteconfirm;
+
+        public MyViewHolder(View view) {
+            super(view);
+            tv_serumtype = (TextView) view.findViewById(R.id.tv_serumtype);
+            txtSampleType = (TextView) view.findViewById(R.id.txt_sample_type);
+            lin_sampleType = (LinearLayout) view.findViewById(R.id.lin_sampleType);
+            ll_sample_type = (LinearLayout) view.findViewById(R.id.ll_sample_type);
+            txtSampleTypeRBS = (TextView) view.findViewById(R.id.txt_sample_type_rb);
+            edtBarcode = (TextView) view.findViewById(R.id.edt_barcode);
+            imgScan = (ImageView) view.findViewById(R.id.scan_barcode_button);
+            imgDelete = (ImageView) view.findViewById(R.id.imgDelete);
+            imgDeleteconfirm = (ImageView) view.findViewById(R.id.imgDeleteconfirm);
+
+            edt_barcode_confirm = view.findViewById(R.id.edt_barcode_confirm);
+            imgScanConfirm = view.findViewById(R.id.scan_barcode_button_confirm);
+
+            txtSampleType.setSelected(true);
+            txtSampleTypeRBS.setSelected(true);
+
+        }
     }
 }

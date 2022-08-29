@@ -4,6 +4,17 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class TestBookingResponseModel implements Parcelable {
+    public static final Creator<TestBookingResponseModel> CREATOR = new Creator<TestBookingResponseModel>() {
+        @Override
+        public TestBookingResponseModel createFromParcel(Parcel in) {
+            return new TestBookingResponseModel(in);
+        }
+
+        @Override
+        public TestBookingResponseModel[] newArray(int size) {
+            return new TestBookingResponseModel[size];
+        }
+    };
     private String ADDRESS, BOOKED_BY, EMAIL, FASTING, MOBILE, MODE, ORDER_NO, PAY_TYPE, PRODUCT, REF_ORDERID, REPORT_HARD_COPY, RESPONSE, RES_ID, SERVICE_TYPE, STATUS;
     private OrderResponseModel ORDERRESPONSE;
     private int CUSTOMER_RATE;
@@ -25,6 +36,9 @@ public class TestBookingResponseModel implements Parcelable {
         SERVICE_TYPE = in.readString();
         STATUS = in.readString();
         CUSTOMER_RATE = in.readInt();
+    }
+
+    public TestBookingResponseModel() {
     }
 
     @Override
@@ -51,18 +65,6 @@ public class TestBookingResponseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<TestBookingResponseModel> CREATOR = new Creator<TestBookingResponseModel>() {
-        @Override
-        public TestBookingResponseModel createFromParcel(Parcel in) {
-            return new TestBookingResponseModel(in);
-        }
-
-        @Override
-        public TestBookingResponseModel[] newArray(int size) {
-            return new TestBookingResponseModel[size];
-        }
-    };
 
     public String getADDRESS() {
         return ADDRESS;
@@ -198,8 +200,5 @@ public class TestBookingResponseModel implements Parcelable {
 
     public void setCUSTOMER_RATE(int CUSTOMER_RATE) {
         this.CUSTOMER_RATE = CUSTOMER_RATE;
-    }
-
-    public TestBookingResponseModel() {
     }
 }

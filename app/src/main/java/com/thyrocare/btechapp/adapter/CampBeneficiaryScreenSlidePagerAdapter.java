@@ -2,6 +2,7 @@ package com.thyrocare.btechapp.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -46,7 +47,7 @@ public class CampBeneficiaryScreenSlidePagerAdapter extends FragmentStatePagerAd
                 break;
             }
         }
-       // bundle.putParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL_ARRAY,beneficiaryDetailsArr);
+        // bundle.putParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL_ARRAY,beneficiaryDetailsArr);
         bundle.putParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsArr.get(position));
         bundle.putParcelable(BundleConstants.CAMP_ALL_ORDER_DETAIL, campAllOrderDetailsModel);
         bundle.putParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModel);

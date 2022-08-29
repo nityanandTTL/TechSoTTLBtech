@@ -32,8 +32,8 @@ import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 public class DeviceLogOutController {
 
-    private Activity activity;
     Context mContext;
+    private Activity activity;
     private Global global;
 
     public DeviceLogOutController(Context activity) {
@@ -67,6 +67,7 @@ public class DeviceLogOutController {
             public void onResponse(Call<CommonResponseModel> call, Response<CommonResponseModel> response) {
                 CommonResponseModel commonResponseModel = response.body();
             }
+
             @Override
             public void onFailure(Call<CommonResponseModel> call, Throwable t) {
 
@@ -97,17 +98,18 @@ public class DeviceLogOutController {
                     if (model.getRespId() == 1) {
                         //                        mLoginScreenActivity.setLoginDeviceResponse();
                     } else {
-                        TastyToast.makeText(activity, !InputUtils.isNull(model.getRespMessage()) ? model.getRespMessage() :SomethingWentwrngMsg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        TastyToast.makeText(activity, !InputUtils.isNull(model.getRespMessage()) ? model.getRespMessage() : SomethingWentwrngMsg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
                     }
 
 
                 } else {
-                    global.showCustomToast(activity,INVALID_LOG,Toast.LENGTH_LONG);
+                    global.showCustomToast(activity, INVALID_LOG, Toast.LENGTH_LONG);
                 }
             }
+
             @Override
             public void onFailure(Call<LoginDeviceResponseModel> call, Throwable t) {
-                global.showCustomToast(activity,SomethingWentwrngMsg,Toast.LENGTH_LONG);
+                global.showCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
 

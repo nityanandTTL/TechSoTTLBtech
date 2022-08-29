@@ -59,6 +59,9 @@ import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 public class ScheduleYourDayActivity extends AbstractActivity {
 
     public static final String TAG_FRAGMENT = "SCHEDULE_YOUR_DAY_FRAGMENT";
+    String value;
+    String tomorrowAsString;
+    Switch btn_switch;
     private ScheduleYourDayActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private Button txtNo, txtYes;
@@ -74,11 +77,8 @@ public class ScheduleYourDayActivity extends AbstractActivity {
     private String lasScheduleDate;
     private String today;
     private int camefrom = 3;
-    String value;
-    String tomorrowAsString;
     private String disableNo = "";
     private Global global;
-    Switch btn_switch;
 
     public ScheduleYourDayActivity() {
         // Required empty public constructor
@@ -304,7 +304,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
         date = (TextView) findViewById(R.id.date);
         Logger.error("TOdayYYYYYY" + tomorrowAsString);
 
-        date.setText(tomorrowAsString+"?");
+        date.setText(tomorrowAsString + "?");
         btnProceed = (Button) findViewById(R.id.btn_proceed);
         btnProceed.setVisibility(View.INVISIBLE);
         llSlotsDisplay = (LinearLayout) findViewById(R.id.ll_slots_display);
@@ -321,12 +321,12 @@ public class ScheduleYourDayActivity extends AbstractActivity {
         btn_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     llSlotsDisplay.setVisibility(View.VISIBLE);
                     isAvailable = true;
                     btnProceed.setVisibility(View.VISIBLE);
                     fetchData();
-                }else{
+                } else {
                     llSlotsDisplay.setVisibility(View.GONE);
                     btnProceed.setVisibility(View.INVISIBLE);
                     isAvailable = false;
@@ -408,7 +408,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
     public void CallLogOutFromDevice() {
         try {
             TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
-            new LogUserActivityTagging(activity, LOGOUT,"");
+            new LogUserActivityTagging(activity, LOGOUT, "");
             appPreferenceManager.clearAllPreferences();
             try {
                 new DhbDao(activity).deleteTablesonLogout();

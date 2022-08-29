@@ -37,6 +37,8 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.Se
 
 public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApdter.MyViewHolder> {
 
+    int flag;
+    boolean isPEpartner;
     private Activity activity;
     private LayoutInflater layoutInflater;
     private AppPreferenceManager appPreferenceManager;
@@ -53,8 +55,6 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
     private ArrayList<GetPETestResponseModel.DataDTO> peNewTestRateModelArry = new ArrayList<>();
     private ArrayList<GetPETestResponseModel.DataDTO> peFilteredList = new ArrayList<>();
     private ArrayList<GetPETestResponseModel.DataDTO> peSelectedTests = new ArrayList<>();
-    int flag;
-    boolean isPEpartner;
 
 
     public DisplayAllTestApdter(Activity activity, boolean pePartner, ArrayList<TestRateMasterModel> testRateMasterModelArry, ArrayList<TestRateMasterModel> allProductList, ArrayList<TestRateMasterModel> selectedTests, boolean isM) {
@@ -80,35 +80,9 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
         this.peFilteredList = peTestRateModelArry;
         this.peSelectedTests = peSelectedTests;
         flag = 2;
-        this.isM=isM;
+        this.isM = isM;
         isPEpartner = pePartner;
     }
-
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView img_test_type;
-        ImageView imgCheck, imgChecked, img_unCheckDisabled;
-        TextView txt_test, txt_dis_amt, mrp_rate, dis_percent;
-        ImageView imgTestFasting;
-        LinearLayout ll_discount;
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-
-            txt_test = (TextView) itemView.findViewById(R.id.txt_test);
-            txt_dis_amt = (TextView) itemView.findViewById(R.id.txt_dis_amt);
-            img_test_type = (ImageView) itemView.findViewById(R.id.img_test_type);
-            imgCheck = (ImageView) itemView.findViewById(R.id.img_check);
-            imgChecked = (ImageView) itemView.findViewById(R.id.img_checked);
-            imgTestFasting = itemView.findViewById(R.id.test_fasting);
-            img_unCheckDisabled = (ImageView) itemView.findViewById(R.id.img_unCheckDisabled);
-            ll_discount = itemView.findViewById(R.id.ll_discount);
-            mrp_rate = itemView.findViewById(R.id.mrp_rate);
-            dis_percent = itemView.findViewById(R.id.dis_percent);
-        }
-    }
-
 
     @NonNull
     @Override
@@ -419,15 +393,15 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
             holder.imgCheck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (peSelectedTests!=null){
+                    if (peSelectedTests != null) {
                         peSelectedTests.add(peResponseModel);
                         if (onClickListeners != null) {
                             onClickListeners.onPECheckChange(peSelectedTests);
                         }
-                    }else {
+                    } else {
                         peSelectedTests = new ArrayList<GetPETestResponseModel.DataDTO>();
                         peSelectedTests.add(peResponseModel);
-                        if (onClickListeners!=null){
+                        if (onClickListeners != null) {
                             onClickListeners.onPECheckChange(peSelectedTests);
                         }
                     }
@@ -501,7 +475,7 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
 //        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             return peFilteredList.size();
         }
-        if (filteredList.size()==0){
+        if (filteredList.size() == 0) {
             return 0;
         }
         return filteredList.size();
@@ -571,5 +545,29 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
         void onCheckChange(ArrayList<TestRateMasterModel> selectedTests);
 
         void onPECheckChange(ArrayList<GetPETestResponseModel.DataDTO> peTestList);
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView img_test_type;
+        ImageView imgCheck, imgChecked, img_unCheckDisabled;
+        TextView txt_test, txt_dis_amt, mrp_rate, dis_percent;
+        ImageView imgTestFasting;
+        LinearLayout ll_discount;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+
+            txt_test = (TextView) itemView.findViewById(R.id.txt_test);
+            txt_dis_amt = (TextView) itemView.findViewById(R.id.txt_dis_amt);
+            img_test_type = (ImageView) itemView.findViewById(R.id.img_test_type);
+            imgCheck = (ImageView) itemView.findViewById(R.id.img_check);
+            imgChecked = (ImageView) itemView.findViewById(R.id.img_checked);
+            imgTestFasting = itemView.findViewById(R.id.test_fasting);
+            img_unCheckDisabled = (ImageView) itemView.findViewById(R.id.img_unCheckDisabled);
+            ll_discount = itemView.findViewById(R.id.ll_discount);
+            mrp_rate = itemView.findViewById(R.id.mrp_rate);
+            dis_percent = itemView.findViewById(R.id.dis_percent);
+        }
     }
 }

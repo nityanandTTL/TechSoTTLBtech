@@ -10,6 +10,17 @@ import android.os.Parcelable;
 public class LedgerDetailsModeler extends BaseModel implements Parcelable {
 
 
+    public static final Creator<LedgerDetailsModeler> CREATOR = new Creator<LedgerDetailsModeler>() {
+        @Override
+        public LedgerDetailsModeler createFromParcel(Parcel in) {
+            return new LedgerDetailsModeler(in);
+        }
+
+        @Override
+        public LedgerDetailsModeler[] newArray(int size) {
+            return new LedgerDetailsModeler[size];
+        }
+    };
     String Date;
     Integer OpeningBal;
     Integer Collection;
@@ -17,6 +28,20 @@ public class LedgerDetailsModeler extends BaseModel implements Parcelable {
     Integer Debit;
     Integer Payments;
     Integer ClosingBal;
+
+    public LedgerDetailsModeler() {
+        super();
+    }
+
+    protected LedgerDetailsModeler(Parcel in) {
+        super(in);
+        Date = in.readString();
+        OpeningBal = in.readInt();
+        Credit = in.readInt();
+        Debit = in.readInt();
+        ClosingBal = in.readInt();
+
+    }
 
     public String getDate() {
         return Date;
@@ -58,22 +83,6 @@ public class LedgerDetailsModeler extends BaseModel implements Parcelable {
         ClosingBal = closingBal;
     }
 
-
-
-    public LedgerDetailsModeler() {
-    super ();
-    }
-
-    protected LedgerDetailsModeler(Parcel in) {
-        super(in);
-        Date = in.readString();
-        OpeningBal = in.readInt();
-        Credit = in.readInt();
-        Debit = in.readInt();
-        ClosingBal = in.readInt();
-
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
@@ -84,24 +93,10 @@ public class LedgerDetailsModeler extends BaseModel implements Parcelable {
         dest.writeInt(ClosingBal);
 
 
-
-
     }
 
     @Override
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<LedgerDetailsModeler> CREATOR = new Creator<LedgerDetailsModeler>() {
-        @Override
-        public LedgerDetailsModeler createFromParcel(Parcel in) {
-            return new LedgerDetailsModeler(in);
-        }
-
-        @Override
-        public LedgerDetailsModeler[] newArray(int size) {
-            return new LedgerDetailsModeler[size];
-        }
-    };
 }

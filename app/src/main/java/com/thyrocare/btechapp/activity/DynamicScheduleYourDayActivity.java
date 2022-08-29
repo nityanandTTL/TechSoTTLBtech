@@ -42,6 +42,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import androidx.appcompat.app.AlertDialog;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,10 +57,15 @@ import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 public class DynamicScheduleYourDayActivity extends AbstractActivity {
 
     public static final String TAG_FRAGMENT = "DynamicScheduleYourDayActivity";
+    String value;
+    String tomorrowAsString;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
+    int gbtkn = 0;
     private DynamicScheduleYourDayActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private Button txtNo, txtYes;
-    private LinearLayout llSlotsDisplay,ll_btn;
+    private LinearLayout llSlotsDisplay, ll_btn;
     private GridView gvSlots;
     private Button btnProceed;
     private ArrayList<SlotModel> slotsArr;
@@ -68,14 +74,8 @@ public class DynamicScheduleYourDayActivity extends AbstractActivity {
     private boolean isAvailable = false;
     private TextView date;
     private String lasScheduleDate;
-    String value;
-    String tomorrowAsString;
     private String disableNo = "";
     private Global global;
-    TextView  tv_toolbar;
-    ImageView iv_back,iv_home;
-
-    int gbtkn = 0;
 
     public DynamicScheduleYourDayActivity() {
         // Required empty public constructor
@@ -111,7 +111,7 @@ public class DynamicScheduleYourDayActivity extends AbstractActivity {
 
         if (validateDays()) {
             tomorrowAsString = getDateFromobj();
-        }else {
+        } else {
             Calendar c = Calendar.getInstance();
             c.set(Calendar.MILLISECOND, 0);
             c.set(Calendar.SECOND, 0);

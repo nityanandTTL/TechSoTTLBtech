@@ -1,7 +1,6 @@
 package com.thyrocare.btechapp.Retrofit;
 
 
-
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CheckbarcodeResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.FAQandANSArray;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.FeedbackListModel;
@@ -40,6 +39,8 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.VersionContr
 import com.thyrocare.btechapp.models.api.response.OrderPassresponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderServedResponseModel;
 import com.thyrocare.btechapp.models.api.response.PEAuthResponseModel;
+import com.thyrocare.btechapp.models.api.response.PEQrCodeResponse;
+import com.thyrocare.btechapp.models.api.response.PEVerifyQRResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentModeMasterResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.QrcodeBasedPatientDetailsResponseModel;
@@ -83,13 +84,13 @@ public interface GetAPIInterface {
     Call<VersionControlResponseModel> VersionControlAPI();
 
     @GET("api/BtechAvaibilityNew/BtechMarkedAvailability/{BtechID}")
-    Call<NewBtechAvaliabilityResponseModel> GetBtechAvailability(@Path("BtechID")String BtechID);
+    Call<NewBtechAvaliabilityResponseModel> GetBtechAvailability(@Path("BtechID") String BtechID);
 
     @GET("api/BtechAvaibilityNew/DynamicBtechMarkedAvailability/{BtechID}")
-    Call<DynamicBtechAvaliabilityResponseModel> GetDynamicBtechAvailability(@Path("BtechID")String BtechID);
+    Call<DynamicBtechAvaliabilityResponseModel> GetDynamicBtechAvailability(@Path("BtechID") String BtechID);
 
     @GET("api/BtechAvaibilityNew/NBTMarkedAvailability/{ID}")
-    Call<ArrayList<TSPNBT_AvilModel>> GetTSP_NBT_Avialability(@Path("ID")String ID);
+    Call<ArrayList<TSPNBT_AvilModel>> GetTSP_NBT_Avialability(@Path("ID") String ID);
 
     @GET("api/BtechOrderSummary/BtechServedOrders/{BtechID}/{Date}")
     Call<ServedOrderResponseModel> CallServedOrderAPI(@Path("BtechID") String BtechID, @Path("Date") String Date);
@@ -107,26 +108,26 @@ public interface GetAPIInterface {
     Call<ArrayList<Get_Leave_Applied_history_Model>> GetBetch_leavehistory(@Path("btechid") String btechid);
 
     @GET("api/Ledger/CashRegister/{btechid}/{fromdate}/{todate}")
-    Call<Get_cash_register_details_Model> Get_CashRegister(@Path("btechid")String btechid, @Path("fromdate") String fromdate, @Path("todate") String todate);
+    Call<Get_cash_register_details_Model> Get_CashRegister(@Path("btechid") String btechid, @Path("fromdate") String fromdate, @Path("todate") String todate);
 
     @GET("api/Ledger/DepositPayments/{btechid}/{fromdate}/{todate}")
-    Call<ArrayList<Get_deposite_details_model>>  Get_Deposite(@Path("btechid")String btechid, @Path("fromdate") String fromdate, @Path("todate") String todate);
+    Call<ArrayList<Get_deposite_details_model>> Get_Deposite(@Path("btechid") String btechid, @Path("fromdate") String fromdate, @Path("todate") String todate);
 
     @GET("api/OrdersCredit/BtechEarnings/{btechid}/{fromdate}/{todate}")
-    Call<Get_BtechEarning_Model> get_BtechEarning(@Path("btechid")String btechid, @Path("fromdate") String fromdate, @Path("todate") String todate);
+    Call<Get_BtechEarning_Model> get_BtechEarning(@Path("btechid") String btechid, @Path("fromdate") String fromdate, @Path("todate") String todate);
 
     @GET("MASTER.svc/BTECH STAFF/DynamicFaq")
     Call<FAQandANSArray> getFAQ();
 
     @GET("api/OrderVisitDetailsOptimize/{btechId}")
-    Call<FetchOrderDetailsResponseModel> getAllVisitDetails(@Path("btechId")String btechId);
+    Call<FetchOrderDetailsResponseModel> getAllVisitDetails(@Path("btechId") String btechId);
 
     @GET("api/OrderVisitDetailsOptimize/ByOrderNo/{btechId}/{orderId}")
-    Call<FetchOrderDetailsResponseModel> getOrderAllVisitDetails(@Path("btechId")String btechId, @Path("orderId")String orderId);
+    Call<FetchOrderDetailsResponseModel> getOrderAllVisitDetails(@Path("btechId") String btechId, @Path("orderId") String orderId);
 
-//    @GET("api/OrderDetailsByVisit/{orderno}")
+    //    @GET("api/OrderDetailsByVisit/{orderno}")
     @GET("api/OrderVisitDetailsOptimize/GetOrderVisitDetailsorderwise/{orderno}")
-    Call<FetchOrderDetailsResponseModel> getOrderDetail(@Path("orderno")String orderno);
+    Call<FetchOrderDetailsResponseModel> getOrderDetail(@Path("orderno") String orderno);
 
     @Headers("Content-Type: application/json")
     @GET("api/BrandTestRateList/2")
@@ -134,11 +135,11 @@ public interface GetAPIInterface {
 
     @Headers("Content-Type: application/json")
     @GET("api/CampDetails/MyCampCount/{ID}")
-    Call<String> CallGetCampDetailsCountAPI(@Path("ID")String ID);
+    Call<String> CallGetCampDetailsCountAPI(@Path("ID") String ID);
 
     @Headers("Content-Type: application/json")
     @GET("api/CampDetails/OrderDetails/{qrContent}")
-    Call<CampScanQRResponseModel> CallgetSendQRCodeRequestAPI(@Path("qrContent")String qrContent);
+    Call<CampScanQRResponseModel> CallgetSendQRCodeRequestAPI(@Path("qrContent") String qrContent);
 
     @Headers("Content-Type: application/json")
     @GET("api/Masters/PaymentModeMaster")
@@ -146,7 +147,7 @@ public interface GetAPIInterface {
 
     @Headers("Content-Type: application/json")
     @GET("api/Masters/BankMaster/{ID}")
-    Call<ArrayList<BankMasterResponseModel>> CallGetBankMasterApi(@Path("ID")String ID);
+    Call<ArrayList<BankMasterResponseModel>> CallGetBankMasterApi(@Path("ID") String ID);
 
     @Headers("Content-Type: application/json")
     @GET("api/BrandMaster")
@@ -158,63 +159,63 @@ public interface GetAPIInterface {
 
     @Headers("Content-Type: application/json")
     @GET("api/BrandTestRateList/{ID}")
-    Call<String> CallGetFetchBrandwiseTestMasterApi( @Path("ID")String ID);
+    Call<String> CallGetFetchBrandwiseTestMasterApi(@Path("ID") String ID);
 
 
     @Headers("Content-Type: application/json")
     @GET("api/ServingSlotDetails/{ID}")
-    Call<ArrayList<SlotModel>> CallFetchSlotDetailsApi(@Path("ID")String ID);
+    Call<ArrayList<SlotModel>> CallFetchSlotDetailsApi(@Path("ID") String ID);
 
     @Headers("Content-Type: application/json")
     @GET("api/ServingSlotDetails/{ID}")
-    Call<ArrayList<SlotModel>> CallFetchSlotDetailsApi(@Header("Authorization")String token, @Path("ID")String ID);
+    Call<ArrayList<SlotModel>> CallFetchSlotDetailsApi(@Header("Authorization") String token, @Path("ID") String ID);
 
     @Headers("Content-Type: application/json")
     @GET("api/Ledger/CashRegister/{ID}/{fromdate}/{todate}")
-    Call<FetchLedgerResponseModel> CallgetFetchDepositDetailsApi(@Path("ID")String ID, @Path("fromdate")String fromdate, @Path("todate")String todate);
+    Call<FetchLedgerResponseModel> CallgetFetchDepositDetailsApi(@Path("ID") String ID, @Path("fromdate") String fromdate, @Path("todate") String todate);
 
     @Headers("Content-Type: application/json")
     @GET("api/OrdersCredit/BtechEarnings/{ID}/{fromdate}/{todate}")
-    Call<Earning_NewRegisterModel> CallFetchEarningDetailsApi(@Path("ID")String ID, @Path("fromdate")String fromdate, @Path("todate")String todate);
+    Call<Earning_NewRegisterModel> CallFetchEarningDetailsApi(@Path("ID") String ID, @Path("fromdate") String fromdate, @Path("todate") String todate);
 
     @GET("api/Ledger/DepositPayments/{btechid}/{fromdate}/{todate}")
-    Call<ArrayList<DepositRegisterModel>> CallgetFetchDepositPaymentDetailsApi(@Path("btechid")String btechid, @Path("fromdate") String fromdate, @Path("todate") String todate);
+    Call<ArrayList<DepositRegisterModel>> CallgetFetchDepositPaymentDetailsApi(@Path("btechid") String btechid, @Path("fromdate") String fromdate, @Path("todate") String todate);
 
     @Headers("Content-Type: application/json")
     @GET("api/Masters/CategoryWiseMaterialMaster/{Category}")
-    Call<ArrayList<MaterialDetailsModel>> CallGetMaterialsDetailsApi(@Path("Category")String Category);
+    Call<ArrayList<MaterialDetailsModel>> CallGetMaterialsDetailsApi(@Path("Category") String Category);
 
     @Headers("Content-Type: application/json")
     @GET("api/Inventory/StockInHand/{ID}")
-    Call<MaterialINVResponseModel> CallGetMaterialINVDetailsApi(@Path("ID")String ID);
+    Call<MaterialINVResponseModel> CallGetMaterialINVDetailsApi(@Path("ID") String ID);
 
     @Headers("Content-Type: application/json")
     @GET("api/MaterialOrderTracking/BtechVirtualStoack/{ID}")
-    Call<MaterialBtechStockResponseModel> CallGetBtechVirtualStoack_DETAILApi(@Path("ID")String ID);
+    Call<MaterialBtechStockResponseModel> CallGetBtechVirtualStoack_DETAILApi(@Path("ID") String ID);
 
     @Headers("Content-Type: application/json")
     @GET("api/BtechCollections/{ID}")
-    Call<BtechCollectionsResponseModel> CallGetBtechCollectionListApi(@Path("ID")String ID);
+    Call<BtechCollectionsResponseModel> CallGetBtechCollectionListApi(@Path("ID") String ID);
 
     @Headers("Content-Type: application/json")
     @GET("api/BtechHubs/{ID}")
-    Call<DispatchHubDisplayDetailsResponseModel> CallGetDispatchHubDetailsDisplayApi(@Path("ID")String ID);
+    Call<DispatchHubDisplayDetailsResponseModel> CallGetDispatchHubDetailsDisplayApi(@Path("ID") String ID);
 
     @Headers("Content-Type: application/json")
     @GET("api/BtechOrderSummary/BtechServedOrders/{ID}/{Date}")
-    Call<OrderServedResponseModel> CallGetOrderServedDetailsDisplayApi(@Path("ID")String ID,@Path("Date")String Date);
+    Call<OrderServedResponseModel> CallGetOrderServedDetailsDisplayApi(@Path("ID") String ID, @Path("Date") String Date);
 
     @Headers("Content-Type: application/json")
     @GET("api/BtechClients/{ID}")
-    Call<BtechClientsResponseModel> CallGetBtechClientsListDetailsDisplayApi(@Path("ID")String ID);
+    Call<BtechClientsResponseModel> CallGetBtechClientsListDetailsDisplayApi(@Path("ID") String ID);
 
     @Headers("Content-Type: application/json")
     @GET("api/CampDetails/MyCampDetails/{ID}")
-    Call<CampListDisplayResponseModel> CallGetCampListDetailsDisplayApi(@Path("ID")String ID);
+    Call<CampListDisplayResponseModel> CallGetCampListDetailsDisplayApi(@Path("ID") String ID);
 
     @Headers("Content-Type: application/json")
     @GET("api/BtechEstEarning/{ID}")
-    Call<BtechEstEarningsResponseModel> CallGetBtechEstEarningsApi(@Path("ID")String ID);
+    Call<BtechEstEarningsResponseModel> CallGetBtechEstEarningsApi(@Path("ID") String ID);
 
     @Headers("Content-Type: application/json")
     @GET("api/PayThyrocare/SelectMode/{ID}")
@@ -305,7 +306,7 @@ public interface GetAPIInterface {
     Call<GetPETestResponseModel> getPETests(@Header("Content-Type") String content_type, @Header("x-source") String source, @Header("x-api-auth") String authToken, @Path("pincode") String pincode,@Path("OrderNo") String OrderNo);*//*,@Path(value = "value",encoded = true)String value*/
 
     @GET("/api/partner-integration/v1/catalog/pincode/{pincode}/items")
-    Call<GetPETestResponseModel> getPETests(@Header("Content-Type") String content_type, @Header("x-source") String source, @Header("x-api-auth") String authToken, @Path("pincode") String pincode,@Query("partner_order_id") String orderno);/*,@Path(value = "value",encoded = true)String value*/
+    Call<GetPETestResponseModel> getPETests(@Header("Content-Type") String content_type, @Header("x-source") String source, @Header("x-api-auth") String authToken, @Path("pincode") String pincode, @Query("partner_order_id") String orderno);/*,@Path(value = "value",encoded = true)String value*/
 
     //TODO DSA brandtestmaster
     @GET("api/DSAProducts/Products/{OrderNo}")
@@ -317,7 +318,7 @@ public interface GetAPIInterface {
     @GET("api/Masters/GetPECancellationRemarks/{ID}")
     Call<GetPECancelRemarksResponseModel> getpecancelRemarks(@Path("ID") String ID);
 
-//    @GET("api/Masters/DisplaySubSlotMastersForPE/{pincode}/{date}")
+    //    @GET("api/Masters/DisplaySubSlotMastersForPE/{pincode}/{date}")
     @GET("api/Masters/DisplayBenwiseSubSlotMastersFOrPE/{pincode}/{date}/{benCount}")
     Call<ArrayList<GetPEBtechSlotResponseModel>> getPEbtechSlot(@Header("Authorization") String token, @Path("pincode") String pincode, @Path("date") String date, @Path("benCount") int size);
 
@@ -332,5 +333,13 @@ public interface GetAPIInterface {
 
     @GET("PEEvents/PECouponAPI/{OrderID}")
     Call<CouponCodeResponseModel> getCouponCodes(@Path("OrderID") String orderid);
+
+    @Headers({"Content-Type: application/json", "X-source:Thyrocare"})
+    @GET("api/partner-integration/v1/thyrocare/get-qr")
+    Call<PEQrCodeResponse> getPEQRCode(@Query("partner_order_id") String orderno, @Header("X-Acess-Token") String accesToken);
+
+    @Headers({"Content-Type: application/json", "X-source:Thyrocare"})
+    @GET("api/integration/v1/thyrocare/validate-qr")
+    Call<PEVerifyQRResponseModel> peVerifyQR(@Query("partner_order_id") String orderno);
 }
 

@@ -4,7 +4,7 @@ import org.parceler.Parcel;
 
 
 @Parcel
-public class GetOTPRequestModel  {
+public class GetOTPRequestModel {
 
     String Mobile_no;
 

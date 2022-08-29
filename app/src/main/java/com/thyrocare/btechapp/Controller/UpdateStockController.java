@@ -21,11 +21,11 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SO
 
 public class UpdateStockController {
     private static final String TAG = UpdateStockController.class.getSimpleName();
+    Global globalClass;
     private Activity mActivity;
     private int flag;
     private RequestQueue requestQueue;
     private UpdateMaterialActivity bmc_updateMaterialActivity;
-    Global globalClass;
 
     public UpdateStockController(UpdateMaterialActivity updateMaterialActivity, Activity activity) {
         this.bmc_updateMaterialActivity = updateMaterialActivity;
@@ -44,12 +44,12 @@ public class UpdateStockController {
             @Override
             public void onResponse(Call<CommonResponseModel> call, retrofit2.Response<CommonResponseModel> response) {
                 globalClass.hideProgressDialog(mActivity);
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     CommonResponseModel commonResponseModel = response.body();
-                    if (flag == 0){
+                    if (flag == 0) {
                         bmc_updateMaterialActivity.getUpdatedResponse(commonResponseModel);
                     }
-                }else{
+                } else {
                     globalClass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
                 }
             }

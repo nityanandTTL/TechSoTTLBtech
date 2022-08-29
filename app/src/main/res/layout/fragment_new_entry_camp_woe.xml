@@ -9,19 +9,21 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:id="@+id/lin_spinners"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginLeft="@dimen/_4sdp"
-            android:layout_marginRight="@dimen/_4sdp">
+            android:layout_marginRight="@dimen/_4sdp"
+            android:orientation="horizontal">
+
             <RelativeLayout
                 android:id="@+id/rel_CampSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_margin="@dimen/_2sdp"
+                android:layout_weight="1"
                 android:background="@drawable/rounded_background_empty_orange">
 
                 <Spinner
@@ -34,14 +36,14 @@
 
             <RelativeLayout
                 android:id="@+id/rel_serach"
-                android:layout_below="@+id/rel_CampSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/rel_CampSpinner"
                 android:layout_margin="@dimen/_2sdp"
-                android:gravity="center_vertical"
                 android:layout_weight="1"
-                android:visibility="gone"
-                android:background="@drawable/rounded_background_empty_orange">
+                android:background="@drawable/rounded_background_empty_orange"
+                android:gravity="center_vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/img_search"
@@ -53,16 +55,16 @@
 
                 <EditText
                     android:id="@+id/edt_search"
-                    android:hint="Search Patient"
-                   android:layout_centerVertical="true"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_18sdp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/img_search"
+                    android:background="@color/transparent"
+                    android:hint="Search Patient"
+                    android:imeOptions="actionDone"
                     android:lines="1"
                     android:maxLines="1"
-                    android:singleLine="true"
-                    android:layout_toLeftOf="@+id/img_search"
-                    android:imeOptions="actionDone"
-                    android:background="@color/transparent" />
+                    android:singleLine="true" />
 
                 <com.thyrocare.btechapp.NewScreenDesigns.Utils.SearchableSpinner
                     android:id="@+id/spn_Search"
@@ -71,7 +73,7 @@
                     android:layout_centerVertical="true"
                     android:background="@color/transparent"
                     android:inputType="textPersonName"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -79,10 +81,10 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/_4sdp"
-            android:layout_marginRight="@dimen/_4sdp"
+            android:layout_above="@+id/lin_new_existingEntry"
             android:layout_below="@+id/lin_spinners"
-            android:layout_above="@+id/lin_new_existingEntry">
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginRight="@dimen/_4sdp">
 
             <RelativeLayout
                 android:id="@+id/rel_form"
@@ -129,40 +131,40 @@
                     android:orientation="horizontal"
                     android:weightSum="10">
 
-                   <!-- <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/til_name"
-                        android:layout_marginLeft="@dimen/_2sdp"
-                        android:layout_marginRight="@dimen/_2sdp"
-                        android:layout_marginBottom="@dimen/_2sdp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="2"
-                        android:hint="Age *">
+                    <!-- <com.google.android.material.textfield.TextInputLayout
+                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                         android:layout_width="0dp"
+                         android:layout_height="wrap_content"
+                         android:layout_below="@+id/til_name"
+                         android:layout_marginLeft="@dimen/_2sdp"
+                         android:layout_marginRight="@dimen/_2sdp"
+                         android:layout_marginBottom="@dimen/_2sdp"
+                         android:layout_gravity="center_vertical"
+                         android:layout_weight="2"
+                         android:hint="Age *">
 
-                        <EditText
-                            android:id="@+id/edt_Age"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_30sdp"
-                            android:layout_margin="@dimen/_2sdp"
-                            android:background="@drawable/rounded_background_empty_orange"
-                            android:digits="@string/Mobile_no_validation"
-                            android:inputType="number"
-                            android:maxLength="3" />
+                         <EditText
+                             android:id="@+id/edt_Age"
+                             android:layout_width="match_parent"
+                             android:layout_height="@dimen/_30sdp"
+                             android:layout_margin="@dimen/_2sdp"
+                             android:background="@drawable/rounded_background_empty_orange"
+                             android:digits="@string/Mobile_no_validation"
+                             android:inputType="number"
+                             android:maxLength="3" />
 
-                    </com.google.android.material.textfield.TextInputLayout>-->
+                     </com.google.android.material.textfield.TextInputLayout>-->
 
                     <EditText
                         android:id="@+id/edt_Age"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
                         android:layout_margin="@dimen/_2sdp"
+                        android:layout_weight="2"
                         android:background="@drawable/rounded_background_empty_orange"
                         android:digits="@string/Mobile_no_validation"
-                        android:inputType="number"
                         android:hint="Age *"
+                        android:inputType="number"
                         android:maxLength="3" />
 
                     <RadioGroup
@@ -170,11 +172,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/_10sdp"
                         android:layout_weight="8"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:weightSum="10"
-                        android:layout_marginLeft="@dimen/_10sdp">
+                        android:weightSum="10">
 
                         <RadioButton
                             android:id="@+id/rb_male"
@@ -195,73 +197,73 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycle_ScanBarcode"
-                    android:layout_below="@+id/lin_AgeGender"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lin_AgeGender" />
 
                 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/lin_uploadVial"
-                    android:layout_below="@+id/recycle_ScanBarcode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:weightSum="10"
-                    android:gravity="center_vertical">
+                    android:layout_below="@+id/recycle_ScanBarcode"
+                    android:gravity="center_vertical"
+                    android:weightSum="10">
 
                     <TextView
                         android:id="@+id/tv_uploadVailPhoto"
                         android:layout_width="0dp"
-                        android:layout_weight="4"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
                         android:layout_marginLeft="@dimen/_3sdp"
                         android:layout_marginRight="@dimen/_7sdp"
+                        android:layout_weight="4"
                         android:text="Vial Image"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_14sdp"/>
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_viewVailPhoto"
                         android:layout_width="0dp"
-                        android:layout_weight="4"
                         android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_2sdp"
+                        android:layout_weight="4"
+                        android:background="@drawable/rounded_background_empty_orange"
                         android:gravity="center"
                         android:padding="@dimen/_6sdp"
-                        android:layout_margin="@dimen/_2sdp"
-                        android:textSize="@dimen/_14sdp"
-                        android:textStyle="bold"
-                        android:background="@drawable/rounded_background_empty_orange"
+                        android:text="Upload"
                         android:textColor="@color/colorPrimary"
-                        android:text="Upload"/>
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:id="@+id/img_CapturePhoto"
                         android:layout_width="0dp"
-                        android:layout_weight="2"
                         android:layout_height="@dimen/_30sdp"
+                        android:layout_weight="2"
                         android:src="@drawable/camera_icon"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/img_deletephoto"
                         android:layout_width="0dp"
-                        android:layout_weight="2"
                         android:layout_height="@dimen/_30sdp"
+                        android:layout_weight="2"
                         android:src="@drawable/red_cross_icon"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/btn_submit"
-                    android:layout_below="@+id/lin_uploadVial"
-                    android:text="submit"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:textColor="@color/colorPrimary"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_30sdp"
+                    android:layout_below="@+id/lin_uploadVial"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:background="@drawable/button_ripple_effect"
                     android:padding="@dimen/_2sdp"
-                    android:background="@drawable/button_ripple_effect">
+                    android:text="submit"
+                    android:textColor="@color/colorPrimary">
 
 
                 </Button>
@@ -272,39 +274,38 @@
 
         <LinearLayout
             android:id="@+id/lin_new_existingEntry"
-            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/_1sdp"
             android:visibility="gone">
 
             <TextView
                 android:id="@+id/tv_existing"
-                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"
-                android:textSize="@dimen/_14sdp"
-                android:padding="@dimen/_6sdp"
+                android:layout_weight="1"
                 android:background="@drawable/selectedtab_white"
-                android:text="Existing"/>
+                android:gravity="center"
+                android:padding="@dimen/_6sdp"
+                android:text="Existing"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_new"
-                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/unselected_tab_grey"
                 android:gravity="center"
-                android:textStyle="bold"
-                android:textSize="@dimen/_14sdp"
-                android:text="New"
                 android:padding="@dimen/_6sdp"
-                android:background="@drawable/unselected_tab_grey"/>
+                android:text="New"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold" />
         </LinearLayout>
     </RelativeLayout>
-
 
 
 </RelativeLayout>

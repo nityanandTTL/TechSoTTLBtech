@@ -80,5 +80,4 @@ public class RemarksResponseModel /*implements Parcelable*/ {
     }*/
 
 
-
 }

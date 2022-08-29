@@ -1,7 +1,9 @@
 package com.thyrocare.btechapp.activity;
 
 import android.os.Bundle;
+
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -40,7 +42,7 @@ public class OLCPickupActivity extends AbstractActivity {
         btechClientsModel = getIntent().getExtras().getParcelable(BundleConstants.BTECH_CLIENTS_MODEL);
         initUI();
         initListeners();
-        pushFragments(OLCMasterBarcodeScanFragment.newInstance(btechClientsModel),false,false, OLCMasterBarcodeScanFragment.TAG_FRAGMENT,R.id.fl_olc_pickup,TAG_ACTIIVTY);
+        pushFragments(OLCMasterBarcodeScanFragment.newInstance(btechClientsModel), false, false, OLCMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_olc_pickup, TAG_ACTIIVTY);
     }
 
     private void initListeners() {

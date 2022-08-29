@@ -11,13 +11,32 @@ import java.util.ArrayList;
  * Created by Orion on 5/15/2017.
  */
 
-public class CampScanQRResponseModel implements Parcelable{
+public class CampScanQRResponseModel implements Parcelable {
+    public static final Creator<CampScanQRResponseModel> CREATOR = new Creator<CampScanQRResponseModel>() {
+        @Override
+        public CampScanQRResponseModel createFromParcel(Parcel in) {
+            return new CampScanQRResponseModel(in);
+        }
+
+        @Override
+        public CampScanQRResponseModel[] newArray(int size) {
+            return new CampScanQRResponseModel[size];
+        }
+    };
+    ArrayList<CampAllOrderDetailsModel> allOrderdetails;
     private int SlotId;
     private double Distance;
-    ArrayList<CampAllOrderDetailsModel> allOrderdetails;
     private String VisitId, Slot;
 
     public CampScanQRResponseModel() {
+    }
+
+    protected CampScanQRResponseModel(Parcel in) {
+        SlotId = in.readInt();
+        Distance = in.readDouble();
+        allOrderdetails = in.createTypedArrayList(CampAllOrderDetailsModel.CREATOR);
+        VisitId = in.readString();
+        Slot = in.readString();
     }
 
     public int getSlotId() {
@@ -60,14 +79,6 @@ public class CampScanQRResponseModel implements Parcelable{
         Slot = slot;
     }
 
-    protected CampScanQRResponseModel(Parcel in) {
-        SlotId = in.readInt();
-        Distance = in.readDouble();
-        allOrderdetails = in.createTypedArrayList(CampAllOrderDetailsModel.CREATOR);
-        VisitId = in.readString();
-        Slot = in.readString();
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(SlotId);
@@ -81,16 +92,4 @@ public class CampScanQRResponseModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<CampScanQRResponseModel> CREATOR = new Creator<CampScanQRResponseModel>() {
-        @Override
-        public CampScanQRResponseModel createFromParcel(Parcel in) {
-            return new CampScanQRResponseModel(in);
-        }
-
-        @Override
-        public CampScanQRResponseModel[] newArray(int size) {
-            return new CampScanQRResponseModel[size];
-        }
-    };
 }

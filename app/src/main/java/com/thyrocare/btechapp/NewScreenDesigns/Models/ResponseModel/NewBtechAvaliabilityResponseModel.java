@@ -25,8 +25,7 @@ public class NewBtechAvaliabilityResponseModel implements Serializable {
         private int Day3;
         private int Day4;
 
-        private Numberofdaysdatamodel()
-        {
+        private Numberofdaysdatamodel() {
             //Prevent default constructor
         }
 

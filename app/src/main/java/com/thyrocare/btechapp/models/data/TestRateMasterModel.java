@@ -10,6 +10,17 @@ import java.util.ArrayList;
  */
 
 public class TestRateMasterModel extends BaseModel implements Parcelable {
+    public static final Creator<TestRateMasterModel> CREATOR = new Creator<TestRateMasterModel>() {
+        @Override
+        public TestRateMasterModel createFromParcel(Parcel in) {
+            return new TestRateMasterModel(in);
+        }
+
+        @Override
+        public TestRateMasterModel[] newArray(int size) {
+            return new TestRateMasterModel[size];
+        }
+    };
     private int TestId;
     private int BrandId;
     private String BrandName;
@@ -80,18 +91,6 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<TestRateMasterModel> CREATOR = new Creator<TestRateMasterModel>() {
-        @Override
-        public TestRateMasterModel createFromParcel(Parcel in) {
-            return new TestRateMasterModel(in);
-        }
-
-        @Override
-        public TestRateMasterModel[] newArray(int size) {
-            return new TestRateMasterModel[size];
-        }
-    };
 
     public int getTestId() {
         return TestId;

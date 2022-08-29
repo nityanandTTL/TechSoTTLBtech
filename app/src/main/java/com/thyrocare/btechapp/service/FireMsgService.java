@@ -147,7 +147,7 @@ public class FireMsgService extends FirebaseMessagingService {
 
 
             if (InputUtils.CheckEqualIgnoreCase(AppID, Constants.StrAppID)) {
-                if (Screen_category==Constants.LogoutID){
+                if (Screen_category == Constants.LogoutID) {
                     LogUserOut();
                 }
                 InitaiteDataForNotification(notifyID, title, message, onGoing, autoCancel, bigText, imageUrl, timestamp, NotificationID, Product_name, Order_ID, mobile, ScreenURL);
@@ -172,7 +172,7 @@ public class FireMsgService extends FirebaseMessagingService {
             Intent n = new Intent(getApplicationContext(), LoginActivity.class);
             n.setAction(Intent.ACTION_MAIN);
             n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            n.putExtra("ScreenCategory",100);
+            n.putExtra("ScreenCategory", 100);
             startActivity(n);
         } catch (Exception e) {
             e.printStackTrace();

@@ -4,6 +4,7 @@ package com.thyrocare.btechapp.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,17 +49,17 @@ import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 
 public class HubListDisplayFragment extends AppCompatActivity {
+    public static final String TAG_FRAGMENT = HubListDisplayFragment.class.getSimpleName();
+    public static int flowDecider = 0;//for btech_hub flow
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recycler_view;
     LinearLayout ll_hub_display_footer;
-    TextView tv_collection_sample,tv_toolbar;
-    ImageView iv_back,iv_home;
+    TextView tv_collection_sample, tv_toolbar;
+    ImageView iv_back, iv_home;
     Activity activity;
     ArrayList<HUBBTechModel> hubbTechModels = new ArrayList<>();
     DispatchToHubDisplayDetailsAdapter dispatchToHubDisplayDetailsAdapter;
     AppPreferenceManager appPreferenceManager;
-    public static final String TAG_FRAGMENT = HubListDisplayFragment.class.getSimpleName();
-    public static int flowDecider = 0;//for btech_hub flow
     private Global global;
 
 
@@ -126,8 +128,8 @@ public class HubListDisplayFragment extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == BundleConstants.HMD_START && resultCode == BundleConstants.HMD_ARRIVED) {
             HUBBTechModel hubbTechModel = data.getExtras().getParcelable(BundleConstants.HUB_BTECH_MODEL);
-            Intent intent = new Intent(activity,HubListDisplayFragment.class);
-            intent.putExtra("hubtech",hubbTechModel);
+            Intent intent = new Intent(activity, HubListDisplayFragment.class);
+            intent.putExtra("hubtech", hubbTechModel);
             startActivity(intent);
 //            pushFragments(HubMasterBarcodeScanFragment.newInstance(hubbTechModel), false, false, HubMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
         }
@@ -157,7 +159,7 @@ public class HubListDisplayFragment extends AppCompatActivity {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     DispatchHubDisplayDetailsResponseModel dispatchHubDisplayDetailsResponseModel = response.body();
-                    if (dispatchHubDisplayDetailsResponseModel != null && dispatchHubDisplayDetailsResponseModel.getHubMaster()  != null && dispatchHubDisplayDetailsResponseModel.getHubMaster().size() > 0) {
+                    if (dispatchHubDisplayDetailsResponseModel != null && dispatchHubDisplayDetailsResponseModel.getHubMaster() != null && dispatchHubDisplayDetailsResponseModel.getHubMaster().size() > 0) {
                         hubbTechModels = dispatchHubDisplayDetailsResponseModel.getHubMaster();
                         Logger.error("hubbTechModels size " + dispatchHubDisplayDetailsResponseModel.getHubMaster().size());
                         prepareRecyclerView();
@@ -168,6 +170,7 @@ public class HubListDisplayFragment extends AppCompatActivity {
                     Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<DispatchHubDisplayDetailsResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);

@@ -52,8 +52,8 @@ public class DisplayBtechCertificateViewPagerAdapter extends PagerAdapter {
 
 
         AppCompatImageView imageView = (AppCompatImageView) itemView.findViewById(R.id.img_certificate);
-        String ImageURL = !InputUtils.isNull(certificatessArrayList.get(position).getCertificate()) ? certificatessArrayList.get(position).getCertificate().replace("\\","/") :"";
-        if (Patterns.WEB_URL.matcher(ImageURL).matches()){
+        String ImageURL = !InputUtils.isNull(certificatessArrayList.get(position).getCertificate()) ? certificatessArrayList.get(position).getCertificate().replace("\\", "/") : "";
+        if (Patterns.WEB_URL.matcher(ImageURL).matches()) {
             globalclass.DisplayImagewithDefaultImage(mActivity, ImageURL, imageView);
             Zoomy.Builder builder = new Zoomy.Builder(mActivity).target(imageView).enableImmersiveMode(false);
             builder.register();

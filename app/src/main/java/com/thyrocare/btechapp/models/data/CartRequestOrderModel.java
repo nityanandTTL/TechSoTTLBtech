@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class CartRequestOrderModel implements Parcelable {
+    public static final Creator<CartRequestOrderModel> CREATOR = new Creator<CartRequestOrderModel>() {
+        @Override
+        public CartRequestOrderModel createFromParcel(Parcel in) {
+            return new CartRequestOrderModel(in);
+        }
+
+        @Override
+        public CartRequestOrderModel[] newArray(int size) {
+            return new CartRequestOrderModel[size];
+        }
+    };
     private String OrderNo;
     private String BrandId;
     private int HC;
@@ -32,18 +43,6 @@ public class CartRequestOrderModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<CartRequestOrderModel> CREATOR = new Creator<CartRequestOrderModel>() {
-        @Override
-        public CartRequestOrderModel createFromParcel(Parcel in) {
-            return new CartRequestOrderModel(in);
-        }
-
-        @Override
-        public CartRequestOrderModel[] newArray(int size) {
-            return new CartRequestOrderModel[size];
-        }
-    };
 
     public String getOrderNo() {
         return OrderNo;

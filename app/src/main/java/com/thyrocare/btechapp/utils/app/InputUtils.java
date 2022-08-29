@@ -26,7 +26,7 @@ public class InputUtils {
     }
 
     public static String toCamelCase(final String init) {
-        if (init==null)
+        if (init == null)
             return null;
 
         final StringBuilder ret = new StringBuilder(init.length());
@@ -36,7 +36,7 @@ public class InputUtils {
                 ret.append(Character.toUpperCase(word.charAt(0)));
                 ret.append(word.substring(1).toLowerCase());
             }
-            if (!(ret.length()==init.length()))
+            if (!(ret.length() == init.length()))
                 ret.append(" ");
         }
 
@@ -49,13 +49,12 @@ public class InputUtils {
         return null;
     }
 
-    public static boolean isValidPassword(String password){
+    public static boolean isValidPassword(String password) {
         String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).{5,16}$";
         String regexSimple = "^(?!.*\\s).{5,16}$";
-        if(InputUtils.isNull(password)){
+        if (InputUtils.isNull(password)) {
             return false;
-        }
-        else{
+        } else {
             return password.matches(regexSimple);
         }
     }
@@ -81,10 +80,6 @@ public class InputUtils {
 
         float dp = px / dpi;
         return dp;
-    }
-
-    public boolean isAlpha(String name) {
-        return name.matches("[a-zA-Z]+");
     }
 
     public static void setTextToTextView(TextView textview, String msg) {
@@ -139,35 +134,36 @@ public class InputUtils {
         }
     }
 
-    public static boolean isNull(String val){
-        if(val==null||val.equalsIgnoreCase(null)||val.trim().equalsIgnoreCase("")||val.trim().equalsIgnoreCase("null")|| val.trim()==""||val.trim()=="null")
+    public static boolean isNull(String val) {
+        if (val == null || val.equalsIgnoreCase(null) || val.trim().equalsIgnoreCase("") || val.trim().equalsIgnoreCase("null") || val.trim() == "" || val.trim() == "null")
             return true;
         return false;
     }
 
     public static boolean isNull(Collection obj) {
-        if (obj == null || obj.size() == 0){
+        if (obj == null || obj.size() == 0) {
             return true;
         }
         return false;
     }
 
     public static boolean isNull(Object obj) {
-        if (obj == null){
+        if (obj == null) {
             return true;
         }
         return false;
     }
+
     public static boolean isNull(int number) {
-        if (number == 0){
+        if (number == 0) {
             return true;
         }
         return false;
     }
 
     public static int parseInt(String strnumber) {
-        int finalNumber = 0 ;
-        if (!isNull(strnumber)){
+        int finalNumber = 0;
+        if (!isNull(strnumber)) {
             try {
                 finalNumber = Integer.parseInt(strnumber);
             } catch (NumberFormatException e) {
@@ -178,8 +174,8 @@ public class InputUtils {
     }
 
     public static float parseFloat(String strnumber) {
-        float finalNumber = 0 ;
-        if (!isNull(strnumber)){
+        float finalNumber = 0;
+        if (!isNull(strnumber)) {
             try {
                 finalNumber = Float.parseFloat(strnumber);
             } catch (NumberFormatException e) {
@@ -190,8 +186,8 @@ public class InputUtils {
     }
 
     public static double parseDouble(String strnumber) {
-        double finalNumber = 0 ;
-        if (!isNull(strnumber)){
+        double finalNumber = 0;
+        if (!isNull(strnumber)) {
             try {
                 finalNumber = Double.parseDouble(strnumber);
             } catch (NumberFormatException e) {
@@ -202,7 +198,7 @@ public class InputUtils {
     }
 
     public static String parseString(int number) {
-        String finalString = "" ;
+        String finalString = "";
         try {
             finalString = String.valueOf(number);
         } catch (NumberFormatException e) {
@@ -212,7 +208,7 @@ public class InputUtils {
     }
 
     public static String parseString(double number) {
-        String finalString = "" ;
+        String finalString = "";
         try {
             finalString = String.valueOf(number);
         } catch (NumberFormatException e) {
@@ -222,24 +218,28 @@ public class InputUtils {
     }
 
     public static boolean CheckEqualIgnoreCase(String str1, String str2) {
-        if (!isNull(str1) && !isNull(str2) && str1.equalsIgnoreCase(str2)){
+        if (!isNull(str1) && !isNull(str2) && str1.equalsIgnoreCase(str2)) {
             return true;
         }
         return false;
     }
 
     public static boolean CheckEqualCaseSensitive(String str1, String str2) {
-        if ( str1 != null  && str2 != null && str1.equals(str2)){
+        if (str1 != null && str2 != null && str1.equals(str2)) {
             return true;
         }
         return false;
     }
 
     public static boolean CheckifStringContains(String mainString, String StrToCheck) {
-        if (!isNull(mainString) && !isNull(StrToCheck) && mainString.contains(StrToCheck)){
+        if (!isNull(mainString) && !isNull(StrToCheck) && mainString.contains(StrToCheck)) {
             return true;
         }
         return false;
+    }
+
+    public boolean isAlpha(String name) {
+        return name.matches("[a-zA-Z]+");
     }
 
 }

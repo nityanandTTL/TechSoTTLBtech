@@ -8,8 +8,8 @@
         android:id="@+id/cv_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_margin="@dimen/_3sdp"
+        android:layout_weight="1"
         android:background="@drawable/new_shadow_background"
         android:padding="@dimen/_5sdp"
         app:cardCornerRadius="@dimen/_8sdp"
@@ -38,16 +38,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_5sdp"
-                android:textColor="@color/grey"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="@color/grey" />
 
             <TextView
                 android:id="@+id/tv_days"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_5sdp"
-                android:textColor="@color/grey"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="@color/grey" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

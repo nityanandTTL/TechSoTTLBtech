@@ -37,25 +37,8 @@ public class NewCampScanBarcodeAdapter extends RecyclerView.Adapter<NewCampScanB
         this.barcodelistArrayList = barcodelistArrayList;
     }
 
-    public void UpdateBarcodeList(ArrayList<SubmitB2BWoeRequestModel.Barcodelist> barcodelistArrayList){
-         this.barcodelistArrayList = barcodelistArrayList;
-    }
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_barcodeType, tv_enteredBarcode;
-        ImageView img_scan, img_deleteBarcode;
-        LinearLayout lin_main;
-
-        public MyViewHolder(View view) {
-            super(view);
-
-            tv_barcodeType = (TextView) view.findViewById(R.id.tv_barcodeType);
-            tv_enteredBarcode = (TextView) view.findViewById(R.id.tv_enteredBarcode);
-            img_scan = (ImageView) view.findViewById(R.id.img_scan);
-            img_deleteBarcode = (ImageView) view.findViewById(R.id.img_deleteBarcode);
-            lin_main = (LinearLayout) view.findViewById(R.id.lin_main);
-
-        }
+    public void UpdateBarcodeList(ArrayList<SubmitB2BWoeRequestModel.Barcodelist> barcodelistArrayList) {
+        this.barcodelistArrayList = barcodelistArrayList;
     }
 
     @NonNull
@@ -69,10 +52,10 @@ public class NewCampScanBarcodeAdapter extends RecyclerView.Adapter<NewCampScanB
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         holder.img_scan.setVisibility(View.GONE);
         holder.tv_barcodeType.setText(StringUtils.toSentenceCase(barcodelistArrayList.get(position).getSAMPLE_TYPE()));
-        if (!StringUtils.isNull(barcodelistArrayList.get(position).getBARCODE())){
+        if (!StringUtils.isNull(barcodelistArrayList.get(position).getBARCODE())) {
             holder.tv_enteredBarcode.setText(barcodelistArrayList.get(position).getBARCODE());
             holder.img_deleteBarcode.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.tv_enteredBarcode.setText("");
             holder.img_deleteBarcode.setVisibility(View.GONE);
         }
@@ -80,12 +63,12 @@ public class NewCampScanBarcodeAdapter extends RecyclerView.Adapter<NewCampScanB
         holder.tv_enteredBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (StringUtils.isNull(holder.tv_enteredBarcode.getText().toString())){
-                    if (onClickListeners != null){
-                        onClickListeners.onScanBarcode(barcodelistArrayList.get(position).getSAMPLE_TYPE(),position);
+                if (StringUtils.isNull(holder.tv_enteredBarcode.getText().toString())) {
+                    if (onClickListeners != null) {
+                        onClickListeners.onScanBarcode(barcodelistArrayList.get(position).getSAMPLE_TYPE(), position);
                     }
-                }else{
-                    globalClass.showCustomToast(activity,"Please delete existing barcode to scan again.");
+                } else {
+                    globalClass.showCustomToast(activity, "Please delete existing barcode to scan again.");
                 }
             }
         });
@@ -93,8 +76,8 @@ public class NewCampScanBarcodeAdapter extends RecyclerView.Adapter<NewCampScanB
         holder.img_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onClickListeners != null){
-                    onClickListeners.onScanBarcode(barcodelistArrayList.get(position).getSAMPLE_TYPE(),position);
+                if (onClickListeners != null) {
+                    onClickListeners.onScanBarcode(barcodelistArrayList.get(position).getSAMPLE_TYPE(), position);
                 }
             }
         });
@@ -102,7 +85,7 @@ public class NewCampScanBarcodeAdapter extends RecyclerView.Adapter<NewCampScanB
         holder.img_deleteBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onClickListeners != null){
+                if (onClickListeners != null) {
                     onClickListeners.onDeleteBarcode(barcodelistArrayList.get(position).getBARCODE());
                 }
 
@@ -123,7 +106,25 @@ public class NewCampScanBarcodeAdapter extends RecyclerView.Adapter<NewCampScanB
     public interface OnClickListeners {
 
         void onScanBarcode(String sample_type, int position);
+
         void onDeleteBarcode(String barcode);
 
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView tv_barcodeType, tv_enteredBarcode;
+        ImageView img_scan, img_deleteBarcode;
+        LinearLayout lin_main;
+
+        public MyViewHolder(View view) {
+            super(view);
+
+            tv_barcodeType = (TextView) view.findViewById(R.id.tv_barcodeType);
+            tv_enteredBarcode = (TextView) view.findViewById(R.id.tv_enteredBarcode);
+            img_scan = (ImageView) view.findViewById(R.id.img_scan);
+            img_deleteBarcode = (ImageView) view.findViewById(R.id.img_deleteBarcode);
+            lin_main = (LinearLayout) view.findViewById(R.id.lin_main);
+
+        }
     }
 }

@@ -2,9 +2,11 @@ package com.thyrocare.btechapp.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -57,9 +59,6 @@ public class MaterialFragment extends AbstractFragment {
     public static final String TAG_FRAGMENT = "MATERIAL_FRAGMENT";
     HomeScreenActivity activity;
     AppPreferenceManager appPreferenceManager;
-    private View rootView;
-    private ArrayList<MaterialDetailsModel> materialDetailsModels;
-    private MaterialINVResponseModel materialINVResponseModel;
     TableLayout materialtable;
     Button update;
     LinearLayout btn_virtual, btn_material;
@@ -67,6 +66,9 @@ public class MaterialFragment extends AbstractFragment {
     CustomOKDialog cdd;
     String Category = "180";
     ArrayList<MaterialsStocksModel> stockModelsArr;
+    private View rootView;
+    private ArrayList<MaterialDetailsModel> materialDetailsModels;
+    private MaterialINVResponseModel materialINVResponseModel;
     private AlertDialog.Builder alertDialogBuilder;
     private Global global;
 
@@ -93,7 +95,7 @@ public class MaterialFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
-        global  = new Global(activity);
+        global = new Global(activity);
 
         try {
             if (activity.toolbarHome != null) {
@@ -142,7 +144,7 @@ public class MaterialFragment extends AbstractFragment {
                     @Override
                     public void onClicked(String remarks) {
 
-                        if (InputUtils.isNull(remarks.trim())){
+                        if (InputUtils.isNull(remarks.trim())) {
                             alertDialogBuilder = new AlertDialog.Builder(activity);
                             alertDialogBuilder
                                     .setMessage("Please enter remarks.")
@@ -155,7 +157,7 @@ public class MaterialFragment extends AbstractFragment {
                             AlertDialog alertDialog = alertDialogBuilder.create();
                             alertDialog.show();
 
-                        }else{
+                        } else {
                             BtechsRequestModel btechsRequestModel = new BtechsRequestModel();
 
                             BtechIdModel btechIdModel = new BtechIdModel();
@@ -241,6 +243,7 @@ public class MaterialFragment extends AbstractFragment {
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<MaterialDetailsModel>> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -263,6 +266,7 @@ public class MaterialFragment extends AbstractFragment {
                     initData();
                 }
             }
+
             @Override
             public void onFailure(Call<MaterialINVResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -280,14 +284,15 @@ public class MaterialFragment extends AbstractFragment {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 global.hideProgressDialog(activity);
-                    if (response.isSuccessful() && response.body() != null) {
-                        Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
-                        materialtable.removeAllViews();
-                        fetchMaterialsINV();
-                    }else{
-                        global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
-                    }
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                    materialtable.removeAllViews();
+                    fetchMaterialsINV();
+                } else {
+                    global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
+                }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -330,7 +335,7 @@ public class MaterialFragment extends AbstractFragment {
                     @Override
                     public void afterTextChanged(Editable s) {
                         if (!InputUtils.isNull(s.toString())) {
-                            try{
+                            try {
                                 if (Integer.parseInt(s.toString()) <= Integer.parseInt(btMaterialsModel.getVirtualStock())) {
                                     MaterialsStocksModel materialsStocksModel = new MaterialsStocksModel();
                                     materialsStocksModel.setMaterialID(Integer.parseInt(btMaterialsModel.getMaterialID()));
@@ -345,7 +350,7 @@ public class MaterialFragment extends AbstractFragment {
                                     actual.setText(btMaterialsModel.getVirtualStock());
                                     Toast.makeText(activity, "Actual Stock cannot be greater than Virtual Stock", Toast.LENGTH_SHORT).show();
                                 }
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 

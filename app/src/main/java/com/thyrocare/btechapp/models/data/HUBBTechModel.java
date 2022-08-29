@@ -7,7 +7,18 @@ import android.os.Parcelable;
  * Created by Orion on 4/27/2017.
  */
 
-public class HUBBTechModel extends BaseModel implements Parcelable{
+public class HUBBTechModel extends BaseModel implements Parcelable {
+    public static final Creator<HUBBTechModel> CREATOR = new Creator<HUBBTechModel>() {
+        @Override
+        public HUBBTechModel createFromParcel(Parcel in) {
+            return new HUBBTechModel(in);
+        }
+
+        @Override
+        public HUBBTechModel[] newArray(int size) {
+            return new HUBBTechModel[size];
+        }
+    };
     private int HubId;
     private String Incharge;
     private String Address;
@@ -47,18 +58,6 @@ public class HUBBTechModel extends BaseModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<HUBBTechModel> CREATOR = new Creator<HUBBTechModel>() {
-        @Override
-        public HUBBTechModel createFromParcel(Parcel in) {
-            return new HUBBTechModel(in);
-        }
-
-        @Override
-        public HUBBTechModel[] newArray(int size) {
-            return new HUBBTechModel[size];
-        }
-    };
 
     public int getHubId() {
         return HubId;

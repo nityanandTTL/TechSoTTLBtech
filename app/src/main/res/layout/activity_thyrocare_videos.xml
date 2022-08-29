@@ -39,11 +39,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recView"
-         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/video_view1"
-        android:layout_marginTop="@dimen/dp_5" />
+        android:layout_marginTop="@dimen/dp_5"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <TextView
         android:id="@+id/tv_noDatafound"

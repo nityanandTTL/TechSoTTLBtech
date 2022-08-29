@@ -2,8 +2,10 @@
 <paths>
     <files-path
         name="images"
-        path= "" />
+        path="" />
 
-    <external-path name="external_files" path="."/>
+    <external-path
+        name="external_files"
+        path="." />
 
 </paths>

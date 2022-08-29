@@ -87,13 +87,23 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     Global globalclass;
     ConnectionDetector cd;
     AppPreferenceManager appPreferenceManager;
+    ArrayList<BeneficiaryDetailsModel> beneficaryWiseArylst;
+    Runnable runnable;
+    TextView btn_Next, btn_Previous;
+    boolean isRescan = false;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
+    File BenBarcodePicimagefile;
+    File Affidavitfile;
+    String fileName = "", filepath = "";
+    int ImageFlag = 0;
+    int DelFlag;
+    boolean isRemovedUrine = false;
     private ViewPager BarcodeScanviewpager;
     private OrderVisitDetailsModel orderVisitDetailsModel;
-    ArrayList<BeneficiaryDetailsModel> beneficaryWiseArylst;
     private IntentIntegrator intentIntegrator;
     private int page = 0;
     private int dotsCount;
-    Runnable runnable;
     private ImageView[] dots;
     private CardView viewPagerIndicator;
     private LinearLayout viewPagerCountDots;
@@ -104,19 +114,9 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     private Camera camera;
     private int BenIDToCaptureVenuPhoto = 0, PositionToStoreVenuPhoto = 0, BenIDToDeleteVenuPhoto = 0, PositionToDeleteVenuPhoto = 0, BenIDToUploadAffidavit = 0, BenIDToDeleteAffidavit = 0, PositionToDeleteAffidavit = 0;
     private TextView btn_Proceed;
-    TextView btn_Next, btn_Previous;
     private Spinner spn_ben;
-    boolean isRescan = false;
-    TextView tv_toolbar;
-    ImageView iv_back, iv_home;
-    File BenBarcodePicimagefile;
-    File Affidavitfile;
     private int pick = 1123;
     private int Select_PDFFILE = 2121;
-    String fileName = "", filepath = "";
-    int ImageFlag = 0;
-    int DelFlag;
-    boolean isRemovedUrine = false;
 
     @Override
     public void onBackPressed() {
@@ -125,10 +125,10 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         alertDialog.setButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE, "YES",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        BundleConstants.setRefreshStartArriveActivity=1;
+                        BundleConstants.setRefreshStartArriveActivity = 1;
                         dialog.dismiss();
                         //onbackpress();
-                       finish();
+                        finish();
 
                     }
                 });
@@ -246,7 +246,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                             beneficaryWiseArylst.get(i).getBarcodedtl().add(beneficiaryBarcodeDetailsModel);
                         }
                     }
-                    if (!InputUtils.isNull(beneficaryWiseArylst.get(i).getTestsCode())){
+                    if (!InputUtils.isNull(beneficaryWiseArylst.get(i).getTestsCode())) {
                         if (beneficaryWiseArylst.get(i).getTestsCode().equalsIgnoreCase("RBS,PPBS") ||
                                 beneficaryWiseArylst.get(i).getTestsCode().equalsIgnoreCase("PPBS,RBS")) {
                             BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModelRBS = new BeneficiaryBarcodeDetailsModel();
@@ -256,8 +256,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                             beneficiaryBarcodeDetailsModelRBS.setOrderNo(beneficaryWiseArylst.get(i).getOrderNo());
                             beneficiaryBarcodeDetailsModelRBS.setRBS_PPBS(true);
                             beneficaryWiseArylst.get(i).getBarcodedtl().add(beneficiaryBarcodeDetailsModelRBS);
-                        }else if (beneficaryWiseArylst.get(i).getTestsCode().contains("RBS,PPBS") || beneficaryWiseArylst.get(i).getTestsCode().contains("PPBS,RBS")){
-                            if (beneficaryWiseArylst.get(i).getFasting().trim().equalsIgnoreCase("NON-FASTING")){
+                        } else if (beneficaryWiseArylst.get(i).getTestsCode().contains("RBS,PPBS") || beneficaryWiseArylst.get(i).getTestsCode().contains("PPBS,RBS")) {
+                            if (beneficaryWiseArylst.get(i).getFasting().trim().equalsIgnoreCase("NON-FASTING")) {
                                 BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModelRBS = new BeneficiaryBarcodeDetailsModel();
                                 beneficiaryBarcodeDetailsModelRBS.setBenId(beneficaryWiseArylst.get(i).getBenId());
                                 beneficiaryBarcodeDetailsModelRBS.setId(DeviceUtils.getRandomUUID());
@@ -356,7 +356,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     }
 
     private void onbackpress() {
-        BundleConstants.setRefreshStartArriveActivity=1;
+        BundleConstants.setRefreshStartArriveActivity = 1;
         Intent intent = new Intent(mActivity, StartAndArriveActivity.class);
         intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -1051,26 +1051,26 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                             dialog.dismiss();
                         }
                     }).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    MessageLogger.LogError(TAG, "onClick: " + scannedBarcode);
-                    for (int i = 0; i < beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().size(); i++) {
-                        if (flag.equalsIgnoreCase("yes")) {
-                            if (!InputUtils.isNull(beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().get(i).getBarcode()) && beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().get(i).getBarcode().equals(scannedBarcode)) {
-                                beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().get(i).setBarcode("");
-                                break;
-                            }
-                        } else {
-                            if (!InputUtils.isNull(beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().get(i).getRescanBarcode()) && beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().get(i).getRescanBarcode().equals(scannedBarcode)) {
-                                beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().get(i).setRescanBarcode("");
-                                break;
-                            }
-                        }
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            MessageLogger.LogError(TAG, "onClick: " + scannedBarcode);
+                            for (int i = 0; i < beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().size(); i++) {
+                                if (flag.equalsIgnoreCase("yes")) {
+                                    if (!InputUtils.isNull(beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().get(i).getBarcode()) && beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().get(i).getBarcode().equals(scannedBarcode)) {
+                                        beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().get(i).setBarcode("");
+                                        break;
+                                    }
+                                } else {
+                                    if (!InputUtils.isNull(beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().get(i).getRescanBarcode()) && beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().get(i).getRescanBarcode().equals(scannedBarcode)) {
+                                        beneficaryWiseArylst.get(BenPositionForDelete).getBarcodedtl().get(i).setRescanBarcode("");
+                                        break;
+                                    }
+                                }
 
-                    }
-                    InitViewpager(BenPositionForScan);
-                }
-            }).show();
+                            }
+                            InitViewpager(BenPositionForScan);
+                        }
+                    }).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1087,54 +1087,54 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                             dialog.dismiss();
                         }
                     }).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    MessageLogger.LogError(TAG, "onClick: " + scanned_barcode);
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            MessageLogger.LogError(TAG, "onClick: " + scanned_barcode);
 
-                    if (TextUtils.isEmpty(scanned_barcode) || scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ") /*|| Character.isDigit(scanned_barcode.charAt(0))*/) {
-                        Toast.makeText(mActivity, "Invalid barcode", Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                            if (beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl() != null) {
-                                for (int i = 0; i < beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().size(); i++) {
-                                    //size 4
-                                    if (!InputUtils.isNull(beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).getSamplType())
-                                            && !InputUtils.isNull(SampleTypeToScan)
-                                            && SampleTypeToScan.equals(beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).getSamplType())
-                                            && BarcodepositionToScan == i) {
+                            if (TextUtils.isEmpty(scanned_barcode) || scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ") /*|| Character.isDigit(scanned_barcode.charAt(0))*/) {
+                                Toast.makeText(mActivity, "Invalid barcode", Toast.LENGTH_SHORT).show();
+                            } else {
+                                if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+                                    if (beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl() != null) {
+                                        for (int i = 0; i < beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().size(); i++) {
+                                            //size 4
+                                            if (!InputUtils.isNull(beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).getSamplType())
+                                                    && !InputUtils.isNull(SampleTypeToScan)
+                                                    && SampleTypeToScan.equals(beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).getSamplType())
+                                                    && BarcodepositionToScan == i) {
 
-                                        for (BeneficiaryDetailsModel bdm : beneficaryWiseArylst) {
-                                            if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
-                                                for (BeneficiaryBarcodeDetailsModel bbdm : bdm.getBarcodedtl()) {
-                                                    if (!isRescan) {
-                                                        if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
-                                                            Toast.makeText(mActivity, "Same barcode already scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
-                                                            return;
+                                                for (BeneficiaryDetailsModel bdm : beneficaryWiseArylst) {
+                                                    if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
+                                                        for (BeneficiaryBarcodeDetailsModel bbdm : bdm.getBarcodedtl()) {
+                                                            if (!isRescan) {
+                                                                if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
+                                                                    Toast.makeText(mActivity, "Same barcode already scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
+                                                                    return;
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
+                                                if (isRescan) {
+                                                    beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).setRescanBarcode(scanned_barcode);
+                                                } else {
+                                                    beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                                                }
+                                                beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).setBenId(BenIDToScan);
+
+                                                break;
                                             }
                                         }
-                                        if (isRescan) {
-                                            beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).setRescanBarcode(scanned_barcode);
-                                        } else {
-                                            beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).setBarcode(scanned_barcode);
-                                        }
-                                        beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).setBenId(BenIDToScan);
-
-                                        break;
+                                        InitViewpager(BenPositionForScan);
+                                    } else {
+                                        Toast.makeText(mActivity, "Failed to update scanned barcode value", Toast.LENGTH_SHORT).show();
                                     }
+                                } else {
+                                    Toast.makeText(mActivity, "Invalid barcode", Toast.LENGTH_SHORT).show();
                                 }
-                                InitViewpager(BenPositionForScan);
-                            } else {
-                                Toast.makeText(mActivity, "Failed to update scanned barcode value", Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            Toast.makeText(mActivity, "Invalid barcode", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                }
-            }).show();
+                    }).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1207,40 +1207,6 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
 
     }
 
-    private class CustomDialogClass extends Dialog {
-
-        private Activity c;
-        private Dialog d;
-        private Button yes, no;
-        private TextView tv_test;
-        private LinearLayout ll_tests;
-        private GetTestListResponseModel testListResponseModel;
-
-        public CustomDialogClass(Activity mActivity, GetTestListResponseModel testListResponseModel) {
-            super(mActivity);
-            this.c = mActivity;
-            this.testListResponseModel = testListResponseModel;
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.item_test_list_display);
-            ll_tests = (LinearLayout) findViewById(R.id.ll_tests);
-            iflateTestGroupName(ll_tests, testListResponseModel);
-            ImageView img_close = (ImageView) findViewById(R.id.img_close);
-            img_close.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
-
-        }
-
-    }
-
     public void iflateTestGroupName(LinearLayout ll_tests, GetTestListResponseModel testListResponseModel) {
         if (testListResponseModel.getTestGroupList().size() > 0) {
             // Logger.error("if ");
@@ -1286,5 +1252,39 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
 
 
         }
+    }
+
+    private class CustomDialogClass extends Dialog {
+
+        private Activity c;
+        private Dialog d;
+        private Button yes, no;
+        private TextView tv_test;
+        private LinearLayout ll_tests;
+        private GetTestListResponseModel testListResponseModel;
+
+        public CustomDialogClass(Activity mActivity, GetTestListResponseModel testListResponseModel) {
+            super(mActivity);
+            this.c = mActivity;
+            this.testListResponseModel = testListResponseModel;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.item_test_list_display);
+            ll_tests = (LinearLayout) findViewById(R.id.ll_tests);
+            iflateTestGroupName(ll_tests, testListResponseModel);
+            ImageView img_close = (ImageView) findViewById(R.id.img_close);
+            img_close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+
+        }
+
     }
 }

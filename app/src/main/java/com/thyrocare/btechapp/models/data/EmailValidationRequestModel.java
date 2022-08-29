@@ -7,7 +7,18 @@ import android.os.Parcelable;
  * Created by e5209@thyrocare.com on 8/9/18.
  */
 
-public class EmailValidationRequestModel implements Parcelable{
+public class EmailValidationRequestModel implements Parcelable {
+    public static final Creator<EmailValidationRequestModel> CREATOR = new Creator<EmailValidationRequestModel>() {
+        @Override
+        public EmailValidationRequestModel createFromParcel(Parcel in) {
+            return new EmailValidationRequestModel(in);
+        }
+
+        @Override
+        public EmailValidationRequestModel[] newArray(int size) {
+            return new EmailValidationRequestModel[size];
+        }
+    };
     private String AppID;
     private String EmailID;
 
@@ -29,18 +40,6 @@ public class EmailValidationRequestModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<EmailValidationRequestModel> CREATOR = new Creator<EmailValidationRequestModel>() {
-        @Override
-        public EmailValidationRequestModel createFromParcel(Parcel in) {
-            return new EmailValidationRequestModel(in);
-        }
-
-        @Override
-        public EmailValidationRequestModel[] newArray(int size) {
-            return new EmailValidationRequestModel[size];
-        }
-    };
 
     public String getAppID() {
         return AppID;

@@ -25,7 +25,7 @@ public class GetCollectionCenterController {
 
     public GetCollectionCenterController(CheckoutWoeActivity checkoutWoeActivity) {
         this.activity = checkoutWoeActivity;
-        globalClass=new Global(activity);
+        globalClass = new Global(activity);
         this.checkoutWoeActivity = checkoutWoeActivity;
         flag = 1;
     }
@@ -41,8 +41,8 @@ public class GetCollectionCenterController {
                 @Override
                 public void onResponse(Call<GetCollectionRespModel> call, retrofit2.Response<GetCollectionRespModel> response) {
                     globalClass.hideProgressDialog(activity);
-                    if (response.isSuccessful() && response.body()!=null){
-                        if (flag==1){
+                    if (response.isSuccessful() && response.body() != null) {
+                        if (flag == 1) {
                             checkoutWoeActivity.getCollectioncenters(response.body());
                         }
                     }

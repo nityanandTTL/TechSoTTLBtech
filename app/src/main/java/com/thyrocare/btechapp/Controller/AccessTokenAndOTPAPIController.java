@@ -58,7 +58,7 @@ public class AccessTokenAndOTPAPIController {
                 globalClass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     CommonPOSTResponseModel model1 = response.body();
-                    if (!InputUtils.isNull(model1.getRespId()) && model1.getRespId().equalsIgnoreCase("RES0000")){
+                    if (!InputUtils.isNull(model1.getRespId()) && model1.getRespId().equalsIgnoreCase("RES0000")) {
                         RequestOTPModel model = new RequestOTPModel();
                         model.setApi_key(API_FOR_OTP);
                         model.setMobile(MobileNumber);
@@ -70,7 +70,7 @@ public class AccessTokenAndOTPAPIController {
                         model.setAccessToken(model1.getToken());
                         model.setReqId(model1.getRequestId());
                         CallGetOTPAPI(model);
-                    }else{
+                    } else {
                         onFailureResponseReceived();
                     }
                 } else {
@@ -78,6 +78,7 @@ public class AccessTokenAndOTPAPIController {
                     onFailureResponseReceived();
                 }
             }
+
             @Override
             public void onFailure(Call<CommonPOSTResponseModel> call, Throwable t) {
                 globalClass.hideProgressDialog(mActivity);

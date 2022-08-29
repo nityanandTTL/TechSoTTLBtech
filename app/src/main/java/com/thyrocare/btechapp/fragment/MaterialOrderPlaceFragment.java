@@ -4,11 +4,14 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -67,16 +70,11 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 
 public class MaterialOrderPlaceFragment extends AbstractFragment {
     public static final String TAG_FRAGMENT = "MATERIAL_ORDER_PLACE_FRAGMENT";
+    static MaterialOrderPlaceFragment fragment;
     HomeScreenActivity activity;
     AppPreferenceManager appPreferenceManager;
-    private View rootView;
     FloatingActionButton btnFab;
-    private ArrayList<MaterialDetailsModel> materialDetailsModels;
-    private ArrayList<MaterialOrderDataModel> materialsOrderArr = new ArrayList<>();
-    private MaterialINVResponseModel materialINVResponseModel;
     TableLayout materialordertable;
-    private ArrayList<FinalMaterialModel> finalMaterialModelsArr;
-    private ArrayList<FinalMaterialModel> Filterarraylst;
     /*  String PROMOTIONAL="205";
       String OPERATIONAL="204";*/
     String Category = "204";
@@ -85,9 +83,14 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
     RadioButton Operational_radio, Promotional_radio;
     RadioGroup group;
     LinearLayout btn_virtual, btn_material;
+    private View rootView;
+    private ArrayList<MaterialDetailsModel> materialDetailsModels;
+    private ArrayList<MaterialOrderDataModel> materialsOrderArr = new ArrayList<>();
+    private MaterialINVResponseModel materialINVResponseModel;
+    private ArrayList<FinalMaterialModel> finalMaterialModelsArr;
+    private ArrayList<FinalMaterialModel> Filterarraylst;
     private float Grandtotal = 0;
     private Dialog material_sel_dialog;
-    static MaterialOrderPlaceFragment fragment;
     private TableRow tbl_header;
     private Global global;
 
@@ -291,7 +294,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
         for (MaterialOrderDataModel materialOrderDataModel :
                 materialsOrderArr) {
             for (FinalMaterialModel finalMaterialModel : finalMaterialModelsArr
-                    ) {
+            ) {
                 if (materialOrderDataModel.getMaterialId() == finalMaterialModel.getMaterialDetailsModel().getMaterialId()) {
 
                     Grandtotal += materialOrderDataModel.getOrderQty() * Float.parseFloat(finalMaterialModel.getMaterialDetailsModel().getUnitCost());
@@ -342,7 +345,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
                 materialsOrderArr) {
             for (FinalMaterialModel finalMaterialModel : finalMaterialModelsArr
 
-                    ) {
+            ) {
                 if (materialOrderDataModel.getMaterialId() == finalMaterialModel.getMaterialDetailsModel().getMaterialId()) {
 
                     Grandtotal += materialOrderDataModel.getOrderQty() * Float.parseFloat(finalMaterialModel.getMaterialDetailsModel().getUnitCost());
@@ -413,13 +416,14 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
                         } else {
                             Toast.makeText(activity, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
                         }
-                    }else{
+                    } else {
                         global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -443,6 +447,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
                     fetchMaterialsINV2();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<MaterialDetailsModel>> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -465,6 +470,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
                     fetchData();
                 }
             }
+
             @Override
             public void onFailure(Call<MaterialINVResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -531,9 +537,9 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
                 Quantity = (EditText) trm.findViewById(R.id.edit_quantity);
                 Total = (TextView) trm.findViewById(R.id.txt_total);
 
-                if(!InputUtils.isNull( finalMaterialModels.getMaterialDetailsModel().getUnitSize())){
+                if (!InputUtils.isNull(finalMaterialModels.getMaterialDetailsModel().getUnitSize())) {
                     item.setText(finalMaterialModels.getMaterialDetailsModel().getMaterialName() + " (" + finalMaterialModels.getMaterialDetailsModel().getUnitSize() + ")");
-                }else{
+                } else {
                     item.setText(finalMaterialModels.getMaterialDetailsModel().getMaterialName());
                 }
 

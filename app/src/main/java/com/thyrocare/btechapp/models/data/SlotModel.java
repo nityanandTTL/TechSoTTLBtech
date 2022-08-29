@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class SlotModel extends BaseModel implements Parcelable {
+    public static final Creator<SlotModel> CREATOR = new Creator<SlotModel>() {
+        @Override
+        public SlotModel createFromParcel(Parcel in) {
+            return new SlotModel(in);
+        }
+
+        @Override
+        public SlotModel[] newArray(int size) {
+            return new SlotModel[size];
+        }
+    };
     private String Slot;
     private int Id;
     private boolean isSelected;
@@ -36,8 +47,8 @@ public class SlotModel extends BaseModel implements Parcelable {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof SlotModel){
-            return ((SlotModel) obj).getId()==this.getId();
+        if (obj instanceof SlotModel) {
+            return ((SlotModel) obj).getId() == this.getId();
         }
         return false;
     }
@@ -46,18 +57,6 @@ public class SlotModel extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SlotModel> CREATOR = new Creator<SlotModel>() {
-        @Override
-        public SlotModel createFromParcel(Parcel in) {
-            return new SlotModel(in);
-        }
-
-        @Override
-        public SlotModel[] newArray(int size) {
-            return new SlotModel[size];
-        }
-    };
 
     public String getSlot() {
         return Slot;

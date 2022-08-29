@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll_main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,29 +9,31 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_35sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
         android:background="@color/bg_new_color"
         android:gravity="end"
-        android:weightSum="1"
-        android:layout_marginBottom="@dimen/_5sdp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="1">
+
         <TextView
             android:id="@+id/booking_done"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_18sdp"
-            android:layout_weight="0.8"
-            android:text="Lead generated Successfully"
-            android:gravity="center"
             android:layout_gravity="center"
+            android:layout_weight="0.8"
+            android:gravity="center"
+            android:text="Lead generated Successfully"
             android:textColor="@color/white"
             android:textSize="@dimen/_15sdp"
             android:textStyle="bold" />
+
         <ImageView
             android:id="@+id/btnclose"
-            android:layout_weight="0.02"
             android:layout_width="@dimen/_25sdp"
             android:layout_height="@dimen/_25sdp"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/_5sdp"
+            android:layout_weight="0.02"
             android:src="@drawable/close_icon_while" />
 
     </LinearLayout>
@@ -41,9 +42,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5sdp"
         android:background="@drawable/tv_background"
-        android:orientation="vertical"
-        android:layout_margin="@dimen/_5sdp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,8 +62,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
                     android:gravity="center"
                     android:text="@string/booking_id"
                     android:textColor="@color/white"
@@ -99,8 +100,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
                     android:gravity="center"
                     android:text="@string/tv_name"
                     android:textColor="@color/white"
@@ -172,8 +173,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
                     android:gravity="center"
                     android:text="@string/tv_email"
                     android:textColor="@color/white"
@@ -210,8 +211,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
                     android:gravity="center"
                     android:text="@string/strAddress"
                     android:textColor="@color/white"
@@ -248,8 +249,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
                     android:gravity="center"
                     android:text="@string/remarks"
                     android:textColor="@color/white"
@@ -274,15 +275,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_6sdp"
             android:layout_marginTop="@dimen/_6sdp"
             android:text="Note : "
-            android:textStyle="bold"
             android:textColor="@color/bg_new_color"
-            android:textSize="@dimen/_14sdp"/>
+            android:textSize="@dimen/_14sdp"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/note"
             android:layout_width="match_parent"
@@ -290,7 +293,7 @@
             android:layout_margin="@dimen/_6sdp"
             android:text=""
             android:textColor="@color/bg_new_color"
-            android:textSize="@dimen/_14sdp"/>
+            android:textSize="@dimen/_14sdp" />
     </LinearLayout>
 
     <LinearLayout

@@ -13,9 +13,11 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.provider.Settings;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
+
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.Surface;
@@ -98,15 +100,15 @@ public class DeviceUtils {
 
         String device_id = "";
 
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.Q){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             try {
 
                 device_id = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
-                System.out.println("Mith000000000000000000000"+device_id);
+                System.out.println("Mith000000000000000000000" + device_id);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             try {
                 TelephonyManager tm = (TelephonyManager) activity
                         .getSystemService(Activity.TELEPHONY_SERVICE);

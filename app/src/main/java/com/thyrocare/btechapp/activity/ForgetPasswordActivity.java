@@ -37,12 +37,12 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
     EditText edt_mobile_no, edt_otp, edt_new_password, edt_confirm_new_password;
     Button btn_send_otp, btn_verify_otp;
     LinearLayout ll_send_otp, ll_verify_otp;
-    private String code;
     String regexp = ".{6,12}";
     String str;
-    private Global globalClass;
     TextView tv_toolbar;
     ImageView iv_back, iv_home;
+    private String code;
+    private Global globalClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,9 +171,9 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
                         finish();
                     }
                 } else {
-                    if ( response.code() == 404 && response.message()!=null){
-                        Toast.makeText(ForgetPasswordActivity.this, ""+response.message(), Toast.LENGTH_SHORT).show();
-                    }else{
+                    if (response.code() == 404 && response.message() != null) {
+                        Toast.makeText(ForgetPasswordActivity.this, "" + response.message(), Toast.LENGTH_SHORT).show();
+                    } else {
                         Toast.makeText(ForgetPasswordActivity.this, !StringUtils.isNull(response.body()) ? response.body() : ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                     }
 

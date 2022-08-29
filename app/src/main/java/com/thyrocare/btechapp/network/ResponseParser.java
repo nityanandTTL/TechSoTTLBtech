@@ -84,36 +84,17 @@ import java.util.ArrayList;
 public class ResponseParser implements AppConstants {
 
 
-    private Activity activity;
-
-    private Context context;
-
-    private Gson gson;
-
-    private AlertDialogMessage alertDialogMessage;
-
-    private AppPreferenceManager appPreferenceManager;
-
-    private TextView txtErrorMsg;
-
-    private boolean isToSwitchActivity = true;
-
-    private MessageModel messageModel;
-
-
-    private boolean isToShowErrorDailog = true;
-
-    private boolean isToShowToast = true;
-
     private static final int SPACE_COUNT_FOR_TOAST_TIME = 10;
-
-    public void setToShowErrorDailog(boolean isToShowErrorDailog) {
-        this.isToShowErrorDailog = isToShowErrorDailog;
-    }
-
-    public void setToShowToast(boolean isToShowToast) {
-        this.isToShowToast = isToShowToast;
-    }
+    private Activity activity;
+    private Context context;
+    private Gson gson;
+    private AlertDialogMessage alertDialogMessage;
+    private AppPreferenceManager appPreferenceManager;
+    private TextView txtErrorMsg;
+    private boolean isToSwitchActivity = true;
+    private MessageModel messageModel;
+    private boolean isToShowErrorDailog = true;
+    private boolean isToShowToast = true;
 
     public ResponseParser(Activity activity) {
 
@@ -139,6 +120,14 @@ public class ResponseParser implements AppConstants {
 
         appPreferenceManager = new AppPreferenceManager(context);
 
+    }
+
+    public void setToShowErrorDailog(boolean isToShowErrorDailog) {
+        this.isToShowErrorDailog = isToShowErrorDailog;
+    }
+
+    public void setToShowToast(boolean isToShowToast) {
+        this.isToShowToast = isToShowToast;
     }
 
     public boolean isSessionExpired(String json, int statusCode) {
@@ -686,16 +675,6 @@ public class ResponseParser implements AppConstants {
         return earningRegisterModels;
     }*/
 
-
-    private class DialogOkButtonListener implements AlertDialogMessage.AlertDialogOkListener {
-
-        @Override
-        public void onAlertDialogOkButtonListener() {
-
-        }
-
-    }
-
     public void onApiFailed(ErrorModel errorModel) {
 
         if (errorModel != null) {
@@ -710,29 +689,6 @@ public class ResponseParser implements AppConstants {
         }
 
         Logger.debug("inside onapifailed");
-
-    }
-
-    private class InvalidSessionAlertDialogOkButtonListener implements
-            AlertDialogMessage.AlertDialogOkListener {
-
-        @Override
-        public void onAlertDialogOkButtonListener() {
-
-            AppPreferenceManager appPreferenceManager = new AppPreferenceManager(
-                    context);
-
-			/* new LogUserActivityTagging(activity, LOGOUT);
-                    appPreferenceManager.clearAllPreferences();
-            DhbDao dhbDao = new DhbDao(activity);
-			dhbDao.deleteDb();
-
-
-			Intent intent = new Intent(context, LoginActivity.class );
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-			context.startActivity(intent);*/
-
-        }
 
     }
 
@@ -754,16 +710,6 @@ public class ResponseParser implements AppConstants {
         return loginResponseModel;
     }
 
-   //BtechAvaliability
-    /* public BtechAvaliabilityResponseModel getBtechAvaliabilityResponseModel(String json, int statusCode) {
-        BtechAvaliabilityResponseModel btechAvaliabilityResponseModel = null;
-        if (!parseIntoError(json, statusCode)) {
-            btechAvaliabilityResponseModel = gson.fromJson(json, BtechAvaliabilityResponseModel.class);
-        }
-        return btechAvaliabilityResponseModel;
-    }*/
-
-
     public NewBtechAvaliabilityResponseModel getNewBtechAvaliabilityResponseModel(String json, int statusCode) {
         NewBtechAvaliabilityResponseModel newBtechAvaliabilityResponseModel = null;
         if (!parseIntoError(json, statusCode)) {
@@ -771,7 +717,6 @@ public class ResponseParser implements AppConstants {
         }
         return newBtechAvaliabilityResponseModel;
     }
-
 
     //Fetch Slot Details Response parse:
     public ArrayList<SlotModel> getSlotDetailsResponseModel(String json, int statusCode) {
@@ -784,6 +729,14 @@ public class ResponseParser implements AppConstants {
         return slotModels;
     }
 
+    //BtechAvaliability
+    /* public BtechAvaliabilityResponseModel getBtechAvaliabilityResponseModel(String json, int statusCode) {
+        BtechAvaliabilityResponseModel btechAvaliabilityResponseModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            btechAvaliabilityResponseModel = gson.fromJson(json, BtechAvaliabilityResponseModel.class);
+        }
+        return btechAvaliabilityResponseModel;
+    }*/
 
     public ArrayList<RemarksResponseModel> getRemarksResponseModel(String json, int statusCode) {
         ArrayList<RemarksResponseModel> remarksResponseModels = null;
@@ -871,7 +824,6 @@ public class ResponseParser implements AppConstants {
         }
         return fetchledgerDetailsResponseModel;
     }
-
 
     ////Fetch Earning details Response parse:
     public ArrayList<DepositRegisterModel> getDepositRegisterResponseModel(String json, int statusCode) {
@@ -1069,7 +1021,6 @@ public class ResponseParser implements AppConstants {
         return orderVisitDetailsModel;
     }
 
-
     ////Fetch Leave  details Response parse:
     public ArrayList<ChatRequestModel> getchatMasterResponse(String json, int statusCode) {
         ArrayList<ChatRequestModel> chatRequestModels = null;
@@ -1087,7 +1038,6 @@ public class ResponseParser implements AppConstants {
         leaveAppliedResponseModels = gson.fromJson(json, token.getType());
         return leaveAppliedResponseModels;
     }
-
 
     ////Fetch Leave  details Response parse:
     public ArrayList<LeaveNatureMasterModel> getLeaveNatureMasterResponse(String json, int statusCode) {
@@ -1210,14 +1160,15 @@ public class ResponseParser implements AppConstants {
         };
         slotModels = gson.fromJson(json, token.getType());
         return slotModels;
-    } public ArrayList<DateWiseWLMISDetailsModel> getDateWiseWLMISResponseModel(String json, int statusCode) {
+    }
+
+    public ArrayList<DateWiseWLMISDetailsModel> getDateWiseWLMISResponseModel(String json, int statusCode) {
         ArrayList<DateWiseWLMISDetailsModel> slotModels = null;
         TypeToken<ArrayList<DateWiseWLMISDetailsModel>> token = new TypeToken<ArrayList<DateWiseWLMISDetailsModel>>() {
         };
         slotModels = gson.fromJson(json, token.getType());
         return slotModels;
     }
-
 
     public ArrayList<LocationMasterModel> getLocationMasterResponseModel(String json, int statusCode) {
         ArrayList<LocationMasterModel> slotModels = null;
@@ -1241,5 +1192,37 @@ public class ResponseParser implements AppConstants {
             orderVisitDetailsModel = gson.fromJson(json, DispositionDataModel.class);
         }
         return orderVisitDetailsModel;
+    }
+
+    private class DialogOkButtonListener implements AlertDialogMessage.AlertDialogOkListener {
+
+        @Override
+        public void onAlertDialogOkButtonListener() {
+
+        }
+
+    }
+
+    private class InvalidSessionAlertDialogOkButtonListener implements
+            AlertDialogMessage.AlertDialogOkListener {
+
+        @Override
+        public void onAlertDialogOkButtonListener() {
+
+            AppPreferenceManager appPreferenceManager = new AppPreferenceManager(
+                    context);
+
+			/* new LogUserActivityTagging(activity, LOGOUT);
+                    appPreferenceManager.clearAllPreferences();
+            DhbDao dhbDao = new DhbDao(activity);
+			dhbDao.deleteDb();
+
+
+			Intent intent = new Intent(context, LoginActivity.class );
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+			context.startActivity(intent);*/
+
+        }
+
     }
 }

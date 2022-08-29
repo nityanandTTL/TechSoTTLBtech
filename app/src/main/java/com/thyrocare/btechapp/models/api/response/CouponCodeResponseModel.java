@@ -18,6 +18,7 @@ public class CouponCodeResponseModel {
         Boolean Status;
         int MinRate;
         int MaxRate;
+        int Discount;
 
         public int getDiscount() {
             return Discount;
@@ -26,8 +27,6 @@ public class CouponCodeResponseModel {
         public void setDiscount(int discount) {
             Discount = discount;
         }
-
-        int Discount;
 
         public int getMinRate() {
             return MinRate;

@@ -13,15 +13,6 @@ import java.util.ArrayList;
 
 public class Tsp_ScanBarcodeResponseModel implements Parcelable {
 
-    private String Response;
-    private ArrayList<Tsp_ScanBarcodeDataModel> tspBarcodes;
-
-
-    protected Tsp_ScanBarcodeResponseModel(Parcel in) {
-        Response = in.readString();
-        tspBarcodes = in.createTypedArrayList(Tsp_ScanBarcodeDataModel.CREATOR);
-    }
-
     public static final Creator<Tsp_ScanBarcodeResponseModel> CREATOR = new Creator<Tsp_ScanBarcodeResponseModel>() {
         @Override
         public Tsp_ScanBarcodeResponseModel createFromParcel(Parcel in) {
@@ -33,6 +24,13 @@ public class Tsp_ScanBarcodeResponseModel implements Parcelable {
             return new Tsp_ScanBarcodeResponseModel[size];
         }
     };
+    private String Response;
+    private ArrayList<Tsp_ScanBarcodeDataModel> tspBarcodes;
+
+    protected Tsp_ScanBarcodeResponseModel(Parcel in) {
+        Response = in.readString();
+        tspBarcodes = in.createTypedArrayList(Tsp_ScanBarcodeDataModel.CREATOR);
+    }
 
     public String getResponse() {
         return Response;

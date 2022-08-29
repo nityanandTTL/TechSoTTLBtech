@@ -10,7 +10,7 @@ import android.view.View;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 
 
-public interface  ActivityHelper extends AppConstants {
+public interface ActivityHelper extends AppConstants {
 
     void hideKeyboard(View view);
 

@@ -7,14 +7,15 @@
     android:orientation="vertical"
     tools:context=".activity.OrderPickUpActivity">
 
-    <include layout="@layout/default_toolbar"
-        android:id="@+id/toolbar"/>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/default_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@id/toolbar"
         android:id="@+id/recycler_pickup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 

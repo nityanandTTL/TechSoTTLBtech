@@ -26,8 +26,8 @@ public class UploadSelfieWOEController {
     Activity mActivity;
     CheckoutWoeActivity checkoutWoeActivity;
     Global globalClass;
-    int Total_retries =3;
-    int retry_count =0;
+    int Total_retries = 3;
+    int retry_count = 0;
 
     public UploadSelfieWOEController(CheckoutWoeActivity checkoutWoeActivity, Activity activity) {
         this.mActivity = activity;
@@ -38,7 +38,7 @@ public class UploadSelfieWOEController {
     public void CallAPI(String RequestToken, BTechSelfieRequestModel bTechSelfieRequestModel) {
 
         globalClass = new Global(mActivity);
-     //   globalClass.showProgressDialog(mActivity, "Please wait...", false);
+        //   globalClass.showProgressDialog(mActivity, "Please wait...", false);
 
         try {
             RequestBody BtechID = RequestBody.create(MediaType.parse("multipart/form-data"), bTechSelfieRequestModel.getBtechid());
@@ -60,7 +60,7 @@ public class UploadSelfieWOEController {
                         //Toast.makeText(mActivity, "Selfie uploaded successfully", Toast.LENGTH_SHORT).show();
 //                        checkoutWoeActivity.getSelfieResponse();
                     } else {
-                      //  Toast.makeText(mActivity, "Failed to upload selfie, Please try again!", Toast.LENGTH_SHORT).show();
+                        //  Toast.makeText(mActivity, "Failed to upload selfie, Please try again!", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -80,7 +80,7 @@ public class UploadSelfieWOEController {
                 }
             });
         } catch (Exception e) {
-          //  globalClass.hideProgressDialog(mActivity);
+            //  globalClass.hideProgressDialog(mActivity);
         }
     }
 

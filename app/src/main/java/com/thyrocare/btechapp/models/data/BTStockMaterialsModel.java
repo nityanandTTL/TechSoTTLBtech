@@ -8,7 +8,18 @@ import android.os.Parcelable;
  * Created by Orion on 5/2/2017.
  */
 
-public class BTStockMaterialsModel implements Parcelable{
+public class BTStockMaterialsModel implements Parcelable {
+    public static final Creator<BTStockMaterialsModel> CREATOR = new Creator<BTStockMaterialsModel>() {
+        @Override
+        public BTStockMaterialsModel createFromParcel(Parcel in) {
+            return new BTStockMaterialsModel(in);
+        }
+
+        @Override
+        public BTStockMaterialsModel[] newArray(int size) {
+            return new BTStockMaterialsModel[size];
+        }
+    };
     private int materialID;
     private String materialName;
     private int virtualStock;
@@ -24,18 +35,6 @@ public class BTStockMaterialsModel implements Parcelable{
         remarks = in.readString();
         lastUpdated = in.readString();
     }
-
-    public static final Creator<BTStockMaterialsModel> CREATOR = new Creator<BTStockMaterialsModel>() {
-        @Override
-        public BTStockMaterialsModel createFromParcel(Parcel in) {
-            return new BTStockMaterialsModel(in);
-        }
-
-        @Override
-        public BTStockMaterialsModel[] newArray(int size) {
-            return new BTStockMaterialsModel[size];
-        }
-    };
 
     public int getMaterialID() {
         return materialID;

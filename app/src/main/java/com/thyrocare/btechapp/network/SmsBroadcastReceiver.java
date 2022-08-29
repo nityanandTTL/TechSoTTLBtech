@@ -11,6 +11,7 @@ import com.google.android.gms.common.api.Status;
 
 public class SmsBroadcastReceiver extends BroadcastReceiver {
     public SmsBroadcastReceiverListener smsBroadcastReceiverListener;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction() == SmsRetriever.SMS_RETRIEVED_ACTION) {
@@ -34,6 +35,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
     public interface SmsBroadcastReceiverListener {
         void onSuccess(Intent intent);
+
         void onFailure();
     }
 }

@@ -9,6 +9,17 @@ import android.os.Parcelable;
 
 public class SubSlotMasterResponseModel implements Parcelable {
 
+    public static final Creator<SubSlotMasterResponseModel> CREATOR = new Creator<SubSlotMasterResponseModel>() {
+        @Override
+        public SubSlotMasterResponseModel createFromParcel(Parcel in) {
+            return new SubSlotMasterResponseModel(in);
+        }
+
+        @Override
+        public SubSlotMasterResponseModel[] newArray(int size) {
+            return new SubSlotMasterResponseModel[size];
+        }
+    };
     private int Id;
     private String SlotMasterId;
     private String Slot;
@@ -17,6 +28,9 @@ public class SubSlotMasterResponseModel implements Parcelable {
         Id = in.readInt();
         SlotMasterId = in.readString();
         Slot = in.readString();
+    }
+
+    public SubSlotMasterResponseModel() {
     }
 
     @Override
@@ -30,18 +44,6 @@ public class SubSlotMasterResponseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SubSlotMasterResponseModel> CREATOR = new Creator<SubSlotMasterResponseModel>() {
-        @Override
-        public SubSlotMasterResponseModel createFromParcel(Parcel in) {
-            return new SubSlotMasterResponseModel(in);
-        }
-
-        @Override
-        public SubSlotMasterResponseModel[] newArray(int size) {
-            return new SubSlotMasterResponseModel[size];
-        }
-    };
 
     public int getId() {
         return Id;
@@ -65,8 +67,5 @@ public class SubSlotMasterResponseModel implements Parcelable {
 
     public void setSlot(String slot) {
         Slot = slot;
-    }
-
-    public SubSlotMasterResponseModel() {
     }
 }

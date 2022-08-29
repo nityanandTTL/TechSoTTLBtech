@@ -45,37 +45,6 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
     private Global global;
     private AppPreferenceManager appPreferenceManager;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_orderno, tv_barcode, tv_status, txt_amount, txt_name, txt_title, txt_sr_no, tv_amount, amount_title, txt_benCount, txt_fasting;
-        Button ereciept;
-        public ImageView call;
-        View itemView;
-
-        public MyViewHolder(View view) {
-            super(view);
-            this.itemView = view;
-            initComp(view);
-        }
-
-        private void initComp(View view) {
-            txt_name = (TextView) view.findViewById(R.id.txt_name);
-            txt_title = (TextView) view.findViewById(R.id.oderno_title);
-            call = (ImageView) view.findViewById(R.id.call);
-            tv_orderno = (TextView) view.findViewById(R.id.tv_orderno);
-            tv_barcode = (TextView) view.findViewById(R.id.tv_barcode);
-            tv_barcode.setSelected(true);
-            tv_status = (TextView) view.findViewById(R.id.tv_status);
-            txt_amount = (TextView) view.findViewById(R.id.txt_amount);
-            txt_sr_no = (TextView) view.findViewById(R.id.txt_sr_no);
-            tv_amount = (TextView) view.findViewById(R.id.tv_amount);
-            amount_title = (TextView) view.findViewById(R.id.amount_title);
-            txt_benCount = (TextView) view.findViewById(R.id.tv_beneficiary_count);
-            txt_fasting = (TextView) view.findViewById(R.id.tv_fasting);
-            ereciept = (Button) view.findViewById(R.id.ereciept);
-        }
-    }
-
-
     public OrderServedDisplayDetailsAdapter(List<BtechOrderModel> btechOrderModels, HomeScreenActivity activity, OrderServedDisplayDetailsAdapterClickedDelegate orderServedDisplayDetailsAdapterClickedDelegate) {
         this.btechOrderModels = btechOrderModels;
         this.activity = activity;
@@ -159,11 +128,10 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
         return btechOrderModels.size();
     }
 
-
     private void CallgetErieceptApi(String orderNo) {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetErieceptApi(orderNo);
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
@@ -178,12 +146,43 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
                     Toast.makeText(activity, "Failed to send E-Reciept. Please try after sometime.", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public ImageView call;
+        TextView tv_orderno, tv_barcode, tv_status, txt_amount, txt_name, txt_title, txt_sr_no, tv_amount, amount_title, txt_benCount, txt_fasting;
+        Button ereciept;
+        View itemView;
+
+        public MyViewHolder(View view) {
+            super(view);
+            this.itemView = view;
+            initComp(view);
+        }
+
+        private void initComp(View view) {
+            txt_name = (TextView) view.findViewById(R.id.txt_name);
+            txt_title = (TextView) view.findViewById(R.id.oderno_title);
+            call = (ImageView) view.findViewById(R.id.call);
+            tv_orderno = (TextView) view.findViewById(R.id.tv_orderno);
+            tv_barcode = (TextView) view.findViewById(R.id.tv_barcode);
+            tv_barcode.setSelected(true);
+            tv_status = (TextView) view.findViewById(R.id.tv_status);
+            txt_amount = (TextView) view.findViewById(R.id.txt_amount);
+            txt_sr_no = (TextView) view.findViewById(R.id.txt_sr_no);
+            tv_amount = (TextView) view.findViewById(R.id.tv_amount);
+            amount_title = (TextView) view.findViewById(R.id.amount_title);
+            txt_benCount = (TextView) view.findViewById(R.id.tv_beneficiary_count);
+            txt_fasting = (TextView) view.findViewById(R.id.tv_fasting);
+            ereciept = (Button) view.findViewById(R.id.ereciept);
+        }
     }
 
 

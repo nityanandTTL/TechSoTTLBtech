@@ -17,11 +17,11 @@ import com.thyrocare.btechapp.R;
 import java.util.List;
 
 public class ExpandableListAdapter_FAQ extends BaseExpandableListAdapter {
-    private Context _context;
     List<FAQandANSArray.PromoterFaqListBean> faq_question_answer_list;
+    ImageView img;
+    private Context _context;
     private TextView faq_question;
     private TextView faq_question_answer;
-    ImageView img;
 
     public ExpandableListAdapter_FAQ(List<FAQandANSArray.PromoterFaqListBean> faq_list, Context context) {
         this.faq_question_answer_list = faq_list;
@@ -74,7 +74,7 @@ public class ExpandableListAdapter_FAQ extends BaseExpandableListAdapter {
 
         faq_question = (TextView) convertView.findViewById(R.id.faq_question);
         img = (ImageView) convertView.findViewById(R.id.img);
-       // img.setBackgroundResource(R.drawable.down_arrow);
+        // img.setBackgroundResource(R.drawable.down_arrow);
         if (isExpanded) {
             img.setBackgroundResource(R.drawable.uparr);
         } else {

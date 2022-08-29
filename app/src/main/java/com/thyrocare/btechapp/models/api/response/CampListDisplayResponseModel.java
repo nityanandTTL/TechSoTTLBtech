@@ -12,9 +12,21 @@ import java.util.ArrayList;
  * /CampDetails/MyCampDetails<br/>
  */
 
-public class CampListDisplayResponseModel implements Parcelable{
+public class CampListDisplayResponseModel implements Parcelable {
+    public static final Creator<CampListDisplayResponseModel> CREATOR = new Creator<CampListDisplayResponseModel>() {
+        @Override
+        public CampListDisplayResponseModel createFromParcel(Parcel in) {
+            return new CampListDisplayResponseModel(in);
+        }
+
+        @Override
+        public CampListDisplayResponseModel[] newArray(int size) {
+            return new CampListDisplayResponseModel[size];
+        }
+    };
     String Response;
     ArrayList<CampDetailModel> campDetail;
+
     public CampListDisplayResponseModel() {
         // Required empty public constructor
     }
@@ -34,18 +46,6 @@ public class CampListDisplayResponseModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<CampListDisplayResponseModel> CREATOR = new Creator<CampListDisplayResponseModel>() {
-        @Override
-        public CampListDisplayResponseModel createFromParcel(Parcel in) {
-            return new CampListDisplayResponseModel(in);
-        }
-
-        @Override
-        public CampListDisplayResponseModel[] newArray(int size) {
-            return new CampListDisplayResponseModel[size];
-        }
-    };
 
     public String getResponse() {
         return Response;

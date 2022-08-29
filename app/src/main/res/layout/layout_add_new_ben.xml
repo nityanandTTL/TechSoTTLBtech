@@ -7,11 +7,11 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/bottom_sheet_design">
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bottom_sheet_design"
+        android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -173,7 +173,6 @@
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
-
 
 
 </RelativeLayout>

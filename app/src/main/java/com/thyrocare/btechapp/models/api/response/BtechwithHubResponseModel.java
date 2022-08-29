@@ -13,14 +13,6 @@ import java.util.ArrayList;
 
 public class BtechwithHubResponseModel implements Parcelable {
 
-    private String Response;
-    private ArrayList<BtechwithHub_BarcodeDataModel> receivedHub;
-
-    protected BtechwithHubResponseModel(Parcel in) {
-        Response = in.readString();
-        receivedHub = in.createTypedArrayList(BtechwithHub_BarcodeDataModel.CREATOR);
-    }
-
     public static final Creator<BtechwithHubResponseModel> CREATOR = new Creator<BtechwithHubResponseModel>() {
         @Override
         public BtechwithHubResponseModel createFromParcel(Parcel in) {
@@ -32,6 +24,13 @@ public class BtechwithHubResponseModel implements Parcelable {
             return new BtechwithHubResponseModel[size];
         }
     };
+    private String Response;
+    private ArrayList<BtechwithHub_BarcodeDataModel> receivedHub;
+
+    protected BtechwithHubResponseModel(Parcel in) {
+        Response = in.readString();
+        receivedHub = in.createTypedArrayList(BtechwithHub_BarcodeDataModel.CREATOR);
+    }
 
     @Override
     public String toString() {

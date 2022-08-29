@@ -21,11 +21,11 @@
 
         <TextView
             android:id="@+id/tv_text1"
-            android:text=""
-            android:visibility="gone"
-            android:textSize="@dimen/label"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="@dimen/label"
+            android:visibility="gone" />
 
 
         <LinearLayout
@@ -44,9 +44,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_bg_new"
                 android:text="YES"
-                android:textStyle="bold"
                 android:textColor="@color/bg_new_color"
-                android:textSize="@dimen/value" />
+                android:textSize="@dimen/value"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_no"

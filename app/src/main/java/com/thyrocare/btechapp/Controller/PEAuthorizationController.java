@@ -184,14 +184,14 @@ public class PEAuthorizationController {
                     try {
                         if (response.isSuccessful() && response.body() != null) {
                             SendEventResponeModel sendEventResponeModel = response.body();
-                            if (InputUtils.CheckEqualIgnoreCase(sendEventResponeModel.getResponse(),"SUCCESS")){
+                            if (InputUtils.CheckEqualIgnoreCase(sendEventResponeModel.getResponse(), "SUCCESS")) {
 
 
-                            }else{
+                            } else {
 
                             }
 
-                        }else {
+                        } else {
                             globalClass.showCustomToast(activity, InputUtils.isNull(response.message()) ? response.message() : ConstantsMessages.SOMETHING_WENT_WRONG);
                         }
                     } catch (Exception e) {

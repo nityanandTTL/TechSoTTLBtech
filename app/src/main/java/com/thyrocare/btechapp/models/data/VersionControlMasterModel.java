@@ -10,6 +10,17 @@ import android.os.Parcelable;
 public class VersionControlMasterModel implements Parcelable {
 
 
+    public static final Creator<VersionControlMasterModel> CREATOR = new Creator<VersionControlMasterModel>() {
+        @Override
+        public VersionControlMasterModel createFromParcel(Parcel in) {
+            return new VersionControlMasterModel(in);
+        }
+
+        @Override
+        public VersionControlMasterModel[] newArray(int size) {
+            return new VersionControlMasterModel[size];
+        }
+    };
     int Id;
     int APICurrentVerson;
     int APIMinVerson;
@@ -20,9 +31,9 @@ public class VersionControlMasterModel implements Parcelable {
     String PlaystoreVersonName;
     int PlaystoreVerson;
 
+
     public VersionControlMasterModel() {
     }
-
 
     protected VersionControlMasterModel(Parcel in) {
         Id = in.readInt();
@@ -54,18 +65,6 @@ public class VersionControlMasterModel implements Parcelable {
         return 0;
     }
 
-    public static final Creator<VersionControlMasterModel> CREATOR = new Creator<VersionControlMasterModel>() {
-        @Override
-        public VersionControlMasterModel createFromParcel(Parcel in) {
-            return new VersionControlMasterModel(in);
-        }
-
-        @Override
-        public VersionControlMasterModel[] newArray(int size) {
-            return new VersionControlMasterModel[size];
-        }
-    };
-
     public int getId() {
         return Id;
     }
@@ -89,7 +88,6 @@ public class VersionControlMasterModel implements Parcelable {
     public void setAPIMinVerson(int APIMinVerson) {
         this.APIMinVerson = APIMinVerson;
     }
-
 
 
     public String getEntryDate() {
@@ -123,7 +121,6 @@ public class VersionControlMasterModel implements Parcelable {
     public void setPlaystoreVersonName(String playstoreVersonName) {
         PlaystoreVersonName = playstoreVersonName;
     }
-
 
 
     public int getPlaystoreVerson() {

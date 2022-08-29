@@ -10,6 +10,17 @@ import java.util.ArrayList;
  */
 
 public class ChildTestsModel extends BaseModel implements Parcelable {
+    public static final Creator<ChildTestsModel> CREATOR = new Creator<ChildTestsModel>() {
+        @Override
+        public ChildTestsModel createFromParcel(Parcel in) {
+            return new ChildTestsModel(in);
+        }
+
+        @Override
+        public ChildTestsModel[] newArray(int size) {
+            return new ChildTestsModel[size];
+        }
+    };
     private int ChildTestId;
     private String ChildTestCode;
     private ArrayList<TestSkillsModel> tstSkills;
@@ -37,18 +48,6 @@ public class ChildTestsModel extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<ChildTestsModel> CREATOR = new Creator<ChildTestsModel>() {
-        @Override
-        public ChildTestsModel createFromParcel(Parcel in) {
-            return new ChildTestsModel(in);
-        }
-
-        @Override
-        public ChildTestsModel[] newArray(int size) {
-            return new ChildTestsModel[size];
-        }
-    };
 
     public int getChildTestId() {
         return ChildTestId;

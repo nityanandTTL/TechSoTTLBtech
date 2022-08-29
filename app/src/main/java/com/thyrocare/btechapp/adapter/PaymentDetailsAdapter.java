@@ -21,9 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 
 public class PaymentDetailsAdapter extends RecyclerView.Adapter<PaymentDetailsAdapter.MyViewHolder> {
-    private ArrayList<PaymentProcessAPIResponseModel> mList;
     Context mContext;
     PaymentsActivity mPaymentsActivity;
+    private ArrayList<PaymentProcessAPIResponseModel> mList;
 
 
     public PaymentDetailsAdapter(PaymentsActivity activity, ArrayList<PaymentProcessAPIResponseModel> paymentModesArr) {

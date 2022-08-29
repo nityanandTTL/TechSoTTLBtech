@@ -20,7 +20,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-
 import static com.thyrocare.btechapp.utils.app.BundleConstants.API_FOR_OTP;
 
 
@@ -47,17 +46,17 @@ public class GetAcessTokenAndOTPAPIController {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        accessTokenForOTPRequestModel.setVersion(""+appLevelVersionCode);
+        accessTokenForOTPRequestModel.setVersion("" + appLevelVersionCode);
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.RequestForOTPTokenAPI(accessTokenForOTPRequestModel);
-        globalClass.showProgressDialog(mActivity,"Please wait..");
+        globalClass.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {
             @Override
             public void onResponse(Call<CommonPOSTResponseModel> call, Response<CommonPOSTResponseModel> response) {
                 globalClass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     CommonPOSTResponseModel model1 = response.body();
-                    if (model1 != null && !InputUtils.isNull(model1.getRespId()) && model1.getRespId().equalsIgnoreCase("RES0000")){
+                    if (model1 != null && !InputUtils.isNull(model1.getRespId()) && model1.getRespId().equalsIgnoreCase("RES0000")) {
                         RequestOTPModel model = new RequestOTPModel();
                         model.setApi_key(API_FOR_OTP);
                         model.setMobile(MobileNumber);
@@ -67,7 +66,7 @@ public class GetAcessTokenAndOTPAPIController {
                         model.setAccessToken(model1.getToken());
                         model.setReqId(model1.getRequestId());
                         CallGetOTPAPI(model);
-                    }else{
+                    } else {
                         onFailureResponseReceived();
                     }
                 } else {
@@ -75,6 +74,7 @@ public class GetAcessTokenAndOTPAPIController {
                     onFailureResponseReceived();
                 }
             }
+
             @Override
             public void onFailure(Call<CommonPOSTResponseModel> call, Throwable t) {
                 globalClass.hideProgressDialog(mActivity);
@@ -89,7 +89,7 @@ public class GetAcessTokenAndOTPAPIController {
         globalClass.showCustomToast(mActivity, "Sending OTP please wait..");
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.RequestForOTPAPI(model);
-        globalClass.showProgressDialog(mActivity,"Please wait..");
+        globalClass.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {
             @Override
             public void onResponse(Call<CommonPOSTResponseModel> call, Response<CommonPOSTResponseModel> response) {

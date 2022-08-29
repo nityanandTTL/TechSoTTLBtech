@@ -45,8 +45,7 @@ public class GetTestController {
                             } else {
                                 globalClass.showCustomToast(activity, "" + responseModel.getResponse());
                             }
-                        }
-                        else {
+                        } else {
                             globalClass.showCustomToast(activity, "Something went wrong. Try after sometime");
                         }
                     } catch (Exception e) {

@@ -7,6 +7,7 @@ import android.view.View;
  */
 public interface CallbackforShowCaseDelegate {
     void onFirstPosition(View view, boolean isAccepted);
+
     void onAcceptOrderFirstPosition(View view);
 
 }

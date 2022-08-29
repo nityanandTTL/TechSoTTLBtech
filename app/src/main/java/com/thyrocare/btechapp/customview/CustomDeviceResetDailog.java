@@ -19,7 +19,7 @@ public class CustomDeviceResetDailog extends Dialog implements View.OnClickListe
     public Activity activity;
     public Dialog d;
     public Button btn_ok;
-    private CustomUpdateDialogOkButtonOnClickedDelegate customupdateDialogOkButtonOnClickedDelegate ;
+    private CustomUpdateDialogOkButtonOnClickedDelegate customupdateDialogOkButtonOnClickedDelegate;
 
     public CustomDeviceResetDailog(Context context, CustomUpdateDialogOkButtonOnClickedDelegate customupdateDialogOkButtonOnClickedDelegate) {
         super(context);
@@ -46,7 +46,7 @@ public class CustomDeviceResetDailog extends Dialog implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-       if (v.getId() == R.id.btn_ok) {
+        if (v.getId() == R.id.btn_ok) {
             customupdateDialogOkButtonOnClickedDelegate.onOkClicked();
         }
     }

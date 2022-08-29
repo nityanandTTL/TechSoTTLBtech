@@ -2,8 +2,10 @@ package com.thyrocare.btechapp.NewScreenDesigns.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +40,7 @@ public class LedgerCash_register_AdapterRV extends RecyclerView.Adapter<LedgerCa
     @Override
     public void onBindViewHolder(@NonNull MyViewholder holder, int position) {
 
-        holder.tv_date_id.setText(!StringUtils.isNull(get_cash_register_details_model.getLedgerDetails().get(position).getDate()) ? get_cash_register_details_model.getLedgerDetails().get(position).getDate() : "" );
+        holder.tv_date_id.setText(!StringUtils.isNull(get_cash_register_details_model.getLedgerDetails().get(position).getDate()) ? get_cash_register_details_model.getLedgerDetails().get(position).getDate() : "");
         holder.tv_openingbalance_id.setText("" + get_cash_register_details_model.getLedgerDetails().get(position).getOpeningBal());
         holder.tv_closingBalance_id.setText("" + get_cash_register_details_model.getLedgerDetails().get(position).getClosingBal());
         holder.tv_credit_id.setText("" + get_cash_register_details_model.getLedgerDetails().get(position).getCredit());

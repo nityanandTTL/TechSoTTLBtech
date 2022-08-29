@@ -1,6 +1,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle"
-    android:padding="@dimen/dp_15">
+    android:padding="@dimen/dp_15"
+    android:shape="rectangle">
     <!-- this one is ths color of the Rounded Button -->
 
     <gradient

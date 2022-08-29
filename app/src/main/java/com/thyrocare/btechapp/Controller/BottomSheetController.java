@@ -44,7 +44,6 @@ public class BottomSheetController {
     ScanBarcodeWoeActivity scanBarcodeWoeActivity;
     CheckoutWoeActivity checkoutWoeActivity;
     OrderPickUpActivity orderPickUpActivity;
-    private Global globalclass;
     Uri uri;
     int benId, position;
     String imgUrl, dialogMsg;
@@ -53,6 +52,7 @@ public class BottomSheetController {
     float mScalefloat = 1.0f;
     int FlagDel = 0;
     PickupOrderResponseModel.PickupordersDTO pickupordersDTO;
+    private Global globalclass;
 
     public BottomSheetController(Activity activity, ChangePasswordFragment changePasswordFragment) {
         this.activity = activity;
@@ -64,7 +64,7 @@ public class BottomSheetController {
         this.activity = activity;
     }
 
-    public BottomSheetController(Activity mActivity, ScanBarcodeWoeActivity scanBarcodeWoeActivity, String imgUrl, boolean isFromURL, final int benId, final int position,final int flagDel) {
+    public BottomSheetController(Activity mActivity, ScanBarcodeWoeActivity scanBarcodeWoeActivity, String imgUrl, boolean isFromURL, final int benId, final int position, final int flagDel) {
         this.activity = mActivity;
         this.scanBarcodeWoeActivity = scanBarcodeWoeActivity;
         globalclass = new Global(mActivity);
@@ -273,16 +273,16 @@ public class BottomSheetController {
             @Override
             public void onClick(View view) {
                 if (flag == 2) {
-                    scanBarcodeWoeActivity.vialImageDelete(benId, position, bottomSheetDialog,FlagDel);
+                    scanBarcodeWoeActivity.vialImageDelete(benId, position, bottomSheetDialog, FlagDel);
                 }
             }
         });
 
         if (flag == 2) {
 
-            System.out.println("---------------------"+imgUrl);
-            String str_image = imgUrl.replace("\\","/");
-            str_image.replace("\n","");
+            System.out.println("---------------------" + imgUrl);
+            String str_image = imgUrl.replace("\\", "/");
+            str_image.replace("\n", "");
             imgUrl = str_image;
             if (isFromURL) {
                 globalclass.DisplayImagewithDefaultImage(mActivity, imgUrl.replace("\\", "/"), imageview);
@@ -348,7 +348,6 @@ public class BottomSheetController {
         bottomSheetDialog.show();
     }
 
-    
 
 }
 

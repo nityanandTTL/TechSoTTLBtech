@@ -7,8 +7,7 @@
     android:orientation="vertical"
     tools:context=".NewScreenDesigns.Activities.NewCampWOEModuleActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/appbarLayout"
         android:layout_width="match_parent"
@@ -34,7 +33,7 @@
                     android:text="Camp Module"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_20sdp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -55,8 +54,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical"
             android:background="@drawable/rounded_background_filled_oranged"
+            android:orientation="vertical"
             android:weightSum="4">
 
             <TextView
@@ -68,7 +67,7 @@
                 android:gravity="center"
                 android:text="ENTER"
                 android:textColor="@color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -76,10 +75,10 @@
             android:id="@+id/lin_Entered"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
             android:layout_marginLeft="@dimen/_2sdp"
+            android:layout_weight="1"
             android:background="@drawable/rounded_background_empty_orange"
+            android:orientation="vertical"
             android:weightSum="4">
 
             <TextView
@@ -90,8 +89,8 @@
                 android:layout_weight="3"
                 android:gravity="center"
                 android:text="MIS"
-                android:textStyle="bold"
-                android:textColor="@color/colorOrange" />
+                android:textColor="@color/colorOrange"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </LinearLayout>

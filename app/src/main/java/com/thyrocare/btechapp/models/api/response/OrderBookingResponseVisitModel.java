@@ -10,9 +10,20 @@ import java.util.ArrayList;
  */
 
 public class OrderBookingResponseVisitModel implements Parcelable {
+    public static final Creator<OrderBookingResponseVisitModel> CREATOR = new Creator<OrderBookingResponseVisitModel>() {
+        @Override
+        public OrderBookingResponseVisitModel createFromParcel(Parcel in) {
+            return new OrderBookingResponseVisitModel(in);
+        }
+
+        @Override
+        public OrderBookingResponseVisitModel[] newArray(int size) {
+            return new OrderBookingResponseVisitModel[size];
+        }
+    };
+    Boolean isSecondVisitGenerated;
     private String oldVisitId;
     private String newVisitId;
-    Boolean isSecondVisitGenerated;
     private ArrayList<OrderBookingResponseOrderModel> orderids;
 
     public OrderBookingResponseVisitModel() {
@@ -37,18 +48,6 @@ public class OrderBookingResponseVisitModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<OrderBookingResponseVisitModel> CREATOR = new Creator<OrderBookingResponseVisitModel>() {
-        @Override
-        public OrderBookingResponseVisitModel createFromParcel(Parcel in) {
-            return new OrderBookingResponseVisitModel(in);
-        }
-
-        @Override
-        public OrderBookingResponseVisitModel[] newArray(int size) {
-            return new OrderBookingResponseVisitModel[size];
-        }
-    };
 
     public Boolean getSecondVisitGenerated() {
         return isSecondVisitGenerated;

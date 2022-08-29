@@ -29,6 +29,11 @@ import java.util.ArrayList;
 
 public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartArriveOrderDetailsAdapter.MyViewHolder> {
 
+    CharSequence[] items;
+    StartAndArriveActivity startAndArriveActivity;
+    String str_benProduct;
+    boolean toShowRemainingTime;
+    long minutes;
     private Activity activity;
     private OrderVisitDetailsModel orderVisitDetailsModel;
     private LayoutInflater layoutInflater;
@@ -37,14 +42,9 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
     private ArrayList<BeneficiaryDetailsModel> BenMasterArray;
     private String Status = "Start";
     private OnClickListeners onClickListeners;
-    CharSequence[] items;
     private String cancelVisit;
     private String userChoosenReleaseTask;
-    StartAndArriveActivity startAndArriveActivity;
     private boolean isCancelRequesGenereted = false;
-    String str_benProduct;
-    boolean toShowRemainingTime;
-    long minutes;
 
 
     public StartArriveOrderDetailsAdapter(Activity activity, OrderVisitDetailsModel orderVisitDetailsModel, ArrayList<BeneficiaryDetailsModel> BenMasterArray, String Status, StartAndArriveActivity startAndArriveActivity, boolean toShowRemainingTime, long minutes) {
@@ -62,46 +62,6 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
 
     public void updateStatus(String Status) {
         this.Status = Status;
-    }
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-
-        private final LinearLayout linBenDetails, lin_BeforeArrive, lin_benProduct, lin_firstBenDetails, lin_benName, lin_Edit_delete_Ben, lin_fastingDetails, lin_MobileNo, lin_EmailID;
-        private final TextView tv_FirstBenName, tv_OrderNo, tv_Address, tv_MobileNo, tv_EmailID, tv_AppointmentDateTime, tv_benName, tv_benProduct, tv_benPrice;
-        private final ImageView img_editBenDetails, img_DeleteBen, imgCall;
-
-        LinearLayout ll_kits, lin_delay_timer;
-        TextView tv_str_kits, tv_delay_timer, tv_note_res;
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            linBenDetails = (LinearLayout) itemView.findViewById(R.id.linBenDetails);
-            lin_BeforeArrive = (LinearLayout) itemView.findViewById(R.id.lin_BeforeArrive);
-            lin_firstBenDetails = (LinearLayout) itemView.findViewById(R.id.lin_firstBenDetails);
-            lin_benName = (LinearLayout) itemView.findViewById(R.id.lin_benName);
-            lin_benProduct = (LinearLayout) itemView.findViewById(R.id.lin_benProduct);
-            lin_Edit_delete_Ben = (LinearLayout) itemView.findViewById(R.id.lin_Edit_delete_Ben);
-            lin_fastingDetails = (LinearLayout) itemView.findViewById(R.id.lin_fastingDetails);
-            lin_MobileNo = (LinearLayout) itemView.findViewById(R.id.lin_MobileNo);
-            lin_EmailID = (LinearLayout) itemView.findViewById(R.id.lin_EmailID);
-            tv_FirstBenName = (TextView) itemView.findViewById(R.id.tv_FirstBenName);
-            tv_OrderNo = (TextView) itemView.findViewById(R.id.tv_OrderNo);
-            tv_Address = (TextView) itemView.findViewById(R.id.tv_Address);
-            tv_MobileNo = (TextView) itemView.findViewById(R.id.tv_MobileNo);
-            tv_EmailID = (TextView) itemView.findViewById(R.id.tv_EmailID);
-            tv_AppointmentDateTime = (TextView) itemView.findViewById(R.id.tv_AppointmentDateTime);
-            tv_benName = (TextView) itemView.findViewById(R.id.tv_benName);
-            tv_benProduct = (TextView) itemView.findViewById(R.id.tv_benProduct);
-            tv_benPrice = (TextView) itemView.findViewById(R.id.tv_benPrice);
-            imgCall = (ImageView) itemView.findViewById(R.id.imgCall);
-            img_editBenDetails = (ImageView) itemView.findViewById(R.id.img_editBenDetails);
-            img_DeleteBen = (ImageView) itemView.findViewById(R.id.img_DeleteBen);
-            ll_kits = itemView.findViewById(R.id.ll_kits);
-            tv_str_kits = itemView.findViewById(R.id.tv_str_kits);
-            lin_delay_timer = itemView.findViewById(R.id.lin_delay_timer);
-            tv_delay_timer = itemView.findViewById(R.id.tv_delay_timer);
-            tv_note_res = itemView.findViewById(R.id.tv_note_res);
-        }
     }
 
     @Override
@@ -177,9 +137,9 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                     }
                 } else {
                     if (BenMasterArray.size() > 1) {
-                        if (orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()){
+                        if (orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
                             editSingleBeneficiary(holder, View.GONE);
-                        }else{
+                        } else {
                             editSingleBeneficiary(holder, View.VISIBLE);
                         }
                     } else {
@@ -194,11 +154,11 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                         holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
                     }
                 } else {
-                    if (orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()){
+                    if (orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
                         holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
                         holder.img_editBenDetails.setVisibility(View.VISIBLE);
                         holder.img_DeleteBen.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
                     }
 
@@ -215,7 +175,7 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
         holder.tv_MobileNo.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
         holder.tv_EmailID.setText(!StringUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail()) ? orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail() : "");
 //        holder.tv_AppointmentDateTime.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAppointmentDate() + ", " + DateUtil.Req_Date_Req(orderVisitDetailsModel.getAllOrderdetails().get(0).getSlot(), "hh:mm a", "HH:mm"));
-        holder.tv_AppointmentDateTime.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAppointmentDate() +", "+ (!StringUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getTimeSlot()) ?orderVisitDetailsModel.getAllOrderdetails().get(0).getTimeSlot() :DateUtil.Req_Date_Req(orderVisitDetailsModel.getAllOrderdetails().get(0).getSlot(), "hh:mm a", "HH:mm")));
+        holder.tv_AppointmentDateTime.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAppointmentDate() + ", " + (!StringUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getTimeSlot()) ? orderVisitDetailsModel.getAllOrderdetails().get(0).getTimeSlot() : DateUtil.Req_Date_Req(orderVisitDetailsModel.getAllOrderdetails().get(0).getSlot(), "hh:mm a", "HH:mm")));
         holder.tv_benName.setText(BenMasterArray.get(position).getName() + " (" + BenMasterArray.get(position).getGender() + " | " + BenMasterArray.get(position).getAge() + " years)");
         if (orderVisitDetailsModel.getAllOrderdetails().get(0).isDisplayProduct()) {
             holder.tv_benProduct.setText(Html.fromHtml(!StringUtils.isNull(BenMasterArray.get(position).getTestsCode()) ? "<u>" + BenMasterArray.get(position).getTestsCode() + "</u>" : ""));
@@ -290,7 +250,6 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
             }
         }
     }
-
 
     private boolean isValidForEditing(String tests) {
 
@@ -379,5 +338,45 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
 
         void onCallCustomer();
 
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        private final LinearLayout linBenDetails, lin_BeforeArrive, lin_benProduct, lin_firstBenDetails, lin_benName, lin_Edit_delete_Ben, lin_fastingDetails, lin_MobileNo, lin_EmailID;
+        private final TextView tv_FirstBenName, tv_OrderNo, tv_Address, tv_MobileNo, tv_EmailID, tv_AppointmentDateTime, tv_benName, tv_benProduct, tv_benPrice;
+        private final ImageView img_editBenDetails, img_DeleteBen, imgCall;
+
+        LinearLayout ll_kits, lin_delay_timer;
+        TextView tv_str_kits, tv_delay_timer, tv_note_res;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            linBenDetails = (LinearLayout) itemView.findViewById(R.id.linBenDetails);
+            lin_BeforeArrive = (LinearLayout) itemView.findViewById(R.id.lin_BeforeArrive);
+            lin_firstBenDetails = (LinearLayout) itemView.findViewById(R.id.lin_firstBenDetails);
+            lin_benName = (LinearLayout) itemView.findViewById(R.id.lin_benName);
+            lin_benProduct = (LinearLayout) itemView.findViewById(R.id.lin_benProduct);
+            lin_Edit_delete_Ben = (LinearLayout) itemView.findViewById(R.id.lin_Edit_delete_Ben);
+            lin_fastingDetails = (LinearLayout) itemView.findViewById(R.id.lin_fastingDetails);
+            lin_MobileNo = (LinearLayout) itemView.findViewById(R.id.lin_MobileNo);
+            lin_EmailID = (LinearLayout) itemView.findViewById(R.id.lin_EmailID);
+            tv_FirstBenName = (TextView) itemView.findViewById(R.id.tv_FirstBenName);
+            tv_OrderNo = (TextView) itemView.findViewById(R.id.tv_OrderNo);
+            tv_Address = (TextView) itemView.findViewById(R.id.tv_Address);
+            tv_MobileNo = (TextView) itemView.findViewById(R.id.tv_MobileNo);
+            tv_EmailID = (TextView) itemView.findViewById(R.id.tv_EmailID);
+            tv_AppointmentDateTime = (TextView) itemView.findViewById(R.id.tv_AppointmentDateTime);
+            tv_benName = (TextView) itemView.findViewById(R.id.tv_benName);
+            tv_benProduct = (TextView) itemView.findViewById(R.id.tv_benProduct);
+            tv_benPrice = (TextView) itemView.findViewById(R.id.tv_benPrice);
+            imgCall = (ImageView) itemView.findViewById(R.id.imgCall);
+            img_editBenDetails = (ImageView) itemView.findViewById(R.id.img_editBenDetails);
+            img_DeleteBen = (ImageView) itemView.findViewById(R.id.img_DeleteBen);
+            ll_kits = itemView.findViewById(R.id.ll_kits);
+            tv_str_kits = itemView.findViewById(R.id.tv_str_kits);
+            lin_delay_timer = itemView.findViewById(R.id.lin_delay_timer);
+            tv_delay_timer = itemView.findViewById(R.id.tv_delay_timer);
+            tv_note_res = itemView.findViewById(R.id.tv_note_res);
+        }
     }
 }

@@ -9,55 +9,52 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AbstractDao {
 
-	protected SQLiteDatabase db;
+    private static AtomicInteger mOpenCounter = new AtomicInteger();
+    protected SQLiteDatabase db;
+    protected SQLiteOpenHelper mDbHelper;
 
-	protected SQLiteOpenHelper mDbHelper;
+    public SQLiteDatabase getDb() {
+        return db;
+    }
 
-	private static AtomicInteger mOpenCounter = new AtomicInteger();
+    public void setDb(SQLiteDatabase db) {
+        this.db = db;
+    }
 
+    public synchronized SQLiteDatabase openDatabase() {
 
-	public SQLiteDatabase getDb() {
-		return db;
-	}
+        int incCount = mOpenCounter.incrementAndGet();
 
-	public void setDb(SQLiteDatabase db) {
-		this.db = db;
-	}
+        Logger.debug("incCount" + incCount);
+        if (incCount == 1) {
 
-	public synchronized SQLiteDatabase openDatabase() {
+            Logger.debug("Creating new object");
+            db = mDbHelper.getWritableDatabase();
 
-		int incCount = mOpenCounter.incrementAndGet();
+        }
 
-		Logger.debug("incCount" + incCount);
-		if (incCount == 1){
+        if (db == null || (db != null && !db.isOpen())) {
 
-			Logger.debug("Creating new object");
-			db = mDbHelper.getWritableDatabase();
+            db = mDbHelper.getWritableDatabase();
 
-		}
+        }
 
-		if (db == null || (db != null && !db.isOpen())){
+        return db;
+    }
 
-			db = mDbHelper.getWritableDatabase();
+    public synchronized void closeDatabase() {
+        int decCount = mOpenCounter.decrementAndGet();
+        Logger.debug("decCount" + decCount);
+        if (decCount == 0) {
+            // Closing database
+            db.close();
 
-		}
+        }
+    }
 
-		return db;
-	}
-
-	public synchronized void closeDatabase() {
-		int decCount = mOpenCounter.decrementAndGet();
-		Logger.debug("decCount" + decCount);
-		if (decCount == 0){
-			// Closing database
-			db.close();
-
-		}
-	}
-
-	public synchronized int count() {
-		int count = mOpenCounter.intValue();
-		return count;
-	}
+    public synchronized int count() {
+        int count = mOpenCounter.intValue();
+        return count;
+    }
 
 }

@@ -8,16 +8,24 @@ import android.os.Parcelable;
  */
 
 public class CartRequestBeneficiaryModel implements Parcelable {
+    public static final Creator<CartRequestBeneficiaryModel> CREATOR = new Creator<CartRequestBeneficiaryModel>() {
+        @Override
+        public CartRequestBeneficiaryModel createFromParcel(Parcel in) {
+            return new CartRequestBeneficiaryModel(in);
+        }
+
+        @Override
+        public CartRequestBeneficiaryModel[] newArray(int size) {
+            return new CartRequestBeneficiaryModel[size];
+        }
+    };
     private String OrderNo;
     private String BenId;
     private String Tests;
-
     private String ProjId;
     private Boolean Addben;
     private Boolean isTestEdit;
     private String Remarks;
-
-
 
     public CartRequestBeneficiaryModel() {
     }
@@ -49,18 +57,6 @@ public class CartRequestBeneficiaryModel implements Parcelable {
         return 0;
     }
 
-    public static final Creator<CartRequestBeneficiaryModel> CREATOR = new Creator<CartRequestBeneficiaryModel>() {
-        @Override
-        public CartRequestBeneficiaryModel createFromParcel(Parcel in) {
-            return new CartRequestBeneficiaryModel(in);
-        }
-
-        @Override
-        public CartRequestBeneficiaryModel[] newArray(int size) {
-            return new CartRequestBeneficiaryModel[size];
-        }
-    };
-
     public String getOrderNo() {
         return OrderNo;
     }
@@ -84,7 +80,6 @@ public class CartRequestBeneficiaryModel implements Parcelable {
     public void setTests(String tests) {
         Tests = tests;
     }
-
 
 
     public String getProjId() {

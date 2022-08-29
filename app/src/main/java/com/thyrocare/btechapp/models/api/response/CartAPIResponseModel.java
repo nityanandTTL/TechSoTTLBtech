@@ -12,6 +12,17 @@ import java.util.ArrayList;
  */
 
 public class CartAPIResponseModel implements Parcelable {
+    public static final Creator<CartAPIResponseModel> CREATOR = new Creator<CartAPIResponseModel>() {
+        @Override
+        public CartAPIResponseModel createFromParcel(Parcel in) {
+            return new CartAPIResponseModel(in);
+        }
+
+        @Override
+        public CartAPIResponseModel[] newArray(int size) {
+            return new CartAPIResponseModel[size];
+        }
+    };
     private ArrayList<CartAPIResponseOrderModel> orders;
     private String Response;
 
@@ -33,18 +44,6 @@ public class CartAPIResponseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<CartAPIResponseModel> CREATOR = new Creator<CartAPIResponseModel>() {
-        @Override
-        public CartAPIResponseModel createFromParcel(Parcel in) {
-            return new CartAPIResponseModel(in);
-        }
-
-        @Override
-        public CartAPIResponseModel[] newArray(int size) {
-            return new CartAPIResponseModel[size];
-        }
-    };
 
     public ArrayList<CartAPIResponseOrderModel> getOrders() {
         return orders;

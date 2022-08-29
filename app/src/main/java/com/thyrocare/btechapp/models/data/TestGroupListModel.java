@@ -9,8 +9,19 @@ import java.util.ArrayList;
  * Created by e5209 on 9/29/2017.
  */
 
-public class TestGroupListModel implements Parcelable{
-    private String groupName,testCount;
+public class TestGroupListModel implements Parcelable {
+    public static final Creator<TestGroupListModel> CREATOR = new Creator<TestGroupListModel>() {
+        @Override
+        public TestGroupListModel createFromParcel(Parcel in) {
+            return new TestGroupListModel(in);
+        }
+
+        @Override
+        public TestGroupListModel[] newArray(int size) {
+            return new TestGroupListModel[size];
+        }
+    };
+    private String groupName, testCount;
     private ArrayList<TestDetailsModel> testDetails;
 
     protected TestGroupListModel(Parcel in) {
@@ -33,18 +44,6 @@ public class TestGroupListModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<TestGroupListModel> CREATOR = new Creator<TestGroupListModel>() {
-        @Override
-        public TestGroupListModel createFromParcel(Parcel in) {
-            return new TestGroupListModel(in);
-        }
-
-        @Override
-        public TestGroupListModel[] newArray(int size) {
-            return new TestGroupListModel[size];
-        }
-    };
 
     public String getGroupName() {
         return groupName;

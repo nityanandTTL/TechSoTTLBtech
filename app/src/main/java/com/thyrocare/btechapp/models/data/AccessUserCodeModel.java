@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class AccessUserCodeModel extends BaseModel implements Parcelable {
+    public static final Creator<AccessUserCodeModel> CREATOR = new Creator<AccessUserCodeModel>() {
+        @Override
+        public AccessUserCodeModel createFromParcel(Parcel in) {
+            return new AccessUserCodeModel(in);
+        }
+
+        @Override
+        public AccessUserCodeModel[] newArray(int size) {
+            return new AccessUserCodeModel[size];
+        }
+    };
     private String AccessCode;
 
     protected AccessUserCodeModel(Parcel in) {
@@ -25,18 +36,6 @@ public class AccessUserCodeModel extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<AccessUserCodeModel> CREATOR = new Creator<AccessUserCodeModel>() {
-        @Override
-        public AccessUserCodeModel createFromParcel(Parcel in) {
-            return new AccessUserCodeModel(in);
-        }
-
-        @Override
-        public AccessUserCodeModel[] newArray(int size) {
-            return new AccessUserCodeModel[size];
-        }
-    };
 
     public String getAccessCode() {
         return AccessCode;

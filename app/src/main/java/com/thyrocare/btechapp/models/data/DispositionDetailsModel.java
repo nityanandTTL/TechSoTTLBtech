@@ -7,10 +7,30 @@ import android.os.Parcelable;
  * Created by e5233@thyrocare.com on 26/6/18.
  */
 
-public class DispositionDetailsModel implements Parcelable{
+public class DispositionDetailsModel implements Parcelable {
 
+    public static final Creator<DispositionDetailsModel> CREATOR = new Creator<DispositionDetailsModel>() {
+        @Override
+        public DispositionDetailsModel createFromParcel(Parcel in) {
+            return new DispositionDetailsModel(in);
+        }
+
+        @Override
+        public DispositionDetailsModel[] newArray(int size) {
+            return new DispositionDetailsModel[size];
+        }
+    };
     private int dispId;
     private String Disposition;
+
+    public DispositionDetailsModel() {
+
+    }
+
+    protected DispositionDetailsModel(Parcel in) {
+        dispId = in.readInt();
+        Disposition = in.readString();
+    }
 
     public int getDispId() {
         return dispId;
@@ -27,27 +47,6 @@ public class DispositionDetailsModel implements Parcelable{
     public void setDisposition(String disposition) {
         Disposition = disposition;
     }
-
-    public DispositionDetailsModel(){
-
-    }
-
-    protected DispositionDetailsModel(Parcel in) {
-        dispId = in.readInt();
-        Disposition = in.readString();
-    }
-
-    public static final Creator<DispositionDetailsModel> CREATOR = new Creator<DispositionDetailsModel>() {
-        @Override
-        public DispositionDetailsModel createFromParcel(Parcel in) {
-            return new DispositionDetailsModel(in);
-        }
-
-        @Override
-        public DispositionDetailsModel[] newArray(int size) {
-            return new DispositionDetailsModel[size];
-        }
-    };
 
     @Override
     public int describeContents() {

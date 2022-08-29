@@ -63,15 +63,15 @@ public class AadharUtils {
                             aadharDataModel.setState(getAttributeValue(aadharparser, "state"));
                             aadharDataModel.setPincode(getAttributeValue(aadharparser, "pc"));
                             aadharDataModel.setVtc(getAttributeValue(aadharparser, "vtc"));
-                            aadharDataModel.setLoc(getAttributeValue(aadharparser,"loc"));
+                            aadharDataModel.setLoc(getAttributeValue(aadharparser, "loc"));
                             Logger.debug("xml" + getAttributeValue(aadharparser, "loc"));
-                            aadharDataModel.setAddress(getAttributeValue(aadharparser, "house") +" "+
-                                    getAttributeValue(aadharparser, "street") +" "+
-                                    getAttributeValue(aadharparser, "lm") +" "+
-                                    getAttributeValue(aadharparser, "po") +" "+
-                                    getAttributeValue(aadharparser, "dist") +" "+
-                                    getAttributeValue(aadharparser, "subdist") +" "+
-                                    getAttributeValue(aadharparser, "state") +" "+
+                            aadharDataModel.setAddress(getAttributeValue(aadharparser, "house") + " " +
+                                    getAttributeValue(aadharparser, "street") + " " +
+                                    getAttributeValue(aadharparser, "lm") + " " +
+                                    getAttributeValue(aadharparser, "po") + " " +
+                                    getAttributeValue(aadharparser, "dist") + " " +
+                                    getAttributeValue(aadharparser, "subdist") + " " +
+                                    getAttributeValue(aadharparser, "state") + " " +
                                     getAttributeValue(aadharparser, "pc")
                             );
                         }
@@ -80,7 +80,7 @@ public class AadharUtils {
                 event = aadharparser.next();
             }
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return aadharDataModel;

@@ -87,7 +87,7 @@ public class GetNBTDetailResponseModel {
 
         @Override
         public String toString() {
-            return Name ;
+            return Name;
         }
     }
 }

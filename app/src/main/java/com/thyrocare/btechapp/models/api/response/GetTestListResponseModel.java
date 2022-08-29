@@ -11,8 +11,19 @@ import java.util.ArrayList;
  * Created by e5209 on 9/29/2017.
  */
 
-public class GetTestListResponseModel implements Parcelable{
-    private String leadId,status;
+public class GetTestListResponseModel implements Parcelable {
+    public static final Creator<GetTestListResponseModel> CREATOR = new Creator<GetTestListResponseModel>() {
+        @Override
+        public GetTestListResponseModel createFromParcel(Parcel in) {
+            return new GetTestListResponseModel(in);
+        }
+
+        @Override
+        public GetTestListResponseModel[] newArray(int size) {
+            return new GetTestListResponseModel[size];
+        }
+    };
+    private String leadId, status;
     private ArrayList<TestGroupListModel> testGroupList;
 
     public GetTestListResponseModel() {
@@ -33,18 +44,6 @@ public class GetTestListResponseModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<GetTestListResponseModel> CREATOR = new Creator<GetTestListResponseModel>() {
-        @Override
-        public GetTestListResponseModel createFromParcel(Parcel in) {
-            return new GetTestListResponseModel(in);
-        }
-
-        @Override
-        public GetTestListResponseModel[] newArray(int size) {
-            return new GetTestListResponseModel[size];
-        }
-    };
 
     public String getLeadId() {
         return leadId;

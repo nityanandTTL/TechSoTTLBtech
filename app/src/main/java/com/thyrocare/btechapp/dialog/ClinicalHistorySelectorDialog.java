@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * Created by Orion on 4/24/2017.
  */
 
-public class ClinicalHistorySelectorDialog extends Dialog{
+public class ClinicalHistorySelectorDialog extends Dialog {
     private Activity activity;
     private Button btnSave;
     private ExpandableListView elvClinicalHistory;
@@ -28,6 +28,7 @@ public class ClinicalHistorySelectorDialog extends Dialog{
     private int benId;
     private SelectClinicalHistoryExpandableListAdapter sCHELA;
     private SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate;
+
     public ClinicalHistorySelectorDialog(Activity activity, ArrayList<BeneficiaryTestDetailsModel> testsRateMasterModelsArr, ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr, int benId, SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate) {
         super(activity);
         this.activity = activity;

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/feedbackCategory"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/_30sdp"
     android:ellipsize="end"
+    android:gravity="center_vertical"
     android:lines="1"
+    android:minHeight="@dimen/_30sdp"
     android:paddingLeft="@dimen/_2sdp"
     android:paddingRight="@dimen/_2sdp"
     android:textColor="@color/black"
-    android:textSize="@dimen/value"
-    android:gravity="center_vertical"
-    android:textColorHighlight="@color/bg_new_color"/>
+    android:textColorHighlight="@color/bg_new_color"
+    android:textSize="@dimen/value" />

@@ -67,23 +67,22 @@ public class ThyrocareVideos extends AppCompatActivity {
 
     Activity mActivity;
     VideoView videoView;
+    ArrayList<VideosResponseModel.Outputlang> VideosArylist;
+    ConnectionDetector cd;
+    View parentLayout;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
     private int a = 0;
     private Global globalclass;
     private ArrayList<VideoLangaugesResponseModel.Outputlang> VideoLangArylist;
     private RecyclerView recView;
-    ArrayList<VideosResponseModel.Outputlang> VideosArylist;
     private DisplayVideoListAdapter videoListAdapter;
     //    private TextView tv_languageSelected;
     private SharedPreferences prefs_Language;
     private TextView tv_noDatafound;
-    ConnectionDetector cd;
-    View parentLayout;
     private Snackbar internetErrorSnackbar;
     private int b = 0;
     private Spinner spn_purpose;
-    TextView tv_toolbar;
-    ImageView iv_back, iv_home;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,12 +263,12 @@ public class ThyrocareVideos extends AppCompatActivity {
         spn_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(spn_purpose.getSelectedItemPosition() == 0){
+                if (spn_purpose.getSelectedItemPosition() == 0) {
                     recView.setVisibility(View.GONE);
                     Toast.makeText(mActivity, "Kindly select language", Toast.LENGTH_SHORT).show();
                     tv_noDatafound.setVisibility(View.GONE);
 
-                }else{
+                } else {
                     for (int i = 0; i < videoLangArylist.size(); i++) {
                         if (spn_purpose.getSelectedItem().toString().equalsIgnoreCase(videoLangArylist.get(i).getLANGUAGE())) {
                             GetVideosBasedonLanguage(videoLangArylist.get(i).getIID_NEW());

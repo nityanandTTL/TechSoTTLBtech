@@ -4,8 +4,10 @@ package com.thyrocare.btechapp.fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AlertDialog;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,8 +97,8 @@ public class CampBeneficiariesDisplayFragment extends AbstractFragment {
                                 dialog.dismiss();
                             }
                         }).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
                         /*tempOrderDetailsModel.setOrderNo(DeviceUtils.randomString(8));
                         ArrayList<BeneficiaryDetailsModel> beneficiaries = new ArrayList<BeneficiaryDetailsModel>();
 
@@ -113,8 +115,8 @@ public class CampBeneficiariesDisplayFragment extends AbstractFragment {
                         intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, tempBeneficiaryDetailsModel);
                         intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, tempOrderDetailsModel);
                         startActivityForResult(intentEdit, BundleConstants.ADD_EDIT_START);*/
-                    }
-                }).show();
+                            }
+                        }).show();
             }
         });
     }
@@ -187,6 +189,14 @@ public class CampBeneficiariesDisplayFragment extends AbstractFragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == BundleConstants.ADD_START && resultCode == BundleConstants.ADD_FINISH) {
+            initData();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private class BeneficiaryScreenPageChangeListener implements ViewPager.OnPageChangeListener {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -205,13 +215,5 @@ public class CampBeneficiariesDisplayFragment extends AbstractFragment {
         public void onPageScrollStateChanged(int state) {
 
         }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == BundleConstants.ADD_START && resultCode == BundleConstants.ADD_FINISH) {
-            initData();
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 }

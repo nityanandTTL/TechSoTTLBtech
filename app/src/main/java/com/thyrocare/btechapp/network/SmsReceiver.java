@@ -26,6 +26,10 @@ public class SmsReceiver extends BroadcastReceiver {
     String otp;
     String b1;
 
+    public static void bindListener(SmsListner listener) {
+        mListener = listener;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle data = intent.getExtras();
@@ -35,14 +39,14 @@ public class SmsReceiver extends BroadcastReceiver {
             String sender = smsMessage.getDisplayOriginatingAddress();
             b = sender.endsWith("");  //Just to fetch otp sent from WNRCRP
             String messageBody = smsMessage.getMessageBody();
-            MessageLogger.LogError(TAG, "onReceive msg: "+messageBody );
+            MessageLogger.LogError(TAG, "onReceive msg: " + messageBody);
             try {
                 otp = messageBody.replaceAll("[^0-9]", "");// here abcd contains otp which is in number format
             } catch (Exception e) {
                 e.printStackTrace();
             }
             otp = !TextUtils.isEmpty(otp) ? otp : "";
-            MessageLogger.LogError(TAG, "onReceive: otp "+otp );
+            MessageLogger.LogError(TAG, "onReceive: otp " + otp);
             Pattern p = Pattern.compile("(\\d{4})");// represents single character (\d{6})
             Matcher m = p.matcher(otp);
             if (m.find()) {
@@ -52,16 +56,12 @@ public class SmsReceiver extends BroadcastReceiver {
             if (b == true) {
                 try {
                     mListener.messageReceived(b1);  // attach value to interface object
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
             } else {
             }
         }
-    }
-
-    public static void bindListener(SmsListner listener) {
-        mListener = listener;
     }
 }

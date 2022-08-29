@@ -24,7 +24,7 @@ public class PostPickupOrderController {
 
     public PostPickupOrderController(OrderPickUpActivity orderPickUpActivity) {
         this.activity = orderPickUpActivity;
-        globalClass=new Global(activity);
+        globalClass = new Global(activity);
         this.orderPickUpActivity = orderPickUpActivity;
         flag = 1;
     }
@@ -39,8 +39,8 @@ public class PostPickupOrderController {
                 @Override
                 public void onResponse(Call<PostPickupOrderResponseModel> call, retrofit2.Response<PostPickupOrderResponseModel> response) {
                     globalClass.hideProgressDialog(activity);
-                    if (response.isSuccessful() && response.body()!=null){
-                        if (flag==1){
+                    if (response.isSuccessful() && response.body() != null) {
+                        if (flag == 1) {
                             orderPickUpActivity.getPostResponse(response.body());
                         }
                     }

@@ -13,7 +13,9 @@ import android.widget.TextView;
 import com.thyrocare.btechapp.Controller.TSPLMESampleDropController;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
+
 import application.ApplicationController;
+
 import com.thyrocare.btechapp.models.data.DateWiseWLMISDetailsModel;
 import com.thyrocare.btechapp.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 import com.thyrocare.btechapp.models.data.WLMISDetailsModel;
@@ -34,15 +36,15 @@ import java.util.Date;
 public class LME_WLMISFragment extends AbstractFragment {
 
     public static final String TAG_FRAGMENT = "LME_OrdersDisplayFragment";
-    private HomeScreenActivity activity;
-    private AppPreferenceManager appPreferenceManager;
-    private View rootView;
     static LME_WLMISFragment fragment;
-    private SampleDropDetailsbyTSPLMEDetailsModel msampleDropDetailsbyTSPLMEDetailsModel;
     TextView nodata;
     LinearLayout ll_staffstat, ll_wlmis;
     TableRow tr_itlcrh_dateWise, tr_itlcrh;
     Button btn_daily, btn_dateWise;
+    private HomeScreenActivity activity;
+    private AppPreferenceManager appPreferenceManager;
+    private View rootView;
+    private SampleDropDetailsbyTSPLMEDetailsModel msampleDropDetailsbyTSPLMEDetailsModel;
     private boolean isDailyPickup = true;
 
     public LME_WLMISFragment() {

@@ -47,42 +47,37 @@ import java.util.Locale;
 
 public class Global {
 
-    public static String PE_BTech="3";
+    public static String PE_BTech = "3";
     public static String Prepaid = "PREPAID";
-    private Context context;
+    public static int selectedPosition;
+    public static int selectedRemarksID;
+    public static boolean todisplaytimerforPosition = false;
+    public static boolean callAPIEditOrder = false;
+    public static boolean toDisplayTimerFlag = false;
+    public static boolean TimerFlag = true;
+    public static boolean displayedtimer = false;
     public String fontDefault = "OPENSANS-REGULAR_3.TTF";
     public String fontRegular = "OPENSANS-REGULAR_3.TTF";
     public String fontLight = "OPENSANS-LIGHT_3.TTF";
     public String fontBold = "OPENSANS-BOLD_2.TTF";
     public String fontSemiBold = "OPENSANS-SEMIBOLD_2.TTF";
     public String fontItalic = "OPENSANS-ITALIC_2.TTF";
-
     public String tableAarogyam = "Aarogyam";
     public String tableProfile = "Profile";
     public String tableTests = "Tests";
     public String tableOffer = "Offer";
     public String tableOfferCart = "OfferCart";
     public String tableThyronomicOfferCart = "ThyronomicOfferCart";
-
     public String tableAarogyamChilds = "Aarogyam_childs";
     public String tableProfileChilds = "Profile_childs";
     public String tableTestsChilds = "Tests_childs";
     public String tableOfferChilds = "Offer_childs";
+    //Live ---------------------------
     public String tableOfferCartChilds = "OfferCart_childs";
     public String tableThyronomicOfferCartChilds = "ThyronomicOfferCart_childs";
-
-    public static int selectedPosition;
-    public static int selectedRemarksID;
-    public static boolean todisplaytimerforPosition =false;
-
     public String tableCart = "Cart";
-    //Live ---------------------------
-
     ProgressDialog progressDialog;
-    public static boolean callAPIEditOrder = false;
-    public static boolean toDisplayTimerFlag = false;
-    public static boolean TimerFlag = true;
-    public static boolean displayedtimer=false;
+    private Context context;
 
     public Global(Context context) {
         this.context = context;
@@ -95,7 +90,7 @@ public class Global {
         }
     }
 
-    public static boolean checkLogin(String s){
+    public static boolean checkLogin(String s) {
         return s != null && s.equalsIgnoreCase(Global.PE_BTech);
     }
 
@@ -124,6 +119,7 @@ public class Global {
     public static String getCurrentDate() {
         return new SimpleDateFormat("dd-MM-yyyy").format(new Date());
     }
+
     public static String getCurrentDateandTime() {
         return new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
     }
@@ -141,10 +137,178 @@ public class Global {
     }
 
 
-    public static void DsaResponseModel(){
+    public static void DsaResponseModel() {
 
     }
 
+    public static String toCamelCase(String inputString) {
+        String result = "";
+        if (inputString.length() == 0) {
+            return result;
+        }
+        char firstChar = inputString.charAt(0);
+        char firstCharToUpperCase = Character.toUpperCase(firstChar);
+        result = result + firstCharToUpperCase;
+        for (int i = 1; i < inputString.length(); i++) {
+            char currentChar = inputString.charAt(i);
+            char previousChar = inputString.charAt(i - 1);
+            if (previousChar == ' ') {
+                char currentCharToUpperCase = Character.toUpperCase(currentChar);
+                result = result + currentCharToUpperCase;
+            } else {
+                char currentCharToLowerCase = Character.toLowerCase(currentChar);
+                result = result + currentCharToLowerCase;
+            }
+        }
+        return result;
+    }
+
+    public static String toUpperCase(String inputString) {
+        String result = "";
+        for (int i = 0; i < inputString.length(); i++) {
+            char currentChar = inputString.charAt(i);
+            char currentCharToUpperCase = Character.toUpperCase(currentChar);
+            result = result + currentCharToUpperCase;
+        }
+        return result;
+    }
+
+    public static String toLowerCase(String inputString) {
+        String result = "";
+        for (int i = 0; i < inputString.length(); i++) {
+            char currentChar = inputString.charAt(i);
+            char currentCharToLowerCase = Character.toLowerCase(currentChar);
+            result = result + currentCharToLowerCase;
+        }
+        return result;
+    }
+
+    public static String toSentenceCase(String inputString) {
+        String result = "";
+        if (inputString.length() == 0) {
+            return result;
+        }
+        char firstChar = inputString.charAt(0);
+        char firstCharToUpperCase = Character.toUpperCase(firstChar);
+        result = result + firstCharToUpperCase;
+        boolean terminalCharacterEncountered = false;
+        char[] terminalCharacters = {'.', '?', '!'};
+        for (int i = 1; i < inputString.length(); i++) {
+            char currentChar = inputString.charAt(i);
+            if (terminalCharacterEncountered) {
+                if (currentChar == ' ') {
+                    result = result + currentChar;
+                } else {
+                    char currentCharToUpperCase = Character.toUpperCase(currentChar);
+                    result = result + currentCharToUpperCase;
+                    terminalCharacterEncountered = false;
+                }
+            } else {
+                char currentCharToLowerCase = Character.toLowerCase(currentChar);
+                result = result + currentCharToLowerCase;
+            }
+            for (int j = 0; j < terminalCharacters.length; j++) {
+                if (currentChar == terminalCharacters[j]) {
+                    terminalCharacterEncountered = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    public static void iconImage(Bitmap bitmap) {
+
+    }
+
+    public static String getHeaderValue(Context pContext) {
+        String header;
+        header = "BtechApp/" + getUserCode(pContext) + getCurrentAppVersionName(pContext) + "(" + getCurrentVersionCode(pContext) + ")/" + getSerialnum(pContext);
+        return header;
+    }
+
+    public static String getUserCode(Context pContext) {
+        String user = "";
+        String usercode = "";
+        String userName = "";
+        try {
+            AppPreferenceManager appPreferenceManager = new AppPreferenceManager(pContext);
+            usercode = appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()) ? appPreferenceManager.getLoginResponseModel().getUserID().trim().replace(" ", "") + "/" : "";
+//            userName = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getName()) ? appPreferenceManager.getLoginResponseModel().getName().trim().replace(" ","")+"/" : "Default/" ;
+
+            user = usercode + userName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
+    public static int getCurrentVersionCode(Context pContext) {
+        int currentAppVersion = 0;
+        try {
+            currentAppVersion = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return currentAppVersion;
+    }
+
+    public static String getCurrentAppVersionName(Context pContext) {
+        String versionName = "";
+        try {
+            PackageInfo packageInfo = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), 0);
+            versionName = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
+    }
+
+    public static String getSerialnum(Context pContext) {
+        String imeiNo = "";
+        try {
+            imeiNo = Settings.Secure.getString(pContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return imeiNo;
+    }
+
+    public static void appBar(Activity activity) {
+        AppBarLayout appBarLayout = activity.findViewById(R.id.appbarLayout);
+        appBarLayout.setVisibility(View.GONE);
+    }
+
+    public static void cropImageFullScreenActivity(Activity activity, int flag) {
+        if (flag == 1) {
+            ImagePicker.Companion.with(activity).crop().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
+        } else if (flag == 0) {
+            ImagePicker.Companion.with(activity).crop().cameraOnly().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
+        } else if (flag == 2) {
+            ImagePicker.Companion.with(activity).crop().galleryOnly().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
+        } else if (flag == 3) {
+            ImagePicker.Companion.with(activity).cameraOnly().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
+        }
+    }
+
+    public static void cropImageFullScreenFragment(Fragment fragment, int flag) {
+
+        if (flag == 1) {
+            ImagePicker.Companion.with(fragment).crop().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
+        } else if (flag == 0) {
+            ImagePicker.Companion.with(fragment).crop().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).cameraOnly().start();
+        } else if (flag == 2) {
+            ImagePicker.Companion.with(fragment).crop().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).galleryOnly().start();
+        }
+    }
 
     public String convertNumberToPrice(String s) {
         Double price = Double.parseDouble(s);
@@ -249,7 +413,6 @@ public class Global {
         toast.show();
     }
 
-
     public void showProgressDialog(Activity activity, String msg) {
 
         progressDialog = new ProgressDialog(activity);
@@ -325,7 +488,6 @@ public class Global {
         }
     }
 
-
     public String formatDate(String currentFormat, String outputFormat, String date) {
 
         SimpleDateFormat curFormater = new SimpleDateFormat(currentFormat);
@@ -340,82 +502,6 @@ public class Global {
             e.printStackTrace();
         }
         return date;
-    }
-
-    public static String toCamelCase(String inputString) {
-        String result = "";
-        if (inputString.length() == 0) {
-            return result;
-        }
-        char firstChar = inputString.charAt(0);
-        char firstCharToUpperCase = Character.toUpperCase(firstChar);
-        result = result + firstCharToUpperCase;
-        for (int i = 1; i < inputString.length(); i++) {
-            char currentChar = inputString.charAt(i);
-            char previousChar = inputString.charAt(i - 1);
-            if (previousChar == ' ') {
-                char currentCharToUpperCase = Character.toUpperCase(currentChar);
-                result = result + currentCharToUpperCase;
-            } else {
-                char currentCharToLowerCase = Character.toLowerCase(currentChar);
-                result = result + currentCharToLowerCase;
-            }
-        }
-        return result;
-    }
-
-    public static String toUpperCase(String inputString) {
-        String result = "";
-        for (int i = 0; i < inputString.length(); i++) {
-            char currentChar = inputString.charAt(i);
-            char currentCharToUpperCase = Character.toUpperCase(currentChar);
-            result = result + currentCharToUpperCase;
-        }
-        return result;
-    }
-
-    public static String toLowerCase(String inputString) {
-        String result = "";
-        for (int i = 0; i < inputString.length(); i++) {
-            char currentChar = inputString.charAt(i);
-            char currentCharToLowerCase = Character.toLowerCase(currentChar);
-            result = result + currentCharToLowerCase;
-        }
-        return result;
-    }
-
-    public static String toSentenceCase(String inputString) {
-        String result = "";
-        if (inputString.length() == 0) {
-            return result;
-        }
-        char firstChar = inputString.charAt(0);
-        char firstCharToUpperCase = Character.toUpperCase(firstChar);
-        result = result + firstCharToUpperCase;
-        boolean terminalCharacterEncountered = false;
-        char[] terminalCharacters = {'.', '?', '!'};
-        for (int i = 1; i < inputString.length(); i++) {
-            char currentChar = inputString.charAt(i);
-            if (terminalCharacterEncountered) {
-                if (currentChar == ' ') {
-                    result = result + currentChar;
-                } else {
-                    char currentCharToUpperCase = Character.toUpperCase(currentChar);
-                    result = result + currentCharToUpperCase;
-                    terminalCharacterEncountered = false;
-                }
-            } else {
-                char currentCharToLowerCase = Character.toLowerCase(currentChar);
-                result = result + currentCharToLowerCase;
-            }
-            for (int j = 0; j < terminalCharacters.length; j++) {
-                if (currentChar == terminalCharacters[j]) {
-                    terminalCharacterEncountered = true;
-                    break;
-                }
-            }
-        }
-        return result;
     }
 
     public boolean checkValidation(String type, int length) {
@@ -498,7 +584,7 @@ public class Global {
         try {
             Glide.with(activity)
                     .load(Url.replace("\\", "/"))
-                    .load(Url.replace("\n",""))
+                    .load(Url.replace("\n", ""))
                     .placeholder(R.drawable.app_logo)
                     .error(R.drawable.app_logo)
                     .into(imageView);
@@ -540,12 +626,6 @@ public class Global {
 
 
     }
-
-    public static void iconImage(Bitmap bitmap){
-
-    }
-
-
 
     public void OpenImageDialog(String imgUrl, Activity mActivity, boolean isFromURL) {
 
@@ -614,63 +694,6 @@ public class Global {
         }
     }
 
-
-    public static String getHeaderValue(Context pContext) {
-        String header;
-        header = "BtechApp/" + getUserCode(pContext) + getCurrentAppVersionName(pContext) + "(" + getCurrentVersionCode(pContext) + ")/" + getSerialnum(pContext);
-        return header;
-    }
-
-
-    public static String getUserCode(Context pContext) {
-        String user = "";
-        String usercode = "";
-        String userName = "";
-        try {
-            AppPreferenceManager appPreferenceManager = new AppPreferenceManager(pContext);
-            usercode = appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()) ? appPreferenceManager.getLoginResponseModel().getUserID().trim().replace(" ", "") + "/" : "";
-//            userName = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getName()) ? appPreferenceManager.getLoginResponseModel().getName().trim().replace(" ","")+"/" : "Default/" ;
-
-            user = usercode + userName;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return user;
-    }
-
-    public static int getCurrentVersionCode(Context pContext) {
-        int currentAppVersion = 0;
-        try {
-            currentAppVersion = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), 0).versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return currentAppVersion;
-    }
-
-    public static String getCurrentAppVersionName(Context pContext) {
-        String versionName = "";
-        try {
-            PackageInfo packageInfo = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), 0);
-            versionName = packageInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return versionName;
-    }
-
-    public static String getSerialnum(Context pContext) {
-        String imeiNo = "";
-        try {
-            imeiNo = Settings.Secure.getString(pContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return imeiNo;
-    }
-
-
     public void EnterBarcodeManually(Activity mActivity, final OnBarcodeDialogSubmitClickListener onBarcodeDialogSubmitClickListener) {
         try {
             final Dialog openDialog = new Dialog(mActivity);
@@ -707,42 +730,5 @@ public class Global {
 
     public interface OnBarcodeDialogSubmitClickListener {
         public void onSubmitButtonClicked(String barcode);
-    }
-
-
-    public static void appBar(Activity activity){
-        AppBarLayout appBarLayout = activity.findViewById(R.id.appbarLayout);
-        appBarLayout.setVisibility(View.GONE);
-    }
-
-
-    public static void cropImageFullScreenActivity(Activity activity, int flag) {
-        if (flag == 1) {
-            ImagePicker.Companion.with(activity).crop().compress(Constants.MaxImageSize)
-                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
-        } else if (flag == 0) {
-            ImagePicker.Companion.with(activity).crop().cameraOnly().compress(Constants.MaxImageSize)
-                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
-        } else if (flag == 2) {
-            ImagePicker.Companion.with(activity).crop().galleryOnly().compress(Constants.MaxImageSize)
-                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
-        }else if (flag == 3){
-            ImagePicker.Companion.with(activity).cameraOnly().compress(Constants.MaxImageSize)
-                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
-        }
-    }
-
-    public static void cropImageFullScreenFragment(Fragment fragment, int flag) {
-
-        if (flag == 1) {
-            ImagePicker.Companion.with(fragment).crop().compress(Constants.MaxImageSize)
-                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
-        } else if (flag == 0) {
-            ImagePicker.Companion.with(fragment).crop().compress(Constants.MaxImageSize)
-                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).cameraOnly().start();
-        } else if (flag == 2) {
-            ImagePicker.Companion.with(fragment).crop().compress(Constants.MaxImageSize)
-                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).galleryOnly().start();
-        }
     }
 }

@@ -1,8 +1,11 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Activities;
 
 import android.app.Activity;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
@@ -38,12 +41,12 @@ public class StockAvailabilityActivityNew extends AppCompatActivity {
 
     public static String TAG = StockAvailabilityActivityNew.class.getSimpleName();
     Global global;
+    RecyclerView recyclerView;
+    StockAvailabilityAdapter stockAvailabilityAdapter;
     private TextView tv_noResult;
     private Activity mActivity;
     private ConnectionDetector connectionDetector;
     private LinearLayout ll_tableView;
-    RecyclerView recyclerView;
-    StockAvailabilityAdapter stockAvailabilityAdapter;
     private AppPreferenceManager appPreferenceManager;
 
     @Override
@@ -134,7 +137,7 @@ public class StockAvailabilityActivityNew extends AppCompatActivity {
                 tv_noResult.setVisibility(View.GONE);
                 stockAvailabilityAdapter = new StockAvailabilityAdapter(mActivity, mainMaterialModel);
                 recyclerView.setAdapter(stockAvailabilityAdapter);
-            } else if (mainMaterialModel.getResponse().equalsIgnoreCase("DATA NOT FOUND")){
+            } else if (mainMaterialModel.getResponse().equalsIgnoreCase("DATA NOT FOUND")) {
                 tv_noResult.setVisibility(View.VISIBLE);
                 ll_tableView.setVisibility(View.GONE);
                 global.showCustomToast(mActivity, mainMaterialModel.getResponse(), Toast.LENGTH_SHORT);

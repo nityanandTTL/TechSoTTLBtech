@@ -2,8 +2,10 @@ package com.thyrocare.btechapp.NewScreenDesigns.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,19 +32,19 @@ public class Leavehistory_Adapter extends RecyclerView.Adapter<Leavehistory_Adap
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.show_history_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.show_history_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.tv_sr_no_id.setText(""+(position+1));
+        holder.tv_sr_no_id.setText("" + (position + 1));
 
-        String Date  = getLeave_applied_history_model.get(position).getLeaveDate();
+        String Date = getLeave_applied_history_model.get(position).getLeaveDate();
 
         try {
-            Date = DateUtil.Req_Date_Req(Date,"yyyy-MM-dd'T'HH:mm:ss","dd MMM yyyy");
+            Date = DateUtil.Req_Date_Req(Date, "yyyy-MM-dd'T'HH:mm:ss", "dd MMM yyyy");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,7 +59,8 @@ public class Leavehistory_Adapter extends RecyclerView.Adapter<Leavehistory_Adap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_sr_no_id,tv_date_id,tv_remark_id;
+        TextView tv_sr_no_id, tv_date_id, tv_remark_id;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_sr_no_id = itemView.findViewById(R.id.tv_sr_no_id);

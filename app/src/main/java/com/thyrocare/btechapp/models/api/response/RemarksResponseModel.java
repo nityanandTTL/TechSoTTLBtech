@@ -9,13 +9,26 @@ import android.os.Parcelable;
 
 public class RemarksResponseModel implements Parcelable {
 
+    public static final Creator<RemarksResponseModel> CREATOR = new Creator<RemarksResponseModel>() {
+        @Override
+        public RemarksResponseModel createFromParcel(Parcel in) {
+            return new RemarksResponseModel(in);
+        }
+
+        @Override
+        public RemarksResponseModel[] newArray(int size) {
+            return new RemarksResponseModel[size];
+        }
+    };
     private int Id;
     private String Reason;
-
 
     protected RemarksResponseModel(Parcel in) {
         Id = in.readInt();
         Reason = in.readString();
+    }
+
+    public RemarksResponseModel() {
     }
 
     @Override
@@ -28,18 +41,6 @@ public class RemarksResponseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<RemarksResponseModel> CREATOR = new Creator<RemarksResponseModel>() {
-        @Override
-        public RemarksResponseModel createFromParcel(Parcel in) {
-            return new RemarksResponseModel(in);
-        }
-
-        @Override
-        public RemarksResponseModel[] newArray(int size) {
-            return new RemarksResponseModel[size];
-        }
-    };
 
     public int getId() {
         return Id;
@@ -55,9 +56,6 @@ public class RemarksResponseModel implements Parcelable {
 
     public void setReason(String reason) {
         Reason = reason;
-    }
-
-    public RemarksResponseModel() {
     }
 
 

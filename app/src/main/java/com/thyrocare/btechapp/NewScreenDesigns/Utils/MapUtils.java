@@ -52,21 +52,6 @@ public class MapUtils {
         return poly;
     }
 
-    // // TODO: 1/22/2017 please check
-    void fixZoomProblem(LatLng source, LatLng distance, List<LatLng> points, GoogleMap googleMap) {
-
-        LatLngBounds.Builder bc = new LatLngBounds.Builder();
-
-        bc.include(source);
-        bc.include(distance);
-
-    /*  for (LatLng item : points) {
-            bc.include(item);
-        }
-*/
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bc.build(), 50));
-    }
-
     public static void fitZoomWithScreen(Location source, Location distance, GoogleMap googleMap, Context context) {
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -90,8 +75,6 @@ public class MapUtils {
 
     }
 
-    // https://stackoverflow.com/questions/24812483/how-to-create-bounds-of-a-android-polyline-in-order-to-fit-the-screen
-
     public static CameraUpdate moveToBounds(Context context, Polyline p) {
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -112,6 +95,9 @@ public class MapUtils {
         return cu;
 //        mMap.animateCamera(cu);
     }
+
+    // https://stackoverflow.com/questions/24812483/how-to-create-bounds-of-a-android-polyline-in-order-to-fit-the-screen
+
     public static float getBearing(LatLng begin, LatLng end) {
         double lat = Math.abs(begin.latitude - end.latitude);
         double lng = Math.abs(begin.longitude - end.longitude);
@@ -125,5 +111,20 @@ public class MapUtils {
         else if (begin.latitude < end.latitude && begin.longitude >= end.longitude)
             return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 270);
         return -1;
+    }
+
+    // // TODO: 1/22/2017 please check
+    void fixZoomProblem(LatLng source, LatLng distance, List<LatLng> points, GoogleMap googleMap) {
+
+        LatLngBounds.Builder bc = new LatLngBounds.Builder();
+
+        bc.include(source);
+        bc.include(distance);
+
+    /*  for (LatLng item : points) {
+            bc.include(item);
+        }
+*/
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bc.build(), 50));
     }
 }

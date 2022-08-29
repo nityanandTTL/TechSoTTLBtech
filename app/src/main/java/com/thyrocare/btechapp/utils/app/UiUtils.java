@@ -15,97 +15,97 @@ import java.util.Stack;
 
 public class UiUtils {
 
-	private static UiUtils instance = null;
+    private static UiUtils instance = null;
 
-	protected UiUtils() {
-		// Exists only to defeat instantiation.
-	}
+    protected UiUtils() {
+        // Exists only to defeat instantiation.
+    }
 
-	public static UiUtils getInstance() {
-		if (instance == null){
-			instance = new UiUtils();
-		}
-		return instance;
-	}
+    public static UiUtils getInstance() {
+        if (instance == null) {
+            instance = new UiUtils();
+        }
+        return instance;
+    }
 
-	public void switchToActivity(Activity current, Class<? extends Activity> otherActivityClass, Bundle extras) {
-		Intent intent = new Intent(current, otherActivityClass);
-		if (extras != null){
-			intent.putExtras(extras);
-		}
-		current.startActivity(intent);
-		current.finish();
-	}
+    public static int dpToPx(Context context, int dp) {
+        DisplayMetrics displayMetrics = context.getApplicationContext()
+                .getResources().getDisplayMetrics();
+        int px = Math.round(dp
+                * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
+    }
 
-	public void goToActivity(Activity current, Class<? extends Activity> otherActivityClass, Bundle extras) {
-		Intent intent = new Intent(current, otherActivityClass);
-		if (extras != null){
-			intent.putExtras(extras);
-		}
-		current.startActivity(intent);
-	}
+    public static void setupKeyboard(View view, final Activity activity) {
 
-	public Typeface createTypeFace(Context context, String fontName) {
-		Typeface tf = Typeface.createFromAsset(context.getApplicationContext().getAssets(), "fonts/" + fontName);
-		return tf;
-	}
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof EditText)) {
 
-	public void clearActivityStack(Stack<Activity> activityStack) {
-		for (Activity activity : activityStack){
-			activity.finish();
-		}
-		activityStack.clear();
-	}
+            view.setOnTouchListener(new View.OnTouchListener() {
 
-	public static int dpToPx(Context context, int dp) {
-		DisplayMetrics displayMetrics = context.getApplicationContext()
-		                                .getResources().getDisplayMetrics();
-		int px = Math.round(dp
-		                    * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-		return px;
-	}
+                @Override
+                public boolean onTouch(View v, android.view.MotionEvent event) {
+                    // TODO Auto-generated method stub
+                    hideSoftKeyboard(activity);
+                    return false;
+                }
+            });
+        }
 
-	public static void setupKeyboard(View view, final Activity activity) {
+        // If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
 
-		// Set up touch listener for non-text box views to hide keyboard.
-		if (!(view instanceof EditText)){
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
 
-			view.setOnTouchListener(new View.OnTouchListener() {
+                View innerView = ((ViewGroup) view).getChildAt(i);
 
-			                                @Override
-			                                public boolean onTouch(View v, android.view.MotionEvent event) {
-			                                        // TODO Auto-generated method stub
-			                                        hideSoftKeyboard(activity);
-			                                        return false;
-							}
-						});
-		}
+                setupKeyboard(innerView, activity);
+            }
+        }
+    }
 
-		// If a layout container, iterate over children and seed recursion.
-		if (view instanceof ViewGroup){
+    public static void hideSoftKeyboard(Activity activity) {
 
-			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++){
+        InputMethodManager inputMethodManager = (InputMethodManager) activity
+                .getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (inputMethodManager.isAcceptingText()) {
+            try {
+                inputMethodManager.hideSoftInputFromWindow(activity
+                        .getCurrentFocus().getWindowToken(), 0);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
 
-				View innerView = ((ViewGroup) view).getChildAt(i);
+    public void switchToActivity(Activity current, Class<? extends Activity> otherActivityClass, Bundle extras) {
+        Intent intent = new Intent(current, otherActivityClass);
+        if (extras != null) {
+            intent.putExtras(extras);
+        }
+        current.startActivity(intent);
+        current.finish();
+    }
 
-				setupKeyboard(innerView, activity);
-			}
-		}
-	}
+    public void goToActivity(Activity current, Class<? extends Activity> otherActivityClass, Bundle extras) {
+        Intent intent = new Intent(current, otherActivityClass);
+        if (extras != null) {
+            intent.putExtras(extras);
+        }
+        current.startActivity(intent);
+    }
 
-	public static void hideSoftKeyboard(Activity activity) {
+    public Typeface createTypeFace(Context context, String fontName) {
+        Typeface tf = Typeface.createFromAsset(context.getApplicationContext().getAssets(), "fonts/" + fontName);
+        return tf;
+    }
 
-		InputMethodManager inputMethodManager = (InputMethodManager) activity
-		                                        .getSystemService(Activity.INPUT_METHOD_SERVICE);
-		if (inputMethodManager.isAcceptingText()){
-			try {
-				inputMethodManager.hideSoftInputFromWindow(activity
-				                                           .getCurrentFocus().getWindowToken(), 0);
-			} catch (Exception e){
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
+    public void clearActivityStack(Stack<Activity> activityStack) {
+        for (Activity activity : activityStack) {
+            activity.finish();
+        }
+        activityStack.clear();
+    }
 
 }

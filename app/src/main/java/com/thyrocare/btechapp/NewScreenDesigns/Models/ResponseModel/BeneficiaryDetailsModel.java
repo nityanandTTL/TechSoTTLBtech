@@ -6,11 +6,22 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 /**
- * Created by Orion on 4/19/2017.*/
-
+ * Created by Orion on 4/19/2017.
+ */
 
 
 public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
+    public static final Creator<BeneficiaryDetailsModel> CREATOR = new Creator<BeneficiaryDetailsModel>() {
+        @Override
+        public BeneficiaryDetailsModel createFromParcel(Parcel in) {
+            return new BeneficiaryDetailsModel(in);
+        }
+
+        @Override
+        public BeneficiaryDetailsModel[] newArray(int size) {
+            return new BeneficiaryDetailsModel[size];
+        }
+    };
     private int benId;
     private String OrderNo;
     private String Name;
@@ -30,7 +41,6 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     private String ProjId;
     private String remarks;
     private String LeadId;
-
     private boolean isTestEdit;
     private boolean isAddBen;
 
@@ -95,18 +105,6 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         return 0;
     }
 
-    public static final Creator<BeneficiaryDetailsModel> CREATOR = new Creator<BeneficiaryDetailsModel>() {
-        @Override
-        public BeneficiaryDetailsModel createFromParcel(Parcel in) {
-            return new BeneficiaryDetailsModel(in);
-        }
-
-        @Override
-        public BeneficiaryDetailsModel[] newArray(int size) {
-            return new BeneficiaryDetailsModel[size];
-        }
-    };
-
     public String getLeadId() {
         return LeadId;
     }
@@ -122,6 +120,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     public void setBtechName(String btechName) {
         BtechName = btechName;
     }
+
     public String getProjId() {
         return ProjId;
     }

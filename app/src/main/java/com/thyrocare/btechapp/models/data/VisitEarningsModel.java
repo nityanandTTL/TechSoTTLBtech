@@ -9,12 +9,23 @@ import java.util.ArrayList;
  * Created by Orion on 6/21/2017.
  */
 
-public class VisitEarningsModel implements Parcelable{
+public class VisitEarningsModel implements Parcelable {
+    public static final Creator<VisitEarningsModel> CREATOR = new Creator<VisitEarningsModel>() {
+        @Override
+        public VisitEarningsModel createFromParcel(Parcel in) {
+            return new VisitEarningsModel(in);
+        }
+
+        @Override
+        public VisitEarningsModel[] newArray(int size) {
+            return new VisitEarningsModel[size];
+        }
+    };
+    ArrayList<KitsCountModel> kits;
+    private int EstIncome;
+
     public VisitEarningsModel() {
     }
-
-    private int EstIncome;
-    ArrayList<KitsCountModel> kits;
 
     protected VisitEarningsModel(Parcel in) {
         EstIncome = in.readInt();
@@ -31,18 +42,6 @@ public class VisitEarningsModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<VisitEarningsModel> CREATOR = new Creator<VisitEarningsModel>() {
-        @Override
-        public VisitEarningsModel createFromParcel(Parcel in) {
-            return new VisitEarningsModel(in);
-        }
-
-        @Override
-        public VisitEarningsModel[] newArray(int size) {
-            return new VisitEarningsModel[size];
-        }
-    };
 
     public int getEstIncome() {
         return EstIncome;

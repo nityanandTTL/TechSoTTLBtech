@@ -4,7 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AlertDialog;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +27,6 @@ import com.thyrocare.btechapp.models.api.request.OlcScanPickUpRequestModel;
 import com.thyrocare.btechapp.models.data.BtechClientsModel;
 
 
-
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
@@ -39,13 +40,13 @@ import retrofit2.Response;
 
 public class OLCMasterBarcodeScanFragment extends AbstractFragment {
     public static final String TAG_FRAGMENT = OLCMasterBarcodeScanFragment.class.getSimpleName();
-    private TextView txt_name, tv_distance;
-    private OLCPickupActivity activity;
     String scanned_barcode;
     BtechClientsModel btechClientsModel;
     IntentIntegrator integrator;
     ImageView btnScanBarcode, txt_call;
     EditText edtScannedBarcode;
+    private TextView txt_name, tv_distance;
+    private OLCPickupActivity activity;
     private Global globalClass;
 
     public OLCMasterBarcodeScanFragment() {
@@ -55,7 +56,7 @@ public class OLCMasterBarcodeScanFragment extends AbstractFragment {
     public static OLCMasterBarcodeScanFragment newInstance(BtechClientsModel btechClientsModel) {
         OLCMasterBarcodeScanFragment fragment = new OLCMasterBarcodeScanFragment();
         Bundle args = new Bundle();
-        args.putParcelable("btechClientsModel",btechClientsModel);
+        args.putParcelable("btechClientsModel", btechClientsModel);
         fragment.setArguments(args);
         return fragment;
     }
@@ -89,7 +90,7 @@ public class OLCMasterBarcodeScanFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:" +btechClientsModel.getMobile()));
+                intent.setData(Uri.parse("tel:" + btechClientsModel.getMobile()));
                 startActivity(intent);
             }
         });
@@ -109,8 +110,8 @@ public class OLCMasterBarcodeScanFragment extends AbstractFragment {
 
     private void initData() {
         btechClientsModel = getArguments().getParcelable("btechClientsModel");
-        tv_distance.setText(""+btechClientsModel.getDistance());
-        txt_name.setText(""+btechClientsModel.getName());
+        tv_distance.setText("" + btechClientsModel.getDistance());
+        txt_name.setText("" + btechClientsModel.getName());
     }
 
     @Override
@@ -121,76 +122,72 @@ public class OLCMasterBarcodeScanFragment extends AbstractFragment {
             scanned_barcode = scanningResult.getContents();
 
 
-
             AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
             builder1.setTitle("Check the Barcode ")
-                    .setMessage("Do you want to Proceed with this barcode entry "+scanned_barcode+"?")
+                    .setMessage("Do you want to Proceed with this barcode entry " + scanned_barcode + "?")
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     }).setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if(scanned_barcode.startsWith("0")|| scanned_barcode.startsWith("$")|| scanned_barcode.startsWith("1")|| scanned_barcode.startsWith(" ")){
-                        Toast.makeText(activity, "", Toast.LENGTH_SHORT).show();
-                    }else {
-                        Logger.error("scanned_barcode "+scanningResult.getContents());
-                        if(scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$")|| scanned_barcode.startsWith("1")|| scanned_barcode.startsWith(" ")){
-                            Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ")) {
+                                Toast.makeText(activity, "", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Logger.error("scanned_barcode " + scanningResult.getContents());
+                                if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ")) {
+                                    Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+                                }
+                                if (edtScannedBarcode.getText().toString().startsWith("0") || edtScannedBarcode.getText().toString().startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ")) {
+                                    Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    edtScannedBarcode.setText(scanned_barcode);
+                                }
+
+
+                                OlcScanPickUpRequestModel olcScanPickUpRequestModel = new OlcScanPickUpRequestModel();
+                                if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ")) {
+                                    Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    olcScanPickUpRequestModel.setBarcode(scanned_barcode);
+                                }
+
+                                olcScanPickUpRequestModel.setBarcodeType("master barcode");
+                                olcScanPickUpRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                olcScanPickUpRequestModel.setClientId(btechClientsModel.getClientId());
+                                if (isNetworkAvailable(activity)) {
+                                    CallgetScanPickupRequestApi(olcScanPickUpRequestModel);
+                                } else {
+                                    Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                }
+                            }
                         }
-                        if(edtScannedBarcode.getText().toString().startsWith("0") || edtScannedBarcode.getText().toString().startsWith("$")|| scanned_barcode.startsWith("1")|| scanned_barcode.startsWith(" ")){
-                            Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
-                        }else {
-                            edtScannedBarcode.setText(scanned_barcode);
-                        }
+                    }).show();
 
 
-                        OlcScanPickUpRequestModel olcScanPickUpRequestModel = new OlcScanPickUpRequestModel();
-                        if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$")|| scanned_barcode.startsWith("1")|| scanned_barcode.startsWith(" ")){
-                            Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
-                        }else {
-                            olcScanPickUpRequestModel.setBarcode(scanned_barcode);
-                        }
-
-                        olcScanPickUpRequestModel.setBarcodeType("master barcode");
-                        olcScanPickUpRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-                        olcScanPickUpRequestModel.setClientId(btechClientsModel.getClientId());
-                        if(isNetworkAvailable(activity)) {
-                            CallgetScanPickupRequestApi(olcScanPickUpRequestModel);
-                        } else{
-                            Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            }).show();
-
-
-
-
-
-        }else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
             Toast.makeText(activity, "no result", Toast.LENGTH_SHORT).show();
         }
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 
-    private void CallgetScanPickupRequestApi(OlcScanPickUpRequestModel olcScanPickUpRequestModel){
+    private void CallgetScanPickupRequestApi(OlcScanPickUpRequestModel olcScanPickUpRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetScanPickupRequestAPI(olcScanPickUpRequestModel);
-        globalClass.showProgressDialog(activity,"Please wait..");
+        globalClass.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 globalClass.hideProgressDialog(activity);
-                if (response.isSuccessful()){
-                    Toast.makeText(activity,"Master Barcode Successfully Scanned and Submitted",Toast.LENGTH_SHORT).show();
+                if (response.isSuccessful()) {
+                    Toast.makeText(activity, "Master Barcode Successfully Scanned and Submitted", Toast.LENGTH_SHORT).show();
                     activity.finish();
-                }else{
+                } else {
                     Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
 

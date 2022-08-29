@@ -16,8 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
             android:baselineAligned="false"
             android:orientation="horizontal">
 
@@ -51,8 +51,8 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentStart="true"
-                    android:layout_marginEnd="10dp"
                     android:layout_marginTop="-8dp"
+                    android:layout_marginEnd="10dp"
                     android:src="@drawable/user_profile" />
 
                 <TextView
@@ -115,11 +115,11 @@
                     android:id="@+id/title_camp_date"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_alignParentStart="true"
                     android:layout_below="@+id/txt_ledger"
-                    android:layout_marginEnd="10dp"
+                    android:layout_alignParentStart="true"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="@dimen/dp_10"
+                    android:layout_marginEnd="10dp"
                     android:src="@drawable/hub_home_icon" />
 
                 <TextView
@@ -141,8 +141,8 @@
                     android:id="@+id/title_distance_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_alignParentStart="true"
                     android:layout_below="@+id/title_camp_date"
+                    android:layout_alignParentStart="true"
                     android:layout_marginEnd="10dp"
                     android:src="@android:drawable/ic_menu_mylocation"
                     android:visibility="invisible" />
@@ -165,8 +165,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_toEndOf="@+id/txt_distance"
-                    android:paddingBottom="2dp"
                     android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:src="@drawable/vseparator"
                     android:visibility="gone" />
 
@@ -199,8 +199,8 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
 
-                    android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
                     android:src="@drawable/edit_order_icon"
                     android:visibility="gone" />
 
@@ -208,8 +208,8 @@
                     android:id="@+id/img_release"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
                     android:src="@drawable/release_order"
                     android:visibility="gone" />
 
@@ -222,10 +222,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ll_1"
-            android:layout_marginBottom="@dimen/dp_5"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="0dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="0dp">
+            android:layout_marginBottom="@dimen/dp_5">
 
             <LinearLayout
                 android:id="@+id/ll4"
@@ -235,9 +235,9 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_marginLeft="-10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="-10dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -259,9 +259,9 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginLeft="-10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="-10dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -279,10 +279,10 @@
                             android:textStyle="bold" />
 
                         <EditText
-                            android:layout_marginLeft="20dp"
                             android:id="@+id/edt_age"
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
                             android:background="@drawable/edittext_modified_states"
                             android:drawableRight="@drawable/vseparator_age"
                             android:inputType="number"
@@ -299,8 +299,8 @@
                             android:layout_height="wrap_content"
                             android:padding="@dimen/dp_10"
                             android:text="Gender:"
-                            android:textStyle="bold"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -359,9 +359,9 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginLeft="-10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="-10dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -377,18 +377,18 @@
                         android:id="@+id/edt_mobile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="70dp"
+                        android:layout_marginTop="-20dp"
                         android:background="@drawable/edittext_modified_states"
                         android:inputType="number"
-                        android:maxLength="10"
-                        android:layout_marginLeft="70dp"
-                        android:layout_marginTop="-20dp" />
+                        android:maxLength="10" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginLeft="-10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="-10dp"
                     android:orientation="vertical">
 
 
@@ -401,27 +401,27 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:layout_marginLeft="70dp"
-                        android:layout_marginTop="-20dp"
                         android:id="@+id/edt_test_alerts"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:focusableInTouchMode="false"
+                        android:layout_marginLeft="70dp"
+                        android:layout_marginTop="-20dp"
                         android:background="@drawable/edittext_modified_states"
                         android:drawableEnd="@android:drawable/arrow_down_float"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
                         android:textSize="12sp" />
 
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginLeft="-10dp"
-                    android:layout_marginTop="@dimen/dp_10"
                     android:id="@+id/ll_test_scan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_marginTop="@dimen/dp_10"
                     android:orientation="vertical"
                     android:visibility="visible">
 
@@ -443,8 +443,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
                 android:layout_below="@+id/ll4"
+                android:layout_alignParentBottom="true"
                 android:layout_marginTop="@dimen/dp_10"
                 android:orientation="horizontal">
 

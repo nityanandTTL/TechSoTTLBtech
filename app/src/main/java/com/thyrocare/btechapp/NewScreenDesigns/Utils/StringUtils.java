@@ -23,7 +23,7 @@ import java.io.InputStreamReader;
 public class StringUtils {
 
 
-    public static boolean FlagForrefresh=false;
+    public static boolean FlagForrefresh = false;
 
     //Download PDF with implicit downloader (ACTION_VIEW).
     public static void downloadPDF(Context context, String URL) {
@@ -31,10 +31,10 @@ public class StringUtils {
     }
 
     public static String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String line = "";
         String result = "";
-        while((line = bufferedReader.readLine()) != null)
+        while ((line = bufferedReader.readLine()) != null)
             result += line;
 
         inputStream.close();
@@ -67,45 +67,24 @@ public class StringUtils {
     }
 
 
-
-    public static boolean isNull(String val){
-        if(val==null||val.equalsIgnoreCase(null)||val.trim().equalsIgnoreCase("")||val.trim().equalsIgnoreCase("null")|| val.trim()==""||val.trim()=="null")
+    public static boolean isNull(String val) {
+        if (val == null || val.equalsIgnoreCase(null) || val.trim().equalsIgnoreCase("") || val.trim().equalsIgnoreCase("null") || val.trim() == "" || val.trim() == "null")
             return true;
         return false;
     }
 
-    public boolean checkValidation(String type, int length) {
-        boolean result = false;
-        if (type.equals("mobile")) {
-            result = length != 10 ? false : true;
-        } else if (type.equals("address")) {
-            result = length <= 25 ? false : true;
-        }
-
-        return result;
-    }
-
     public static String removeLastCharacter(String str) {
-        if (str.length() > 0 ) {
+        if (str.length() > 0) {
             str = str.substring(0, str.length() - 1);
         }
         return str;
     }
+
     public static String removeFirstCharacter(String str) {
-        if (str.length() > 0 ) {
+        if (str.length() > 0) {
             str = str.substring(1, str.length());
         }
         return str;
-    }
-
-    public String checkJsonNullStringValue(JSONObject jsonObject, String key) {
-        String value = "";
-        try {
-            value = jsonObject.isNull(key) ? "" : jsonObject.getString(key);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return value;
     }
 
     public static String toCamelCase(String inputString) {
@@ -185,8 +164,8 @@ public class StringUtils {
     }
 
     public static int parseInt(String strnumber) {
-        int finalNumber = 0 ;
-        if (!isNull(strnumber)){
+        int finalNumber = 0;
+        if (!isNull(strnumber)) {
             try {
                 finalNumber = Integer.parseInt(strnumber);
             } catch (NumberFormatException e) {
@@ -197,8 +176,8 @@ public class StringUtils {
     }
 
     public static float parseFloat(String strnumber) {
-        float finalNumber = 0 ;
-        if (!isNull(strnumber)){
+        float finalNumber = 0;
+        if (!isNull(strnumber)) {
             try {
                 finalNumber = Float.parseFloat(strnumber);
             } catch (NumberFormatException e) {
@@ -208,10 +187,9 @@ public class StringUtils {
         return finalNumber;
     }
 
-
     public static double parseDouble(String strnumber) {
-        double finalNumber = 0 ;
-        if (!isNull(strnumber)){
+        double finalNumber = 0;
+        if (!isNull(strnumber)) {
             try {
                 finalNumber = Double.parseDouble(strnumber);
             } catch (NumberFormatException e) {
@@ -222,22 +200,44 @@ public class StringUtils {
     }
 
     public static boolean CheckEqualIgnoreCase(String str1, String str2) {
-        if (!isNull(str1) && !isNull(str2) && str1.equalsIgnoreCase(str2)){
+        if (!isNull(str1) && !isNull(str2) && str1.equalsIgnoreCase(str2)) {
             return true;
         }
         return false;
     }
+
     public static boolean CheckEqualCaseSensitive(String str1, String str2) {
-        if (!isNull(str1) && !isNull(str2) && str1.equals(str2)){
+        if (!isNull(str1) && !isNull(str2) && str1.equals(str2)) {
             return true;
         }
         return false;
     }
 
     public static boolean CheckifStringContains(String mainString, String StrToCheck) {
-        if (!isNull(mainString) && !isNull(StrToCheck) && mainString.contains(StrToCheck)){
+        if (!isNull(mainString) && !isNull(StrToCheck) && mainString.contains(StrToCheck)) {
             return true;
         }
         return false;
+    }
+
+    public boolean checkValidation(String type, int length) {
+        boolean result = false;
+        if (type.equals("mobile")) {
+            result = length != 10 ? false : true;
+        } else if (type.equals("address")) {
+            result = length <= 25 ? false : true;
+        }
+
+        return result;
+    }
+
+    public String checkJsonNullStringValue(JSONObject jsonObject, String key) {
+        String value = "";
+        try {
+            value = jsonObject.isNull(key) ? "" : jsonObject.getString(key);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return value;
     }
 }

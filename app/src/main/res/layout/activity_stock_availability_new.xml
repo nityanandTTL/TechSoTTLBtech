@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".btechapp.NewScreenDesigns.Activities.StockAvailabilityActivityNew">
 
-    <com.google.android.material.appbar.AppBarLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.google.android.material.appbar.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/appbarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,9 +25,9 @@
 
     <LinearLayout
         android:id="@+id/ll_tableView"
-        android:layout_below="@+id/appbarLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/appbarLayout"
         android:orientation="vertical"
         android:visibility="gone">
 

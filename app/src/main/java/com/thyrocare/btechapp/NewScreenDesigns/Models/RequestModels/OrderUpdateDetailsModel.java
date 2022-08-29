@@ -10,6 +10,17 @@ import java.util.ArrayList;
  */
 
 public class OrderUpdateDetailsModel implements Parcelable {
+    public static final Creator<OrderUpdateDetailsModel> CREATOR = new Creator<OrderUpdateDetailsModel>() {
+        @Override
+        public OrderUpdateDetailsModel createFromParcel(Parcel in) {
+            return new OrderUpdateDetailsModel(in);
+        }
+
+        @Override
+        public OrderUpdateDetailsModel[] newArray(int size) {
+            return new OrderUpdateDetailsModel[size];
+        }
+    };
     private int BtechId;
     private String BtechName;
     private String ETA;
@@ -44,17 +55,8 @@ public class OrderUpdateDetailsModel implements Parcelable {
         ordHistory = in.createTypedArrayList(OrderHistoryDetails.CREATOR);
     }
 
-    public static final Creator<OrderUpdateDetailsModel> CREATOR = new Creator<OrderUpdateDetailsModel>() {
-        @Override
-        public OrderUpdateDetailsModel createFromParcel(Parcel in) {
-            return new OrderUpdateDetailsModel(in);
-        }
-
-        @Override
-        public OrderUpdateDetailsModel[] newArray(int size) {
-            return new OrderUpdateDetailsModel[size];
-        }
-    };
+    public OrderUpdateDetailsModel() {
+    }
 
     public ArrayList<OrderHistoryDetails> getOrdHistory() {
         return ordHistory;
@@ -62,9 +64,6 @@ public class OrderUpdateDetailsModel implements Parcelable {
 
     public void setOrdHistory(ArrayList<OrderHistoryDetails> ordHistory) {
         this.ordHistory = ordHistory;
-    }
-
-    public OrderUpdateDetailsModel() {
     }
 
     public int getBtechId() {

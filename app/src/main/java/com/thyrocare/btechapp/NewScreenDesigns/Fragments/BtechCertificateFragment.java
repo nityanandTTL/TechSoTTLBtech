@@ -44,13 +44,13 @@ import retrofit2.Response;
 public class BtechCertificateFragment extends AppCompatActivity {
 
     public static final String TAG_FRAGMENT = "Btech Certificatess Fragment";
+    ImageView iv_back, iv_home;
     private Activity activity;
     private Global globalclass;
     private ConnectionDetector cd;
     private AppPreferenceManager appPreferenceManager;
     private UltraViewPager ultraViewPager;
     private TextView tv_noDatafound, tv_toolbar;
-    ImageView iv_back, iv_home;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

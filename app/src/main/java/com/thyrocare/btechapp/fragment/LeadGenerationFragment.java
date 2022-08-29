@@ -92,6 +92,11 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 public class LeadGenerationFragment extends AppCompatActivity {
 
     public static final String TAG = LeadGenerationFragment.class.getSimpleName();
+    LinearLayout ll_channel;
+    Spinner spr_channel, spr_from;
+    TextView tv_selected_purpose;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
     private Activity mActivity;
     private EditText edt_name, edt_mobile, edt_email, edt_setAddress, edt_pincode;
     private MultiAutoCompleteTextView edt_remarks;
@@ -120,12 +125,58 @@ public class LeadGenerationFragment extends AppCompatActivity {
     private CardView lin_spnPurpose;
     private boolean isorderSelected = true;
     private String strSelectedPurpose = "";
-    LinearLayout ll_channel;
-    Spinner spr_channel, spr_from;
-    TextView tv_selected_purpose;
-    TextView tv_toolbar;
-    ImageView iv_back, iv_home;
     private LeadPurposeResponseModel leadmodel;
+
+    public static String whatsappUrl(String name, String mobile, String email_id, String city, String booking_id, String type, String remarks) {
+
+        final String BASE_URL = "https://api.whatsapp.com/";
+        final String WHATSAPP_PHONE_NUMBER = "91" + mobile;    //'62' is country code for Indonesia
+        final String PARAM_PHONE_NUMBER = "phone";
+        final String PARAM_TEXT = "text";
+        String TEXT_VALUE = null;
+        if (type.contains("TEST")) {
+            if (email_id.isEmpty() && city.isEmpty() && remarks.isEmpty()) {
+                TEXT_VALUE = "Test details" + "\n" + "Refer ID :- " + booking_id + "\n" + "Name :- " + name + "\n" + "Mobile :- " + mobile;
+            } else {
+                TEXT_VALUE = "Test details" + "\n" + "Refer ID :- " + booking_id + "\n" + "Name :- " + name + "\n" + "Mobile :- " + mobile + "\n" + "Email ID :- " + email_id + "\n" + "City :- " + city + "\n" + "Remarks :- " + remarks;
+            }
+        } else if (type.contains("SCAN")) {
+            if (email_id.isEmpty() && city.isEmpty() && remarks.isEmpty()) {
+                TEXT_VALUE = "PET scan details" + "\n" + "Refer ID :- " + booking_id + "\n" + "Name :- " + name + "\n" + "Mobile :- " + mobile;
+            } else {
+                TEXT_VALUE = "PET scan details" + "\n" + "Refer ID :- " + booking_id + "\n" + "Name :- " + name + "\n" + "Mobile :- " + mobile + "\n" + "Email ID :- " + email_id + "\n" + "City :- " + city + "\n" + "Remarks :- " + remarks;
+            }
+        }
+        String newUrl = BASE_URL + "send";
+        Uri builtUri = Uri.parse(newUrl).buildUpon()
+                .appendQueryParameter(PARAM_PHONE_NUMBER, WHATSAPP_PHONE_NUMBER)
+                .appendQueryParameter(PARAM_TEXT, TEXT_VALUE)
+                .build();
+
+        return buildUrl(builtUri).toString();
+    }
+
+    public static URL buildUrl(Uri myUri) {
+        URL finalUrl = null;
+        try {
+            finalUrl = new URL(myUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return finalUrl;
+    }
+
+    public static String generateBookingID() {
+        String alphanumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder random = new StringBuilder();
+        Random rnd = new Random();
+        while (random.length() < 6) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * alphanumeric.length());
+            random.append(alphanumeric.charAt(index));
+        }
+        String generatedstr = random.toString();
+        return generatedstr;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -193,7 +244,6 @@ public class LeadGenerationFragment extends AppCompatActivity {
         }
     }
 
-
     private void initUI() {
         edt_name = (EditText) findViewById(R.id.edt_name);
         edt_mobile = (EditText) findViewById(R.id.edt_mobile);
@@ -225,7 +275,6 @@ public class LeadGenerationFragment extends AppCompatActivity {
         iv_home = findViewById(R.id.iv_home);
         tv_toolbar.setText("Lead Generation");
     }
-
 
     private void initListners() {
 
@@ -413,7 +462,6 @@ public class LeadGenerationFragment extends AppCompatActivity {
         }
     }
 
-
     private boolean checkRemarksValidation() {
         if (edt_remarks.getText().toString().startsWith(",")) {
 
@@ -482,157 +530,6 @@ public class LeadGenerationFragment extends AppCompatActivity {
         }
 
 
-    }
-
-
-    public class CustomDialogClass extends Dialog {
-
-        public Activity activity;
-        Boolean ButtonClicked = false;
-        Button btn_discard, btn_save;
-        ImageView img_record;
-        TextView tv_record_title;
-        ImageButton closeButton;
-
-        public CustomDialogClass(Activity activity) {
-            super(activity);
-            this.activity = activity;
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.audio_record_customdailog);
-
-            initDialogUI();
-            initDialogListners();
-        }
-
-        private void initDialogUI() {
-            closeButton = (ImageButton) findViewById(R.id.ib_close);
-            img_record = (ImageView) findViewById(R.id.img_record);
-            btn_discard = (Button) findViewById(R.id.btn_discard);
-            btn_save = (Button) findViewById(R.id.btn_save);
-            tv_record_title = (TextView) findViewById(R.id.tv_record_title);
-
-            if (f_AudioSavePathInDevice != null) {
-                if (f_AudioSavePathInDevice.exists()) {
-                    f_AudioSavePathInDevice.delete();
-                }
-                f_AudioSavePathInDevice = null;
-            }
-            btn_save.setEnabled(false);
-            btn_save.setBackgroundResource(R.drawable.btn_disabled_bg);
-            MessageLogger.info(mActivity, "Audio file initUI: " + f_AudioSavePathInDevice);
-        }
-
-        private void initDialogListners() {
-            closeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Dismiss the popup window
-                    customDialogClass.cancel();
-                    if (f_AudioSavePathInDevice != null) {
-                        if (f_AudioSavePathInDevice.exists()) {
-                            f_AudioSavePathInDevice.delete();
-                        }
-                        f_AudioSavePathInDevice = null;
-                    }
-                    MessageLogger.info(mActivity, "On cancel Audio file: " + f_AudioSavePathInDevice);
-                    img_tick2.setVisibility(View.INVISIBLE);
-                }
-            });
-
-            btn_discard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    customDialogClass.cancel();
-                    if (f_AudioSavePathInDevice != null) {
-                        if (f_AudioSavePathInDevice.exists()) {
-                            f_AudioSavePathInDevice.delete();
-                        }
-                        f_AudioSavePathInDevice = null;
-                    }
-                    MessageLogger.info(mActivity, "On discard Audio file: " + f_AudioSavePathInDevice);
-                    img_tick2.setVisibility(View.INVISIBLE);
-                }
-            });
-
-            btn_save.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    customDialogClass.cancel();
-                    MessageLogger.info(mActivity, "On Save Audio file: " + f_AudioSavePathInDevice);
-                    img_tick2.setVisibility(View.VISIBLE);
-                }
-            });
-
-            img_record.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    try {
-                        if (!ButtonClicked) {
-                            PermissionUtils.AsKPermissionToRecordAudio(mActivity, new PermissionUtils.OnPermissionSuccessListener() {
-                                @Override
-                                public void onPermissionGranted() {
-                                    ButtonClicked = true;
-                                    File sdCard = Environment.getExternalStorageDirectory();
-                                    File directory = new File(sdCard.getAbsolutePath() + "/Uploads" + "/" + "Audio Records");
-                                    if (!directory.isDirectory()) {
-                                        directory.mkdirs();
-                                    }
-                                    if (InputUtils.CheckEqualCaseSensitive(type, "TEST")) {
-                                        AudioSavePathInDevice = directory + "/" + lead_id + "_TestBooking.Mp3";
-                                    } else {
-                                        AudioSavePathInDevice = directory + "/" + edt_mobile.getText().toString() + "_ScanBooking.Mp3";
-                                    }
-                                    f_AudioSavePathInDevice = new File(AudioSavePathInDevice);
-                                    MessageLogger.info(mActivity, "Audio File Path: " + AudioSavePathInDevice);
-                                    MediaRecorderReady();
-                                    try {
-                                        mediaRecorder.prepare();
-                                        mediaRecorder.start();
-                                    } catch (IllegalStateException e) {
-                                        // TODO Auto-generated catch block
-                                        e.printStackTrace();
-                                    } catch (IOException e) {
-                                        // TODO Auto-generated catch block
-                                        e.printStackTrace();
-                                    }
-                                    InputUtils.setTextToTextView(tv_record_title, getString(R.string.stop_record));
-                                    closeButton.setClickable(false);
-                                    img_record.setImageResource(R.drawable.ic_stop_record);
-                                    btn_save.setEnabled(false);
-                                    btn_save.setBackgroundResource(R.drawable.btn_disabled_bg);
-                                    btn_discard.setEnabled(false);
-                                    btn_discard.setBackgroundResource(R.drawable.btn_disabled_bg);
-                                    globalClass.showCustomToast(mActivity, ConstantsMessages.Recordingstarted);
-                                }
-                            });
-
-                        } else {
-                            ButtonClicked = false;
-                            try {
-                                mediaRecorder.stop();
-                            } catch (IllegalStateException e) {
-                                e.printStackTrace();
-                            }
-                            InputUtils.setTextToTextView(tv_record_title, getString(R.string.start_record));
-                            closeButton.setClickable(true);
-                            img_record.setImageResource(R.drawable.ic_start_record);
-                            btn_save.setEnabled(true);
-                            btn_save.setBackgroundResource(R.drawable.bg_bg1);
-                            btn_discard.setEnabled(true);
-                            btn_discard.setBackgroundResource(R.drawable.bg_bg1);
-                            globalClass.showCustomToast(mActivity, ConstantsMessages.RecordingCompleted);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
     }
 
     private void clearAllFields() {
@@ -836,7 +733,6 @@ public class LeadGenerationFragment extends AppCompatActivity {
                 .setImageHeight(1000)// it will try to achieve this height as close as possible maintaining the aspect ratio;
                 .build(this);
     }
-
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1076,45 +972,6 @@ public class LeadGenerationFragment extends AppCompatActivity {
         return false;
     }
 
-    public static String whatsappUrl(String name, String mobile, String email_id, String city, String booking_id, String type, String remarks) {
-
-        final String BASE_URL = "https://api.whatsapp.com/";
-        final String WHATSAPP_PHONE_NUMBER = "91" + mobile;    //'62' is country code for Indonesia
-        final String PARAM_PHONE_NUMBER = "phone";
-        final String PARAM_TEXT = "text";
-        String TEXT_VALUE = null;
-        if (type.contains("TEST")) {
-            if (email_id.isEmpty() && city.isEmpty() && remarks.isEmpty()) {
-                TEXT_VALUE = "Test details" + "\n" + "Refer ID :- " + booking_id + "\n" + "Name :- " + name + "\n" + "Mobile :- " + mobile;
-            } else {
-                TEXT_VALUE = "Test details" + "\n" + "Refer ID :- " + booking_id + "\n" + "Name :- " + name + "\n" + "Mobile :- " + mobile + "\n" + "Email ID :- " + email_id + "\n" + "City :- " + city + "\n" + "Remarks :- " + remarks;
-            }
-        } else if (type.contains("SCAN")) {
-            if (email_id.isEmpty() && city.isEmpty() && remarks.isEmpty()) {
-                TEXT_VALUE = "PET scan details" + "\n" + "Refer ID :- " + booking_id + "\n" + "Name :- " + name + "\n" + "Mobile :- " + mobile;
-            } else {
-                TEXT_VALUE = "PET scan details" + "\n" + "Refer ID :- " + booking_id + "\n" + "Name :- " + name + "\n" + "Mobile :- " + mobile + "\n" + "Email ID :- " + email_id + "\n" + "City :- " + city + "\n" + "Remarks :- " + remarks;
-            }
-        }
-        String newUrl = BASE_URL + "send";
-        Uri builtUri = Uri.parse(newUrl).buildUpon()
-                .appendQueryParameter(PARAM_PHONE_NUMBER, WHATSAPP_PHONE_NUMBER)
-                .appendQueryParameter(PARAM_TEXT, TEXT_VALUE)
-                .build();
-
-        return buildUrl(builtUri).toString();
-    }
-
-    public static URL buildUrl(Uri myUri) {
-        URL finalUrl = null;
-        try {
-            finalUrl = new URL(myUri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return finalUrl;
-    }
-
     private void CallEmailValidationApi(String EmailID) {
 
         try {
@@ -1174,18 +1031,6 @@ public class LeadGenerationFragment extends AppCompatActivity {
         lead_id = generateBookingID();
     }
 
-    public static String generateBookingID() {
-        String alphanumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder random = new StringBuilder();
-        Random rnd = new Random();
-        while (random.length() < 6) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * alphanumeric.length());
-            random.append(alphanumeric.charAt(index));
-        }
-        String generatedstr = random.toString();
-        return generatedstr;
-    }
-
     private void CallGetTechsoProductsAPI() {
 
         try {
@@ -1223,7 +1068,6 @@ public class LeadGenerationFragment extends AppCompatActivity {
         }
     }
 
-
     private void SetProductstoAutoCompleteTextView() {
 
         if (!InputUtils.isNull(appPreferenceManager.getCacheProduct())) {
@@ -1256,6 +1100,156 @@ public class LeadGenerationFragment extends AppCompatActivity {
         }
 
         return FinalProductnameAryList;
+    }
+
+    public class CustomDialogClass extends Dialog {
+
+        public Activity activity;
+        Boolean ButtonClicked = false;
+        Button btn_discard, btn_save;
+        ImageView img_record;
+        TextView tv_record_title;
+        ImageButton closeButton;
+
+        public CustomDialogClass(Activity activity) {
+            super(activity);
+            this.activity = activity;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.audio_record_customdailog);
+
+            initDialogUI();
+            initDialogListners();
+        }
+
+        private void initDialogUI() {
+            closeButton = (ImageButton) findViewById(R.id.ib_close);
+            img_record = (ImageView) findViewById(R.id.img_record);
+            btn_discard = (Button) findViewById(R.id.btn_discard);
+            btn_save = (Button) findViewById(R.id.btn_save);
+            tv_record_title = (TextView) findViewById(R.id.tv_record_title);
+
+            if (f_AudioSavePathInDevice != null) {
+                if (f_AudioSavePathInDevice.exists()) {
+                    f_AudioSavePathInDevice.delete();
+                }
+                f_AudioSavePathInDevice = null;
+            }
+            btn_save.setEnabled(false);
+            btn_save.setBackgroundResource(R.drawable.btn_disabled_bg);
+            MessageLogger.info(mActivity, "Audio file initUI: " + f_AudioSavePathInDevice);
+        }
+
+        private void initDialogListners() {
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Dismiss the popup window
+                    customDialogClass.cancel();
+                    if (f_AudioSavePathInDevice != null) {
+                        if (f_AudioSavePathInDevice.exists()) {
+                            f_AudioSavePathInDevice.delete();
+                        }
+                        f_AudioSavePathInDevice = null;
+                    }
+                    MessageLogger.info(mActivity, "On cancel Audio file: " + f_AudioSavePathInDevice);
+                    img_tick2.setVisibility(View.INVISIBLE);
+                }
+            });
+
+            btn_discard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    customDialogClass.cancel();
+                    if (f_AudioSavePathInDevice != null) {
+                        if (f_AudioSavePathInDevice.exists()) {
+                            f_AudioSavePathInDevice.delete();
+                        }
+                        f_AudioSavePathInDevice = null;
+                    }
+                    MessageLogger.info(mActivity, "On discard Audio file: " + f_AudioSavePathInDevice);
+                    img_tick2.setVisibility(View.INVISIBLE);
+                }
+            });
+
+            btn_save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    customDialogClass.cancel();
+                    MessageLogger.info(mActivity, "On Save Audio file: " + f_AudioSavePathInDevice);
+                    img_tick2.setVisibility(View.VISIBLE);
+                }
+            });
+
+            img_record.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        if (!ButtonClicked) {
+                            PermissionUtils.AsKPermissionToRecordAudio(mActivity, new PermissionUtils.OnPermissionSuccessListener() {
+                                @Override
+                                public void onPermissionGranted() {
+                                    ButtonClicked = true;
+                                    File sdCard = Environment.getExternalStorageDirectory();
+                                    File directory = new File(sdCard.getAbsolutePath() + "/Uploads" + "/" + "Audio Records");
+                                    if (!directory.isDirectory()) {
+                                        directory.mkdirs();
+                                    }
+                                    if (InputUtils.CheckEqualCaseSensitive(type, "TEST")) {
+                                        AudioSavePathInDevice = directory + "/" + lead_id + "_TestBooking.Mp3";
+                                    } else {
+                                        AudioSavePathInDevice = directory + "/" + edt_mobile.getText().toString() + "_ScanBooking.Mp3";
+                                    }
+                                    f_AudioSavePathInDevice = new File(AudioSavePathInDevice);
+                                    MessageLogger.info(mActivity, "Audio File Path: " + AudioSavePathInDevice);
+                                    MediaRecorderReady();
+                                    try {
+                                        mediaRecorder.prepare();
+                                        mediaRecorder.start();
+                                    } catch (IllegalStateException e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    }
+                                    InputUtils.setTextToTextView(tv_record_title, getString(R.string.stop_record));
+                                    closeButton.setClickable(false);
+                                    img_record.setImageResource(R.drawable.ic_stop_record);
+                                    btn_save.setEnabled(false);
+                                    btn_save.setBackgroundResource(R.drawable.btn_disabled_bg);
+                                    btn_discard.setEnabled(false);
+                                    btn_discard.setBackgroundResource(R.drawable.btn_disabled_bg);
+                                    globalClass.showCustomToast(mActivity, ConstantsMessages.Recordingstarted);
+                                }
+                            });
+
+                        } else {
+                            ButtonClicked = false;
+                            try {
+                                mediaRecorder.stop();
+                            } catch (IllegalStateException e) {
+                                e.printStackTrace();
+                            }
+                            InputUtils.setTextToTextView(tv_record_title, getString(R.string.start_record));
+                            closeButton.setClickable(true);
+                            img_record.setImageResource(R.drawable.ic_start_record);
+                            btn_save.setEnabled(true);
+                            btn_save.setBackgroundResource(R.drawable.bg_bg1);
+                            btn_discard.setEnabled(true);
+                            btn_discard.setBackgroundResource(R.drawable.bg_bg1);
+                            globalClass.showCustomToast(mActivity, ConstantsMessages.RecordingCompleted);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 
 }

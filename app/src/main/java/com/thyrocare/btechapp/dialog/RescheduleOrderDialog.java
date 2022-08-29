@@ -43,6 +43,10 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
  */
 
 public class RescheduleOrderDialog extends Dialog implements View.OnClickListener {
+    Calendar mCalendarOpeningTime;
+    Calendar mCalendarClosingTime;
+    AppPreferenceManager appPreferenceManager;
+    int onlyTime;
     private Activity activity;
     private Dialog d;
     private Button btn_yes, btn_no;
@@ -52,14 +56,10 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
     private int sampleCollectedYear;
     private int sampleCollectedMonth;
     private int sampleCollectedDay;
-    Calendar mCalendarOpeningTime;
-    Calendar mCalendarClosingTime;
-    AppPreferenceManager appPreferenceManager;
     private Spinner spn_remark;
     private RemarksResponseModel remarksResponseModelmain;
     private ArrayList<RemarksResponseModel> remarksResponseModelsarr;
     private ArrayList<String> remarks, hoursList, minsList;
-    int onlyTime;
     private OrderRescheduleDialogButtonClickedDelegate orderRescheduleDialogButtonClickedDelegate;
     private OrderDetailsModel orderDetailsModel;
     private int TIME_PICKER_INTERVAL = 30;

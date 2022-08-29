@@ -6,6 +6,17 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 public class OrderResponseModel implements Parcelable {
+    public static final Creator<OrderResponseModel> CREATOR = new Creator<OrderResponseModel>() {
+        @Override
+        public OrderResponseModel createFromParcel(Parcel in) {
+            return new OrderResponseModel(in);
+        }
+
+        @Override
+        public OrderResponseModel[] newArray(int size) {
+            return new OrderResponseModel[size];
+        }
+    };
     ArrayList<PostOrderDataResponseModel> PostOrderDataResponse;
 
     protected OrderResponseModel(Parcel in) {
@@ -19,18 +30,6 @@ public class OrderResponseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<OrderResponseModel> CREATOR = new Creator<OrderResponseModel>() {
-        @Override
-        public OrderResponseModel createFromParcel(Parcel in) {
-            return new OrderResponseModel(in);
-        }
-
-        @Override
-        public OrderResponseModel[] newArray(int size) {
-            return new OrderResponseModel[size];
-        }
-    };
 
     public ArrayList<PostOrderDataResponseModel> getPostOrderDataResponse() {
         return PostOrderDataResponse;

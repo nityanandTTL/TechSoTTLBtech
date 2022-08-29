@@ -15,6 +15,7 @@ public class FetchLedgerResponseModel {
     private String BTechName;
     private int OutstandingBalance;
     private ArrayList<LedgerDetailsModeler> LedgerDetails;
+
     public ArrayList<LedgerDetailsModeler> getLedgerDetails() {
         return LedgerDetails;
     }

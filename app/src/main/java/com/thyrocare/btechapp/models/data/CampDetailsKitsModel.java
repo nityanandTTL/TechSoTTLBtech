@@ -7,7 +7,18 @@ import android.os.Parcelable;
  * Created by Orion on 5/15/2017.
  */
 
-public class CampDetailsKitsModel implements Parcelable{
+public class CampDetailsKitsModel implements Parcelable {
+    public static final Creator<CampDetailsKitsModel> CREATOR = new Creator<CampDetailsKitsModel>() {
+        @Override
+        public CampDetailsKitsModel createFromParcel(Parcel in) {
+            return new CampDetailsKitsModel(in);
+        }
+
+        @Override
+        public CampDetailsKitsModel[] newArray(int size) {
+            return new CampDetailsKitsModel[size];
+        }
+    };
     private int Value;
     private String Kit;
 
@@ -29,18 +40,6 @@ public class CampDetailsKitsModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<CampDetailsKitsModel> CREATOR = new Creator<CampDetailsKitsModel>() {
-        @Override
-        public CampDetailsKitsModel createFromParcel(Parcel in) {
-            return new CampDetailsKitsModel(in);
-        }
-
-        @Override
-        public CampDetailsKitsModel[] newArray(int size) {
-            return new CampDetailsKitsModel[size];
-        }
-    };
 
     public int getValue() {
         return Value;

@@ -3,28 +3,30 @@
     android:layout_height="match_parent">
 
     <com.dhb.customview.TouchImageView
-        android:contentDescription="@string/selfie"
-        android:layout_centerInParent="true"
         android:id="@+id/img_selfie_full"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_centerInParent="true"
         android:adjustViewBounds="true"
-        android:src="@drawable/b_tech_new_logo"/>
+        android:contentDescription="@string/selfie"
+        android:src="@drawable/b_tech_new_logo" />
+
     <LinearLayout
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:gravity="center">
+
         <Button
             android:id="@+id/btn_selfie_close"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:layout_gravity="center"
-            android:minEms="8"
-            android:background="@drawable/purple_btn_bg"
-            android:text="@string/close"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/purple_btn_bg"
+            android:minEms="8"
+            android:text="@string/close"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
     </LinearLayout>
 </RelativeLayout>

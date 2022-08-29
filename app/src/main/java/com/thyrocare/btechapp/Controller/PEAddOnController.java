@@ -50,8 +50,8 @@ public class PEAddOnController {
                 public void onResponse(Call<AddOnResponseModel> call, retrofit2.Response<AddOnResponseModel> response) {
                     try {
                         AddOnResponseModel add = response.body();
-                        if (add!=null&&!InputUtils.isNull(add.isStatus()) && add.isStatus()) {
-                            boolean peaddON  ;
+                        if (add != null && !InputUtils.isNull(add.isStatus()) && add.isStatus()) {
+                            boolean peaddON;
                             if (peAddben == 1) {
                                 peaddON = true;
 //                                BundleConstants.isPEPartner =false;
@@ -59,7 +59,7 @@ public class PEAddOnController {
                                 BundleConstants.callOTPFlag = 0;
                                 TastyToast.makeText(mactivity, ConstantsMessages.BenefiaryAdded, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                                 Intent intent = new Intent(mactivity, B2BVisitOrdersDisplayFragment.class);
-                                intent.putExtra(BundleConstants.PEADDON,peaddON);
+                                intent.putExtra(BundleConstants.PEADDON, peaddON);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 mactivity.startActivity(intent);
                             } else {
@@ -69,9 +69,9 @@ public class PEAddOnController {
                             }
                         } else {
                             Gson gson = new GsonBuilder().create();
-                            AddOnErrorResponsemodel mError=new AddOnErrorResponsemodel();
+                            AddOnErrorResponsemodel mError = new AddOnErrorResponsemodel();
                             try {
-                                mError= gson.fromJson(response.errorBody().string(),AddOnErrorResponsemodel.class);
+                                mError = gson.fromJson(response.errorBody().string(), AddOnErrorResponsemodel.class);
                                 TastyToast.makeText(mactivity, mError.getError() != null ? mError.getError().trim() : ConstantsMessages.SomethingWentwrngMsg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
                                 globalClass.hideProgressDialog(mactivity);
                             } catch (IOException e) {
@@ -81,9 +81,10 @@ public class PEAddOnController {
                     } catch (Exception e) {
                         e.printStackTrace();
                         globalClass.hideProgressDialog(mactivity);
-                        TastyToast.makeText(mactivity,"Something went wrong",TastyToast.LENGTH_LONG,TastyToast.ERROR);
+                        TastyToast.makeText(mactivity, "Something went wrong", TastyToast.LENGTH_LONG, TastyToast.ERROR);
                     }
                 }
+
                 @Override
                 public void onFailure(Call<AddOnResponseModel> call, Throwable t) {
                     globalClass.showCustomToast(mactivity, "Something went wrong. Try after sometime");

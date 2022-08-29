@@ -19,6 +19,17 @@ import java.util.ArrayList;
  */
 
 public class OrderBookingRequestModel implements Parcelable {
+    public static final Creator<OrderBookingRequestModel> CREATOR = new Creator<OrderBookingRequestModel>() {
+        @Override
+        public OrderBookingRequestModel createFromParcel(Parcel in) {
+            return new OrderBookingRequestModel(in);
+        }
+
+        @Override
+        public OrderBookingRequestModel[] newArray(int size) {
+            return new OrderBookingRequestModel[size];
+        }
+    };
     private OrderBookingDetailsModel ordbooking;
     private ArrayList<OrderDetailsModel> orddtl;
     private ArrayList<BeneficiaryDetailsModel> bendtl;
@@ -28,6 +39,16 @@ public class OrderBookingRequestModel implements Parcelable {
     private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> clHistory;
 
     public OrderBookingRequestModel() {
+    }
+
+    protected OrderBookingRequestModel(Parcel in) {
+        ordbooking = in.readParcelable(OrderBookingDetailsModel.class.getClassLoader());
+        orddtl = in.createTypedArrayList(OrderDetailsModel.CREATOR);
+        bendtl = in.createTypedArrayList(BeneficiaryDetailsModel.CREATOR);
+        barcodedtl = in.createTypedArrayList(BeneficiaryBarcodeDetailsModel.CREATOR);
+        smpldtl = in.createTypedArrayList(BeneficiarySampleTypeDetailsModel.CREATOR);
+        labAlert = in.createTypedArrayList(BeneficiaryLabAlertsModel.CREATOR);
+        clHistory = in.createTypedArrayList(BeneficiaryTestWiseClinicalHistoryModel.CREATOR);
     }
 
     public OrderBookingDetailsModel getOrdbooking() {
@@ -86,16 +107,6 @@ public class OrderBookingRequestModel implements Parcelable {
         this.clHistory = clHistory;
     }
 
-    protected OrderBookingRequestModel(Parcel in) {
-        ordbooking = in.readParcelable(OrderBookingDetailsModel.class.getClassLoader());
-        orddtl = in.createTypedArrayList(OrderDetailsModel.CREATOR);
-        bendtl = in.createTypedArrayList(BeneficiaryDetailsModel.CREATOR);
-        barcodedtl = in.createTypedArrayList(BeneficiaryBarcodeDetailsModel.CREATOR);
-        smpldtl = in.createTypedArrayList(BeneficiarySampleTypeDetailsModel.CREATOR);
-        labAlert = in.createTypedArrayList(BeneficiaryLabAlertsModel.CREATOR);
-        clHistory = in.createTypedArrayList(BeneficiaryTestWiseClinicalHistoryModel.CREATOR);
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(ordbooking, flags);
@@ -111,16 +122,4 @@ public class OrderBookingRequestModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<OrderBookingRequestModel> CREATOR = new Creator<OrderBookingRequestModel>() {
-        @Override
-        public OrderBookingRequestModel createFromParcel(Parcel in) {
-            return new OrderBookingRequestModel(in);
-        }
-
-        @Override
-        public OrderBookingRequestModel[] newArray(int size) {
-            return new OrderBookingRequestModel[size];
-        }
-    };
 }

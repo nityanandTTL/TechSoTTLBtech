@@ -55,7 +55,7 @@ public class VerifyCouponResponseModel {
     }
 
     public static class Data {
-       public Double tests_discount, tests_pe_selling_price;
+        public Double tests_discount, tests_pe_selling_price;
 
         public Double getTests_discount() {
             return tests_discount;

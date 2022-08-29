@@ -4,7 +4,9 @@ package com.thyrocare.btechapp.fragment;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +62,8 @@ public class LedgerDisplayFragment extends AbstractFragment {
     public static final String TAG_FRAGMENT = "LEDGER_DISPLAY_FRAGMENT";
     HomeScreenActivity activity;
     AppPreferenceManager appPreferenceManager;
+    Earning_NewRegisterModel earning_newRegisterModel;
+    TextView tv_cr_date, tv_cr_amount, tv_fasting_ord, tv_nonfast_ord, tv_estm_earning;
     private View rootView;
     private LinearLayout sevenlay, noledgerlay, nodepositlay, noearninglay;
     private TextView txtFromDate, txtToDate, seven, outstanding, norecordsearnings, norecordsdeposit, noledger, balance;
@@ -68,13 +72,8 @@ public class LedgerDisplayFragment extends AbstractFragment {
     private FetchLedgerResponseModel fetchLedgerResponseModel;
     private ArrayList<EarningRegisterModel> earningRegisterModels;
     private ArrayList<DepositRegisterModel> depositRegisterModels;
-
     //earning
     private ArrayList<Earning_NewRegisterModel> earning_newRegisterModelsArr;
-    Earning_NewRegisterModel earning_newRegisterModel;
-
-    TextView tv_cr_date, tv_cr_amount, tv_fasting_ord, tv_nonfast_ord, tv_estm_earning;
-
     private int mYear, mMonth, mDay;
     private String fromdate = "", todate = "";
     private Global global;
@@ -89,6 +88,14 @@ public class LedgerDisplayFragment extends AbstractFragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public static String getCalculatedDate(String dateFormat, int days) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat s = new SimpleDateFormat(dateFormat);
+        cal.add(Calendar.DAY_OF_YEAR, days);
+        String previous_date = s.format(new Date(cal.getTimeInMillis()));
+        return previous_date;
     }
 
     @Override
@@ -136,14 +143,6 @@ public class LedgerDisplayFragment extends AbstractFragment {
         fetchLedgerDetails();
         setListners();
         return rootView;
-    }
-
-    public static String getCalculatedDate(String dateFormat, int days) {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat s = new SimpleDateFormat(dateFormat);
-        cal.add(Calendar.DAY_OF_YEAR, days);
-        String previous_date = s.format(new Date(cal.getTimeInMillis()));
-        return previous_date;
     }
 
     private void setListners() {
@@ -254,7 +253,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
     private boolean validate_date() {
 
         SimpleDateFormat simpleDateFormat_date = new SimpleDateFormat("yyyy-mm-dd", Locale.US);
-        Date date_fromtime = null,date_totime = null;
+        Date date_fromtime = null, date_totime = null;
         try {
             date_fromtime = simpleDateFormat_date.parse(txtFromDate.getText().toString());
             date_totime = simpleDateFormat_date.parse(txtToDate.getText().toString());
@@ -262,10 +261,10 @@ public class LedgerDisplayFragment extends AbstractFragment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        MessageLogger.PrintMsg("rohit from date :"+ date_fromtime.toString());
-        MessageLogger.PrintMsg("rohit to date :"+ date_totime.toString());
+        MessageLogger.PrintMsg("rohit from date :" + date_fromtime.toString());
+        MessageLogger.PrintMsg("rohit to date :" + date_totime.toString());
         try {
-            if (date_fromtime.before(date_totime)||date_fromtime.equals(date_totime)){
+            if (date_fromtime.before(date_totime) || date_fromtime.equals(date_totime)) {
                 return true;
             }
         } catch (Exception e) {
@@ -303,17 +302,17 @@ public class LedgerDisplayFragment extends AbstractFragment {
     private void CallgetFetchDepositDetailsApi() {
 
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-        Call<FetchLedgerResponseModel> responseCall = apiInterface.CallgetFetchDepositDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(),fromdate, todate);
+        Call<FetchLedgerResponseModel> responseCall = apiInterface.CallgetFetchDepositDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(), fromdate, todate);
         global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback< FetchLedgerResponseModel>() {
+        responseCall.enqueue(new Callback<FetchLedgerResponseModel>() {
             @Override
-            public void onResponse(Call< FetchLedgerResponseModel> call, retrofit2.Response< FetchLedgerResponseModel> response) {
+            public void onResponse(Call<FetchLedgerResponseModel> call, retrofit2.Response<FetchLedgerResponseModel> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
-                    FetchLedgerResponseModel fetchLedgerDetailsResponseModel =  response.body();
+                    FetchLedgerResponseModel fetchLedgerDetailsResponseModel = response.body();
                     fetchLedgerResponseModel = fetchLedgerDetailsResponseModel;
                     fetchEarningRegister();
-                }else {
+                } else {
                     Toast.makeText(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -329,11 +328,11 @@ public class LedgerDisplayFragment extends AbstractFragment {
 
     private void CallFetchEarningDetailsApi() {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-        Call<Earning_NewRegisterModel> responseCall = apiInterface.CallFetchEarningDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(),fromdate, todate);
+        Call<Earning_NewRegisterModel> responseCall = apiInterface.CallFetchEarningDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(), fromdate, todate);
         global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback< Earning_NewRegisterModel>() {
+        responseCall.enqueue(new Callback<Earning_NewRegisterModel>() {
             @Override
-            public void onResponse(Call< Earning_NewRegisterModel> call, retrofit2.Response< Earning_NewRegisterModel> response) {
+            public void onResponse(Call<Earning_NewRegisterModel> call, retrofit2.Response<Earning_NewRegisterModel> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     earning_newRegisterModelsArr = new ArrayList<>();
@@ -342,10 +341,11 @@ public class LedgerDisplayFragment extends AbstractFragment {
 
                     }
                     fetchDepositLedger();
-                }else {
+                } else {
                     Toast.makeText(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<Earning_NewRegisterModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -356,11 +356,11 @@ public class LedgerDisplayFragment extends AbstractFragment {
 
     private void CallgetFetchDepositPaymentDetailsApi() {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-        Call<ArrayList<DepositRegisterModel>> responseCall = apiInterface.CallgetFetchDepositPaymentDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(),fromdate, todate);
+        Call<ArrayList<DepositRegisterModel>> responseCall = apiInterface.CallgetFetchDepositPaymentDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(), fromdate, todate);
         global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback< ArrayList<DepositRegisterModel>>() {
+        responseCall.enqueue(new Callback<ArrayList<DepositRegisterModel>>() {
             @Override
-            public void onResponse(Call< ArrayList<DepositRegisterModel>> call, retrofit2.Response< ArrayList<DepositRegisterModel>> response) {
+            public void onResponse(Call<ArrayList<DepositRegisterModel>> call, retrofit2.Response<ArrayList<DepositRegisterModel>> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     depositRegisterModels = new ArrayList<>();
@@ -372,6 +372,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
                 }
                 initData();
             }
+
             @Override
             public void onFailure(Call<ArrayList<DepositRegisterModel>> call, Throwable t) {
                 global.hideProgressDialog(activity);

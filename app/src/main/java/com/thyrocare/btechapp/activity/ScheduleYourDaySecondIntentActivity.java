@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AlertDialog;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -30,7 +32,6 @@ import com.thyrocare.btechapp.dao.DhbDao;
 import com.thyrocare.btechapp.delegate.SlotsSelectionDelegate;
 import com.thyrocare.btechapp.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.btechapp.models.data.SlotModel;
-
 
 
 import com.thyrocare.btechapp.network.MyBroadcastReceiver;
@@ -114,9 +115,9 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
 
 
 
-      /*  activity2.toolbarHome.setTitle("Schedule your Day");
+    /*  activity2.toolbarHome.setTitle("Schedule your Day");
 
-      */
+     */
 
 
     //changes_5june2017
@@ -208,7 +209,7 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
                                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                                 if (isNetworkAvailable(activity)) {
-                                    callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel,false);
+                                    callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel, false);
                                 } else {
                                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                 }
@@ -261,7 +262,7 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                 if (isNetworkAvailable(activity)) {
-                    callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel,true);
+                    callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel, true);
                 } else {
                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                 }
@@ -313,9 +314,9 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<SlotModel>> responseCall = apiInterface.CallFetchSlotDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID());
         global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback< ArrayList<SlotModel>>() {
+        responseCall.enqueue(new Callback<ArrayList<SlotModel>>() {
             @Override
-            public void onResponse(Call< ArrayList<SlotModel>> call, retrofit2.Response< ArrayList<SlotModel>> response) {
+            public void onResponse(Call<ArrayList<SlotModel>> call, retrofit2.Response<ArrayList<SlotModel>> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     slotsArr = response.body();
@@ -335,7 +336,7 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
             }
 
             @Override
-            public void onFailure(Call< ArrayList<SlotModel>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<SlotModel>> call, Throwable t) {
                 global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
@@ -345,8 +346,8 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
     public void CallLogOutFromDevice() {
         try {
             TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
-             new LogUserActivityTagging(activity, LOGOUT,"");
-                    appPreferenceManager.clearAllPreferences();
+            new LogUserActivityTagging(activity, LOGOUT, "");
+            appPreferenceManager.clearAllPreferences();
             try {
                 new DhbDao(activity).deleteTablesonLogout();
             } catch (Exception e) {

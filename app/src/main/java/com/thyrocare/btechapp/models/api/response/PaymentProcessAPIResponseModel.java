@@ -12,6 +12,17 @@ import java.util.ArrayList;
  */
 
 public class PaymentProcessAPIResponseModel implements Parcelable {
+    public static final Creator<PaymentProcessAPIResponseModel> CREATOR = new Creator<PaymentProcessAPIResponseModel>() {
+        @Override
+        public PaymentProcessAPIResponseModel createFromParcel(Parcel in) {
+            return new PaymentProcessAPIResponseModel(in);
+        }
+
+        @Override
+        public PaymentProcessAPIResponseModel[] newArray(int size) {
+            return new PaymentProcessAPIResponseModel[size];
+        }
+    };
     private ArrayList<PaymentNameValueModel> NameValueCollection;
     private int URLId;
     private String APIUrl;
@@ -36,18 +47,6 @@ public class PaymentProcessAPIResponseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<PaymentProcessAPIResponseModel> CREATOR = new Creator<PaymentProcessAPIResponseModel>() {
-        @Override
-        public PaymentProcessAPIResponseModel createFromParcel(Parcel in) {
-            return new PaymentProcessAPIResponseModel(in);
-        }
-
-        @Override
-        public PaymentProcessAPIResponseModel[] newArray(int size) {
-            return new PaymentProcessAPIResponseModel[size];
-        }
-    };
 
     public ArrayList<PaymentNameValueModel> getNameValueCollection() {
         return NameValueCollection;

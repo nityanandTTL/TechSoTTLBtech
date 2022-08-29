@@ -12,14 +12,6 @@ import java.util.ArrayList;
  */
 
 public class Tsp_SendConsignment_Modes_ResponseModel implements Parcelable {
-    private String Response;
-    private ArrayList<Tsp_SendMode_DataModel> courierModes;
-
-    protected Tsp_SendConsignment_Modes_ResponseModel(Parcel in) {
-        Response = in.readString();
-        courierModes = in.createTypedArrayList(Tsp_SendMode_DataModel.CREATOR);
-    }
-
     public static final Creator<Tsp_SendConsignment_Modes_ResponseModel> CREATOR = new Creator<Tsp_SendConsignment_Modes_ResponseModel>() {
         @Override
         public Tsp_SendConsignment_Modes_ResponseModel createFromParcel(Parcel in) {
@@ -31,6 +23,13 @@ public class Tsp_SendConsignment_Modes_ResponseModel implements Parcelable {
             return new Tsp_SendConsignment_Modes_ResponseModel[size];
         }
     };
+    private String Response;
+    private ArrayList<Tsp_SendMode_DataModel> courierModes;
+
+    protected Tsp_SendConsignment_Modes_ResponseModel(Parcel in) {
+        Response = in.readString();
+        courierModes = in.createTypedArrayList(Tsp_SendMode_DataModel.CREATOR);
+    }
 
     @Override
     public String toString() {

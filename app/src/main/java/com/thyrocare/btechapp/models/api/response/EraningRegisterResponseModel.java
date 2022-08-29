@@ -6,6 +6,10 @@ package com.thyrocare.btechapp.models.api.response;
 
 public class EraningRegisterResponseModel {
 
+    String Date;
+    Integer Amount;
+    String Remarks;
+
     public String getDate() {
         return Date;
     }
@@ -29,13 +33,6 @@ public class EraningRegisterResponseModel {
     public void setRemarks(String remarks) {
         Remarks = remarks;
     }
-
-    String Date;
-    Integer Amount;
-    String Remarks;
-
-
-
 
 
 }

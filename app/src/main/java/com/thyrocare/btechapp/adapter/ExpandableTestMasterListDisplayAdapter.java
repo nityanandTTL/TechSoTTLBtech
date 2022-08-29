@@ -2,7 +2,9 @@ package com.thyrocare.btechapp.adapter;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+
 import androidx.appcompat.app.AlertDialog;
+
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -43,9 +45,9 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
         this.activity = activity;
         this.testRateMasterModels = testRateMasterModels1;
         this.filteredList = testRateMasterModels1;
-        this.mcallback=mcallback;
+        this.mcallback = mcallback;
         this.selectedTests = selectedTests;
-        if(this.selectedTests==null){
+        if (this.selectedTests == null) {
             this.selectedTests = new ArrayList<>();
         }
     }
@@ -90,7 +92,7 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
         ViewParentHolder holder = null;
         if (convertView == null) {
             LayoutInflater inf = activity.getLayoutInflater();
-            convertView = inf.inflate(R.layout.item_select_test_header, parent,false);
+            convertView = inf.inflate(R.layout.item_select_test_header, parent, false);
             holder = new ViewParentHolder();
             holder.txtHeader = (TextView) convertView.findViewById(R.id.txt_header);
             convertView.setTag(holder);
@@ -106,7 +108,7 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
         ViewChildHolder holder = null;
         if (convertView == null) {
             LayoutInflater infalInflater = activity.getLayoutInflater();
-            convertView = infalInflater.inflate(R.layout.item_select_test_list_view, parent,false);
+            convertView = infalInflater.inflate(R.layout.item_select_test_list_view, parent, false);
             holder = new ViewChildHolder();
             holder.txt_test = (TextView) convertView.findViewById(R.id.txt_test);
             holder.txt_dis_amt = (TextView) convertView.findViewById(R.id.txt_dis_amt);
@@ -123,32 +125,29 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
         final boolean isSelectedDueToParent = holder.isSelectedDueToParent;
         final String parentTestCode = holder.parentTestCode;
         final TestRateMasterModel testRateMasterModel = filteredList.get(groupPosition).getTestRateMasterModels().get(childPosition);
-        holder.txt_dis_amt.setText("₹ " + testRateMasterModel.getRate()+"/-");
+        holder.txt_dis_amt.setText("₹ " + testRateMasterModel.getRate() + "/-");
 
-        if(!InputUtils.isNull(testRateMasterModel.getTestType())&&(testRateMasterModel.getTestType().equals("TEST")||testRateMasterModel.getTestType().equals("OFFER"))
-                && !InputUtils.isNull(testRateMasterModel.getDescription())){
-            holder.txt_test.setText(testRateMasterModel.getDescription()+"("+testRateMasterModel.getTestCode()+")");
-        }
-        else{
+        if (!InputUtils.isNull(testRateMasterModel.getTestType()) && (testRateMasterModel.getTestType().equals("TEST") || testRateMasterModel.getTestType().equals("OFFER"))
+                && !InputUtils.isNull(testRateMasterModel.getDescription())) {
+            holder.txt_test.setText(testRateMasterModel.getDescription() + "(" + testRateMasterModel.getTestCode() + ")");
+        } else {
             holder.txt_test.setText(testRateMasterModel.getTestCode());
         }
 
-        if (!InputUtils.isNull(testRateMasterModel.getTestType())&&testRateMasterModel.getTestType().equalsIgnoreCase("profile")) {
+        if (!InputUtils.isNull(testRateMasterModel.getTestType()) && testRateMasterModel.getTestType().equalsIgnoreCase("profile")) {
             holder.img_test_type.setImageDrawable(activity.getResources().getDrawable(R.drawable.p));
-        }else if (!InputUtils.isNull(testRateMasterModel.getTestType())&&testRateMasterModel.getTestType().equalsIgnoreCase("test")) {
+        } else if (!InputUtils.isNull(testRateMasterModel.getTestType()) && testRateMasterModel.getTestType().equalsIgnoreCase("test")) {
             holder.img_test_type.setImageDrawable(activity.getResources().getDrawable(R.drawable.t));
         } else {
             holder.img_test_type.setImageDrawable(activity.getResources().getDrawable(R.drawable.o));
         }
-        if(testRateMasterModel.getFasting().equalsIgnoreCase("fasting")){
+        if (testRateMasterModel.getFasting().equalsIgnoreCase("fasting")) {
             holder.imgTestFasting.setVisibility(View.VISIBLE);
             holder.imgTestFasting.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_fasting));
-        }
-        else if(testRateMasterModel.getFasting().equalsIgnoreCase("non-fasting")){
+        } else if (testRateMasterModel.getFasting().equalsIgnoreCase("non-fasting")) {
             holder.imgTestFasting.setVisibility(View.VISIBLE);
             holder.imgTestFasting.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_non_fasting));
-        }
-        else{
+        } else {
             holder.imgTestFasting.setVisibility(View.INVISIBLE);
         }
         boolean isChecked = false;
@@ -156,7 +155,7 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
         holder.parentTestCode = "";
         holder.imgChecked.setVisibility(View.GONE);
         holder.imgCheck.setVisibility(View.VISIBLE);
-        if(selectedTests!=null && selectedTests.size()>0) {
+        if (selectedTests != null && selectedTests.size() > 0) {
             for (int i = 0; !isChecked && i < selectedTests.size(); i++) {
                 TestRateMasterModel selectedTestModel = selectedTests.get(i);
                 if (selectedTestModel.getTestCode().equals(testRateMasterModel.getTestCode())) {
@@ -165,13 +164,13 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
                     holder.isSelectedDueToParent = false;
                     holder.parentTestCode = "";
                     isChecked = true;
-                }else if(selectedTestModel.getChldtests()!=null && testRateMasterModel.getChldtests()!=null && selectedTestModel.checkIfChildsContained(testRateMasterModel)) {
+                } else if (selectedTestModel.getChldtests() != null && testRateMasterModel.getChldtests() != null && selectedTestModel.checkIfChildsContained(testRateMasterModel)) {
                     holder.imgChecked.setVisibility(View.VISIBLE);
                     holder.imgCheck.setVisibility(View.GONE);
                     holder.isSelectedDueToParent = true;
                     holder.parentTestCode = selectedTestModel.getTestCode();
                     isChecked = true;
-                }else {
+                } else {
                     if (selectedTestModel.getChldtests() != null && selectedTestModel.getChldtests().size() > 0) {
                         for (ChildTestsModel ctm :
                                 selectedTestModel.getChldtests()) {
@@ -193,7 +192,7 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
                     }
                 }
             }
-        }else{
+        } else {
             holder.imgChecked.setVisibility(View.GONE);
             holder.imgCheck.setVisibility(View.VISIBLE);
         }
@@ -210,7 +209,7 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
                     slectedpackage = testRateMasterModel.getTestCode();
                 }
 
-                if(testRateMasterModel.getTestType().equals("OFFER")&&checkIfOfferExists(selectedTests)) {
+                if (testRateMasterModel.getTestType().equals("OFFER") && checkIfOfferExists(selectedTests)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setTitle("Confirm Action")
                             .setMessage("Selecting an OFFER will replace previously selected OFFER. Do you still wish to proceed?")
@@ -224,59 +223,58 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    selectedTests = replaceOffer(selectedTests,testRateMasterModel);
+                                    selectedTests = replaceOffer(selectedTests, testRateMasterModel);
                                     mcallback.onCheckChange(selectedTests);
                                 }
                             })
                             .setCancelable(false)
                             .show();
 
-                }
-                else {
+                } else {
 
                     tempselectedTests = new ArrayList<>();
                     tempselectedTests1 = new ArrayList<>();
-if(testRateMasterModel.getChldtests()!=null ){
-    for (int i = 0; i < testRateMasterModel.getChldtests().size(); i++) {
+                    if (testRateMasterModel.getChldtests() != null) {
+                        for (int i = 0; i < testRateMasterModel.getChldtests().size(); i++) {
 
 
-        //tejas t -----------------------------
-        for (int j = 0; j < selectedTests.size(); j++) {
+                            //tejas t -----------------------------
+                            for (int j = 0; j < selectedTests.size(); j++) {
 
-            if (testRateMasterModel.getChldtests().get(i).getChildTestCode().equalsIgnoreCase(selectedTests.get(j).getTestCode())) {
-                MessageLogger.PrintMsg("Cart selectedtestlist Description :" + selectedTests.get(j).getDescription() + "Cart selectedtestlist Code :" + selectedTests.get(j).getTestCode());
+                                if (testRateMasterModel.getChldtests().get(i).getChildTestCode().equalsIgnoreCase(selectedTests.get(j).getTestCode())) {
+                                    MessageLogger.PrintMsg("Cart selectedtestlist Description :" + selectedTests.get(j).getDescription() + "Cart selectedtestlist Code :" + selectedTests.get(j).getTestCode());
 
-                if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
-                        && !InputUtils.isNull(selectedTests.get(j).getDescription())) {
-                    tempselectedTests1.add(selectedTests.get(j).getDescription());
-                } else {
-                    tempselectedTests1.add(selectedTests.get(j).getTestCode());
-                }
+                                    if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
+                                            && !InputUtils.isNull(selectedTests.get(j).getDescription())) {
+                                        tempselectedTests1.add(selectedTests.get(j).getDescription());
+                                    } else {
+                                        tempselectedTests1.add(selectedTests.get(j).getTestCode());
+                                    }
 
-                tempselectedTests.add(selectedTests.get(j));
-            }
-        }
-    }
-}
+                                    tempselectedTests.add(selectedTests.get(j));
+                                }
+                            }
+                        }
+                    }
 
-if (selectedTests!=null){
-    for (int j = 0; j < selectedTests.size(); j++) {
-        TestRateMasterModel selectedTestModel123 = selectedTests.get(j);
-        if (selectedTestModel123.getChldtests() != null && testRateMasterModel.getChldtests() != null && testRateMasterModel.checkIfChildsContained(selectedTestModel123)) {
+                    if (selectedTests != null) {
+                        for (int j = 0; j < selectedTests.size(); j++) {
+                            TestRateMasterModel selectedTestModel123 = selectedTests.get(j);
+                            if (selectedTestModel123.getChldtests() != null && testRateMasterModel.getChldtests() != null && testRateMasterModel.checkIfChildsContained(selectedTestModel123)) {
 
-            if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
-                    && !InputUtils.isNull(selectedTests.get(j).getDescription())) {
-                tempselectedTests1.add(selectedTests.get(j).getDescription());
-            } else {
-                tempselectedTests1.add(selectedTests.get(j).getTestCode());
-            }
-            tempselectedTests.add(selectedTestModel123);
-        }
-    }
+                                if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
+                                        && !InputUtils.isNull(selectedTests.get(j).getDescription())) {
+                                    tempselectedTests1.add(selectedTests.get(j).getDescription());
+                                } else {
+                                    tempselectedTests1.add(selectedTests.get(j).getTestCode());
+                                }
+                                tempselectedTests.add(selectedTestModel123);
+                            }
+                        }
 
-}
+                    }
 
-                    if (tempselectedTests != null && tempselectedTests.size() > 0  ) {
+                    if (tempselectedTests != null && tempselectedTests.size() > 0) {
                         String cartproduct = TextUtils.join(",", tempselectedTests1);
                         alertDialogBuilder = new AlertDialog.Builder(activity);
                         alertDialogBuilder
@@ -290,7 +288,7 @@ if (selectedTests!=null){
                         AlertDialog alertDialog = alertDialogBuilder.create();
                         alertDialog.show();
                     }
-                    if(tempselectedTests != null){
+                    if (tempselectedTests != null) {
                         for (int i = 0; i < tempselectedTests.size(); i++) {
                             for (int j = 0; j < selectedTests.size(); j++) {
                                 if (tempselectedTests.get(i).getTestCode().equalsIgnoreCase(selectedTests.get(j).getTestCode())) {
@@ -309,12 +307,11 @@ if (selectedTests!=null){
         holder.imgChecked.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isSelectedDueToParent) {
+                if (!isSelectedDueToParent) {
                     selectedTests.remove(testRateMasterModel);
                     mcallback.onCheckChange(selectedTests);
-                }
-                else{
-                    Toast.makeText(activity,"This test was selected because of its parent. If you wish to remove this test please remove the parent: "+parentTestCode,Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, "This test was selected because of its parent. If you wish to remove this test please remove the parent: " + parentTestCode, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -322,31 +319,19 @@ if (selectedTests!=null){
         return convertView;
     }
 
-    private class ViewParentHolder {
-        TextView txtHeader;
-    }
-
-    private class ViewChildHolder {
-        ImageView img_test_type;
-        ImageView imgCheck, imgChecked;
-        TextView txt_test, txt_dis_amt;
-        boolean isSelectedDueToParent;
-        String parentTestCode;
-        ImageView imgTestFasting;
-    }
-    private boolean checkIfOfferExists(ArrayList<TestRateMasterModel> selTests){
-        for (TestRateMasterModel trmm:
-             selTests) {
-            if(!InputUtils.isNull(trmm.getTestType())&&trmm.getTestType().equals("OFFER")){
+    private boolean checkIfOfferExists(ArrayList<TestRateMasterModel> selTests) {
+        for (TestRateMasterModel trmm :
+                selTests) {
+            if (!InputUtils.isNull(trmm.getTestType()) && trmm.getTestType().equals("OFFER")) {
                 return true;
             }
         }
         return false;
     }
 
-    private ArrayList<TestRateMasterModel> replaceOffer(ArrayList<TestRateMasterModel> selTests,TestRateMasterModel newOffer){
-        for (int i=0;i<selTests.size();i++) {
-            if(!InputUtils.isNull(selTests.get(i).getTestType())&&selTests.get(i).getTestType().equals("OFFER")){
+    private ArrayList<TestRateMasterModel> replaceOffer(ArrayList<TestRateMasterModel> selTests, TestRateMasterModel newOffer) {
+        for (int i = 0; i < selTests.size(); i++) {
+            if (!InputUtils.isNull(selTests.get(i).getTestType()) && selTests.get(i).getTestType().equals("OFFER")) {
                 selTests.remove(i);
                 break;
             }
@@ -360,37 +345,49 @@ if (selectedTests!=null){
         return true;
     }
 
-    public void filterData(String query){
+    public void filterData(String query) {
 
         query = query.toLowerCase();
-        Logger.verbose("FilteredListSizeBeforeFilter: "+ String.valueOf(filteredList.size()));
+        Logger.verbose("FilteredListSizeBeforeFilter: " + String.valueOf(filteredList.size()));
 
-        if(query.isEmpty()){
+        if (query.isEmpty()) {
             filteredList = new ArrayList<>();
             filteredList.addAll(testRateMasterModels);
-            Logger.verbose("FilteredListSizeAfterFilerQueryEmpty: "+ String.valueOf(filteredList.size()));
-        }
-        else {
+            Logger.verbose("FilteredListSizeAfterFilerQueryEmpty: " + String.valueOf(filteredList.size()));
+        } else {
             filteredList = new ArrayList<>();
-            for(TestTypeWiseTestRateMasterModelsList testTypeModel: testRateMasterModels){
+            for (TestTypeWiseTestRateMasterModelsList testTypeModel : testRateMasterModels) {
 
                 ArrayList<TestRateMasterModel> oldList = testTypeModel.getTestRateMasterModels();
                 ArrayList<TestRateMasterModel> newList = new ArrayList<TestRateMasterModel>();
-                for(TestRateMasterModel testModel: oldList){
-                    if(testModel.getTestCode().toLowerCase().contains(query) ||
-                            testModel.getDescription().toLowerCase().contains(query)){
+                for (TestRateMasterModel testModel : oldList) {
+                    if (testModel.getTestCode().toLowerCase().contains(query) ||
+                            testModel.getDescription().toLowerCase().contains(query)) {
                         newList.add(testModel);
                     }
                 }
-                if(newList.size() > 0){
-                    TestTypeWiseTestRateMasterModelsList nContinent = new TestTypeWiseTestRateMasterModelsList(testTypeModel.getTestType(),newList);
+                if (newList.size() > 0) {
+                    TestTypeWiseTestRateMasterModelsList nContinent = new TestTypeWiseTestRateMasterModelsList(testTypeModel.getTestType(), newList);
                     filteredList.add(nContinent);
                 }
             }
         }
 
-        Logger.verbose("FilteredListSizeAfterFilter: "+ String.valueOf(filteredList.size()));
+        Logger.verbose("FilteredListSizeAfterFilter: " + String.valueOf(filteredList.size()));
         notifyDataSetChanged();
 
+    }
+
+    private class ViewParentHolder {
+        TextView txtHeader;
+    }
+
+    private class ViewChildHolder {
+        ImageView img_test_type;
+        ImageView imgCheck, imgChecked;
+        TextView txt_test, txt_dis_amt;
+        boolean isSelectedDueToParent;
+        String parentTestCode;
+        ImageView imgTestFasting;
     }
 }

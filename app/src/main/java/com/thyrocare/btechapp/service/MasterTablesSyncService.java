@@ -22,7 +22,6 @@ import com.thyrocare.btechapp.models.data.LabAlertMasterModel;
 import com.thyrocare.btechapp.models.data.TestRateMasterModel;
 
 
-
 import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.utils.api.NetworkUtils;
 import com.thyrocare.btechapp.utils.app.AppConstants;
@@ -35,21 +34,24 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 public class MasterTablesSyncService extends Service {
-    private DhbDao dhbDao;
-    private AppPreferenceManager appPreferenceManager;
-    private Context context;
     private static final int MASTER_TABLE_BRANDS = 0;
     private static final int MASTER_TABLE_LAB_ALERTS = 1;
     private static final int MASTER_TABLE_TESTS = 2;
-    private int retryCount = 0;
-    private static int uploadTotalCount = 2;
     private static final int retryCountMax = 5;
+    private static int uploadTotalCount = 2;
+    private static int previousBrandCount = 0;
+    private DhbDao dhbDao;
+    private AppPreferenceManager appPreferenceManager;
+    private Context context;
+    private int retryCount = 0;
     private boolean isIssueFound = false;
     private int serviceId;
     private ArrayList<Integer> masterTableUploaded = new ArrayList<>();
     private ArrayList<Integer> masterTableTotalToBeUploaded = new ArrayList<>();
-    private static int previousBrandCount = 0;
     private Global globalclass;
+
+    public MasterTablesSyncService() {
+    }
 
     @Override
     public void onCreate() {
@@ -60,9 +62,6 @@ public class MasterTablesSyncService extends Service {
         appPreferenceManager = new AppPreferenceManager(getApplicationContext());
         masterTableUploaded = new ArrayList<>();
         masterTableTotalToBeUploaded = new ArrayList<>();
-    }
-
-    public MasterTablesSyncService() {
     }
 
     @Nullable
@@ -77,15 +76,15 @@ public class MasterTablesSyncService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         serviceId = startId;
-        for (int i = 0; i < uploadTotalCount; i++){
+        for (int i = 0; i < uploadTotalCount; i++) {
             masterTableUploaded.add(i, 0);
-            masterTableTotalToBeUploaded.add(i,1);
+            masterTableTotalToBeUploaded.add(i, 1);
         }
-        if (appPreferenceManager.getLoginResponseModel()==null){
+        if (appPreferenceManager.getLoginResponseModel() == null) {
             broadcastSyncIssue();
             stopSelf(serviceId);
         }
-        if (NetworkUtils.isNetworkAvailable(getApplicationContext())){
+        if (NetworkUtils.isNetworkAvailable(getApplicationContext())) {
             isIssueFound = false;
             broadcastSyncProgress(true);
             startUpdatingMasterTables();
@@ -101,8 +100,8 @@ public class MasterTablesSyncService extends Service {
         //BRAND MASTER
         try {
             if (masterTableUploaded != null && masterTableTotalToBeUploaded != null
-                    && masterTableUploaded.get(MASTER_TABLE_BRANDS) < masterTableTotalToBeUploaded.get(MASTER_TABLE_BRANDS)){
-                callMasterTableUpdateUploadAPI(MASTER_TABLE_BRANDS,"",0);
+                    && masterTableUploaded.get(MASTER_TABLE_BRANDS) < masterTableTotalToBeUploaded.get(MASTER_TABLE_BRANDS)) {
+                callMasterTableUpdateUploadAPI(MASTER_TABLE_BRANDS, "", 0);
                 return;
             }
         } catch (Exception e) {
@@ -111,8 +110,8 @@ public class MasterTablesSyncService extends Service {
         //LAB ALERT MASTER
         try {
             if (masterTableUploaded != null && masterTableTotalToBeUploaded != null
-                    && masterTableUploaded.get(MASTER_TABLE_LAB_ALERTS) < masterTableTotalToBeUploaded.get(MASTER_TABLE_LAB_ALERTS)){
-                callMasterTableUpdateUploadAPI(MASTER_TABLE_LAB_ALERTS,"",0);
+                    && masterTableUploaded.get(MASTER_TABLE_LAB_ALERTS) < masterTableTotalToBeUploaded.get(MASTER_TABLE_LAB_ALERTS)) {
+                callMasterTableUpdateUploadAPI(MASTER_TABLE_LAB_ALERTS, "", 0);
                 return;
             }
         } catch (Exception e) {
@@ -123,8 +122,8 @@ public class MasterTablesSyncService extends Service {
             BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
             ArrayList<BrandMasterModel> brandMasterModels = brandMasterDao.getAllModels();
             if (masterTableUploaded != null && masterTableTotalToBeUploaded != null && masterTableUploaded.size() > MASTER_TABLE_TESTS && masterTableTotalToBeUploaded.size() > MASTER_TABLE_TESTS &&
-                    ( masterTableUploaded.get(MASTER_TABLE_TESTS) < masterTableTotalToBeUploaded.get(MASTER_TABLE_TESTS)) && previousBrandCount < brandMasterModels.size()){
-                callMasterTableUpdateUploadAPI(MASTER_TABLE_TESTS,brandMasterModels.get(previousBrandCount).getBrandId()+"",previousBrandCount);
+                    (masterTableUploaded.get(MASTER_TABLE_TESTS) < masterTableTotalToBeUploaded.get(MASTER_TABLE_TESTS)) && previousBrandCount < brandMasterModels.size()) {
+                callMasterTableUpdateUploadAPI(MASTER_TABLE_TESTS, brandMasterModels.get(previousBrandCount).getBrandId() + "", previousBrandCount);
                 return;
             }
         } catch (Exception e) {
@@ -139,16 +138,16 @@ public class MasterTablesSyncService extends Service {
 
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<String> responseCall;
-        if (infoType == MASTER_TABLE_BRANDS){
+        if (infoType == MASTER_TABLE_BRANDS) {
             responseCall = apiInterface.CallFetchBrandMasterApi();
-        } else if (infoType == MASTER_TABLE_LAB_ALERTS){
+        } else if (infoType == MASTER_TABLE_LAB_ALERTS) {
             responseCall = apiInterface.CallGetFetchLabAlertMasterApi();
         } else {
-            responseCall = apiInterface.CallGetFetchBrandwiseTestMasterApi( brandId);
+            responseCall = apiInterface.CallGetFetchBrandwiseTestMasterApi(brandId);
         }
         responseCall.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<String> call, retrofit2.Response< String> response) {
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     retryCount = 0;
                     ResponseParser responseParser = new ResponseParser(getApplicationContext());
@@ -158,22 +157,22 @@ public class MasterTablesSyncService extends Service {
                         case MASTER_TABLE_BRANDS: {
                             ArrayList<BrandMasterModel> brandMastersArr = new ArrayList<BrandMasterModel>();
                             brandMastersArr = responseParser.getBrandMaster(response.body(), response.code());
-                            masterTableUploaded.set(MASTER_TABLE_BRANDS,1);
-                            masterTableTotalToBeUploaded.set(MASTER_TABLE_BRANDS,0);
+                            masterTableUploaded.set(MASTER_TABLE_BRANDS, 1);
+                            masterTableTotalToBeUploaded.set(MASTER_TABLE_BRANDS, 0);
 
                             ////////////////// FOR HANDLING BRAND WISE TEST MASTER FETCH API CALL
-                            if (brandMastersArr != null && brandMastersArr.size() > 0){
-                                for (int i = uploadTotalCount; i < uploadTotalCount + brandMastersArr.size(); i++){
-                                    masterTableUploaded.add(i,0);
+                            if (brandMastersArr != null && brandMastersArr.size() > 0) {
+                                for (int i = uploadTotalCount; i < uploadTotalCount + brandMastersArr.size(); i++) {
+                                    masterTableUploaded.add(i, 0);
                                     masterTableTotalToBeUploaded.add(i, 1);
                                 }
                             }
 
-                              int size = brandMastersArr != null ? brandMastersArr.size() : 0;
-                                uploadTotalCount = uploadTotalCount + size;
+                            int size = brandMastersArr != null ? brandMastersArr.size() : 0;
+                            uploadTotalCount = uploadTotalCount + size;
                             ///////////////// END OF FOR HANDLING BRAND WISE TEST MASTER FETCH API CALL
 
-                            if ( brandMastersArr != null && brandMastersArr.size() > 0) {
+                            if (brandMastersArr != null && brandMastersArr.size() > 0) {
                                 for (BrandMasterModel brandMaster : brandMastersArr) {
                                     BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
                                     brandMasterDao.insertOrUpdate(brandMaster);
@@ -188,10 +187,10 @@ public class MasterTablesSyncService extends Service {
                         case MASTER_TABLE_LAB_ALERTS: {
                             FetchLabAlertMasterAPIResponseModel fetchLabAlertMasterAPIResponseModel = new FetchLabAlertMasterAPIResponseModel();
                             fetchLabAlertMasterAPIResponseModel = responseParser.getLabAlertMasterAPIResponseModel(response.body(), response.code());
-                            masterTableUploaded.set(MASTER_TABLE_LAB_ALERTS,1);
-                            masterTableTotalToBeUploaded.set(MASTER_TABLE_LAB_ALERTS,0);
+                            masterTableUploaded.set(MASTER_TABLE_LAB_ALERTS, 1);
+                            masterTableTotalToBeUploaded.set(MASTER_TABLE_LAB_ALERTS, 0);
 
-                            if (fetchLabAlertMasterAPIResponseModel!=null && fetchLabAlertMasterAPIResponseModel.getTestLabAlerts().size() > 0) {
+                            if (fetchLabAlertMasterAPIResponseModel != null && fetchLabAlertMasterAPIResponseModel.getTestLabAlerts().size() > 0) {
                                 for (LabAlertMasterModel labAlertMasterModel : fetchLabAlertMasterAPIResponseModel.getTestLabAlerts()) {
                                     LabAlertMasterDao labAlertMasterDao = new LabAlertMasterDao(dhbDao.getDb());
                                     labAlertMasterDao.insertOrUpdate(labAlertMasterModel);
@@ -206,7 +205,7 @@ public class MasterTablesSyncService extends Service {
                         case MASTER_TABLE_TESTS: {
                             BrandTestMasterModel brandTestMasterModel = new BrandTestMasterModel();
                             brandTestMasterModel = responseParser.getBrandTestMaster(response.body(), response.code());
-                            if (brandTestMasterModel!=null && brandTestMasterModel.getTstratemaster()!=null && brandTestMasterModel.getTstratemaster().size() > 0) {
+                            if (brandTestMasterModel != null && brandTestMasterModel.getTstratemaster() != null && brandTestMasterModel.getTstratemaster().size() > 0) {
                                 TestRateMasterDao testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
                                 for (TestRateMasterModel testRateMasterModel :
                                         brandTestMasterModel.getTstratemaster()) {
@@ -215,12 +214,12 @@ public class MasterTablesSyncService extends Service {
                                     testRateMasterDao.insertOrUpdate(testRateMasterModel);
                                 }
                                 previousBrandCount++;
-                                int previousCnt = masterTableUploaded.get(infoType+previousCount);
-                                int toBeUploadedCnt = masterTableTotalToBeUploaded.get(infoType+previousCount);
-                                masterTableUploaded.set(infoType+previousCount, brandTestMasterModel.getTstratemaster().size() + previousCnt);
-                                masterTableTotalToBeUploaded.set(infoType+previousCount,toBeUploadedCnt-brandTestMasterModel.getTstratemaster().size());
+                                int previousCnt = masterTableUploaded.get(infoType + previousCount);
+                                int toBeUploadedCnt = masterTableTotalToBeUploaded.get(infoType + previousCount);
+                                masterTableUploaded.set(infoType + previousCount, brandTestMasterModel.getTstratemaster().size() + previousCnt);
+                                masterTableTotalToBeUploaded.set(infoType + previousCount, toBeUploadedCnt - brandTestMasterModel.getTstratemaster().size());
                             } else {
-                                masterTableUploaded.set(infoType+previousCount, masterTableTotalToBeUploaded.get(infoType));
+                                masterTableUploaded.set(infoType + previousCount, masterTableTotalToBeUploaded.get(infoType));
                             }
                         }
                         break;
@@ -230,15 +229,14 @@ public class MasterTablesSyncService extends Service {
                         break;
                     }
                     broadcastSyncProgress(false);
-                }
-                else {
+                } else {
                     retryCount++;
                 }
 
-                if (retryCount < retryCountMax){
+                if (retryCount < retryCountMax) {
                     startUpdatingMasterTables();
                 } else {
-                    if (retryCount >= retryCountMax){
+                    if (retryCount >= retryCountMax) {
                         isIssueFound = true;
                         masterTableUploaded.set(infoType, masterTableTotalToBeUploaded.get(infoType));
                     }
@@ -259,7 +257,7 @@ public class MasterTablesSyncService extends Service {
     public void broadcastSyncProgress(boolean isInInitialMode) {
         Intent intent = new Intent();
         intent.setAction(AppConstants.MASTER_TABLE_UPDATE_ACTION_IN_PROGRESS);
-        if (isInInitialMode){
+        if (isInInitialMode) {
             intent.putExtra(AppConstants.MASTER_TABLE_UPDATE_TOTAL_COUNT, 0);
             intent.putExtra(AppConstants.MASTER_TABLE_UPDATE_COMPLETED_COUNT, 0);
         } else {
@@ -290,8 +288,8 @@ public class MasterTablesSyncService extends Service {
 
     public int getTotalUploadCount() {
         int totalUploadCount = 0;
-        for (int i = 0; i < masterTableUploaded.size(); i++){
-            if (masterTableTotalToBeUploaded.get(i) != 0){
+        for (int i = 0; i < masterTableUploaded.size(); i++) {
+            if (masterTableTotalToBeUploaded.get(i) != 0) {
                 totalUploadCount = totalUploadCount + masterTableTotalToBeUploaded.get(i);
             }
         }
@@ -300,8 +298,8 @@ public class MasterTablesSyncService extends Service {
 
     public int getUploadCount() {
         int uploadCount = 0;
-        for (int i = 0; i < masterTableUploaded.size(); i++){
-            if (masterTableUploaded.get(i) != 0){
+        for (int i = 0; i < masterTableUploaded.size(); i++) {
+            if (masterTableUploaded.get(i) != 0) {
                 uploadCount = uploadCount + masterTableUploaded.get(i);
             }
         }
@@ -311,7 +309,7 @@ public class MasterTablesSyncService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (dhbDao != null){
+        if (dhbDao != null) {
             dhbDao.closeDatabase();
         }
     }

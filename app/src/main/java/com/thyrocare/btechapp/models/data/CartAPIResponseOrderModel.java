@@ -10,6 +10,17 @@ import java.util.ArrayList;
  */
 
 public class CartAPIResponseOrderModel implements Parcelable {
+    public static final Creator<CartAPIResponseOrderModel> CREATOR = new Creator<CartAPIResponseOrderModel>() {
+        @Override
+        public CartAPIResponseOrderModel createFromParcel(Parcel in) {
+            return new CartAPIResponseOrderModel(in);
+        }
+
+        @Override
+        public CartAPIResponseOrderModel[] newArray(int size) {
+            return new CartAPIResponseOrderModel[size];
+        }
+    };
     private String OrderNo;
     private int BrandId;
     private boolean HC;
@@ -64,18 +75,6 @@ public class CartAPIResponseOrderModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<CartAPIResponseOrderModel> CREATOR = new Creator<CartAPIResponseOrderModel>() {
-        @Override
-        public CartAPIResponseOrderModel createFromParcel(Parcel in) {
-            return new CartAPIResponseOrderModel(in);
-        }
-
-        @Override
-        public CartAPIResponseOrderModel[] newArray(int size) {
-            return new CartAPIResponseOrderModel[size];
-        }
-    };
 
     public String getOrderNo() {
         return OrderNo;

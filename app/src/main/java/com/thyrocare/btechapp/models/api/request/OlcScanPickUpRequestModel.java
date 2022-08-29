@@ -5,8 +5,8 @@ package com.thyrocare.btechapp.models.api.request;
  */
 
 public class OlcScanPickUpRequestModel {
-    String Barcode,BarcodeType;
-    int BtechId,ClientId;
+    String Barcode, BarcodeType;
+    int BtechId, ClientId;
 
     public String getBarcode() {
         return Barcode;

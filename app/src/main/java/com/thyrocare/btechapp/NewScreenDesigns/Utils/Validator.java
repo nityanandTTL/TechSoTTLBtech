@@ -24,62 +24,12 @@ public class Validator {
     }
 
     public static boolean isValidAge(int age) {
-        if (age > 0 && age <= 120){
+        if (age > 0 && age <= 120) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-
-    public boolean Check_Startswith_Specialcharecter(String stringtoCheck) {
-
-        Pattern p = Pattern.compile("(^\\p{Punct})");
-        Matcher m = p.matcher(stringtoCheck);
-        boolean a = m.find();
-        if (a)
-            MessageLogger.PrintMsg("Password must contain at least one special character at the beginning or end!");
-        else
-            MessageLogger.PrintMsg("....output..." + a);
-        return a;
-    }
-
-    public int LongestStringSequence(String message) {
-
-        int largestSequence = 0;
-        char longestChar = '\0';
-        int currentSequence = 1;
-        char current = '\0';
-        char next = '\0';
-
-        for (int i = 0; i < message.length() - 1; i++) {
-            current = message.charAt(i);
-            next = message.charAt(i + 1);
-
-            // If character's are in sequence , increase the counter
-            if (current == next) {
-                currentSequence += 1;
-            } else {
-                if (currentSequence > largestSequence) { // When sequence is
-                    // completed, check if
-                    // it is longest
-                    largestSequence = currentSequence;
-                    longestChar = current;
-                }
-                currentSequence = 1; // re-initialize counter
-            }
-        }
-        if (currentSequence > largestSequence) { // Check if last string
-            // sequence is longest
-            largestSequence = currentSequence;
-            longestChar = current;
-        }
-
-        MessageLogger.PrintMsg("Longest character sequence is of character "
-                + longestChar + " and is " + largestSequence + " long");
-
-        return largestSequence;
-    }
-
 
     public static Boolean isValidEmail(String email) {
         if (StringUtils.isNull(email)) {
@@ -93,7 +43,6 @@ public class Validator {
         return matcher.matches();
 
     }
-
 
     public static boolean isValidPincode(String pincode) {
 
@@ -159,7 +108,6 @@ public class Validator {
         return true;
     }
 
-
     public static boolean isValidAddress(String Address) {
         if (StringUtils.isNull(Address))
             return false;
@@ -169,7 +117,6 @@ public class Validator {
 
         return true;
     }
-
 
     public static boolean isValidRemarks(String remarks) {
         if (StringUtils.isNull(remarks))
@@ -181,7 +128,6 @@ public class Validator {
         return true;
     }
 
-
     public static boolean isValidOTP(String OTP) {
         if (StringUtils.isNull(OTP))
             return false;
@@ -191,6 +137,55 @@ public class Validator {
 
 
         return true;
+    }
+
+    public boolean Check_Startswith_Specialcharecter(String stringtoCheck) {
+
+        Pattern p = Pattern.compile("(^\\p{Punct})");
+        Matcher m = p.matcher(stringtoCheck);
+        boolean a = m.find();
+        if (a)
+            MessageLogger.PrintMsg("Password must contain at least one special character at the beginning or end!");
+        else
+            MessageLogger.PrintMsg("....output..." + a);
+        return a;
+    }
+
+    public int LongestStringSequence(String message) {
+
+        int largestSequence = 0;
+        char longestChar = '\0';
+        int currentSequence = 1;
+        char current = '\0';
+        char next = '\0';
+
+        for (int i = 0; i < message.length() - 1; i++) {
+            current = message.charAt(i);
+            next = message.charAt(i + 1);
+
+            // If character's are in sequence , increase the counter
+            if (current == next) {
+                currentSequence += 1;
+            } else {
+                if (currentSequence > largestSequence) { // When sequence is
+                    // completed, check if
+                    // it is longest
+                    largestSequence = currentSequence;
+                    longestChar = current;
+                }
+                currentSequence = 1; // re-initialize counter
+            }
+        }
+        if (currentSequence > largestSequence) { // Check if last string
+            // sequence is longest
+            largestSequence = currentSequence;
+            longestChar = current;
+        }
+
+        MessageLogger.PrintMsg("Longest character sequence is of character "
+                + longestChar + " and is " + largestSequence + " long");
+
+        return largestSequence;
     }
 
 }

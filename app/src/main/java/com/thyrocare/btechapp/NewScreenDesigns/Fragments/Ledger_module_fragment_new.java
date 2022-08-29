@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +48,6 @@ import retrofit2.Response;
 
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CHECK_INTERNET_CONN;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
-
 
 
 /**
@@ -170,7 +171,7 @@ public class Ledger_module_fragment_new extends Fragment {
                         d_to_date = SelectedDate;
                     }
                 });
-                selectDatePickerDialogFragment.show(getFragmentManager(),"DatePicker");
+                selectDatePickerDialogFragment.show(getFragmentManager(), "DatePicker");
 
 
             }
@@ -189,7 +190,7 @@ public class Ledger_module_fragment_new extends Fragment {
                         d_from_date = SelectedDate;
                     }
                 });
-                selectDatePickerDialogFragment.show(getFragmentManager(),"DatePicker");
+                selectDatePickerDialogFragment.show(getFragmentManager(), "DatePicker");
             }
         });
 
@@ -227,7 +228,7 @@ public class Ledger_module_fragment_new extends Fragment {
             txt_to_date.setText(currentdate);
             callall_api(lastweek_date, currentdate);
         } else {
-            global.showCustomToast(activity,SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
+            global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
         }
     }
 
@@ -236,8 +237,8 @@ public class Ledger_module_fragment_new extends Fragment {
             call_cashregisterapi(fromdate, todate);
           /*  call_deposite_register(fromdate, todate);
             call_btechEraningapi(fromdate, todate);*/
-        }else{
-            global.showCustomToast(activity,CHECK_INTERNET_CONN,Toast.LENGTH_LONG);
+        } else {
+            global.showCustomToast(activity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
         }
     }
 
@@ -264,13 +265,13 @@ public class Ledger_module_fragment_new extends Fragment {
                         global.showCustomToast(activity, "No data to show", Toast.LENGTH_LONG);
                     }
                 } else {
-                    global.showCustomToast(activity, SOMETHING_WENT_WRONG , Toast.LENGTH_LONG);
+                    global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
                 }
 
                 if (connectionDetector.isConnectingToInternet()) {
                     call_deposite_register(fromdate, todate);
-                }else{
-                    global.showCustomToast(activity, CHECK_INTERNET_CONN,Toast.LENGTH_LONG);
+                } else {
+                    global.showCustomToast(activity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
                 }
             }
 
@@ -279,8 +280,8 @@ public class Ledger_module_fragment_new extends Fragment {
                 global.hideProgressDialog(activity);
                 if (connectionDetector.isConnectingToInternet()) {
                     call_deposite_register(fromdate, todate);
-                }else{
-                    global.showCustomToast(activity, CHECK_INTERNET_CONN,Toast.LENGTH_LONG);
+                } else {
+                    global.showCustomToast(activity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
                 }
                 global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
             }
@@ -293,14 +294,14 @@ public class Ledger_module_fragment_new extends Fragment {
 
         GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<Get_deposite_details_model>> getdeposit_call = getAPIInterface.Get_Deposite(btechid, fromdate, todate);
-        global.showProgressDialog(activity,"Processing request......",false);
+        global.showProgressDialog(activity, "Processing request......", false);
         getdeposit_call.enqueue(new Callback<ArrayList<Get_deposite_details_model>>() {
             @Override
             public void onResponse(Call<ArrayList<Get_deposite_details_model>> call, Response<ArrayList<Get_deposite_details_model>> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     ArrayList<Get_deposite_details_model> get_deposite_details_model = response.body();
-                    if ( get_deposite_details_model.size() > 0) {
+                    if (get_deposite_details_model.size() > 0) {
                         get_deposite_adapter = new Get_Deposite_Adapter(activity, context, get_deposite_details_model);
                         rv_deposite_register.setLayoutManager(layoutManager_deposite);
                         rv_deposite_register.setAdapter(get_deposite_adapter);
@@ -311,13 +312,13 @@ public class Ledger_module_fragment_new extends Fragment {
                         ll_norecord_deposite_id.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    global.showCustomToast(activity,SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
+                    global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
                 }
 
                 if (connectionDetector.isConnectingToInternet()) {
                     call_btechEraningapi(fromdate, todate);
-                }else{
-                    global.showCustomToast(activity, CHECK_INTERNET_CONN,Toast.LENGTH_LONG);
+                } else {
+                    global.showCustomToast(activity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
                 }
             }
 
@@ -326,8 +327,8 @@ public class Ledger_module_fragment_new extends Fragment {
                 global.hideProgressDialog(activity);
                 if (connectionDetector.isConnectingToInternet()) {
                     call_btechEraningapi(fromdate, todate);
-                }else{
-                    global.showCustomToast(activity, CHECK_INTERNET_CONN,Toast.LENGTH_LONG);
+                } else {
+                    global.showCustomToast(activity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
                 }
                 global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
             }
@@ -340,7 +341,7 @@ public class Ledger_module_fragment_new extends Fragment {
 
         GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<Get_BtechEarning_Model> get_btechEarning_modelCall = getAPIInterface.get_BtechEarning(btechid, fromdate, todate);
-        global.showProgressDialog(activity,"Processing request......",false);
+        global.showProgressDialog(activity, "Processing request......", false);
         get_btechEarning_modelCall.enqueue(new Callback<Get_BtechEarning_Model>() {
             @Override
             public void onResponse(Call<Get_BtechEarning_Model> call, Response<Get_BtechEarning_Model> response) {
@@ -349,7 +350,7 @@ public class Ledger_module_fragment_new extends Fragment {
                     Get_BtechEarning_Model get_btechEarning_model = response.body();
                     tv_cr_amount.setText("" + get_btechEarning_model.getCreditedAmount());
                     if (get_btechEarning_model.getCreditDate() != null) {
-                        tv_cr_date.setText(!StringUtils.isNull(get_btechEarning_model.getCreditDate()) ? get_btechEarning_model.getCreditDate() : "" );
+                        tv_cr_date.setText(!StringUtils.isNull(get_btechEarning_model.getCreditDate()) ? get_btechEarning_model.getCreditDate() : "");
                     } else {
                         tv_cr_date.setText("" + 0);
                     }

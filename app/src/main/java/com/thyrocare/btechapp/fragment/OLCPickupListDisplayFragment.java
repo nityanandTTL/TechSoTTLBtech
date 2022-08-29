@@ -3,10 +3,12 @@ package com.thyrocare.btechapp.fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,18 +42,18 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 
 /**
  * for getting olc list<br/>
- *  http://bts.dxscloud.com/btsapi/api/BtechClients/884543107<br/>
+ * http://bts.dxscloud.com/btsapi/api/BtechClients/884543107<br/>
  */
 
 public class OLCPickupListDisplayFragment extends AbstractFragment {
 
+    public static final String TAG_FRAGMENT = OLCPickupListDisplayFragment.class.getSimpleName();
+    ArrayList<BtechClientsModel> btechClientsModels = new ArrayList<>();
+    BtechClientDetailsAdapter btechClientDetailsAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recycler_view;
     private TextView tv_noof_pickup, tv_est_distance;
     private HomeScreenActivity activity;
-    public static final String TAG_FRAGMENT = OLCPickupListDisplayFragment.class.getSimpleName();
-    ArrayList<BtechClientsModel> btechClientsModels = new ArrayList<>();
-    BtechClientDetailsAdapter btechClientDetailsAdapter;
     private Global global;
 
     public OLCPickupListDisplayFragment() {
@@ -100,8 +102,8 @@ public class OLCPickupListDisplayFragment extends AbstractFragment {
                 Logger.error("item clicked");
 
                 Intent intentMapDisplay = new Intent(activity, OLCPickupDetailMapDisplayFragmentActivity.class);
-                intentMapDisplay.putExtra(BundleConstants.BTECH_CLIENTS_MODEL,btechClientsModel);
-                startActivityForResult(intentMapDisplay,BundleConstants.BCMD_START);
+                intentMapDisplay.putExtra(BundleConstants.BTECH_CLIENTS_MODEL, btechClientsModel);
+                startActivityForResult(intentMapDisplay, BundleConstants.BCMD_START);
 
             }
 
@@ -145,19 +147,20 @@ public class OLCPickupListDisplayFragment extends AbstractFragment {
                     if (btechClientsResponseModel != null && btechClientsResponseModel.getBtechClients().size() > 0) {
                         btechClientsModels = btechClientsResponseModel.getBtechClients();
                         Logger.error("btechTechModels size " + btechClientsResponseModel.getBtechClients().size());
-                        tv_noof_pickup.setText(btechClientsResponseModel.getBtechClients().size()+" Pickups");
+                        tv_noof_pickup.setText(btechClientsResponseModel.getBtechClients().size() + " Pickups");
                         int dst = 0;
                         for (BtechClientsModel btechClientsModel :
                                 btechClientsResponseModel.getBtechClients()) {
                             dst = dst + btechClientsModel.getDistance();
                         }
-                        tv_est_distance.setText("Est. Distance "+dst+" KM");
+                        tv_est_distance.setText("Est. Distance " + dst + " KM");
                         prepareRecyclerView();
                     }
                 } else {
                     Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<BtechClientsResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -168,10 +171,10 @@ public class OLCPickupListDisplayFragment extends AbstractFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==BundleConstants.BCMD_START && resultCode==BundleConstants.BCMD_ARRIVED){
+        if (requestCode == BundleConstants.BCMD_START && resultCode == BundleConstants.BCMD_ARRIVED) {
             BtechClientsModel btechClientsModel = data.getExtras().getParcelable(BundleConstants.BTECH_CLIENTS_MODEL);
             Intent intentOrderBooking = new Intent(activity, OLCPickupActivity.class);
-            intentOrderBooking.putExtra(BundleConstants.BTECH_CLIENTS_MODEL,btechClientsModel);
+            intentOrderBooking.putExtra(BundleConstants.BTECH_CLIENTS_MODEL, btechClientsModel);
             startActivity(intentOrderBooking);
         }
         super.onActivityResult(requestCode, resultCode, data);

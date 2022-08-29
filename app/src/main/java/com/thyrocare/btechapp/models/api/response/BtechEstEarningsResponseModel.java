@@ -11,7 +11,18 @@ import java.util.ArrayList;
  * Created by Orion on 6/21/2017.
  */
 
-public class BtechEstEarningsResponseModel implements Parcelable{
+public class BtechEstEarningsResponseModel implements Parcelable {
+    public static final Creator<BtechEstEarningsResponseModel> CREATOR = new Creator<BtechEstEarningsResponseModel>() {
+        @Override
+        public BtechEstEarningsResponseModel createFromParcel(Parcel in) {
+            return new BtechEstEarningsResponseModel(in);
+        }
+
+        @Override
+        public BtechEstEarningsResponseModel[] newArray(int size) {
+            return new BtechEstEarningsResponseModel[size];
+        }
+    };
     ArrayList<BtechEarningsModel> btechEarnings;
     private int Distance;
     private String Response;
@@ -19,7 +30,6 @@ public class BtechEstEarningsResponseModel implements Parcelable{
 
     public BtechEstEarningsResponseModel() {
     }
-
 
     protected BtechEstEarningsResponseModel(Parcel in) {
         btechEarnings = in.createTypedArrayList(BtechEarningsModel.CREATOR);
@@ -39,18 +49,6 @@ public class BtechEstEarningsResponseModel implements Parcelable{
         return 0;
     }
 
-    public static final Creator<BtechEstEarningsResponseModel> CREATOR = new Creator<BtechEstEarningsResponseModel>() {
-        @Override
-        public BtechEstEarningsResponseModel createFromParcel(Parcel in) {
-            return new BtechEstEarningsResponseModel(in);
-        }
-
-        @Override
-        public BtechEstEarningsResponseModel[] newArray(int size) {
-            return new BtechEstEarningsResponseModel[size];
-        }
-    };
-
     public ArrayList<BtechEarningsModel> getBtechEarnings() {
         return btechEarnings;
     }
@@ -58,6 +56,7 @@ public class BtechEstEarningsResponseModel implements Parcelable{
     public void setBtechEarnings(ArrayList<BtechEarningsModel> btechEarnings) {
         this.btechEarnings = btechEarnings;
     }
+
     public int getDistance() {
         return Distance;
     }

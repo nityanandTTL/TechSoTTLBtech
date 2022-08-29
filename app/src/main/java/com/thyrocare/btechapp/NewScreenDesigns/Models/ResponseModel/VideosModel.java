@@ -7,7 +7,7 @@ import java.util.ArrayList;
 @Parcel
 public class VideosModel {
 
-    String RESPONSE,RES_ID;
+    String RESPONSE, RES_ID;
     ArrayList<Videos> videolist;
 
     public VideosModel() {
@@ -39,7 +39,7 @@ public class VideosModel {
 
     @Parcel
     public static class Videos {
-        String videoTitle, videourl,thumbnailurl;
+        String videoTitle, videourl, thumbnailurl;
 
 
         public Videos() {

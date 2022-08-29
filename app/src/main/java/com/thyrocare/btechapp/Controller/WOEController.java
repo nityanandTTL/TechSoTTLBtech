@@ -58,8 +58,8 @@ public class WOEController {
     PaymentsActivity paymentsActivity;
     AppPreferenceManager appPreferenceManager;
     int flag;
-    private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels = new ArrayList<>();
     boolean companyFlag;
+    private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels = new ArrayList<>();
 
 
     public WOEController(CheckoutWoeActivity checkoutWoeActivity) {
@@ -78,6 +78,18 @@ public class WOEController {
         appPreferenceManager = new AppPreferenceManager(activity);
         flag = 2;
 
+    }
+
+    public static void restart(Activity activity) {
+        try {
+            BundleConstants.setVisitOrderScreen = true;
+            Intent intent = new Intent(activity, SplashActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(intent);
+            activity.finishAffinity();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void CallWorkOrderEntryAPI(OrderBookingRequestModel orderBookingRequestModel, final OrderVisitDetailsModel orderVisitDetailsModel, final String test, final String newTimeaddTwoHrs, final String newTimeaddTwoHalfHrs, final TextView btn_Pay) {
@@ -230,7 +242,7 @@ public class WOEController {
                 try {
                     if (BundleConstants.setSecondOrderFlag) {
                         try {
-                            if (dialog_batch.isShowing()){
+                            if (dialog_batch.isShowing()) {
                                 dialog_batch.dismiss();
                             }
                         } catch (Exception e) {
@@ -251,7 +263,7 @@ public class WOEController {
                                             ResetOTPFlag();
                                             appPreferenceManager.setPE_Partner(true);
 //                                            BundleConstants.isPEPartner= true;
-                                            BundleConstants.PE_HARD_BLOCKING= false;
+                                            BundleConstants.PE_HARD_BLOCKING = false;
                                             System.out.println(BundleConstants.PEDSAOrder);
 //                                            BundleConstants.PEDSAOrder = true;
                                             boolean FlagADDEditBen = true;
@@ -274,7 +286,7 @@ public class WOEController {
                     } else {
                         boolean FlagADDEditBen = true;
                         int peAddben = 1;
-                        BundleConstants.PE_HARD_BLOCKING =false;
+                        BundleConstants.PE_HARD_BLOCKING = false;
                         Intent intent = new Intent(checkoutWoeActivity, AddEditBenificaryActivity.class);
                         intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
                         intent.putExtra(Constants.PEAddBen, peAddben);
@@ -315,7 +327,7 @@ public class WOEController {
 //                                        BundleConstants.isPEPartner = false;
                                         appPreferenceManager.setPE_DSA(false);
 //                                        BundleConstants.PEDSAOrder = false;
-                                        BundleConstants.PE_HARD_BLOCKING=false;
+                                        BundleConstants.PE_HARD_BLOCKING = false;
                                         ResetOTPFlag();
                                         if (BundleConstants.isKIOSKOrder) {
                                             activity.finish();
@@ -348,7 +360,7 @@ public class WOEController {
                         appPreferenceManager.setPE_Partner(false);
 //                        BundleConstants.PEDSAOrder = false;
                         appPreferenceManager.setPE_DSA(false);
-                        BundleConstants.PE_HARD_BLOCKING=false;
+                        BundleConstants.PE_HARD_BLOCKING = false;
                         ResetOTPFlag();
                         if (BundleConstants.isKIOSKOrder) {
                             activity.finish();
@@ -1057,19 +1069,6 @@ public class WOEController {
             } else {
                 BundleConstants.callOTPFlag = 0;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public static void restart(Activity activity) {
-        try {
-            BundleConstants.setVisitOrderScreen = true;
-            Intent intent = new Intent(activity, SplashActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(intent);
-            activity.finishAffinity();
         } catch (Exception e) {
             e.printStackTrace();
         }

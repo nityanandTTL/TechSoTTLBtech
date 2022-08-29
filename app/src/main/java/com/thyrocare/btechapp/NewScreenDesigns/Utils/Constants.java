@@ -58,7 +58,7 @@ public class Constants {
     public static String Logout_Topic = "BTech_ALLDEVICES";
 
     public static boolean isFromCleverTap = false;
-    public static int LogoutID=100;
+    public static int LogoutID = 100;
 
     //TODO firebase firestore Coupon Constants--------------------------------------------------------------------------------------------
     public static String PE_CouponCollection = "PE_AllCoupons";

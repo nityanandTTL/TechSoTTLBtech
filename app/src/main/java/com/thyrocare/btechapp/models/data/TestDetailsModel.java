@@ -7,8 +7,19 @@ import android.os.Parcelable;
  * Created by e5209 on 9/29/2017.
  */
 
-public class TestDetailsModel implements Parcelable{
-    private String testCode,description,unit;
+public class TestDetailsModel implements Parcelable {
+    public static final Creator<TestDetailsModel> CREATOR = new Creator<TestDetailsModel>() {
+        @Override
+        public TestDetailsModel createFromParcel(Parcel in) {
+            return new TestDetailsModel(in);
+        }
+
+        @Override
+        public TestDetailsModel[] newArray(int size) {
+            return new TestDetailsModel[size];
+        }
+    };
+    private String testCode, description, unit;
 
     protected TestDetailsModel(Parcel in) {
         testCode = in.readString();
@@ -27,18 +38,6 @@ public class TestDetailsModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<TestDetailsModel> CREATOR = new Creator<TestDetailsModel>() {
-        @Override
-        public TestDetailsModel createFromParcel(Parcel in) {
-            return new TestDetailsModel(in);
-        }
-
-        @Override
-        public TestDetailsModel[] newArray(int size) {
-            return new TestDetailsModel[size];
-        }
-    };
 
     public String getTestCode() {
         return testCode;

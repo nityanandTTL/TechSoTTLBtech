@@ -6,16 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".activity.HCW_Activity">
 
-    <include layout="@layout/default_toolbar"
+    <include
         android:id="@+id/toolbarHCW"
-        />
+        layout="@layout/default_toolbar" />
 
-   <!-- <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarHCW"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />-->
+    <!-- <androidx.appcompat.widget.Toolbar
+         android:id="@+id/toolbarHCW"
+         android:layout_width="match_parent"
+         android:layout_height="?attr/actionBarSize"
+         android:background="?attr/colorPrimary"
+         app:popupTheme="@style/AppTheme.PopupOverlay" />-->
 
 
     <WebView

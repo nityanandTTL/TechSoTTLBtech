@@ -1,8 +1,6 @@
 package com.thyrocare.btechapp.models.api.response;
 
 
-
-
 import com.thyrocare.btechapp.models.data.HubBarcodeModel;
 
 import java.util.ArrayList;
@@ -14,6 +12,7 @@ import java.util.ArrayList;
 public class BtechCollectionsResponseModel {
     private int Btech;
     private ArrayList<HubBarcodeModel> Barcode;
+    private String Response;
 
     public int getBtech() {
         return Btech;
@@ -38,6 +37,4 @@ public class BtechCollectionsResponseModel {
     public void setResponse(String response) {
         Response = response;
     }
-
-    private String Response;
 }

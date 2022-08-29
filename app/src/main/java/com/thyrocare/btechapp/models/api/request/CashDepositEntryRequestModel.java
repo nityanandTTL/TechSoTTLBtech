@@ -6,8 +6,8 @@ package com.thyrocare.btechapp.models.api.request;
  */
 
 public class CashDepositEntryRequestModel {
-    private int Id,BTechId,BankId,ModeId,Amount;//
-    private String TransactionId,ChequeNo,Remarks,Image;
+    private int Id, BTechId, BankId, ModeId, Amount;//
+    private String TransactionId, ChequeNo, Remarks, Image;
 
     public CashDepositEntryRequestModel() {
     }

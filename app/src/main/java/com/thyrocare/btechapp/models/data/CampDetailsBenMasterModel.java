@@ -9,22 +9,25 @@ import java.util.ArrayList;
  * Created by Orion on 5/15/2017.
  */
 
-public class CampDetailsBenMasterModel implements Parcelable{
-    private int benId,Age;
-    private String Name,Gender,testsCode,Fasting,Pincode,ProjId;
+public class CampDetailsBenMasterModel implements Parcelable {
+    public static final Creator<CampDetailsBenMasterModel> CREATOR = new Creator<CampDetailsBenMasterModel>() {
+        @Override
+        public CampDetailsBenMasterModel createFromParcel(Parcel in) {
+            return new CampDetailsBenMasterModel(in);
+        }
+
+        @Override
+        public CampDetailsBenMasterModel[] newArray(int size) {
+            return new CampDetailsBenMasterModel[size];
+        }
+    };
+    private int benId, Age;
+    private String Name, Gender, testsCode, Fasting, Pincode, ProjId;
     private ArrayList<CampDetailsSampleTypeModel> sampleType;
     private ArrayList<CampDetailsKitsModel> kits;
     private String OrderNo;
 
     public CampDetailsBenMasterModel() {
-    }
-
-    public String getProjId() {
-        return ProjId;
-    }
-
-    public void setProjId(String projId) {
-        ProjId = projId;
     }
 
     protected CampDetailsBenMasterModel(Parcel in) {
@@ -39,6 +42,14 @@ public class CampDetailsBenMasterModel implements Parcelable{
         sampleType = in.createTypedArrayList(CampDetailsSampleTypeModel.CREATOR);
         kits = in.createTypedArrayList(CampDetailsKitsModel.CREATOR);
         OrderNo = in.readString();
+    }
+
+    public String getProjId() {
+        return ProjId;
+    }
+
+    public void setProjId(String projId) {
+        ProjId = projId;
     }
 
     @Override
@@ -60,18 +71,6 @@ public class CampDetailsBenMasterModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<CampDetailsBenMasterModel> CREATOR = new Creator<CampDetailsBenMasterModel>() {
-        @Override
-        public CampDetailsBenMasterModel createFromParcel(Parcel in) {
-            return new CampDetailsBenMasterModel(in);
-        }
-
-        @Override
-        public CampDetailsBenMasterModel[] newArray(int size) {
-            return new CampDetailsBenMasterModel[size];
-        }
-    };
 
     public String getPincode() {
         return Pincode;

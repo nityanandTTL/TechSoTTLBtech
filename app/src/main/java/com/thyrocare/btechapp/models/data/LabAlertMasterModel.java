@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class LabAlertMasterModel extends BaseModel implements Parcelable {
+    public static final Creator<LabAlertMasterModel> CREATOR = new Creator<LabAlertMasterModel>() {
+        @Override
+        public LabAlertMasterModel createFromParcel(Parcel in) {
+            return new LabAlertMasterModel(in);
+        }
+
+        @Override
+        public LabAlertMasterModel[] newArray(int size) {
+            return new LabAlertMasterModel[size];
+        }
+    };
     private int LabAlertId;
     private String LabAlert;
 
@@ -32,18 +43,6 @@ public class LabAlertMasterModel extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<LabAlertMasterModel> CREATOR = new Creator<LabAlertMasterModel>() {
-        @Override
-        public LabAlertMasterModel createFromParcel(Parcel in) {
-            return new LabAlertMasterModel(in);
-        }
-
-        @Override
-        public LabAlertMasterModel[] newArray(int size) {
-            return new LabAlertMasterModel[size];
-        }
-    };
 
     public int getLabAlertId() {
         return LabAlertId;

@@ -7,10 +7,7 @@ import android.os.Parcelable;
  * Created by Orion on 5/2/2017.
  */
 
-public class AcceptOrderNotfiDetailsModel implements Parcelable{
-
-    private String VisitId;
-    private String SlotId;
+public class AcceptOrderNotfiDetailsModel implements Parcelable {
 
     public static final Creator<AcceptOrderNotfiDetailsModel> CREATOR = new Creator<AcceptOrderNotfiDetailsModel>() {
         @Override
@@ -23,6 +20,12 @@ public class AcceptOrderNotfiDetailsModel implements Parcelable{
             return new AcceptOrderNotfiDetailsModel[size];
         }
     };
+    private String VisitId;
+    private String SlotId;
+
+    protected AcceptOrderNotfiDetailsModel(Parcel in) {
+        VisitId = in.readString();
+    }
 
     public String getSlotId() {
         return SlotId;
@@ -39,11 +42,6 @@ public class AcceptOrderNotfiDetailsModel implements Parcelable{
     public void setVisitId(String visitId) {
         VisitId = visitId;
     }
-
-    protected AcceptOrderNotfiDetailsModel(Parcel in) {
-        VisitId = in.readString();
-    }
-
 
     @Override
     public int describeContents() {

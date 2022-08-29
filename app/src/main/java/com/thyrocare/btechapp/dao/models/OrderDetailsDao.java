@@ -137,8 +137,6 @@ public class OrderDetailsDao {
         orderDetailsModel.setEditME(cursor.getString(cursor.getColumnIndex(EDITME)).equals("1"));
 
 
-
-
         TypeToken<ArrayList<KitsCountModel>> tokenBarcode = new TypeToken<ArrayList<KitsCountModel>>() {
         };
         ArrayList<KitsCountModel> kitsArr = new Gson().fromJson(cursor.getString(cursor.getColumnIndex(KITS)), tokenBarcode.getType());

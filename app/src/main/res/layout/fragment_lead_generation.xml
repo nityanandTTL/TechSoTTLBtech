@@ -39,8 +39,8 @@
                         android:id="@+id/spn_purpose"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:dropDownVerticalOffset="50dp"
                         android:background="@drawable/drawable_spinner_bg"
+                        android:dropDownVerticalOffset="50dp"
                         android:padding="@dimen/_8sdp" />
                 </androidx.cardview.widget.CardView>
 

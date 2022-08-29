@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 public class CampPatientSearchDetailResponseModel implements Serializable {
 
-    String  response;
-    String  responseID;
+    String response;
+    String responseID;
     ArrayList<Camp> camp;
 
     public String getResponse() {
@@ -216,12 +216,12 @@ public class CampPatientSearchDetailResponseModel implements Serializable {
         @NonNull
         @Override
         public String toString() {
-            if (!StringUtils.isNull(campName) && campName.equalsIgnoreCase(" - Select Camp - ")){
+            if (!StringUtils.isNull(campName) && campName.equalsIgnoreCase(" - Select Camp - ")) {
                 return campName;
-            }else{
-                if (!StringUtils.isNull(campName)){
-                    return campName + " ("+campID+")";
-                }else{
+            } else {
+                if (!StringUtils.isNull(campName)) {
+                    return campName + " (" + campID + ")";
+                } else {
                     return campID;
                 }
 

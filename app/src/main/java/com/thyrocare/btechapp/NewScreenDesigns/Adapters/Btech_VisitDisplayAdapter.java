@@ -99,6 +99,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     int hr = 0;
     int minnew = 0;
     VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new;
+    ConnectionDetector cd;
     private HomeScreenActivity homeScreenActivity;
     private LayoutInflater layoutInflater;
     private ArrayList<OrderVisitDetailsModel> orderVisitDetailsModelsArr;
@@ -123,7 +124,6 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     private Date strDate3;
     private Global globalClass;
     private boolean isCancelRequesGenereted = false;
-    ConnectionDetector cd;
 
 
     public Btech_VisitDisplayAdapter(VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new, Activity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels, int orderPosition) {
@@ -359,20 +359,20 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                                     }
                                 }
                             } else {
-                                if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(0).getAllOrderdetails().get(0).IsPEDSATCPhlebo()) && orderVisitDetailsModelsArr.get(0).getAllOrderdetails().get(0).IsPEDSATCPhlebo()){
-                                      if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isPPE()) {
-                                            final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
-                                            builder1.setMessage(ConstantsMessages.EnsureToWearPPE).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    PerformStartFunction(pos, holder);
-                                                }
-                                            });
-                                            builder1.show();
-                                        } else {
-                                            PerformStartFunction(pos, holder);
-                                        }
-                                }else{
+                                if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(0).getAllOrderdetails().get(0).IsPEDSATCPhlebo()) && orderVisitDetailsModelsArr.get(0).getAllOrderdetails().get(0).IsPEDSATCPhlebo()) {
+                                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isPPE()) {
+                                        final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+                                        builder1.setMessage(ConstantsMessages.EnsureToWearPPE).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                PerformStartFunction(pos, holder);
+                                            }
+                                        });
+                                        builder1.show();
+                                    } else {
+                                        PerformStartFunction(pos, holder);
+                                    }
+                                } else {
                                     Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
                                 }
                             }

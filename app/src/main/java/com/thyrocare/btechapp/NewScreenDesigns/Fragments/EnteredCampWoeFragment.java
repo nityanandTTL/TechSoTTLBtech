@@ -64,7 +64,7 @@ import static android.app.Activity.RESULT_OK;
 public class EnteredCampWoeFragment extends Fragment {
 
     private TextView tv_date;
-    private ImageView img_dateIcon,img_search;
+    private ImageView img_dateIcon, img_search;
     private EditText edt_Search;
     private RecyclerView recycle_CampWOEMIS;
     private Activity mActivity;
@@ -99,7 +99,7 @@ public class EnteredCampWoeFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_entered_camp_woe, container, false);
 
-        strDate = DateUtil.getDateFromLong(System.currentTimeMillis(),"yyyy-MM-dd");
+        strDate = DateUtil.getDateFromLong(System.currentTimeMillis(), "yyyy-MM-dd");
         initView(v);
         initData();
         initListener();
@@ -120,10 +120,10 @@ public class EnteredCampWoeFragment extends Fragment {
     }
 
     private void initData() {
-        if (cd.isConnectingToInternet()){
-            tv_date.setText(DateUtil.getDateFromLong(System.currentTimeMillis(),"dd-MM-yyyy"));
+        if (cd.isConnectingToInternet()) {
+            tv_date.setText(DateUtil.getDateFromLong(System.currentTimeMillis(), "dd-MM-yyyy"));
             CallCampWOEMisAPI();
-        }else{
+        } else {
             globalclass.showCustomToast(mActivity, ConstantsMessages.CHECK_INTERNET_CONN);
         }
     }
@@ -138,7 +138,7 @@ public class EnteredCampWoeFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (campWOE_mis_adpter != null){
+                if (campWOE_mis_adpter != null) {
                     campWOE_mis_adpter.filterData(s.toString().trim());
                 }
 
@@ -153,12 +153,12 @@ public class EnteredCampWoeFragment extends Fragment {
         img_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!StringUtils.isNull(edt_Search.getText().toString().trim())){
-                    if (campWOE_mis_adpter != null){
+                if (!StringUtils.isNull(edt_Search.getText().toString().trim())) {
+                    if (campWOE_mis_adpter != null) {
                         campWOE_mis_adpter.filterData(edt_Search.getText().toString().trim());
                     }
-                }else{
-                    globalclass.showCustomToast(mActivity,"Please enter something in search box to start searching");
+                } else {
+                    globalclass.showCustomToast(mActivity, "Please enter something in search box to start searching");
                 }
 
             }
@@ -190,12 +190,12 @@ public class EnteredCampWoeFragment extends Fragment {
             @Override
             public void onDateSelected(String strSelectedDate, Date SelectedDate) {
 
-                strDate = DateUtil.getDateFromLong(SelectedDate.getTime(),"yyyy-MM-dd");
+                strDate = DateUtil.getDateFromLong(SelectedDate.getTime(), "yyyy-MM-dd");
                 tv_date.setText(strSelectedDate);
-                if (cd.isConnectingToInternet()){
+                if (cd.isConnectingToInternet()) {
                     CallCampWOEMisAPI();
-                }else{
-                    globalclass.showCustomToast(mActivity,ConstantsMessages.CHECK_INTERNET_CONN);
+                } else {
+                    globalclass.showCustomToast(mActivity, ConstantsMessages.CHECK_INTERNET_CONN);
                 }
             }
         });
@@ -210,17 +210,18 @@ public class EnteredCampWoeFragment extends Fragment {
         campWoeMISReuestModel.setSdate(strDate);
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<CampModuleMISResponseModel> responseCall = apiInterface.CallGetCampWOEMISAPI(campWoeMISReuestModel);
-        globalclass.showProgressDialog(mActivity,"Please wait..");
+        globalclass.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<CampModuleMISResponseModel>() {
             @Override
             public void onResponse(Call<CampModuleMISResponseModel> call, Response<CampModuleMISResponseModel> response) {
                 globalclass.hideProgressDialog(mActivity);
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     onCampWOEMisAPIresponseReceived(response.body());
-                }else{
+                } else {
                     Toast.makeText(mActivity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<CampModuleMISResponseModel> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
@@ -229,15 +230,15 @@ public class EnteredCampWoeFragment extends Fragment {
     }
 
     private void onCampWOEMisAPIresponseReceived(CampModuleMISResponseModel responseModel) {
-        if (responseModel.getResponseID() != null && responseModel.getResponseID().equalsIgnoreCase("RES0000")){
-            if (responseModel.getOutput() != null && responseModel.getOutput().size() > 0){
+        if (responseModel.getResponseID() != null && responseModel.getResponseID().equalsIgnoreCase("RES0000")) {
+            if (responseModel.getOutput() != null && responseModel.getOutput().size() > 0) {
 
                 DisplayData(responseModel.getOutput());
-            }else{
+            } else {
                 tv_noDatafound.setVisibility(View.VISIBLE);
                 recycle_CampWOEMIS.setVisibility(View.GONE);
             }
-        }else{
+        } else {
             tv_noDatafound.setVisibility(View.VISIBLE);
             recycle_CampWOEMIS.setVisibility(View.GONE);
         }
@@ -245,13 +246,13 @@ public class EnteredCampWoeFragment extends Fragment {
 
     private void DisplayData(ArrayList<CampModuleMISResponseModel.Output> CampMisAryList) {
 
-        campWOE_mis_adpter = new CampWOE_MIS_Adpter(mActivity,CampMisAryList);
+        campWOE_mis_adpter = new CampWOE_MIS_Adpter(mActivity, CampMisAryList);
         campWOE_mis_adpter.setOnItemClickListener(new CampWOE_MIS_Adpter.OnClickListeners() {
             @Override
             public void onFilter(boolean isDataavailable) {
-                if (!isDataavailable){
+                if (!isDataavailable) {
                     tv_noDatafound.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     tv_noDatafound.setVisibility(View.GONE);
                 }
             }
@@ -260,11 +261,11 @@ public class EnteredCampWoeFragment extends Fragment {
             public void onUploadVialImageClicked(CampModuleMISResponseModel.Output output) {
                 SelectedPatientModelforVialImageUpload = output;
 
-                if (!StringUtils.isNull(SelectedPatientModelforVialImageUpload.getPatientID())){
+                if (!StringUtils.isNull(SelectedPatientModelforVialImageUpload.getPatientID())) {
                     androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder;
                     alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(mActivity);
                     alertDialogBuilder
-                            .setMessage("Do you want to uploads vial Image for "+SelectedPatientModelforVialImageUpload.getName()+" ?")
+                            .setMessage("Do you want to uploads vial Image for " + SelectedPatientModelforVialImageUpload.getName() + " ?")
                             .setCancelable(true)
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
@@ -272,14 +273,14 @@ public class EnteredCampWoeFragment extends Fragment {
                                     AskPermissionAndOpenCamera();
                                 }
                             }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
                     androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else{
+                } else {
                     globalclass.showCustomToast(mActivity, "You cannot upload Vail Image for selected Patient.");
                 }
 
@@ -343,7 +344,7 @@ public class EnteredCampWoeFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-         if (requestCode == Camera.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+        if (requestCode == Camera.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             String imageurl = "";
             try {
                 imageurl = camera.getCameraBitmapPath();
@@ -361,7 +362,7 @@ public class EnteredCampWoeFragment extends Fragment {
 
     private void ShowImageInDialog() {
         try {
-           openDialog = new Dialog(mActivity);
+            openDialog = new Dialog(mActivity);
             openDialog.setContentView(R.layout.vial_image_display_dialog);
             int width = (int) (mActivity.getResources().getDisplayMetrics().widthPixels * 0.99);
             int height = (int) (mActivity.getResources().getDisplayMetrics().heightPixels * 0.90);
@@ -383,10 +384,10 @@ public class EnteredCampWoeFragment extends Fragment {
             btn_Upload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (cd.isConnectingToInternet()){
-                        CallSubmitBenVailPhotoAPI(SelectedPatientModelforVialImageUpload.getUniqueId(),SelectedPatientModelforVialImageUpload.getPatientID(),SelectedPatientModelforVialImageUpload.getCampID());
-                    }else{
-                        globalclass.showCustomToast(mActivity,ConstantsMessages.CHECK_INTERNET_CONN);
+                    if (cd.isConnectingToInternet()) {
+                        CallSubmitBenVailPhotoAPI(SelectedPatientModelforVialImageUpload.getUniqueId(), SelectedPatientModelforVialImageUpload.getPatientID(), SelectedPatientModelforVialImageUpload.getCampID());
+                    } else {
+                        globalclass.showCustomToast(mActivity, ConstantsMessages.CHECK_INTERNET_CONN);
                     }
                 }
             });
@@ -398,10 +399,10 @@ public class EnteredCampWoeFragment extends Fragment {
                 }
             });
 
-            globalclass.DisplayDeviceImages(mActivity,VialPhotoFile.getAbsolutePath(),imageview);
+            globalclass.DisplayDeviceImages(mActivity, VialPhotoFile.getAbsolutePath(), imageview);
 
 
-            if (!mActivity.isFinishing() && openDialog != null ){
+            if (!mActivity.isFinishing() && openDialog != null) {
                 openDialog.show();
             }
 
@@ -419,15 +420,15 @@ public class EnteredCampWoeFragment extends Fragment {
         RequestBody requestcampID = RequestBody.create(MediaType.parse("multipart/form-data"), campID);
 
         MultipartBody.Part ImageFileMultiBody = null;
-        if(VialPhotoFile != null &&VialPhotoFile.exists()){
-            MessageLogger.info(mActivity,"FileName "+ VialPhotoFile.getName());
+        if (VialPhotoFile != null && VialPhotoFile.exists()) {
+            MessageLogger.info(mActivity, "FileName " + VialPhotoFile.getName());
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), VialPhotoFile);
             ImageFileMultiBody = MultipartBody.Part.createFormData("vailImage", VialPhotoFile.getName(), requestFile);
         }
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
-        Call<CommonResponseModel1> responseCall = apiInterface.CalluploadCAmpWOEPatientVailPhotoAPI(ImageFileMultiBody,requestuniqueID,requestwoepatientID,requestcampID);
-        globalclass.showProgressDialog(mActivity,"Please wait",false);
+        Call<CommonResponseModel1> responseCall = apiInterface.CalluploadCAmpWOEPatientVailPhotoAPI(ImageFileMultiBody, requestuniqueID, requestwoepatientID, requestcampID);
+        globalclass.showProgressDialog(mActivity, "Please wait", false);
 
         responseCall.enqueue(new Callback<CommonResponseModel1>() {
             @Override
@@ -444,7 +445,7 @@ public class EnteredCampWoeFragment extends Fragment {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.dismiss();
                                     try {
-                                        if (!mActivity.isFinishing() && openDialog != null && openDialog.isShowing()){
+                                        if (!mActivity.isFinishing() && openDialog != null && openDialog.isShowing()) {
                                             openDialog.dismiss();
                                         }
                                         CallCampWOEMisAPI();
@@ -457,14 +458,14 @@ public class EnteredCampWoeFragment extends Fragment {
                     androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
                 } else {
-                    globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.",Toast.LENGTH_LONG);
+                    globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.", Toast.LENGTH_LONG);
                 }
             }
 
             @Override
             public void onFailure(Call<CommonResponseModel1> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
-                globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.",Toast.LENGTH_LONG);
+                globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.", Toast.LENGTH_LONG);
             }
         });
     }
@@ -473,7 +474,7 @@ public class EnteredCampWoeFragment extends Fragment {
     public void onStop() {
         super.onStop();
         try {
-            if (camera != null){
+            if (camera != null) {
                 camera.deleteImage();
             }
         } catch (Exception e) {

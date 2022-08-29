@@ -9,15 +9,6 @@ import android.os.Parcelable;
 
 public class DepositRegisterModel implements Parcelable {
 
-    String Date;
-    Integer Amount;
-    String Remarks;
-
-    protected DepositRegisterModel(Parcel in) {
-        Date = in.readString();
-        Remarks = in.readString();
-    }
-
     public static final Creator<DepositRegisterModel> CREATOR = new Creator<DepositRegisterModel>() {
         @Override
         public DepositRegisterModel createFromParcel(Parcel in) {
@@ -29,6 +20,14 @@ public class DepositRegisterModel implements Parcelable {
             return new DepositRegisterModel[size];
         }
     };
+    String Date;
+    Integer Amount;
+    String Remarks;
+
+    protected DepositRegisterModel(Parcel in) {
+        Date = in.readString();
+        Remarks = in.readString();
+    }
 
     @Override
     public String toString() {

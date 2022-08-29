@@ -37,13 +37,13 @@ public class OrderPickUpActivity extends AppCompatActivity implements PickupOrde
 
     RecyclerView recycler_pickup;
     AppPreferenceManager appPreferenceManager;
-    private ConnectionDetector cd;
     String Btechid;
     Global globalclass;
     TextView tv_noDatafound;
     TextView tv_toolbar;
     ImageView iv_back, iv_home;
     PickupOrderAdapter pickupOrderAdapter;
+    private ConnectionDetector cd;
 
 //    SwipeableButton swipeableButton;
 

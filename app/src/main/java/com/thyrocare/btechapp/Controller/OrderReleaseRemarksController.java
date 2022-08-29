@@ -192,11 +192,11 @@ public class OrderReleaseRemarksController {
             GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<ArrayList<GetPEBtechSlotResponseModel>> smsResponeModelCall;
 //            if (BundleConstants.isPEPartner && !BundleConstants.PEDSAOrder) {
-            String  str = "---------------------------"+appPreferenceManager.isPEPartner()+"-----------------"+appPreferenceManager.PEDSAOrder();
+            String str = "---------------------------" + appPreferenceManager.isPEPartner() + "-----------------" + appPreferenceManager.PEDSAOrder();
             System.out.println(str);
             if (appPreferenceManager.isPEPartner() && !appPreferenceManager.PEDSAOrder()) {
                 //Mith
-                smsResponeModelCall = getAPIInterface.getPEbtechSlot(token, pincode, date,size);
+                smsResponeModelCall = getAPIInterface.getPEbtechSlot(token, pincode, date, size);
 //                smsResponeModelCall = getAPIInterface.getPEbtechSlot(token, pincode, date);
             } else {
                 smsResponeModelCall = getAPIInterface.getbtechSlot(token, pincode, date);
@@ -210,9 +210,9 @@ public class OrderReleaseRemarksController {
                         if (response.isSuccessful() && response.body() != null) {
                             ArrayList<GetPEBtechSlotResponseModel> slotResponseModelArrayList = new ArrayList<>();
                             slotResponseModelArrayList = response.body();
-                            if (appPreferenceManager.isPEPartner() && !appPreferenceManager.PEDSAOrder()){
+                            if (appPreferenceManager.isPEPartner() && !appPreferenceManager.PEDSAOrder()) {
                                 rescheduleSlotActivity.PEslotresponse(slotResponseModelArrayList);
-                            }else{
+                            } else {
                                 rescheduleSlotActivity.TCslotResponse(slotResponseModelArrayList);
                             }
                         } else {
@@ -337,7 +337,7 @@ public class OrderReleaseRemarksController {
                         if (response.isSuccessful() && response.body() != null) {
                             PEBenWiseApptSlotResponseModel peBenWiseApptSlotResponseModel = response.body();
                             if (peBenWiseApptSlotResponseModel.getRespId().equalsIgnoreCase(ConstantsMessages.RES0000)) {
-                                ArrayList<GetPEBtechSlotResponseModel>  slotResponseModelArrayList = new ArrayList<>();
+                                ArrayList<GetPEBtechSlotResponseModel> slotResponseModelArrayList = new ArrayList<>();
                                 int minsToAdd = 30;
                                 String newTime = "";
                                 String newTime1 = "";

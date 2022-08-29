@@ -10,9 +10,9 @@
 
 
     <LinearLayout
-        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginBottom="@dimen/_10sdp"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/_10sdp">
@@ -45,12 +45,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="@dimen/_5sdp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:gravity="center"
-            android:theme="@style/SwitchTheme"
-            android:textColor="@color/green_1" />
+            android:padding="@dimen/_5sdp"
+            android:textColor="@color/green_1"
+            android:theme="@style/SwitchTheme" />
 
     </LinearLayout>
 
@@ -71,7 +71,6 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:text="NO" />
-
 
 
         <Button
@@ -127,8 +126,8 @@
                 android:text="Select Slots:"
                 android:textColor="@color/colorSecondaryDark"
                 android:textSize="16sp"
-                android:visibility="gone"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <GridView
                 android:id="@+id/gv_slots"
@@ -143,7 +142,7 @@
                 android:horizontalSpacing="10dp"
                 android:numColumns="auto_fit"
                 android:stretchMode="columnWidth"
-                android:verticalSpacing="10dp"/>
+                android:verticalSpacing="10dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -151,8 +150,8 @@
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:visibility="gone"
-        android:background="@color/grey_1" />
+        android:background="@color/grey_1"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"

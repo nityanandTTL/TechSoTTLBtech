@@ -5,7 +5,7 @@ package com.thyrocare.btechapp.models.api.request;
  */
 
 public class CampStartedRequestModel {
-    int BtechId,CampId,Type;
+    int BtechId, CampId, Type;
 
     public int getBtechId() {
         return BtechId;

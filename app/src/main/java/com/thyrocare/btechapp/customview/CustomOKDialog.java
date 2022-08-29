@@ -24,7 +24,7 @@ public class CustomOKDialog extends Dialog implements View.OnClickListener {
     public EditText edt_remark;
     private CustomOkDialogOkButtonOnClickedDelegate customOkDialogOkButtonOnClickedDelegate;
 
-    public CustomOKDialog(Context context,CustomOkDialogOkButtonOnClickedDelegate customOkDialogOkButtonOnClickedDelegate) {
+    public CustomOKDialog(Context context, CustomOkDialogOkButtonOnClickedDelegate customOkDialogOkButtonOnClickedDelegate) {
         super(context);
         this.customOkDialogOkButtonOnClickedDelegate = customOkDialogOkButtonOnClickedDelegate;
     }
@@ -38,14 +38,14 @@ public class CustomOKDialog extends Dialog implements View.OnClickListener {
     }
 
     private void setListners() {
-         btn_no.setOnClickListener(this);
+        btn_no.setOnClickListener(this);
         btn_yes.setOnClickListener(this);
 
     }
 
     private void initUI() {
         btn_yes = (Button) findViewById(R.id.btn_yes);
-           btn_no = (Button) findViewById(R.id.btn_no);
+        btn_no = (Button) findViewById(R.id.btn_no);
         tv_title = (TextView) findViewById(R.id.tv_title);
         edt_remark = (EditText) findViewById(R.id.edt_remark);
     }
@@ -56,8 +56,7 @@ public class CustomOKDialog extends Dialog implements View.OnClickListener {
         if (v.getId() == R.id.btn_yes) {
             customOkDialogOkButtonOnClickedDelegate.onClicked(edt_remark.getText().toString());
             dismiss();
-        }
-        else if (v.getId() == R.id.btn_no) {
+        } else if (v.getId() == R.id.btn_no) {
             dismiss();
         }
     }

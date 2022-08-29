@@ -3,7 +3,9 @@ package com.thyrocare.btechapp.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Paint;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.GetAvailableStockController;
 import com.thyrocare.btechapp.R;
+
 import application.ApplicationController;
+
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.models.api.request.StockAvailabilityRequestModel;
 import com.thyrocare.btechapp.models.api.response.MainMaterialModel;
@@ -25,19 +30,20 @@ import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class StockAvailabilityActivity extends AppCompatActivity {
     Gson gson;
+    AppPreferenceManager appPreferenceManager;
+    String dac_code;
+    int oStock = 0, uStock = 0, cStock = 0;
     private TextView tv_srno, tv_materialName, tv_opStock, tv_clStock, tv_noResult;
     private TableLayout tablelayout;
     private TableRow tableRow;
     private Activity mActivity;
     private ConnectionDetector cd;
     private LinearLayout ll_tableView;
-    AppPreferenceManager appPreferenceManager;
-    String dac_code;
-    int oStock = 0, uStock = 0, cStock = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +55,14 @@ public class StockAvailabilityActivity extends AppCompatActivity {
         initUI();
         appPreferenceManager = new AppPreferenceManager(mActivity);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         if (cd.isConnectingToInternet())
             FetchAvailableStock();
         else
-            TastyToast.makeText(mActivity, "Oops! Internet connection is not available", TastyToast.LENGTH_SHORT,TastyToast.ERROR);
+            TastyToast.makeText(mActivity, "Oops! Internet connection is not available", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
     }
 
     private void initUI() {
@@ -93,12 +100,12 @@ public class StockAvailabilityActivity extends AppCompatActivity {
             } else {
                 ll_tableView.setVisibility(View.GONE);
                 tv_noResult.setVisibility(View.VISIBLE);
-                TastyToast.makeText(mActivity, mainMaterialModel.getResponse(), TastyToast.LENGTH_SHORT,TastyToast.ERROR);
+                TastyToast.makeText(mActivity, mainMaterialModel.getResponse(), TastyToast.LENGTH_SHORT, TastyToast.ERROR);
             }
         } else {
             ll_tableView.setVisibility(View.GONE);
             tv_noResult.setVisibility(View.VISIBLE);
-            TastyToast.makeText(mActivity,"Something went wrong. Please try after sometime", TastyToast.LENGTH_SHORT,TastyToast.ERROR);
+            TastyToast.makeText(mActivity, "Something went wrong. Please try after sometime", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
         }
     }
 
@@ -126,7 +133,7 @@ public class StockAvailabilityActivity extends AppCompatActivity {
             uStock = (int) Double.parseDouble(materialDetailsModelArrayList.get(i).getUsedStock());
 
             cStock = oStock - uStock;
-            tv_clStock.setText(""+cStock);
+            tv_clStock.setText("" + cStock);
 
             tv_materialName.setOnClickListener(new View.OnClickListener() {
                 @Override

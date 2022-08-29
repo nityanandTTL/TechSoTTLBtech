@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Venupunture_Temporary_ImageModel implements Serializable {
 
-    String VenupuntureBase64string ;
+    String VenupuntureBase64string;
     int BenID;
     String Benname;
     String BenGender;

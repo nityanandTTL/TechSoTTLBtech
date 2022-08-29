@@ -41,6 +41,7 @@ public class OrderReleaseAdapter extends RecyclerView.Adapter<OrderReleaseAdapte
         this.remarksArray = arrayList;
         flag = 1;
     }
+
     public OrderReleaseAdapter(VisitOrdersDisplayFragment_new activity, ArrayList<GetRemarksResponseModel> arrayList) {
         this.visitOrdersDisplayFragment_new = activity;
         this.mContext = activity;
@@ -70,20 +71,20 @@ public class OrderReleaseAdapter extends RecyclerView.Adapter<OrderReleaseAdapte
                 }
             });
         } else if (flag == 2) {*/
-            holder.tv_text.setText(remarksArray.get(position).getRemarks());
+        holder.tv_text.setText(remarksArray.get(position).getRemarks());
 
-            holder.ll_main.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (flag == 1){
-                        startAndArriveActivity.onRemarksClick(remarksArray.get(position),position);
-                    }else{
-                        visitOrdersDisplayFragment_new.onRemarksClick(remarksArray.get(position),position);
-                    }
-
+        holder.ll_main.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (flag == 1) {
+                    startAndArriveActivity.onRemarksClick(remarksArray.get(position), position);
+                } else {
+                    visitOrdersDisplayFragment_new.onRemarksClick(remarksArray.get(position), position);
                 }
-            });
-        }
+
+            }
+        });
+    }
 //    }
 
     @Override

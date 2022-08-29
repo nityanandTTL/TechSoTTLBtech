@@ -2,9 +2,11 @@ package com.thyrocare.btechapp.NewScreenDesigns.Fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +27,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CHECK_INTERNET_CONN;
-
 
 
 /**
@@ -78,7 +79,7 @@ public class FAQ_Fragment extends Fragment {
         if (cd.isConnectingToInternet()) {
             getFAQData();
         } else {
-            globalClass.showCustomToast(activity,CHECK_INTERNET_CONN, Toast.LENGTH_SHORT);
+            globalClass.showCustomToast(activity, CHECK_INTERNET_CONN, Toast.LENGTH_SHORT);
         }
     }
 

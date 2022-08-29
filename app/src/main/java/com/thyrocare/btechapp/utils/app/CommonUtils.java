@@ -67,9 +67,9 @@ public class CommonUtils {
 	     return apiResponseModel;
 	   }*/
 
+    public static String TSP_NBT_Str = "tsp_nbt_list";
     private static CommonUtils instance = null;
     private MessageModel messageModel;
-    public static String TSP_NBT_Str = "tsp_nbt_list";
 
     protected CommonUtils() {
         // Exists only to defeat instantiation.
@@ -139,41 +139,13 @@ public class CommonUtils {
 
     public static void HideViewIfStringisEmpty(TextView textView, String strstring) {
 
-        if (textView != null ){
-            if (!StringUtils.isNull(strstring)){
+        if (textView != null) {
+            if (!StringUtils.isNull(strstring)) {
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(strstring);
-            }else{
+            } else {
                 textView.setVisibility(View.GONE);
             }
-        }
-    }
-
-    public String getErrorJson(String msg) {
-        Gson gson = new Gson();
-        MessageModel errorModel = new MessageModel();
-
-        messageModel = new MessageModel();
-        MessageModel.FieldError f = new MessageModel.FieldError();
-        f.setField("InterNet");
-        f.setMessage(msg);
-
-        MessageModel.FieldError[] messages = new MessageModel.FieldError[]{f};
-
-        errorModel.setType("ERROR");
-        errorModel.setStatusCode(400);
-        errorModel.setMessages(messages);
-        Logger.debug(gson.toJson(errorModel));
-
-        return gson.toJson(errorModel);
-    }
-
-    public void openAppOnMarket(Activity activity) {
-        final String appPackageName = activity.getPackageName();
-        try {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-        } catch (android.content.ActivityNotFoundException anfe) {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
         }
     }
 
@@ -273,8 +245,8 @@ public class CommonUtils {
     public static void CallLogOutFromDevice(Context mContext, Activity mActivity, AppPreferenceManager appPreferenceManager, DhbDao dhbDao) {
         try {
             TastyToast.makeText(mContext, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
-             new LogUserActivityTagging(mActivity, LOGOUT,"");
-                    appPreferenceManager.clearAllPreferences();
+            new LogUserActivityTagging(mActivity, LOGOUT, "");
+            appPreferenceManager.clearAllPreferences();
             dhbDao.deleteTablesonLogout();
             Intent homeIntent = new Intent(Intent.ACTION_MAIN);
             homeIntent.addCategory(Intent.CATEGORY_HOME);
@@ -295,7 +267,7 @@ public class CommonUtils {
 
     }
 
-    public static int getNotificationIcon(){
+    public static int getNotificationIcon() {
 
         return R.mipmap.app_nlogo;
     }
@@ -318,7 +290,6 @@ public class CommonUtils {
 
         return cnt;
     }
-
 
     public static boolean isValidForEditing(String tests) {
 
@@ -365,40 +336,6 @@ public class CommonUtils {
         latLong.setmLongitude(longi);
         return latLong;
     }
-
-
-
-    /*public static String getIPAddress(Activity activity) {
-        WifiManager wm = (WifiManager) activity.getApplicationContext().getSystemService(WIFI_SERVICE);
-        return wm != null && wm.getConnectionInfo() != null ? Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress()) : "";
-    }*/
-
-    /*public static String getMACAddress() {
-        try {
-            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for (NetworkInterface nif : all) {
-                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
-
-                byte[] macBytes = nif.getHardwareAddress();
-                if (macBytes == null) {
-                    return "";
-                }
-
-                StringBuilder res1 = new StringBuilder();
-                for (byte b : macBytes) {
-                    res1.append(String.format("%02X:",b));
-                }
-
-                if (res1.length() > 0) {
-                    res1.deleteCharAt(res1.length() - 1);
-                }
-                return res1.toString();
-            }
-        } catch (Exception ex) {
-            //handle exception
-        }
-        return "";
-    }*/
 
     public static String getMACAddress() {
         try {
@@ -456,6 +393,39 @@ public class CommonUtils {
     }
 
 
+
+    /*public static String getIPAddress(Activity activity) {
+        WifiManager wm = (WifiManager) activity.getApplicationContext().getSystemService(WIFI_SERVICE);
+        return wm != null && wm.getConnectionInfo() != null ? Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress()) : "";
+    }*/
+
+    /*public static String getMACAddress() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null) {
+                    return "";
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(String.format("%02X:",b));
+                }
+
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
+            }
+        } catch (Exception ex) {
+            //handle exception
+        }
+        return "";
+    }*/
+
     public static ArrayList<SevenDaysModel> getSevenDays() {
         SimpleDateFormat sdfday = new SimpleDateFormat("EEE");
         SimpleDateFormat sdfdate = new SimpleDateFormat("dd");
@@ -478,5 +448,33 @@ public class CommonUtils {
             arrayList.add(sevenDaysModel);
         }
         return arrayList;
+    }
+
+    public String getErrorJson(String msg) {
+        Gson gson = new Gson();
+        MessageModel errorModel = new MessageModel();
+
+        messageModel = new MessageModel();
+        MessageModel.FieldError f = new MessageModel.FieldError();
+        f.setField("InterNet");
+        f.setMessage(msg);
+
+        MessageModel.FieldError[] messages = new MessageModel.FieldError[]{f};
+
+        errorModel.setType("ERROR");
+        errorModel.setStatusCode(400);
+        errorModel.setMessages(messages);
+        Logger.debug(gson.toJson(errorModel));
+
+        return gson.toJson(errorModel);
+    }
+
+    public void openAppOnMarket(Activity activity) {
+        final String appPackageName = activity.getPackageName();
+        try {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
     }
 }

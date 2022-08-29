@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class TestSampleTypeModel implements Parcelable {
+    public static final Creator<TestSampleTypeModel> CREATOR = new Creator<TestSampleTypeModel>() {
+        @Override
+        public TestSampleTypeModel createFromParcel(Parcel in) {
+            return new TestSampleTypeModel(in);
+        }
+
+        @Override
+        public TestSampleTypeModel[] newArray(int size) {
+            return new TestSampleTypeModel[size];
+        }
+    };
     private String id;
     private String sampleType;
 
@@ -30,18 +41,6 @@ public class TestSampleTypeModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<TestSampleTypeModel> CREATOR = new Creator<TestSampleTypeModel>() {
-        @Override
-        public TestSampleTypeModel createFromParcel(Parcel in) {
-            return new TestSampleTypeModel(in);
-        }
-
-        @Override
-        public TestSampleTypeModel[] newArray(int size) {
-            return new TestSampleTypeModel[size];
-        }
-    };
 
     public String getId() {
         return id;

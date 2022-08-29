@@ -19,8 +19,8 @@
         <item
             android:id="@+id/nav_gqc"
             android:icon="@drawable/ic_gqc"
-            android:visible="false"
-            android:title="GQC WOE"/>
+            android:title="GQC WOE"
+            android:visible="false" />
 
         <item
             android:id="@+id/nav_hcw"

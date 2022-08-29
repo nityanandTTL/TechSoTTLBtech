@@ -17,15 +17,17 @@ public class OnPinchListener extends ScaleGestureDetector.SimpleOnScaleGestureLi
     private ImageView srcImageView = null;
     // Related appication context.
     private Context context = null;
+
     // The default constructor pass context and imageview object.
     public OnPinchListener(Context context, ImageView srcImageView) {
         this.context = context;
         this.srcImageView = srcImageView;
     }
+
     // When pinch zoom gesture occurred.
     @Override
     public boolean onScale(ScaleGestureDetector detector) {
-        if(detector!=null) {
+        if (detector != null) {
             float scaleFactor = detector.getScaleFactor();
             if (srcImageView != null) {
                 // Scale the image with pinch zoom value.
@@ -37,15 +39,14 @@ public class OnPinchListener extends ScaleGestureDetector.SimpleOnScaleGestureLi
                     Log.e(TAG_PINCH_LISTENER, "Both context and srcImageView is null.");
                 }
             }
-        }else
-        {
+        } else {
             Log.e(TAG_PINCH_LISTENER, "Pinch listener onScale detector parameter is null.");
         }
         return true;
     }
+
     /* This method is used to scale the image when user pinch zoom it. */
-    private void scaleImage(float xScale, float yScale)
-    {
+    private void scaleImage(float xScale, float yScale) {
         // Get source image bitmap object.
         BitmapDrawable srcBitmapDrawable = (BitmapDrawable) srcImageView.getDrawable();
         Bitmap srcBitmap = srcBitmapDrawable.getBitmap();
@@ -55,7 +56,7 @@ public class OnPinchListener extends ScaleGestureDetector.SimpleOnScaleGestureLi
         // Get source image config object.
         Bitmap.Config srcImageConfig = srcBitmap.getConfig();
         // Create a new bitmap which has scaled width and height value from source bitmap.
-        Bitmap scaleBitmap = Bitmap.createBitmap((int)(srcImageWith * xScale), (int)(srcImageHeight * yScale), srcImageConfig);
+        Bitmap scaleBitmap = Bitmap.createBitmap((int) (srcImageWith * xScale), (int) (srcImageHeight * yScale), srcImageConfig);
         // Create the scaled canvas.
         Canvas scaleCanvas = new Canvas(scaleBitmap);
         // Create the Matrix object which will scale the source bitmap to target.

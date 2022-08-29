@@ -59,6 +59,8 @@ import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListener {
     private static final String TAG = ConfirmOrderPassDialog.class.getSimpleName();
+    VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new;
+    Activity activity;
     private Dialog d;
     private Button btn_yes, btn_no, btn_call, btn_send;
     private TextView tv_title, tv_cancel;
@@ -74,14 +76,12 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
     private AppPreferenceManager appPreferenceManager;
     private String Pincode;
     private EditText edt_otp;
-    VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new;
     private LinearLayout validateOtp;
     private Global global;
-    Activity activity;
 
     public ConfirmOrderPassDialog(VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new, refreshDelegate RefreshDelegate, String pincode, OrderVisitDetailsModel orderVisitDetailsModel) {
         super(visitOrdersDisplayFragment_new);
-        this.activity= visitOrdersDisplayFragment_new;
+        this.activity = visitOrdersDisplayFragment_new;
         global = new Global(activity);
         this.RefreshDelegate = RefreshDelegate;
         this.orderVisitDetailsModel = orderVisitDetailsModel;

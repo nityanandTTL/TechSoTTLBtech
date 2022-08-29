@@ -68,24 +68,22 @@ import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 public class BtechwithHub_HubMasterBarcodeScanFragment extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG_FRAGMENT = BtechwithHub_HubMasterBarcodeScanFragment.class.getSimpleName();
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
+    AppPreferenceManager appPreferenceManager;
     private LinearLayout ll_hub_display_footer, ll_scan_master_barcode, ll_scan_vial_barcode;
     private Activity activity;
     private TextView tv_collection_sample;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
-
     private ArrayList<BtechwithHub_BarcodeDataModel> barcodeModels = new ArrayList<>();
     private BtechwithHub_HubScanBarcodeListAdapter hubScanBarcodeListAdapter;
-
     private String master_scanned_barcode = "";
     private boolean isMasterBarcode;
     private IntentIntegrator intentIntegrator;
     private Button btn_receive;
     private boolean isCentrifuged = false;
     private Global global;
-    TextView tv_toolbar;
-    ImageView iv_back, iv_home;
-    AppPreferenceManager appPreferenceManager;
 
     public BtechwithHub_HubMasterBarcodeScanFragment() {
     }

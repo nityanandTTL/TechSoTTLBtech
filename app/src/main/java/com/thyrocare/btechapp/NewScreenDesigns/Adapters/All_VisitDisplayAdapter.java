@@ -25,12 +25,12 @@ import java.util.ArrayList;
 public class
 All_VisitDisplayAdapter extends RecyclerView.Adapter<All_VisitDisplayAdapter.MyViewHolder> {
     private static final String TAG = All_VisitDisplayAdapter.class.getSimpleName();
-    private Activity activity;
     private final String current_date;
     GetOrderDetailsResponseModel orderDetailsResponseModel;
+    B2BVisitOrdersDisplayFragment mB2BVisitOrdersDisplayFragment;
+    private Activity activity;
     private ArrayList<GetOrderDetailsResponseModel.GetVisitcountDTO> orderVisitDetailsModelsArr;
     private AppPreferenceManager appPreferenceManager;
-    B2BVisitOrdersDisplayFragment mB2BVisitOrdersDisplayFragment;
 
     public All_VisitDisplayAdapter(B2BVisitOrdersDisplayFragment visitOrdersDisplayFragment_new, GetOrderDetailsResponseModel orderDetailsResponseModels, Activity activity) {
         this.activity = activity;
@@ -61,7 +61,7 @@ All_VisitDisplayAdapter extends RecyclerView.Adapter<All_VisitDisplayAdapter.MyV
             holder.txtStatus.setVisibility(View.GONE);
         }
 
-        holder.txtDate.setText(DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy") + " "+ (!InputUtils.isNull(orderDetailsResponseModel.getGetVisitcount().get(pos).getTimeSlot())?orderDetailsResponseModel.getGetVisitcount().get(pos).getTimeSlot():DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "HH:mm")) );
+        holder.txtDate.setText(DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy") + " " + (!InputUtils.isNull(orderDetailsResponseModel.getGetVisitcount().get(pos).getTimeSlot()) ? orderDetailsResponseModel.getGetVisitcount().get(pos).getTimeSlot() : DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "HH:mm")));
 
         try {
             if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAppointmentDate()) && !InputUtils.isNull(orderDetailsResponseModel.getCurrentDatetime()) && DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy").equals(DateUtils.Req_Date_Req(orderDetailsResponseModel.getCurrentDatetime(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy"))) {

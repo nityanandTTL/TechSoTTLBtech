@@ -2,107 +2,109 @@
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/tr_itlcrh"
-    android:background="@color/colorOrange"
     android:layout_width="match_parent"
     android:layout_height="@dimen/_40sdp"
-    android:layout_marginRight="@dimen/_2sdp"
     android:layout_marginLeft="@dimen/_2sdp"
+    android:layout_marginRight="@dimen/_2sdp"
+    android:background="@color/colorOrange"
     android:orientation="horizontal"
     android:weightSum="5">
-    <LinearLayout
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:background="@color/white"
-        android:padding="@dimen/_2sdp"
-        android:layout_marginRight="@dimen/_1sdp"
-        android:layout_marginBottom="@dimen/_1sdp"
-        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@color/grey1"
-        android:textSize="12sp"
-        android:gravity="center"
-        android:text="Date"
-        android:textColor="@color/black" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:background="@color/white"
-        android:padding="@dimen/_2sdp"
         android:layout_marginRight="@dimen/_1sdp"
         android:layout_marginBottom="@dimen/_1sdp"
-        android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="12sp"
-        android:background="@color/grey1"
-        android:gravity="center"
-        android:text="@string/opening"
-        android:textColor="@color/black" />
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_weight="1"
         android:background="@color/white"
-        android:padding="@dimen/_2sdp"
-        android:layout_width="0dp"
-        android:layout_marginRight="@dimen/_1sdp"
-        android:layout_marginBottom="@dimen/_1sdp"
-        android:layout_height="match_parent">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/grey1"
-        android:gravity="center"
-        android:textSize="12sp"
-        android:text="Credit"
-        android:textColor="@color/black" />
-    </LinearLayout>
+        android:padding="@dimen/_2sdp">
 
-    <LinearLayout
-        android:layout_weight="1"
-        android:background="@color/white"
-        android:padding="@dimen/_2sdp"
-        android:layout_width="0dp"
-        android:layout_marginRight="@dimen/_1sdp"
-        android:layout_marginBottom="@dimen/_1sdp"
-        android:layout_height="match_parent">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/grey1"
             android:gravity="center"
-            android:textSize="12sp"
+            android:text="Date"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/_1sdp"
+        android:layout_marginBottom="@dimen/_1sdp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:padding="@dimen/_2sdp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey1"
+            android:gravity="center"
+            android:text="@string/opening"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/_1sdp"
+        android:layout_marginBottom="@dimen/_1sdp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:padding="@dimen/_2sdp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey1"
+            android:gravity="center"
+            android:text="Credit"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/_1sdp"
+        android:layout_marginBottom="@dimen/_1sdp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:padding="@dimen/_2sdp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey1"
+            android:gravity="center"
             android:text="Debit"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="12sp" />
     </LinearLayout>
 
 
-<LinearLayout
-    android:layout_weight="1"
-    android:layout_width="0dp"
-    android:background="@color/white"
-    android:padding="@dimen/_2sdp"
-    android:layout_marginBottom="@dimen/_1sdp"
-    android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/txt_5"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:textSize="12sp"
-        android:background="@color/grey1"
-        android:gravity="center"
-        android:text="@string/closing"
-        android:textColor="@color/black" />
-</LinearLayout>
+        android:layout_marginBottom="@dimen/_1sdp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:padding="@dimen/_2sdp">
 
-
+        <TextView
+            android:id="@+id/txt_5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey1"
+            android:gravity="center"
+            android:text="@string/closing"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+    </LinearLayout>
 
 
 </TableRow>

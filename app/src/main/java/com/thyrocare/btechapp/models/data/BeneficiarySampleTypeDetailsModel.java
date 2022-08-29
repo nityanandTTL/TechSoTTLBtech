@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class BeneficiarySampleTypeDetailsModel extends BaseModel implements Parcelable {
+    public static final Creator<BeneficiarySampleTypeDetailsModel> CREATOR = new Creator<BeneficiarySampleTypeDetailsModel>() {
+        @Override
+        public BeneficiarySampleTypeDetailsModel createFromParcel(Parcel in) {
+            return new BeneficiarySampleTypeDetailsModel(in);
+        }
+
+        @Override
+        public BeneficiarySampleTypeDetailsModel[] newArray(int size) {
+            return new BeneficiarySampleTypeDetailsModel[size];
+        }
+    };
     private String id;
     private int benId;
     private String sampleType;
@@ -38,18 +49,6 @@ public class BeneficiarySampleTypeDetailsModel extends BaseModel implements Parc
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BeneficiarySampleTypeDetailsModel> CREATOR = new Creator<BeneficiarySampleTypeDetailsModel>() {
-        @Override
-        public BeneficiarySampleTypeDetailsModel createFromParcel(Parcel in) {
-            return new BeneficiarySampleTypeDetailsModel(in);
-        }
-
-        @Override
-        public BeneficiarySampleTypeDetailsModel[] newArray(int size) {
-            return new BeneficiarySampleTypeDetailsModel[size];
-        }
-    };
 
     public String getId() {
         return id;
@@ -85,8 +84,8 @@ public class BeneficiarySampleTypeDetailsModel extends BaseModel implements Parc
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof BeneficiarySampleTypeDetailsModel){
-            if(((BeneficiarySampleTypeDetailsModel) obj).getSampleType().equals(getSampleType())){
+        if (obj instanceof BeneficiarySampleTypeDetailsModel) {
+            if (((BeneficiarySampleTypeDetailsModel) obj).getSampleType().equals(getSampleType())) {
                 return true;
             }
         }

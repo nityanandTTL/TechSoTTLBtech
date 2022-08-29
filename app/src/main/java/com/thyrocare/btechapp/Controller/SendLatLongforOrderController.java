@@ -18,8 +18,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-
-
 public class SendLatLongforOrderController {
 
     Activity activity;
@@ -35,7 +33,7 @@ public class SendLatLongforOrderController {
         gson = new Gson();
     }
 
-    public void SendLatlongToToServer(String Orderno ,int Status) {
+    public void SendLatlongToToServer(String Orderno, int Status) {
 
         OrderAllocationTrackLocationRequestModel model = new OrderAllocationTrackLocationRequestModel();
 
@@ -46,7 +44,7 @@ public class SendLatLongforOrderController {
 //Latlong added
         try {
             GPSTracker gpsTracker = new GPSTracker(activity);
-            if (gpsTracker.canGetLocation()){
+            if (gpsTracker.canGetLocation()) {
                 model.setLatitude(String.valueOf(gpsTracker.getLatitude()));
                 model.setLongitude(String.valueOf(gpsTracker.getLongitude()));
             }
@@ -56,7 +54,7 @@ public class SendLatLongforOrderController {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.SendBtechLatlongToServer(model);
-        globalClass.showProgressDialog(activity,activity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
+        globalClass.showProgressDialog(activity, activity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 
         responseCall.enqueue(new Callback<String>() {
             @Override
@@ -67,6 +65,7 @@ public class SendLatLongforOrderController {
                     onResponseListener.onSuccess(strresponse);
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalClass.hideProgressDialog(activity);
@@ -77,6 +76,7 @@ public class SendLatLongforOrderController {
             }
         });
     }
+
     public void setOnResponseListener(OnResponseListener onResponseListener) {
         this.onResponseListener = onResponseListener;
     }

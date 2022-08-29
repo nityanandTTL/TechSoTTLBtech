@@ -6,6 +6,10 @@ package com.thyrocare.btechapp.models.api.response;
 
 public class DepositRegisterResponseModel {
 
+    String Date;
+    Integer Amount;
+    String Remarks;
+
     public String getDate() {
         return Date;
     }
@@ -29,11 +33,6 @@ public class DepositRegisterResponseModel {
     public void setRemarks(String remarks) {
         Remarks = remarks;
     }
-
-    String Date;
-    Integer Amount;
-    String Remarks;
-
 
 
 }

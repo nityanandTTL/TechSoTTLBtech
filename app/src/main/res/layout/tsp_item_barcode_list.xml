@@ -8,33 +8,33 @@
 
     <LinearLayout
         android:id="@+id/ll_barcode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
 
         <TextView
-            android:layout_weight="1"
             android:id="@+id/editbarcode"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:gravity="center"
             android:maxLength="8"
-            android:textColor="@color/bg_new_color"
-            android:textAllCaps="true"
             android:padding="@dimen/dp_2"
             android:text="25825255"
+            android:textAllCaps="true"
+            android:textColor="@color/bg_new_color"
             android:textSize="20sp" />
 
         <ImageView
-            android:layout_weight="0.5"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:id="@+id/btnScanBarcode"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0.5"
             app:srcCompat="@drawable/ic_baseline_qr_code_scanner_24" />
 
         <ImageView
@@ -58,9 +58,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.8dp"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:layout_marginBottom="@dimen/_5sdp"
         android:layout_marginLeft="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginRight="@dimen/_12sdp"
-        android:background="@color/grey"/>
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:background="@color/grey" />
 </LinearLayout>

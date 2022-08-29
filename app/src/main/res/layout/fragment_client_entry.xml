@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="fragment.ClientEntryFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="fragment.ClientEntryFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,210 +17,211 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/newClientEntry"
                 android:layout_gravity="center_horizontal"
-                android:textSize="20dp"
+                android:layout_margin="@dimen/dp_5"
+                android:text="@string/newClientEntry"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:layout_margin="@dimen/dp_5"/>
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="@dimen/dp_5">
+                android:layout_margin="@dimen/dp_5"
+                android:orientation="vertical">
 
 
-                    <com.google.android.material.textfield.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/clientName">
+
+                    <EditText
+                        android:id="@+id/edtName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/clientName">
+                        android:digits="@string/Namevalidation"
+                        android:inputType="textPersonName"
+                        android:maxLength="50" />
 
-                        <EditText
-                            android:id="@+id/edtName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPersonName"
-                            android:maxLength="50"
-                            android:digits="@string/Namevalidation"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/mobile">
 
-                    <com.google.android.material.textfield.TextInputLayout
+                    <EditText
+                        android:id="@+id/edtMobile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/mobile">
+                        android:digits="@string/Mobile_no_validation"
+                        android:inputType="phone"
+                        android:maxLength="10" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <EditText
-                            android:id="@+id/edtMobile"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="phone"
-                            android:digits="@string/Mobile_no_validation"
-                            android:maxLength="10"/>
-                    </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email">
 
-                    <com.google.android.material.textfield.TextInputLayout
+                    <EditText
+                        android:id="@+id/edtEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/email">
+                        android:digits="@string/emailIDandMobilenumberValidation"
+                        android:inputType="textEmailAddress"
+                        android:maxLength="80" />
 
-                        <EditText
-                            android:id="@+id/edtEmail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textEmailAddress"
-                            android:maxLength="80"
-                            android:digits="@string/emailIDandMobilenumberValidation"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/txtLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@android:drawable/edit_text"
+                    android:drawableRight="@drawable/location"
+                    android:gravity="center_vertical"
+                    android:hint="@string/location"
+                    android:textColor="@color/black" />
 
-                    <TextView
-                        android:id="@+id/txtLocation"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/address">
+
+                    <EditText
+                        android:id="@+id/edtAddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:background="@android:drawable/edit_text"
-                        android:hint="@string/location"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/black"
-                        android:drawableRight="@drawable/location"/>
+                        android:digits="@string/addressvalidation"
+                        android:inputType="textPostalAddress"
+                        android:maxLength="250"
+                        android:maxLines="3" />
 
-                    <com.google.android.material.textfield.TextInputLayout
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/pincode">
+
+                    <EditText
+                        android:id="@+id/edtPincode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/address">
+                        android:digits="@string/Mobile_no_validation"
+                        android:inputType="number"
+                        android:maxLength="6" />
 
-                        <EditText
-                            android:id="@+id/edtAddress"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPostalAddress"
-                            android:maxLines="3"
-                            android:maxLength="250"
-                            android:digits="@string/addressvalidation"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/inchargeName">
 
-                    <com.google.android.material.textfield.TextInputLayout
+                    <EditText
+                        android:id="@+id/edtInchargeName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/pincode">
+                        android:digits="@string/Namevalidation"
+                        android:inputType="textPersonName"
+                        android:maxLength="50" />
 
-                        <EditText
-                            android:id="@+id/edtPincode"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number"
-                            android:digits="@string/Mobile_no_validation"
-                            android:maxLength="6"/>
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/inchargeName">
-
-                        <EditText
-                            android:id="@+id/edtInchargeName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPersonName"
-                            android:maxLength="50"
-                            android:digits="@string/Namevalidation"/>
-
-                    </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp_2"
                     android:orientation="horizontal"
-                    android:weightSum="3"
-                    android:layout_margin="@dimen/dp_2">
+                    android:weightSum="3">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/uploadImage"
-                        android:textColor="@color/black"
+                        android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:layout_gravity="center"/>
+                        android:text="@string/uploadImage"
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_weight="0.1"
-                        android:textColor="@color/black"
                         android:text=":"
-                        android:layout_gravity="center"/>
+                        android:textColor="@color/black" />
 
                     <ImageView
                         android:id="@+id/btnCamera"
                         android:layout_width="0dp"
                         android:layout_height="60dp"
                         android:layout_weight="0.9"
-                        android:src="@drawable/ic_menu_camera"/>
+                        android:src="@drawable/ic_menu_camera" />
 
                     <TextView
                         android:id="@+id/btnUpload"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_gravity="center" />
+                        android:layout_gravity="center"
+                        android:layout_weight="1" />
 
 
                 </LinearLayout>
 
 
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/imageNote"
                     android:layout_gravity="center_horizontal"
-                    android:textColor="@color/black"
-                    android:layout_margin="@dimen/dp_2"/>
+                    android:layout_margin="@dimen/dp_2"
+                    android:text="@string/imageNote"
+                    android:textColor="@color/black" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginTop="@dimen/dp_10"
+                    android:orientation="horizontal"
                     android:weightSum="3">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
                         android:text="@string/txtNote"
                         android:textColor="@color/black"
-                        android:layout_weight="0.4"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
                         android:text=":"
-                        android:textColor="@color/black"
-                        android:layout_weight="0.1"/>
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="2.5"
                         android:text="@string/clientNote"
-                        android:textColor="@color/black"
-                        android:layout_weight="2.5"/>
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/btnSubmit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/submit"
-                    android:background="@drawable/button_border"
-                    android:textColor="@color/white"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/dp_10"/>
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/button_border"
+                    android:text="@string/submit"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
 

@@ -9,18 +9,6 @@ import android.os.Parcelable;
  */
 
 public class DeviceLoginDetailsModel implements Parcelable {
-    private String DeviceId;
-    private String Url;
-    private int UserId;
-    private int IsStech;
-
-    protected DeviceLoginDetailsModel(Parcel in) {
-        DeviceId = in.readString();
-        Url = in.readString();
-        UserId = in.readInt();
-        IsStech = in.readInt();
-    }
-
     public static final Creator<DeviceLoginDetailsModel> CREATOR = new Creator<DeviceLoginDetailsModel>() {
         @Override
         public DeviceLoginDetailsModel createFromParcel(Parcel in) {
@@ -32,6 +20,17 @@ public class DeviceLoginDetailsModel implements Parcelable {
             return new DeviceLoginDetailsModel[size];
         }
     };
+    private String DeviceId;
+    private String Url;
+    private int UserId;
+    private int IsStech;
+
+    protected DeviceLoginDetailsModel(Parcel in) {
+        DeviceId = in.readString();
+        Url = in.readString();
+        UserId = in.readInt();
+        IsStech = in.readInt();
+    }
 
     public String getUrl() {
         return Url;

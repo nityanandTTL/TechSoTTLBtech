@@ -6,9 +6,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -64,19 +66,14 @@ public class FeedbackFragment extends Fragment {
 
     private ArrayList<String> arrFeedback, arrComplain;
     private SpinnerAdapter adapterString;
-    private String strType="", strEmotionsType="", strRating="", strMobile="", strEmail="", strName="", strQuery="";
+    private String strType = "", strEmotionsType = "", strRating = "", strMobile = "", strEmail = "", strName = "", strQuery = "";
 
     private AlertDialog.Builder alertDialogBuilder;
     private Global globalClass;
     private ConnectionDetector cd;
     private SharedPreferences pref, prefs_user;
-    private String deviceInfo="";
+    private String deviceInfo = "";
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mActivity=getActivity();
-    }
     public static FeedbackFragment newInstance() {
         FeedbackFragment fragment = new FeedbackFragment();
         Bundle args = new Bundle();
@@ -86,42 +83,48 @@ public class FeedbackFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mActivity = getActivity();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_feedback, container, false);
 
-        imgHappy=(ImageView) view.findViewById(R.id.imgHappy);
-        imgNeutral=(ImageView) view.findViewById(R.id.imgNeutral);
-        imgSad=(ImageView) view.findViewById(R.id.imgSad);
-        txtHappy=(TextView) view.findViewById(R.id.txtHappy);
-        txtNeutral=(TextView) view.findViewById(R.id.txtNeutral);
-        txtSad=(TextView) view.findViewById(R.id.txtSad);
-        spinType=(Spinner) view.findViewById(R.id.spinType);
-        edtName=(EditText) view.findViewById(R.id.edtName);
-        edtEmail=(EditText) view.findViewById(R.id.edtEmail);
-        edtMobile=(EditText) view.findViewById(R.id.edtMobile);
-        edtQuery=(EditText) view.findViewById(R.id.edtQuery);
-        btnSubmit=(Button) view.findViewById(R.id.btnSubmit);
-        mScrollView=(ScrollView) view.findViewById(R.id.scrollView5);
+        imgHappy = (ImageView) view.findViewById(R.id.imgHappy);
+        imgNeutral = (ImageView) view.findViewById(R.id.imgNeutral);
+        imgSad = (ImageView) view.findViewById(R.id.imgSad);
+        txtHappy = (TextView) view.findViewById(R.id.txtHappy);
+        txtNeutral = (TextView) view.findViewById(R.id.txtNeutral);
+        txtSad = (TextView) view.findViewById(R.id.txtSad);
+        spinType = (Spinner) view.findViewById(R.id.spinType);
+        edtName = (EditText) view.findViewById(R.id.edtName);
+        edtEmail = (EditText) view.findViewById(R.id.edtEmail);
+        edtMobile = (EditText) view.findViewById(R.id.edtMobile);
+        edtQuery = (EditText) view.findViewById(R.id.edtQuery);
+        btnSubmit = (Button) view.findViewById(R.id.btnSubmit);
+        mScrollView = (ScrollView) view.findViewById(R.id.scrollView5);
 
-        globalClass=new Global(mActivity);
-        cd=new ConnectionDetector(mActivity);
-        pref=mActivity.getSharedPreferences("domain", 0);
+        globalClass = new Global(mActivity);
+        cd = new ConnectionDetector(mActivity);
+        pref = mActivity.getSharedPreferences("domain", 0);
         prefs_user = mActivity.getSharedPreferences("login_detail", 0);
         mScrollView.setVisibility(View.INVISIBLE);
 
         setDeviceInfo();
 
-        if (cd.isConnectingToInternet()){
+        if (cd.isConnectingToInternet()) {
             new AsyncLoadOptionApi().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }else{
+        } else {
             globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.plz_chk_internet));
         }
 
-        if (!prefs_user.getString("email", "").equals("")){
-            strMobile=prefs_user.getString("mobile", "");
-            strEmail=prefs_user.getString("email", "");
+        if (!prefs_user.getString("email", "").equals("")) {
+            strMobile = prefs_user.getString("mobile", "");
+            strEmail = prefs_user.getString("email", "");
 
             edtName.setText(prefs_user.getString("name", ""));
             edtMobile.setText(strMobile);
@@ -139,8 +142,8 @@ public class FeedbackFragment extends Fragment {
                 txtNeutral.setTextColor(mActivity.getResources().getColor(R.color.tertiary_color));
                 txtSad.setTextColor(mActivity.getResources().getColor(R.color.tertiary_color));
 
-                strRating="HAPPY";
-                strEmotionsType=":-)";
+                strRating = "HAPPY";
+                strEmotionsType = ":-)";
             }
         });
 
@@ -151,8 +154,8 @@ public class FeedbackFragment extends Fragment {
                 txtNeutral.setTextColor(mActivity.getResources().getColor(R.color.highlight_color));
                 txtSad.setTextColor(mActivity.getResources().getColor(R.color.tertiary_color));
 
-                strRating="NEUTRAL";
-                strEmotionsType=":-|";
+                strRating = "NEUTRAL";
+                strEmotionsType = ":-|";
             }
         });
 
@@ -176,7 +179,7 @@ public class FeedbackFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().startsWith(" ")){
+                if (charSequence.toString().startsWith(" ")) {
                     edtQuery.setText("");
                 }
             }
@@ -195,7 +198,7 @@ public class FeedbackFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().startsWith(" ")){
+                if (charSequence.toString().startsWith(" ")) {
                     edtName.setText("");
                 }
             }
@@ -223,12 +226,12 @@ public class FeedbackFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                strName=edtName.getText().toString();
-                strMobile=edtMobile.getText().toString();
-                strEmail=edtEmail.getText().toString();
-                strQuery=edtQuery.getText().toString();
+                strName = edtName.getText().toString();
+                strMobile = edtMobile.getText().toString();
+                strEmail = edtEmail.getText().toString();
+                strQuery = edtQuery.getText().toString();
                 alertDialogBuilder = new AlertDialog.Builder(mActivity);
-                if (strName.equals("") || strEmail.equals("") || strMobile.equals("") || strQuery.equals("")){
+                if (strName.equals("") || strEmail.equals("") || strMobile.equals("") || strQuery.equals("")) {
                     alertDialogBuilder
                             .setMessage("All fields are mandatory")
                             .setCancelable(true)
@@ -240,7 +243,7 @@ public class FeedbackFragment extends Fragment {
 
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else if (spinType.getSelectedItemPosition()==0) {
+                } else if (spinType.getSelectedItemPosition() == 0) {
                     alertDialogBuilder
                             .setMessage("Please select feedback category.")
                             .setCancelable(false)
@@ -255,7 +258,7 @@ public class FeedbackFragment extends Fragment {
 
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else if (strRating.equals("")) {
+                } else if (strRating.equals("")) {
                     alertDialogBuilder
                             .setMessage("Please select your rating")
                             .setCancelable(false)
@@ -270,7 +273,7 @@ public class FeedbackFragment extends Fragment {
 
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else if (strMobile.length()!=10){
+                } else if (strMobile.length() != 10) {
                     alertDialogBuilder
                             .setMessage("Mobile number should be of 10 digits")
                             .setCancelable(true)
@@ -281,7 +284,7 @@ public class FeedbackFragment extends Fragment {
                             });
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else if (strMobile.startsWith("5")||strMobile.startsWith("4")||strMobile.startsWith("3")||strMobile.startsWith("2")||strMobile.startsWith("1")||strMobile.startsWith("0")){
+                } else if (strMobile.startsWith("5") || strMobile.startsWith("4") || strMobile.startsWith("3") || strMobile.startsWith("2") || strMobile.startsWith("1") || strMobile.startsWith("0")) {
                     alertDialogBuilder
                             .setMessage("Mobile number should start with 6,7,8 or 9")
                             .setCancelable(true)
@@ -292,7 +295,7 @@ public class FeedbackFragment extends Fragment {
                             });
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else  if (!Validator.isValidEmail(strEmail.toString())) {
+                } else if (!Validator.isValidEmail(strEmail.toString())) {
                     alertDialogBuilder
                             .setMessage("Please enter valid Email ID")
                             .setCancelable(false)
@@ -307,7 +310,7 @@ public class FeedbackFragment extends Fragment {
 
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else if (strQuery.length()<20){
+                } else if (strQuery.length() < 20) {
                     alertDialogBuilder
                             .setMessage("Query should be atleast of 20 characters")
                             .setCancelable(true)
@@ -318,7 +321,7 @@ public class FeedbackFragment extends Fragment {
                             });
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else if (strQuery.length()>250){
+                } else if (strQuery.length() > 250) {
                     alertDialogBuilder
                             .setMessage("Query should be maximum of 250 characters")
                             .setCancelable(true)
@@ -329,7 +332,7 @@ public class FeedbackFragment extends Fragment {
                             });
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else{
+                } else {
                     if (cd.isConnectingToInternet())
                         new AsyncTaskPost().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     else
@@ -374,18 +377,62 @@ public class FeedbackFragment extends Fragment {
             myDeviceVersion = "";
         }
 
-        deviceInfo = myDeviceModel+" "+ myDevice + " "+myDevicePRODUCT+" "+myDeviceVersion;
+        deviceInfo = myDeviceModel + " " + myDevice + " " + myDevicePRODUCT + " " + myDeviceVersion;
 
-        MessageLogger.PrintMsg("Nitya >> "+deviceInfo);
+        MessageLogger.PrintMsg("Nitya >> " + deviceInfo);
+    }
+
+    private void setFeedbackSpinner() {
+        Resources res = mActivity.getResources();
+       /* arrFeedback=new ArrayList<>();
+        String[] array=getResources().getStringArray(R.array.feedbacktype_array);
+        for (int i=0; i<array.length; i++){
+            arrFeedback.add(array[i]);
+        }*/
+        adapterString = new SpinnerAdapter(mActivity, R.layout.spinner_items, arrFeedback, res);
+        spinType.setAdapter(adapterString);
+        spinType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int arg2, long arg3) {
+                // TODO Auto-generated method stub
+                strType = (String) spinType.getSelectedItem();
+                //MessageLogger.PrintMsg("strType: " + strType);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+    }
+
+    private String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+        while ((line = bufferedReader.readLine()) != null)
+            result += line;
+        inputStream.close();
+        return result;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //you can set the title for your toolbar here for different fragments different titles
+        getActivity().setTitle("Feedback");
     }
 
     public class AsyncLoadOptionApi extends AsyncTask<Void, Void, ArrayList<String>> {
-        String strData="";
+        String strData = "";
+
         @Override
         protected void onPreExecute() {
             // TODO Auto-generated method stub
             super.onPreExecute();
-            globalClass.showProgressDialog(mActivity,"Please wait..");
+            globalClass.showProgressDialog(mActivity, "Please wait..");
         }
 
         @Override
@@ -395,7 +442,7 @@ public class FeedbackFragment extends Fragment {
                 try {
                     HttpClient client = new DefaultHttpClient();
 //                    String getURL = pref.getString("domain", "") + "MASTER.svc/"+pref.getString("api_key","")+"/FEEDBACK/getlist";
-                    String getURL = EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION)) +"MASTER.svc/"+ AppConstants.API_KEY+"/FEEDBACK/getlist";
+                    String getURL = EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION)) + "MASTER.svc/" + AppConstants.API_KEY + "/FEEDBACK/getlist";
                     MessageLogger.PrintMsg(getURL);
                     HttpGet httpGet = new HttpGet(getURL);
                     httpGet.setHeader("Content-Type", "application/json");
@@ -403,19 +450,19 @@ public class FeedbackFragment extends Fragment {
                     HttpResponse response = client.execute(httpGet);
                     HttpEntity resEntity = response.getEntity();
                     if (resEntity != null) {
-                        strData= EntityUtils.toString(resEntity);
+                        strData = EntityUtils.toString(resEntity);
                         MessageLogger.LogError("Response", strData);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                arrFeedback=new ArrayList<>();
+                arrFeedback = new ArrayList<>();
                 arrFeedback.add("-Select Feedback Category-");
                 JSONObject json = new JSONObject(strData);
-                JSONArray jsonArray=json.getJSONArray("MASTER");
-                for (int i=0;i<jsonArray.length();i++){
-                    JSONObject jObject=jsonArray.getJSONObject(i);
+                JSONArray jsonArray = json.getJSONArray("MASTER");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jObject = jsonArray.getJSONObject(i);
                     arrFeedback.add(jObject.getString("VALUE"));
                 }
 
@@ -440,34 +487,6 @@ public class FeedbackFragment extends Fragment {
         }
     }
 
-    private void setFeedbackSpinner(){
-        Resources res = mActivity.getResources();
-       /* arrFeedback=new ArrayList<>();
-        String[] array=getResources().getStringArray(R.array.feedbacktype_array);
-        for (int i=0; i<array.length; i++){
-            arrFeedback.add(array[i]);
-        }*/
-        adapterString=new SpinnerAdapter(mActivity, R.layout.spinner_items, arrFeedback, res);
-        spinType.setAdapter(adapterString);
-        spinType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                       int arg2, long arg3) {
-                // TODO Auto-generated method stub
-                strType = (String) spinType.getSelectedItem();
-                //MessageLogger.PrintMsg("strType: " + strType);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-
-            }
-        });
-    }
-
-
-
-
     class AsyncTaskPost extends AsyncTask<Void, Void, JSONObject> {
 
         @Override
@@ -481,7 +500,7 @@ public class FeedbackFragment extends Fragment {
         protected JSONObject doInBackground(Void... params) {
 
 //            String strUrl=pref.getString("domain", "")+"MASTER.svc/feedback";
-            String strUrl=EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION)) +"MASTER.svc/feedback";
+            String strUrl = EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION)) + "MASTER.svc/feedback";
 
             JSONObject jobj = new JSONObject();
             try {
@@ -491,7 +510,7 @@ public class FeedbackFragment extends Fragment {
                 jobj.put("name", strName);
                 jobj.put("email", strEmail);
                 jobj.put("mobile", strMobile);
-                jobj.put("feedback", strQuery+ " - Btech app "+deviceInfo);
+                jobj.put("feedback", strQuery + " - Btech app " + deviceInfo);
                 jobj.put("emotion_text", strEmotionsType);
                 jobj.put("rating", strRating);
             } catch (JSONException e) {
@@ -508,16 +527,16 @@ public class FeedbackFragment extends Fragment {
                 HttpPost httpPost = new HttpPost(strUrl);
                 String strJson = "";
                 strJson = jobj.toString();
-                MessageLogger.PrintMsg("Sending data: "+strJson);
+                MessageLogger.PrintMsg("Sending data: " + strJson);
                 StringEntity se = new StringEntity(strJson);
                 httpPost.setEntity(se);
                 httpPost.setHeader("Accept", "application/json");
                 httpPost.setHeader("Content-type", "application/json");
                 HttpResponse httpResponse = httpclient.execute(httpPost);
                 inputStream = httpResponse.getEntity().getContent();
-                if(inputStream != null){
+                if (inputStream != null) {
                     result = convertInputStreamToString(inputStream);
-                    MessageLogger.PrintMsg("Response : "+ result);
+                    MessageLogger.PrintMsg("Response : " + result);
                 }
 
             } catch (Exception e) {
@@ -539,23 +558,23 @@ public class FeedbackFragment extends Fragment {
             super.onPostExecute(result);
             globalClass.hideProgressDialog(mActivity);
             alertDialogBuilder = new AlertDialog.Builder(mActivity);
-            try{
-                String strResponse=result.getString("RESPONSE");
-                if (strResponse.equals("SUCCESS")){
+            try {
+                String strResponse = result.getString("RESPONSE");
+                if (strResponse.equals("SUCCESS")) {
                     alertDialogBuilder
                             .setMessage("Thank you for your valuable information!")
                             .setCancelable(true)
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.dismiss();
-                                    if (!prefs_user.getString("email", "").equals("")){
-                                        strMobile=prefs_user.getString("mobile", "");
-                                        strEmail=prefs_user.getString("email", "");
+                                    if (!prefs_user.getString("email", "").equals("")) {
+                                        strMobile = prefs_user.getString("mobile", "");
+                                        strEmail = prefs_user.getString("email", "");
 
                                         edtName.setText(prefs_user.getString("name", ""));
                                         edtMobile.setText(strMobile);
                                         edtEmail.setText(strEmail);
-                                    }else{
+                                    } else {
                                         edtName.setText("");
                                         edtEmail.setText("");
                                         edtMobile.setText("");
@@ -563,8 +582,8 @@ public class FeedbackFragment extends Fragment {
                                     txtHappy.setTextColor(mActivity.getResources().getColor(R.color.tertiary_color));
                                     txtNeutral.setTextColor(mActivity.getResources().getColor(R.color.tertiary_color));
                                     txtSad.setTextColor(mActivity.getResources().getColor(R.color.tertiary_color));
-                                    strRating="";
-                                    strEmotionsType="";
+                                    strRating = "";
+                                    strEmotionsType = "";
 
                                     edtQuery.setText("");
                                     spinType.setSelection(0);
@@ -572,7 +591,7 @@ public class FeedbackFragment extends Fragment {
                             });
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else{
+                } else {
                     alertDialogBuilder
                             .setMessage(strResponse)
                             .setCancelable(true)
@@ -584,25 +603,9 @@ public class FeedbackFragment extends Fragment {
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
                 }
-            }catch (JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    private String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-        inputStream.close();
-        return result;
-    }
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //you can set the title for your toolbar here for different fragments different titles
-        getActivity().setTitle("Feedback");
     }
 }

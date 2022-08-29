@@ -56,7 +56,7 @@ public class PEOrderEditController {
                         if (response.isSuccessful() && response.body() != null) {
                             PEUpdatePatientResponseModel peUpdatePatientResponseModel = response.body();
                             if (InputUtils.CheckEqualIgnoreCase(AppConstants.SUCCESS_MSG, peUpdatePatientResponseModel.getResponse())) {
-                                if (i==1){
+                                if (i == 1) {
                                     TastyToast.makeText(activity, peUpdatePatientResponseModel.getMessage().toString() != null ? peUpdatePatientResponseModel.getMessage().toString() : "Beneficiary edited successfully", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
                                     addEditBenificaryActivity.pePatientDetailsUpdated();
                                 }
@@ -96,19 +96,19 @@ public class PEOrderEditController {
                     try {
                         if (response.isSuccessful() && response.body() != null) {
                             PEOrderEditResponseModel peOrderEditResponseModel = response.body();
-                            if (InputUtils.CheckEqualIgnoreCase(peOrderEditResponseModel.getResponse(), AppConstants.SUCCESS_MSG)){
+                            if (InputUtils.CheckEqualIgnoreCase(peOrderEditResponseModel.getResponse(), AppConstants.SUCCESS_MSG)) {
                                 BundleConstants.setPEOrderEdit = true;
-                                TastyToast.makeText(activity,peOrderEditResponseModel.getMessage().toString()!=null?peOrderEditResponseModel.getMessage().toString().trim():"Beneficiary edited successfully",TastyToast.LENGTH_SHORT,TastyToast.SUCCESS);
-                               if (action.equalsIgnoreCase("DELETE")){
-                                   startAndArriveActivity.pePatientDetailsUpdated();
-                               }else{
+                                TastyToast.makeText(activity, peOrderEditResponseModel.getMessage().toString() != null ? peOrderEditResponseModel.getMessage().toString().trim() : "Beneficiary edited successfully", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
+                                if (action.equalsIgnoreCase("DELETE")) {
+                                    startAndArriveActivity.pePatientDetailsUpdated();
+                                } else {
 //                                   if (i==1){
-                                       addEditBenificaryActivity.pePatientDetailsUpdated();
+                                    addEditBenificaryActivity.pePatientDetailsUpdated();
 //                                   }
-                               }
+                                }
 
-                            }else{
-                                TastyToast.makeText(activity,peOrderEditResponseModel.getResponse().toString()!=null?peOrderEditResponseModel.getResponse().toString().trim():SomethingWentwrngMsg,TastyToast.LENGTH_SHORT,TastyToast.ERROR);
+                            } else {
+                                TastyToast.makeText(activity, peOrderEditResponseModel.getResponse().toString() != null ? peOrderEditResponseModel.getResponse().toString().trim() : SomethingWentwrngMsg, TastyToast.LENGTH_SHORT, TastyToast.ERROR);
                             }
                         } else {
                             globalClass.showCustomToast(activity, "Something went wrong. Try after sometime");

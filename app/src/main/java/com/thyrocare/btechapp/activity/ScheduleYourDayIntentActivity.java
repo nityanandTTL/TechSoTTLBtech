@@ -3,7 +3,9 @@ package com.thyrocare.btechapp.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AlertDialog;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -108,9 +110,9 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
 
 
 
-      /*  activity2.toolbarHome.setTitle("Schedule your Day");
+    /*  activity2.toolbarHome.setTitle("Schedule your Day");
 
-      */
+     */
 
 
     //changes_5june2017
@@ -150,6 +152,7 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
 
         }
     }
+
     @Override
     public void onBackPressed() {
 
@@ -165,13 +168,13 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 //changes_5june2017
-             /*   if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {*/
-                    txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
-                    txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                    llSlotsDisplay.setVisibility(View.VISIBLE);
-                    isAvailable = true;
-                    btnProceed.setVisibility(View.VISIBLE);
-                    fetchData();
+                /*   if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {*/
+                txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
+                txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                llSlotsDisplay.setVisibility(View.VISIBLE);
+                isAvailable = true;
+                btnProceed.setVisibility(View.VISIBLE);
+                fetchData();
               /*  } else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
                     Toast.makeText(activity, "User can schedule only once per day...Please try again later.", Toast.LENGTH_SHORT).show();
                 }*/
@@ -210,14 +213,14 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
                                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                                 if (isNetworkAvailable(activity)) {
-                                    callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel,false);
+                                    callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel, false);
                                 } else {
                                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                 }
 
                                 //neha g---------------
                                 appPreferenceManager.setNot_avail_tom(2);
-                                BundleConstants.not_avail_tom=2;
+                                BundleConstants.not_avail_tom = 2;
                                 //neha g---------------------
                             }
                         })
@@ -226,7 +229,7 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
                             public void onClick(DialogInterface dialog, int which) {
 
                                 dialog.dismiss();
-                                
+
                             }
                         });
                 builder.create().
@@ -260,7 +263,7 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                 if (isNetworkAvailable(activity)) {
-                    callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel,true);
+                    callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel, true);
                 } else {
                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                 }
@@ -296,9 +299,9 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<SlotModel>> responseCall = apiInterface.CallFetchSlotDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID());
         global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback< ArrayList<SlotModel>>() {
+        responseCall.enqueue(new Callback<ArrayList<SlotModel>>() {
             @Override
-            public void onResponse(Call< ArrayList<SlotModel>> call, retrofit2.Response< ArrayList<SlotModel>> response) {
+            public void onResponse(Call<ArrayList<SlotModel>> call, retrofit2.Response<ArrayList<SlotModel>> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     slotsArr = response.body();
@@ -318,7 +321,7 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
             }
 
             @Override
-            public void onFailure(Call< ArrayList<SlotModel>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<SlotModel>> call, Throwable t) {
                 global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
@@ -329,8 +332,8 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
     public void CallLogOutFromDevice() {
         try {
             TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
-             new LogUserActivityTagging(activity, LOGOUT,"");
-                    appPreferenceManager.clearAllPreferences();
+            new LogUserActivityTagging(activity, LOGOUT, "");
+            appPreferenceManager.clearAllPreferences();
             try {
                 new DhbDao(activity).deleteTablesonLogout();
             } catch (Exception e) {
@@ -378,7 +381,7 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
             public void onResponse(Call<String> call, Response<String> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful()) {
-                    TastyToast.makeText(activity,  "Availability set Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                    TastyToast.makeText(activity, "Availability set Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     // Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
                     if (isAvailable) {
 
@@ -392,14 +395,14 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
                         appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
                         switchToActivity(activity, ScheduleYourDaySecondIntentActivity.class, new Bundle());
 
-                    }else{
+                    } else {
                         switchToActivity(activity, ScheduleYourDaySecondIntentActivity.class, new Bundle());
                     }
 
-                }else if (response.code() == 401) {
+                } else if (response.code() == 401) {
                     CallLogOutFromDevice();
                 } else {
-                    TastyToast.makeText(activity,  "Failed to set Availability", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                    TastyToast.makeText(activity, "Failed to set Availability", TastyToast.LENGTH_LONG, TastyToast.ERROR);
                     // Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
                 }
             }

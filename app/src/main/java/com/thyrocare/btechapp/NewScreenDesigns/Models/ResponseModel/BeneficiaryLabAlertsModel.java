@@ -7,6 +7,17 @@ import android.os.Parcelable;
  * Created by Orion on 5/10/2017.
  */
 public class BeneficiaryLabAlertsModel implements Parcelable {
+    public static final Creator<BeneficiaryLabAlertsModel> CREATOR = new Creator<BeneficiaryLabAlertsModel>() {
+        @Override
+        public BeneficiaryLabAlertsModel createFromParcel(Parcel in) {
+            return new BeneficiaryLabAlertsModel(in);
+        }
+
+        @Override
+        public BeneficiaryLabAlertsModel[] newArray(int size) {
+            return new BeneficiaryLabAlertsModel[size];
+        }
+    };
     private int LabAlertId;
     private int BenId;
 
@@ -29,18 +40,6 @@ public class BeneficiaryLabAlertsModel implements Parcelable {
         return 0;
     }
 
-    public static final Creator<BeneficiaryLabAlertsModel> CREATOR = new Creator<BeneficiaryLabAlertsModel>() {
-        @Override
-        public BeneficiaryLabAlertsModel createFromParcel(Parcel in) {
-            return new BeneficiaryLabAlertsModel(in);
-        }
-
-        @Override
-        public BeneficiaryLabAlertsModel[] newArray(int size) {
-            return new BeneficiaryLabAlertsModel[size];
-        }
-    };
-
     public int getBenId() {
         return BenId;
     }
@@ -59,8 +58,8 @@ public class BeneficiaryLabAlertsModel implements Parcelable {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof BeneficiaryLabAlertsModel){
-            if(((BeneficiaryLabAlertsModel) obj).getLabAlertId()==getLabAlertId() && ((BeneficiaryLabAlertsModel) obj).getBenId()==getBenId()){
+        if (obj instanceof BeneficiaryLabAlertsModel) {
+            if (((BeneficiaryLabAlertsModel) obj).getLabAlertId() == getLabAlertId() && ((BeneficiaryLabAlertsModel) obj).getBenId() == getBenId()) {
                 return true;
             }
         }

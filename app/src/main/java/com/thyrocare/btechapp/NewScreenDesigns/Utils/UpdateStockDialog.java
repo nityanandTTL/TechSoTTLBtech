@@ -30,13 +30,12 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CH
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
 
 
-
 public class UpdateStockDialog extends Dialog {
     public static String TAG = UpdateStockDialog.class.getSimpleName();
     Activity activity;
-    private ConnectionDetector cd;
     Global global;
     TextView txtExpectedStock, txtClosingStock, txtActualStock;
+    private ConnectionDetector cd;
     private EditText edtActualStock, edtWastedStock, edtDefectiveStock;
     private Button btnUpdate, btnCancel;
     private MainMaterialModel.MaterialDetailsBean materialDetailsBean;
@@ -150,7 +149,7 @@ public class UpdateStockDialog extends Dialog {
         opStock = (int) Double.parseDouble(materialDetailsBean.getOpeningStock());
         usedStock = (int) Double.parseDouble(materialDetailsBean.getUsedStock());
         actualStock = opStock - usedStock;
-        txtActualStock.setText(""+actualStock);
+        txtActualStock.setText("" + actualStock);
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override

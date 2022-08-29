@@ -26,7 +26,7 @@ public class SignINOUTController {
 
     public SignINOUTController(HomeScreenActivity homeScreenActivity) {
         this.homeScreenActivity = homeScreenActivity;
-        this.activity = homeScreenActivity ;
+        this.activity = homeScreenActivity;
         globalClass = new Global(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
     }

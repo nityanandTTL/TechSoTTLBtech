@@ -8,10 +8,10 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_3sdp"
         card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="4dp"
         card_view:cardElevation="2dp"
-        android:layout_margin="@dimen/_3sdp"
         card_view:cardUseCompatPadding="true">
 
         <LinearLayout
@@ -72,13 +72,13 @@
                     android:id="@+id/tv_vailPhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="@dimen/_4sdp"
                     android:layout_marginLeft="@dimen/_10sdp"
                     android:background="@drawable/rounded_background_empty_orange_less_padding"
+                    android:gravity="center"
+                    android:padding="@dimen/_4sdp"
                     android:text="Vial Mail"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 

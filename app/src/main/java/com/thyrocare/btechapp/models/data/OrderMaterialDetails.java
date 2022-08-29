@@ -8,9 +8,18 @@ import android.os.Parcelable;
  */
 
 
-
-
 public class OrderMaterialDetails extends BaseModel implements Parcelable {
+    public static final Creator<OrderMaterialDetails> CREATOR = new Creator<OrderMaterialDetails>() {
+        @Override
+        public OrderMaterialDetails createFromParcel(Parcel in) {
+            return new OrderMaterialDetails(in);
+        }
+
+        @Override
+        public OrderMaterialDetails[] newArray(int size) {
+            return new OrderMaterialDetails[size];
+        }
+    };
     private String MaterialID;
     private String MaterialName;
     private String ProposedQty;
@@ -47,16 +56,4 @@ public class OrderMaterialDetails extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<OrderMaterialDetails> CREATOR = new Creator<OrderMaterialDetails>() {
-        @Override
-        public OrderMaterialDetails createFromParcel(Parcel in) {
-            return new OrderMaterialDetails(in);
-        }
-
-        @Override
-        public OrderMaterialDetails[] newArray(int size) {
-            return new OrderMaterialDetails[size];
-        }
-    };
 }

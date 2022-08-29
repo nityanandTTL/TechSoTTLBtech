@@ -40,9 +40,9 @@ public class FaceOverlayView extends View {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setBitmap( Bitmap bitmap ) {
+    public void setBitmap(Bitmap bitmap) {
         mBitmap = bitmap;
-        FaceDetector detector = new FaceDetector.Builder( getContext() )
+        FaceDetector detector = new FaceDetector.Builder(getContext())
                 .setTrackingEnabled(true)
                 .setLandmarkType(FaceDetector.ALL_LANDMARKS)
                 .setMode(FaceDetector.ACCURATE_MODE)
@@ -76,7 +76,7 @@ public class FaceOverlayView extends View {
         double imageHeight = mBitmap.getHeight();
         double scale = Math.min(viewWidth / imageWidth, viewHeight / imageHeight);
 
-        Rect destBounds = new Rect(0, 0, (int)(imageWidth * scale), (int)(imageHeight * scale));
+        Rect destBounds = new Rect(0, 0, (int) (imageWidth * scale), (int) (imageHeight * scale));
         canvas.drawBitmap(mBitmap, null, destBounds, null);
         return scale;
     }
@@ -95,31 +95,31 @@ public class FaceOverlayView extends View {
         float right = 0;
         float bottom = 0;
 
-        for( int i = 0; i < mFaces.size(); i++ ) {
+        for (int i = 0; i < mFaces.size(); i++) {
             Face face = mFaces.valueAt(i);
 
-            left = (float) ( face.getPosition().x * scale );
-            top = (float) ( face.getPosition().y * scale );
-            right = (float) scale * ( face.getPosition().x + face.getWidth() );
-            bottom = (float) scale * ( face.getPosition().y + face.getHeight() );
+            left = (float) (face.getPosition().x * scale);
+            top = (float) (face.getPosition().y * scale);
+            right = (float) scale * (face.getPosition().x + face.getWidth());
+            bottom = (float) scale * (face.getPosition().y + face.getHeight());
 
-            canvas.drawRect( left, top, right, bottom, paint );
+            canvas.drawRect(left, top, right, bottom, paint);
         }
     }
 
-    private void drawFaceLandmarks( Canvas canvas, double scale ) {
+    private void drawFaceLandmarks(Canvas canvas, double scale) {
         Paint paint = new Paint();
-        paint.setColor( Color.GREEN );
-        paint.setStyle( Paint.Style.STROKE );
-        paint.setStrokeWidth( 5 );
+        paint.setColor(Color.GREEN);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(5);
 
-        for( int i = 0; i < mFaces.size(); i++ ) {
+        for (int i = 0; i < mFaces.size(); i++) {
             Face face = mFaces.valueAt(i);
 
-            for ( Landmark landmark : face.getLandmarks() ) {
-                int cx = (int) ( landmark.getPosition().x * scale );
-                int cy = (int) ( landmark.getPosition().y * scale );
-                canvas.drawCircle( cx, cy, 10, paint );
+            for (Landmark landmark : face.getLandmarks()) {
+                int cx = (int) (landmark.getPosition().x * scale);
+                int cy = (int) (landmark.getPosition().y * scale);
+                canvas.drawCircle(cx, cy, 10, paint);
             }
 
         }
@@ -131,7 +131,7 @@ public class FaceOverlayView extends View {
         float rightEyeOpenProbability;
         float eulerY;
         float eulerZ;
-        for( int i = 0; i < mFaces.size(); i++ ) {
+        for (int i = 0; i < mFaces.size(); i++) {
             Face face = mFaces.valueAt(i);
 
             smilingProbability = face.getIsSmilingProbability();
@@ -140,11 +140,11 @@ public class FaceOverlayView extends View {
             eulerY = face.getEulerY();
             eulerZ = face.getEulerZ();
 
-            MessageLogger.LogError( "Tuts+ Face Detection", "Smiling: " + smilingProbability );
-            MessageLogger.LogError( "Tuts+ Face Detection", "Left eye open: " + leftEyeOpenProbability );
-            MessageLogger.LogError( "Tuts+ Face Detection", "Right eye open: " + rightEyeOpenProbability );
-            MessageLogger.LogError( "Tuts+ Face Detection", "Euler Y: " + eulerY );
-            MessageLogger.LogError( "Tuts+ Face Detection", "Euler Z: " + eulerZ );
+            MessageLogger.LogError("Tuts+ Face Detection", "Smiling: " + smilingProbability);
+            MessageLogger.LogError("Tuts+ Face Detection", "Left eye open: " + leftEyeOpenProbability);
+            MessageLogger.LogError("Tuts+ Face Detection", "Right eye open: " + rightEyeOpenProbability);
+            MessageLogger.LogError("Tuts+ Face Detection", "Euler Y: " + eulerY);
+            MessageLogger.LogError("Tuts+ Face Detection", "Euler Z: " + eulerZ);
         }
     }
 }

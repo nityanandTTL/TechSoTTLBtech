@@ -3,15 +3,15 @@
     android:id="@+id/tr_itlcr"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorOrange"
     android:orientation="horizontal"
-    android:weightSum="5"
-    android:background="@color/colorOrange">
+    android:weightSum="5">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/_1sdp"
         android:layout_marginRight="@dimen/_1sdp"
+        android:layout_marginBottom="@dimen/_1sdp"
         android:layout_weight="1.20"
         android:background="@color/white">
 
@@ -20,18 +20,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/light"
-            android:text=""
-            android:padding="@dimen/_5sdp"
             android:gravity="center"
-            android:textColor="@color/black"/>
+            android:padding="@dimen/_5sdp"
+            android:text=""
+            android:textColor="@color/black" />
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/_1sdp"
         android:layout_marginRight="@dimen/_1sdp"
+        android:layout_marginBottom="@dimen/_1sdp"
         android:layout_weight="1"
         android:background="@color/white">
 
@@ -42,15 +42,15 @@
             android:background="@color/light"
             android:gravity="center"
             android:padding="@dimen/_5sdp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black" />
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/_1sdp"
         android:layout_marginRight="@dimen/_1sdp"
+        android:layout_marginBottom="@dimen/_1sdp"
         android:layout_weight="0.90"
         android:background="@color/white">
 
@@ -61,15 +61,15 @@
             android:background="@color/light"
             android:gravity="center"
             android:padding="@dimen/_5sdp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black" />
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/_1sdp"
         android:layout_marginRight="@dimen/_1sdp"
+        android:layout_marginBottom="@dimen/_1sdp"
         android:layout_weight="0.90"
         android:background="@color/white">
 
@@ -80,7 +80,7 @@
             android:background="@color/light"
             android:gravity="center"
             android:padding="@dimen/_5sdp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black" />
     </LinearLayout>
 
 
@@ -98,7 +98,7 @@
             android:background="@color/light"
             android:gravity="center"
             android:padding="@dimen/_5sdp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black" />
     </LinearLayout>
 
 </TableRow>

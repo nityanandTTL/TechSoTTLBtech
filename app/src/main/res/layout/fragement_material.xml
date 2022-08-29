@@ -32,9 +32,9 @@
             android:id="@+id/virtual_stock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_2"
             android:layout_marginStart="@dimen/dp_2"
             android:layout_marginTop="5dp"
+            android:layout_marginEnd="@dimen/dp_2"
             android:layout_weight="1"
             android:background="@drawable/footer_bg"
             android:gravity="center"
@@ -58,9 +58,9 @@
             android:id="@+id/material_order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_2"
             android:layout_marginStart="@dimen/dp_2"
             android:layout_marginTop="5dp"
+            android:layout_marginEnd="@dimen/dp_2"
             android:layout_weight="1"
             android:background="@drawable/footer_bg"
             android:gravity="center"
@@ -87,8 +87,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/dp_5"
         android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginBottom="@dimen/dp_5"
         android:gravity="center">
 
         <Button

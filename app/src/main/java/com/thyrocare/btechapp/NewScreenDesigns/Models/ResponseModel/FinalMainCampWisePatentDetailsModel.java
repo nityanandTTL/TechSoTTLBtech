@@ -41,10 +41,10 @@ public class FinalMainCampWisePatentDetailsModel implements Serializable {
     @NonNull
     @Override
     public String toString() {
-        if (patientDetails!= null && !StringUtils.isNull(patientDetails.name) && patientDetails.name.equalsIgnoreCase("- Search Patient -")){
+        if (patientDetails != null && !StringUtils.isNull(patientDetails.name) && patientDetails.name.equalsIgnoreCase("- Search Patient -")) {
             return patientDetails.name;
-        }else{
-            return patientDetails.name + "("+patientDetails.gender+"/"+patientDetails.age+")\n"+patientDetails.UniqueId;
+        } else {
+            return patientDetails.name + "(" + patientDetails.gender + "/" + patientDetails.age + ")\n" + patientDetails.UniqueId;
         }
 
     }

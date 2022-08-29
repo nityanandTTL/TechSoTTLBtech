@@ -7,15 +7,26 @@ import android.os.Parcelable;
  * Created by Nityanand on 9/21/2017.
  */
 
-public class TSPNBT_AvilModel implements Parcelable{
+public class TSPNBT_AvilModel implements Parcelable {
+    public static final Creator<TSPNBT_AvilModel> CREATOR = new Creator<TSPNBT_AvilModel>() {
+        @Override
+        public TSPNBT_AvilModel createFromParcel(Parcel in) {
+            return new TSPNBT_AvilModel(in);
+        }
+
+        @Override
+        public TSPNBT_AvilModel[] newArray(int size) {
+            return new TSPNBT_AvilModel[size];
+        }
+    };
     private String BtechID;
     private String Date;
     private String Name;
 
-    public TSPNBT_AvilModel(){
+
+    public TSPNBT_AvilModel() {
 
     }
-
 
     protected TSPNBT_AvilModel(Parcel in) {
         BtechID = in.readString();
@@ -34,18 +45,6 @@ public class TSPNBT_AvilModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<TSPNBT_AvilModel> CREATOR = new Creator<TSPNBT_AvilModel>() {
-        @Override
-        public TSPNBT_AvilModel createFromParcel(Parcel in) {
-            return new TSPNBT_AvilModel(in);
-        }
-
-        @Override
-        public TSPNBT_AvilModel[] newArray(int size) {
-            return new TSPNBT_AvilModel[size];
-        }
-    };
 
     public String getBtechID() {
         return BtechID;
@@ -70,7 +69,6 @@ public class TSPNBT_AvilModel implements Parcelable{
     public void setName(String name) {
         Name = name;
     }
-
 
 
 }

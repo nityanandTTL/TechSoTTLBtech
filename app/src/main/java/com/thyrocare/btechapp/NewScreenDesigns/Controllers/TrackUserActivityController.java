@@ -17,8 +17,8 @@ import retrofit2.Callback;
 
 public class TrackUserActivityController {
     private static final String TAG = TrackUserActivityController.class.getSimpleName();
-    Activity activity;
     static RequestQueue requestQueue;
+    Activity activity;
     Gson gson;
 
     public TrackUserActivityController(Activity activity) {
@@ -41,6 +41,7 @@ public class TrackUserActivityController {
                 } else {
                 }
             }
+
             @Override
             public void onFailure(Call<CommonPOSTResponseModel> call, Throwable t) {
                 MessageLogger.LogDebug("Errror", t.getMessage());

@@ -5,7 +5,7 @@ package com.thyrocare.btechapp.models.api.request;
  */
 
 public class BtechAppVersion {
-    int BtechId,Version;
+    int BtechId, Version;
 
     public BtechAppVersion() {
     }

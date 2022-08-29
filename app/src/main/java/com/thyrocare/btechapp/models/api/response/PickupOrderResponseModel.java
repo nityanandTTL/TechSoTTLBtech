@@ -3,7 +3,7 @@ package com.thyrocare.btechapp.models.api.response;
 import java.util.List;
 
 
-public class PickupOrderResponseModel  {
+public class PickupOrderResponseModel {
 
 
     /**

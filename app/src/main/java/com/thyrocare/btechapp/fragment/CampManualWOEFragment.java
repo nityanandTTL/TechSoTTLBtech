@@ -3,7 +3,9 @@ package com.thyrocare.btechapp.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AlertDialog;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +78,16 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 public class CampManualWOEFragment extends AbstractFragment implements View.OnClickListener {
     public static final String TAG_FRAGMENT = CampManualWOEFragment.class.getSimpleName();
     private static final String TAG_ACTIVITY = CampManualWOEFragment.class.getSimpleName();
+    public static ArrayList<BrandMasterModel> brandMastersArr;
+    RelativeLayout rl_2;
+    IntentIntegrator integrator;
+    View view_male, view_female;
+    String[] testsList;
+    ArrayList<CampAllOrderDetailsModel> campAllOrderDetailsModelslist = new ArrayList<>();
+    CampScanQRResponseModel campScanQRResponseModel = new CampScanQRResponseModel();
+    CampDetailModel campDetailModel = new CampDetailModel();
+    int benId;
+    ArrayList<TestRateMasterModel> testRateMasterModels = new ArrayList<>();
     private EditText edt_name, edt_mobile, edt_email, edt_scan_result, edt_amount, edt_pincode;
     private TextView edt_brand_name;
     private int clearText = 0;
@@ -84,19 +96,10 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
     private ImageView scan_barcode_button, img_female, img_male;
     private LinearLayout ll_age_gender, ll_test_scan;
     private Button btn_enter_manually, btn_scan_qr, btn_next;
-    RelativeLayout rl_2;
-    IntentIntegrator integrator;
     private String selectedGender = "";
     private AppPreferenceManager appPreferenceManager;
     private boolean issampleTypeScan;
-    View view_male, view_female;
     private CampOrderBookingActivity activity;
-    String[] testsList;
-    public static ArrayList<BrandMasterModel> brandMastersArr;
-    ArrayList<CampAllOrderDetailsModel> campAllOrderDetailsModelslist = new ArrayList<>();
-    CampScanQRResponseModel campScanQRResponseModel = new CampScanQRResponseModel();
-    CampDetailModel campDetailModel = new CampDetailModel();
-    int benId;
     private String orderNO;
     private ArrayList<BeneficiaryBarcodeDetailsModel> barcodeDetailsArr;
     private String currentSampleType;
@@ -107,7 +110,6 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
     private LabAlertMasterDao labAlertMasterDao;
     private ArrayList<LabAlertMasterModel> labAlertsArr;
     private ArrayList<BeneficiaryLabAlertsModel> benLAArr;
-    ArrayList<TestRateMasterModel> testRateMasterModels = new ArrayList<>();
     private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> benCHArr;
     private TextView edtCH, edtLA;
     private boolean isGenderSelected = false;
@@ -126,6 +128,10 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         args.putParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModel);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public final static boolean isValidEmail(CharSequence target) {
+        return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
     @Override
@@ -295,7 +301,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         String tests = campDetailModel.getProduct();
         testsList = tests.split(",");
         edt_test_alerts.setText("--SELECT--");
-       // edt_test_alerts.setText("" + testsList[0]);
+        // edt_test_alerts.setText("" + testsList[0]);
     }
 
     private void clearEntries() {
@@ -318,7 +324,6 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         }*/
 
     }
-
 
     @Override
     public void onClick(View v) {
@@ -375,12 +380,12 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             lv_test_codes.setAdapter(adapter);
             btn_edit.setVisibility(View.GONE);
             builder.show();
-           lv_test_codes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-               @Override
-               public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                   edt_test_alerts.setText(""+testsList[i]);
-               }
-           });
+            lv_test_codes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    edt_test_alerts.setText("" + testsList[i]);
+                }
+            });
 
         }
     }
@@ -439,10 +444,6 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         orderBookingRequestModel.setClHistory(benCHArr);
         orderBookingRequestModel.setLabAlert(benLAArr);
         return orderBookingRequestModel;
-    }
-
-    public final static boolean isValidEmail(CharSequence target) {
-        return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
     private boolean validate() {
@@ -683,12 +684,12 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<OrderBookingResponseVisitModel> responseCall = apiInterface.CallOrderBookingApi(orderBookingRequestModel);
-        globalclass.showProgressDialog(activity,activity.getResources().getString(R.string.progress_message_uploading_order_details_please_wait),false);
+        globalclass.showProgressDialog(activity, activity.getResources().getString(R.string.progress_message_uploading_order_details_please_wait), false);
         responseCall.enqueue(new Callback<OrderBookingResponseVisitModel>() {
             @Override
             public void onResponse(Call<OrderBookingResponseVisitModel> call, retrofit2.Response<OrderBookingResponseVisitModel> response) {
                 globalclass.hideProgressDialog(activity);
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     orderBookingResponseVisitModel = response.body();
                     for (OrderBookingResponseOrderModel obrom :
                             orderBookingResponseVisitModel.getOrderids()) {
@@ -696,14 +697,15 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                         Logger.error("ben for woe " + obrom.getBenfids());
                     }
                     callWoeApi();
-                }else{
+                } else {
                     globalclass.showCustomToast(activity, ConstantsMessages.SOMETHING_WENT_WRONG);
                 }
             }
+
             @Override
             public void onFailure(Call<OrderBookingResponseVisitModel> call, Throwable t) {
                 globalclass.hideProgressDialog(activity);
-                globalclass.showCustomToast(activity,ConstantsMessages.UNABLE_TO_CONNECT);
+                globalclass.showCustomToast(activity, ConstantsMessages.UNABLE_TO_CONNECT);
             }
         });
     }
@@ -718,29 +720,30 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         }
     }
 
-    public void CallWorkOrderEntryAPI(OrderBookingRequestModel orderBookingRequestModel){
+    public void CallWorkOrderEntryAPI(OrderBookingRequestModel orderBookingRequestModel) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallWorkOrderEntryAPI(orderBookingRequestModel);
-        globalclass.showProgressDialog(activity, PLEASE_WAIT,false);
+        globalclass.showProgressDialog(activity, PLEASE_WAIT, false);
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> res) {
                 globalclass.hideProgressDialog(activity);
                 if (res.isSuccessful() && res.body() != null) {
-                    Toast.makeText(activity, "SUCCESS" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "SUCCESS", Toast.LENGTH_SHORT).show();
                     isSuceed = true;
                     clearEntries();
                     clearText = 1;
                     initScanBarcodeView();
 
-                }else{
-                    Toast.makeText(activity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalclass.hideProgressDialog(activity);
-                Toast.makeText(activity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
+                Toast.makeText(activity, SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
             }
         });
     }

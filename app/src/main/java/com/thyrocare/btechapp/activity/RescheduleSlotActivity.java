@@ -64,7 +64,7 @@ public class RescheduleSlotActivity extends AppCompatActivity {
     AppPreferenceManager appPreferenceManager;
     String orderno, pincode, token, date, slot2, appoinmentdate;
     String slot1, response;
-    int SlotID, remarks, slotID, remarksID,count;
+    int SlotID, remarks, slotID, remarksID, count;
     Button btn_submit, btn_back;
     CheckBox chk_slot;
     Global globalClass;
@@ -261,7 +261,7 @@ public class RescheduleSlotActivity extends AppCompatActivity {
         slotID = getIntent().getIntExtra(BundleConstants.ORDER_SLOTID, 0);
         orderVisitDetailsModelArrayList = getIntent().getExtras().getParcelableArrayList(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
         orderDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
-        count = getIntent().getIntExtra("Bencount",0);
+        count = getIntent().getIntExtra("Bencount", 0);
         SlotsDateAdapter sdadapter = new SlotsDateAdapter(this, arrayList);
         rec_dateList.setAdapter(sdadapter);
         chk_slot.setChecked(false);
@@ -339,7 +339,7 @@ public class RescheduleSlotActivity extends AppCompatActivity {
         slotResponseModels.clear();
         slotResponseModels = tempArraylist;
 
-        SlotAppointmentTimeAdapter timeAdapter = new SlotAppointmentTimeAdapter(this, slotResponseModels,1);
+        SlotAppointmentTimeAdapter timeAdapter = new SlotAppointmentTimeAdapter(this, slotResponseModels, 1);
         rec_slotList.setAdapter(timeAdapter);
 
     }
@@ -388,7 +388,7 @@ public class RescheduleSlotActivity extends AppCompatActivity {
     }
 
     public void TCslotResponse(ArrayList<GetPEBtechSlotResponseModel> slotResponseModelArrayList) {
-        SlotAppointmentTimeAdapter timeAdapter = new SlotAppointmentTimeAdapter(this, slotResponseModelArrayList,2);
+        SlotAppointmentTimeAdapter timeAdapter = new SlotAppointmentTimeAdapter(this, slotResponseModelArrayList, 2);
         rec_slotList.setAdapter(timeAdapter);
 
     }

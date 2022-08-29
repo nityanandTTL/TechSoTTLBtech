@@ -45,14 +45,13 @@ public class GetOrderDetailsController {
                         if (response.isSuccessful() && response.body() != null) {
                             GetOrderDetailsResponseModel getOrderDetailsResponseModel = response.body();
                             if (InputUtils.CheckEqualIgnoreCase(getOrderDetailsResponseModel.getResponse(), Constants.Success)) {
-                                if (getOrderDetailsResponseModel!=null&& getOrderDetailsResponseModel.getGetVisitcount().size()>0){
-                                    visitOrdersDisplayFragment_new.checkOrderDetails(fetchOrderDetailsResponseModel,getOrderDetailsResponseModel);
+                                if (getOrderDetailsResponseModel != null && getOrderDetailsResponseModel.getGetVisitcount().size() > 0) {
+                                    visitOrdersDisplayFragment_new.checkOrderDetails(fetchOrderDetailsResponseModel, getOrderDetailsResponseModel);
                                 }
                             } else {
                                 globalClass.showCustomToast(activity, "" + getOrderDetailsResponseModel.getResponse());
                             }
-                        }
-                        else {
+                        } else {
                             globalClass.showCustomToast(activity, response.message());
                         }
                     } catch (Exception e) {

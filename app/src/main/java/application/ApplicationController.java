@@ -28,71 +28,72 @@ import java.util.Stack;
 
 public class ApplicationController extends Application {
 
-	public static ApplicationController applicationController;
-	public static Stack<Activity> ACTIVITY_STACK = new Stack<Activity>();
-	public static boolean IS_PAUSED = true;
-	public static String pushToken="";
-	public static Handler handler;
-	public static Runnable timerRunnable;
-//	private File cacheDir;
-	public static String selectedService;
-	public static NotificationMappingController notificationMappingController;
-	public static SendLatLongforOrderController sendLatLongforOrderController;
+    public static final int BEEP_COUNTER_15 = 15 * 60 * 1000;
+    public static final int BEEP_COUNTER_5 = 5 * 60 * 1000;
+    // after 15 min there will be two beep events 20 mins and 25 mins before completing 30 min inactive time.
+    public static final int MAX_BEEP_COUNT = 2;
+    public static ApplicationController applicationController;
+    public static Stack<Activity> ACTIVITY_STACK = new Stack<Activity>();
+    public static boolean IS_PAUSED = true;
+    public static String pushToken = "";
+    public static Handler handler;
+    public static Runnable timerRunnable;
+    //	private File cacheDir;
+    public static String selectedService;
+    public static NotificationMappingController notificationMappingController;
+    public static SendLatLongforOrderController sendLatLongforOrderController;
+    public static int beepCouner = 0;
+    public static DeviceLogOutController mDeviceLogOutController;
+    public static TSPLMESampleDropController mTSPLMESampleDropController;
+    public static ClientEntryController clientEntryController;
+    public static UpdateStockController updateStockController;
+    public static GetAvailableStockController getAvailableStockController;
+    public static TrackUserActivityController trackUserActivityController;
+    public static PostEmailValidationController PostEmailValidationController;
+    public static GetAcessTokenAndOTPAPIController getAcessTokenAndOTPAPIController;
+    MediaPlayer player;
     private AppPreferenceManager appPreferenceManager;
-	MediaPlayer player;
-	public static int beepCouner = 0;
-	public static final int BEEP_COUNTER_15 = 15*60*1000;
-	public static final int BEEP_COUNTER_5 = 5*60*1000;
-	// after 15 min there will be two beep events 20 mins and 25 mins before completing 30 min inactive time.
-	public static final int MAX_BEEP_COUNT = 2;
-	public static DeviceLogOutController mDeviceLogOutController;
-	public static TSPLMESampleDropController mTSPLMESampleDropController;
-	public static ClientEntryController clientEntryController;
-	public static UpdateStockController updateStockController;
-	public static GetAvailableStockController getAvailableStockController;
-	public static TrackUserActivityController trackUserActivityController;
-	public static PostEmailValidationController PostEmailValidationController;
-	public static GetAcessTokenAndOTPAPIController getAcessTokenAndOTPAPIController;
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
 
-		super.onConfigurationChanged(newConfig);
+        super.onConfigurationChanged(newConfig);
 
-	}
+    }
 
-	@Override
-	public void onCreate() {
-		ActivityLifecycleCallback.register(this);
+    @Override
+    public void onCreate() {
+        ActivityLifecycleCallback.register(this);
 
-		super.onCreate();
+        super.onCreate();
 
-		applicationController = this;
-		new GlideCacheClearAsyncTask(getApplicationContext()).execute();
-		DbHelper.init(applicationController);
-		appPreferenceManager=new AppPreferenceManager(getApplicationContext());
+        applicationController = this;
+        new GlideCacheClearAsyncTask(getApplicationContext()).execute();
+        DbHelper.init(applicationController);
+        appPreferenceManager = new AppPreferenceManager(getApplicationContext());
 
-		handler=new Handler();
+        handler = new Handler();
 
-		player = new MediaPlayer();
+        player = new MediaPlayer();
 
 
-	}
+    }
 
-	@Override
-	protected void attachBaseContext(Context base) {
-		super.attachBaseContext(base);
-		MultiDex.install(this);
-	}
-	@Override
-	public void onLowMemory() {
-		super.onLowMemory();
-	}
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
-	@Override
-	public void onTerminate() {
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+    }
 
-		super.onTerminate();
+    @Override
+    public void onTerminate() {
 
-	}
+        super.onTerminate();
+
+    }
 }

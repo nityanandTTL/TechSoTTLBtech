@@ -66,24 +66,24 @@ import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 public class TSP_HubMasterBarcodeScanFragment extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG_FRAGMENT = TSP_HubMasterBarcodeScanFragment.class.getSimpleName();
-    private LinearLayout ll_hub_display_footer, ll_scan_master_barcode, ll_scan_vial_barcode;
     TextView tv_collection_sample;
+    HUBBTechModel hubbTechModel;
+    AppPreferenceManager appPreferenceManager;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
+    private LinearLayout ll_hub_display_footer, ll_scan_master_barcode, ll_scan_vial_barcode;
     private Activity activity;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<BtechwithHub_BarcodeDataModel> barcodeModels = new ArrayList<>();
     private BtechwithHub_HubScanBarcodeListAdapter hubScanBarcodeListAdapter;
     private String master_scanned_barcode = "";
-    HUBBTechModel hubbTechModel;
     private boolean isMasterBarcode;
     private IntentIntegrator intentIntegrator;
     private Button btn_receive;
     private GPSTracker gpsTracker;
     private boolean isCentrifuged = false;
     private Global global;
-    AppPreferenceManager appPreferenceManager;
-    TextView tv_toolbar;
-    ImageView iv_back, iv_home;
 
     public TSP_HubMasterBarcodeScanFragment() {
     }

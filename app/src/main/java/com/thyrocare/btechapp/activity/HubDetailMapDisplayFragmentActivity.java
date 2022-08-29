@@ -83,8 +83,11 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 
 public class HubDetailMapDisplayFragmentActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
 
-    private static final String TAG = HubDetailMapDisplayFragmentActivity.class.getSimpleName();
     public static final String TAG_FRAGMENT = HubDetailMapDisplayFragmentActivity.class.getSimpleName();
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private static final String TAG = HubDetailMapDisplayFragmentActivity.class.getSimpleName();
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
     private GoogleMap mMap;
     private ArrayList<LatLng> MarkerPoints;
     private GoogleApiClient mGoogleApiClient;
@@ -92,11 +95,9 @@ public class HubDetailMapDisplayFragmentActivity extends AppCompatActivity imple
     private Marker mCurrLocationMarker;
     private ArrayList<HUBBTechModel> hubbTechModels;
     private LocationRequest mLocationRequest;
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private Button btn_startNav, btn_arrived;
     private FragmentActivity activity;
     private HUBBTechModel hubBTechModel;
-
     private TextView txtName, txtAge, txtSrNo, txtAadharNo, txtorder_no, txt_title;
     private ImageView imgRelease, imgDistance;
     private TextView txtDistance;
@@ -109,8 +110,18 @@ public class HubDetailMapDisplayFragmentActivity extends AppCompatActivity imple
     private boolean isStarted = false;
     private LinearLayout llCall;
     private Global global;
-    TextView tv_toolbar;
-    ImageView iv_back, iv_home;
+
+    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        float dist = (float) (earthRadius * c);
+        return dist;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,7 +142,6 @@ public class HubDetailMapDisplayFragmentActivity extends AppCompatActivity imple
         MarkerPoints = new ArrayList<>();
 
     }
-
 
     private void setListeners() {
         btn_arrived.setOnClickListener(this);
@@ -250,7 +260,6 @@ public class HubDetailMapDisplayFragmentActivity extends AppCompatActivity imple
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
         return url;
     }
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -440,7 +449,7 @@ public class HubDetailMapDisplayFragmentActivity extends AppCompatActivity imple
                         intentResult.putExtra(BundleConstants.HUB_BTECH_MODEL, hubBTechModel);
                         startActivity(intentResult);
 //                        finish();
-                    } else if (hubStartRequestModel.getType() == 7){
+                    } else if (hubStartRequestModel.getType() == 7) {
 
 //                        Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
                         btn_arrived.setVisibility(View.VISIBLE);
@@ -457,38 +466,6 @@ public class HubDetailMapDisplayFragmentActivity extends AppCompatActivity imple
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
-    }
-
-
-    // Fetches data from url passed
-    private class FetchUrl extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... url) {
-
-            // For storing data from web service
-            String data = "";
-
-            try {
-                // Fetching the data from web service
-                data = downloadUrl(url[0]);
-                MessageLogger.LogDebug("Background Task data", data.toString());
-            } catch (Exception e) {
-                MessageLogger.LogDebug("Background Task", e.toString());
-            }
-            return data;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            ParserTask parserTask = new ParserTask();
-
-            // Invokes the thread for parsing the JSON data
-            parserTask.execute(result);
-
-        }
     }
 
     private String downloadUrl(String strUrl) throws IOException {
@@ -527,6 +504,80 @@ public class HubDetailMapDisplayFragmentActivity extends AppCompatActivity imple
             urlConnection.disconnect();
         }
         return data;
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(activity)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted. Do the
+                    // contacts-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(activity,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        if (mGoogleApiClient == null) {
+                            buildGoogleApiClient();
+                        }
+                        mMap.setMyLocationEnabled(true);
+                    }
+
+                } else {
+
+                    // Permission denied, Disable the functionality that depends on activity permission.
+                    Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other permissions activity app might request.
+            // You can add here other case statements according to your requirement.
+        }
+    }
+
+    // Fetches data from url passed
+    private class FetchUrl extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... url) {
+
+            // For storing data from web service
+            String data = "";
+
+            try {
+                // Fetching the data from web service
+                data = downloadUrl(url[0]);
+                MessageLogger.LogDebug("Background Task data", data.toString());
+            } catch (Exception e) {
+                MessageLogger.LogDebug("Background Task", e.toString());
+            }
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            ParserTask parserTask = new ParserTask();
+
+            // Invokes the thread for parsing the JSON data
+            parserTask.execute(result);
+
+        }
     }
 
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
@@ -600,62 +651,6 @@ public class HubDetailMapDisplayFragmentActivity extends AppCompatActivity imple
                 MessageLogger.LogDebug("onPostExecute", "without Polylines drawn");
             }
         }
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(activity)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted. Do the
-                    // contacts-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(activity,
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-
-                        if (mGoogleApiClient == null) {
-                            buildGoogleApiClient();
-                        }
-                        mMap.setMyLocationEnabled(true);
-                    }
-
-                } else {
-
-                    // Permission denied, Disable the functionality that depends on activity permission.
-                    Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other permissions activity app might request.
-            // You can add here other case statements according to your requirement.
-        }
-    }
-
-
-    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
-        double earthRadius = 6371000; //meters
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLng = Math.toRadians(lng2 - lng1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        float dist = (float) (earthRadius * c);
-        return dist;
     }
 
 }

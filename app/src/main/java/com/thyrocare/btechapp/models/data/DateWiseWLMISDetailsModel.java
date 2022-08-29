@@ -7,8 +7,19 @@ import android.os.Parcelable;
  * Created by e5209@thyrocare.com on 4/10/18.
  */
 
-public class DateWiseWLMISDetailsModel implements Parcelable{
-    private String CompletedAt,WL,PickUp;
+public class DateWiseWLMISDetailsModel implements Parcelable {
+    public static final Creator<DateWiseWLMISDetailsModel> CREATOR = new Creator<DateWiseWLMISDetailsModel>() {
+        @Override
+        public DateWiseWLMISDetailsModel createFromParcel(Parcel in) {
+            return new DateWiseWLMISDetailsModel(in);
+        }
+
+        @Override
+        public DateWiseWLMISDetailsModel[] newArray(int size) {
+            return new DateWiseWLMISDetailsModel[size];
+        }
+    };
+    private String CompletedAt, WL, PickUp;
 
     protected DateWiseWLMISDetailsModel(Parcel in) {
         CompletedAt = in.readString();
@@ -27,18 +38,6 @@ public class DateWiseWLMISDetailsModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<DateWiseWLMISDetailsModel> CREATOR = new Creator<DateWiseWLMISDetailsModel>() {
-        @Override
-        public DateWiseWLMISDetailsModel createFromParcel(Parcel in) {
-            return new DateWiseWLMISDetailsModel(in);
-        }
-
-        @Override
-        public DateWiseWLMISDetailsModel[] newArray(int size) {
-            return new DateWiseWLMISDetailsModel[size];
-        }
-    };
 
     public String getCompletedAt() {
         return CompletedAt;

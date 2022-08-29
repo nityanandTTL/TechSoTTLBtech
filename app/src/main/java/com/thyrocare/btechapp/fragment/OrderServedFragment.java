@@ -8,10 +8,12 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +52,6 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 /**
  * Created by Orion on 5/2/2017.<br/>
  * for getting orders<br/>
-
  */
 
 public class OrderServedFragment extends AbstractFragment {
@@ -59,9 +60,9 @@ public class OrderServedFragment extends AbstractFragment {
     public static final String TAG_FRAGMENT = "ORDER_FRAGMENT";
     HomeScreenActivity activity;
     AppPreferenceManager appPreferenceManager;
+    RecyclerView recycler_view;
     private View rootView;
     private TextView tv_date, no_orders;
-    RecyclerView recycler_view;
     private String todaysDate;
     private ArrayList<BtechOrderModel> btechOrderModels = new ArrayList<>();
     private OrderServedDisplayDetailsAdapter orderServedDisplayDetailsAdapter;
@@ -190,7 +191,7 @@ public class OrderServedFragment extends AbstractFragment {
 
     private void CallGetOrderServedDetailsDisplayApi(String date) {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-        Call<OrderServedResponseModel> responseCall = apiInterface.CallGetOrderServedDetailsDisplayApi(appPreferenceManager.getLoginResponseModel().getUserID(),date);
+        Call<OrderServedResponseModel> responseCall = apiInterface.CallGetOrderServedDetailsDisplayApi(appPreferenceManager.getLoginResponseModel().getUserID(), date);
         global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<OrderServedResponseModel>() {
             @Override
@@ -210,6 +211,7 @@ public class OrderServedFragment extends AbstractFragment {
                     Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<OrderServedResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);

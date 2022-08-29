@@ -423,7 +423,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         } else {
             if (Constants.isWOEDone) {
                 Constants.isWOEDone = false;
-                ReloadActivity();
+               // ReloadActivity();
                 // fetchData();
             }
         }
@@ -789,14 +789,16 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                 @Override
                 public void onCallCustomer(OrderVisitDetailsModel orderVisitDetailsModels) {
 
-                    try {
+               /*     try {
                         callgetDispositionData(orderVisitDetailsModels);
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
+                    }*/
 
                     if (isNetworkAvailable(activity) && connectionDetector.isConnectingToInternet()) {
-                        if (!InputUtils.isNull(orderVisitDetailsModels.getAllOrderdetails().get(0).getPhone())) {
+                        if (!InputUtils.isNull(orderVisitDetailsModels.getAllOrderdetails().get(0).getPhone()) &&
+                                (!InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModels.getAllOrderdetails().get(0).getMobile(), orderVisitDetailsModels
+                                        .getAllOrderdetails().get(0).getPhone()))) {
                             openTwoContactNoDialog(orderVisitDetailsModels);
                         } else {
                             CallPatchRequestAPI(orderVisitDetailsModels, orderVisitDetailsModels.getAllOrderdetails().get(0).getMobile());
@@ -921,7 +923,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                                             isphonecallstarted = true;
                                             Intent intent = new Intent(Intent.ACTION_CALL);
                                             intent.setData(Uri.parse("tel:" + MaskedPhoneNumber.replace("\"", "")));
-                                            activity.startActivity(intent);
+                                            startActivity(intent);
                                         } else {
                                             global.showCustomToast(activity, "Invalid number");
                                         }
@@ -949,7 +951,8 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
 
     public void callgetDispositionData(OrderVisitDetailsModel orderVisitDetailsModel) {
         if (isNetworkAvailable(activity) && connectionDetector.isConnectingToInternet()) {
-            if (!InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getPhone())) {
+            if (!InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getPhone()) &&
+                    (!InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile(), orderVisitDetailsModel.getAllOrderdetails().get(0).getPhone()))) {
                 openTwoContactNoDialog(orderVisitDetailsModel);
             } else {
                 CallPatchRequestAPI(orderVisitDetailsModel, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
@@ -999,7 +1002,6 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.85);
 //        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.60);
         dialog_ready.getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
-
         dialog_ready.show();
 
         ImageView img_cnc = (ImageView) dialog_ready.findViewById(R.id.img_cnc);
@@ -1331,8 +1333,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
 //                            BundleConstants.PEDSAOrder = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder();
                             appPreferenceManager.setPE_DSA(orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder());
                             //fungible
-                            if /*((appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()))*/
-                            (InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()) || InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude())
+                            if (InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()) || InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude())
                                     || (InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude(), "0.00000000") || (InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude(), "0.00000000")))
                             ) {
 //                            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
@@ -1424,7 +1425,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
     }
 
     private void ProceedToArriveScreen(OrderVisitDetailsModel orderVisitDetailsModel, boolean OpenMap) {
-
+        boolean test=false;
         try {
             startTrackerService();
             SendinglatlongOrderAllocation(orderVisitDetailsModel, 7);
@@ -1434,6 +1435,10 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
 //            BundleConstants.PEDSAOrder = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder();
             appPreferenceManager.setPE_DSA(orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder());
             new LogUserActivityTagging(activity, BundleConstants.WOE, remarks);
+            if  (test){
+                Intent PE_PostOrderDetailsIntent= new Intent(mActivity,PE_PostPatientDetailsActivity.class);
+                startActivity(PE_PostOrderDetailsIntent);
+            }
 //            Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
             Intent intentNavigate = new Intent(activity, StartAndArriveActivity.class);
             intentNavigate.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
@@ -1722,6 +1727,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
 
         SetDispositionDataModel setDispositionDataModel;
 
+
         public Btech_AsyncLoadBookingFreqApi(SetDispositionDataModel nm) {
             this.setDispositionDataModel = nm;
         }
@@ -1816,6 +1822,8 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
             } else {
                 TastyToast.makeText(activity, "" + res, TastyToast.LENGTH_LONG, TastyToast.ERROR);
             }
+
         }
     }
 }
+

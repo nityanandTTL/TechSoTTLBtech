@@ -75,6 +75,11 @@ import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 public class HubMasterBarcodeScanFragment extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG_FRAGMENT = HubMasterBarcodeScanFragment.class.getSimpleName();
+    HUBBTechModel hubbTechModel;
+    AppPreferenceManager appPreferenceManager;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
+    TextView txt_master_barcode;
     private LinearLayout ll_hub_display_footer, ll_scan_master_barcode, ll_scan_vial_barcode;
     private TextView tv_collection_sample;
     private Activity activity;
@@ -83,17 +88,12 @@ public class HubMasterBarcodeScanFragment extends AppCompatActivity implements V
     private ArrayList<HubBarcodeModel> barcodeModels = new ArrayList<>();
     private HubScanBarcodeListAdapter hubScanBarcodeListAdapter;
     private String master_scanned_barcode = "";
-    HUBBTechModel hubbTechModel;
     private boolean isMasterBarcode;
     private IntentIntegrator intentIntegrator;
     private Button btnDispatch;
     private boolean isCentrifuged = false;
     private TextView tv_centrifuge;
     private Global global;
-    AppPreferenceManager appPreferenceManager;
-    TextView tv_toolbar;
-    ImageView iv_back, iv_home;
-    TextView txt_master_barcode;
     private File selfie_photo;
     private Uri selfieUri;
 

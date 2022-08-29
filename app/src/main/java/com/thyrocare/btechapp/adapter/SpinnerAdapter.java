@@ -20,35 +20,34 @@ import java.util.ArrayList;
 /********* Adapter class extends with BaseAdapter and implements with OnClickListener ************/
 public class SpinnerAdapter extends ArrayAdapter<String> {
 
-	private Activity activity;
-    private ArrayList<String> data;
     public Resources res;
     public String strTextColor;
     public String strFont;
     Typeface font;
-    String tempValues=null;
+    String tempValues = null;
     LayoutInflater inflater;
+    private Activity activity;
+    private ArrayList<String> data;
 
     /*************  CustomAdapter Constructor *****************/
-	public SpinnerAdapter(
+    public SpinnerAdapter(
             Activity activitySpinner,
             int textViewResourceId,
             ArrayList<String> objects,
             Resources resLocal
-    )
-	 {
+    ) {
         super(activitySpinner, textViewResourceId, objects);
-        
+
         /********** Take passed values **********/
         activity = activitySpinner;
-        data     = objects;
-        res      = resLocal;
+        data = objects;
+        res = resLocal;
         /***********  Layout inflator to call external xml layout () **********************/
-        inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	  }
+        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
 
     @Override
-    public View getDropDownView(int position, View convertView,ViewGroup parent) {
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
         return getCustomView(position, convertView, parent);
     }
 
@@ -59,20 +58,20 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
 
     public View getCustomView(int position, View convertView, ViewGroup parent) {
 
-    	/********** Inflate spinner_rows.xml file for each row ( Defined below ) ************/
+        /********** Inflate spinner_rows.xml file for each row ( Defined below ) ************/
         View row = inflater.inflate(R.layout.spinner_items, parent, false);
-        
+
         /***** Get each Model object from Arraylist ********/
         tempValues = null;
-        tempValues =data.get(position);
-        
-        TextView label        = (TextView)row.findViewById(R.id.company);
+        tempValues = data.get(position);
 
-        ImageView companyLogo = (ImageView)row.findViewById(R.id.image);
-        RelativeLayout relbg=(RelativeLayout) row.findViewById(R.id.relSpinBg);
+        TextView label = (TextView) row.findViewById(R.id.company);
+
+        ImageView companyLogo = (ImageView) row.findViewById(R.id.image);
+        RelativeLayout relbg = (RelativeLayout) row.findViewById(R.id.relSpinBg);
         relbg.setBackgroundColor(Color.parseColor("#00000000"));
         label.setText(tempValues);
 
         return row;
-      }
- }
+    }
+}

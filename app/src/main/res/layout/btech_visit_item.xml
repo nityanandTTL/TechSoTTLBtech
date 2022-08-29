@@ -190,11 +190,11 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:visibility="gone"
                     android:id="@+id/ll_slotTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/_1sdp">
+                    android:padding="@dimen/_1sdp"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/tv_slotTime"

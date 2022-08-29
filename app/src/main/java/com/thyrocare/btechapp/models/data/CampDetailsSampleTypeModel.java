@@ -7,13 +7,28 @@ import android.os.Parcelable;
  * Created by Orion on 5/15/2017.
  */
 
-public class CampDetailsSampleTypeModel implements Parcelable{
-    private String sampleType,Tests;
+public class CampDetailsSampleTypeModel implements Parcelable {
+    public static final Creator<CampDetailsSampleTypeModel> CREATOR = new Creator<CampDetailsSampleTypeModel>() {
+        @Override
+        public CampDetailsSampleTypeModel createFromParcel(Parcel in) {
+            return new CampDetailsSampleTypeModel(in);
+        }
+
+        @Override
+        public CampDetailsSampleTypeModel[] newArray(int size) {
+            return new CampDetailsSampleTypeModel[size];
+        }
+    };
+    private String sampleType, Tests;
+    private String benId;
 
     protected CampDetailsSampleTypeModel(Parcel in) {
         sampleType = in.readString();
         Tests = in.readString();
         benId = in.readString();
+    }
+
+    public CampDetailsSampleTypeModel() {
     }
 
     @Override
@@ -28,29 +43,12 @@ public class CampDetailsSampleTypeModel implements Parcelable{
         return 0;
     }
 
-    public static final Creator<CampDetailsSampleTypeModel> CREATOR = new Creator<CampDetailsSampleTypeModel>() {
-        @Override
-        public CampDetailsSampleTypeModel createFromParcel(Parcel in) {
-            return new CampDetailsSampleTypeModel(in);
-        }
-
-        @Override
-        public CampDetailsSampleTypeModel[] newArray(int size) {
-            return new CampDetailsSampleTypeModel[size];
-        }
-    };
-
     public String getBenId() {
         return benId;
     }
 
     public void setBenId(String benId) {
         this.benId = benId;
-    }
-
-    private String benId;
-
-    public CampDetailsSampleTypeModel() {
     }
 
     public String getSampleType() {

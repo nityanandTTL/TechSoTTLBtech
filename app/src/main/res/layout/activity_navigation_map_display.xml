@@ -26,8 +26,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/default_toolbar"
-                android:id="@+id/appbarLayout"/>
+            <include
+                android:id="@+id/appbarLayout"
+                layout="@layout/default_toolbar" />
+
             <include
                 android:id="@+id/il_cell_title"
                 layout="@layout/cell_title_layout" />
@@ -36,9 +38,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
             android:orientation="vertical"
-            android:layout_alignParentBottom="true"
             android:weightSum="2">
 
             <LinearLayout
@@ -147,7 +149,6 @@
         </LinearLayout>
 
     </RelativeLayout>
-
 
 
 </FrameLayout>

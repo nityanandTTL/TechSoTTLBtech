@@ -3,10 +3,12 @@ package com.thyrocare.btechapp.fragment.LME;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,7 +23,9 @@ import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.activity.LMEMapDisplayFragmentActivity;
 
 import com.thyrocare.btechapp.adapter.LME.LMEVisitsListAdapter;
+
 import application.ApplicationController;
+
 import com.thyrocare.btechapp.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
@@ -35,15 +39,15 @@ import java.util.ArrayList;
 public class LME_OrdersDisplayFragment extends AbstractFragment {
 
     public static final String TAG_FRAGMENT = "LME_OrdersDisplayFragment";
+    static LME_OrdersDisplayFragment fragment;
+    EditText edt_search;
+    TextView txt_nodata;
+    LMEVisitsListAdapter adaptor;
     private HomeScreenActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private View rootView;
-    static LME_OrdersDisplayFragment fragment;
     private RecyclerView recy_Orderlist;
-    EditText edt_search;
-    TextView txt_nodata;
     private SampleDropDetailsbyTSPLMEDetailsModel msampleDropDetailsbyTSPLMEDetailsModel;
-    LMEVisitsListAdapter adaptor;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public LME_OrdersDisplayFragment() {

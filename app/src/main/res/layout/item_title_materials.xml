@@ -3,41 +3,47 @@
     android:id="@+id/tablematerialorder"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@android:color/white"
     android:layout_marginLeft="@dimen/dp_5"
     android:layout_marginRight="@dimen/dp_5"
+    android:background="@android:color/white"
+    android:orientation="horizontal"
     android:weightSum="3">
-    <TextView android:layout_weight="1"
-        android:layout_height="match_parent"
+
+    <TextView
         android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:background="@color/navyblue"
+        android:gravity="center"
         android:padding="15dp"
         android:text="Item"
-        android:textStyle="bold"
-        android:background="@color/navyblue"
-        android:layout_margin="4dp"
-        android:gravity="center"
-        android:textColor="@color/colorPrimaryDark"/>
-    <TextView android:layout_weight="1"
-        android:layout_height="match_parent"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
+
+    <TextView
         android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:background="@color/navyblue"
+        android:gravity="center"
         android:padding="15dp"
         android:text="Virtual Stock"
-        android:textStyle="bold"
-        android:background="@color/navyblue"
-        android:layout_margin="4dp"
-        android:gravity="center"
-        android:textColor="@color/colorPrimaryDark"/>
-    <TextView android:layout_weight="1"
-        android:layout_height="match_parent"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
+
+    <TextView
         android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:background="@color/navyblue"
+        android:gravity="center"
         android:padding="15dp"
         android:text="Actual Stock"
-        android:background="@color/navyblue"
-        android:layout_margin="4dp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
 
 
 </TableRow>

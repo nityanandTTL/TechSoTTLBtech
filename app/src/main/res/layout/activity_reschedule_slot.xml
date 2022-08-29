@@ -27,8 +27,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="Skip Appointment slot" />
+            android:text="Skip Appointment slot"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <View
@@ -59,10 +59,10 @@
         android:layout_marginEnd="@dimen/_5sdp"
         android:layout_marginBottom="@dimen/_5sdp"
         android:padding="@dimen/_5sdp"
-        android:textStyle="bold"
         android:text="Select Appointment Date"
         android:textColor="@color/tertiary_color"
-        android:textSize="@dimen/label" />
+        android:textSize="@dimen/label"
+        android:textStyle="bold" />
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -96,9 +96,9 @@
             android:id="@+id/rec_slotList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_below="@id/tv_3"
             android:orientation="vertical"
-            android:layout_below="@id/tv_3" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </LinearLayout>
 

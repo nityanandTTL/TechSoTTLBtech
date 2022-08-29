@@ -5,7 +5,7 @@ package com.thyrocare.btechapp.models.api.request;
  */
 
 public class ChangePasswordRequestModel {
-    String OldPassword,NewPassword,ConfirmPassword;
+    String OldPassword, NewPassword, ConfirmPassword;
 
     public String getOldPassword() {
         return OldPassword;

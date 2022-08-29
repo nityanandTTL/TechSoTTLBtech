@@ -433,7 +433,7 @@ public class SubmitB2BWoeRequestModel implements Serializable {
         }
     }
 
-    public static class Barcodelist{
+    public static class Barcodelist {
         String SAMPLE_TYPE;
         String BARCODE;
         String TESTS;

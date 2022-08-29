@@ -77,7 +77,7 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
     private void GetremarksForRequestToReleaseApi() {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<RemarksRequestToReleaseResponseModel>> responseCall = apiInterface.GetremarksForRequestToReleaseApi(27);
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<ArrayList<RemarksRequestToReleaseResponseModel>>() {
             @Override
             public void onResponse(Call<ArrayList<RemarksRequestToReleaseResponseModel>> call, retrofit2.Response<ArrayList<RemarksRequestToReleaseResponseModel>> response) {
@@ -115,13 +115,14 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
                                             break;
                                         }
                                     }
-                                    if(Remarksstr.equalsIgnoreCase("other") || Remarksstr.equalsIgnoreCase("others")){
+                                    if (Remarksstr.equalsIgnoreCase("other") || Remarksstr.equalsIgnoreCase("others")) {
                                         edt__release_remark.setVisibility(View.VISIBLE);
-                                    }else {
+                                    } else {
                                         edt__release_remark.setVisibility(View.GONE);
                                     }
                                 }
                             }
+
                             @Override
                             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -132,6 +133,7 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
                     Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<RemarksRequestToReleaseResponseModel>> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -155,9 +157,9 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
         if (v.getId() == R.id.btn_yes) {
             if (edt_remark == null || edt_remark.getSelectedItem() == null) {
                 TastyToast.makeText(activity, "Select Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-            } else if ( edt_remark.getSelectedItem().equals("--SELECT--")) {
+            } else if (edt_remark.getSelectedItem().equals("--SELECT--")) {
                 TastyToast.makeText(activity, "Select Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-            }else if (ifOTHERRemarksVisible()) {
+            } else if (ifOTHERRemarksVisible()) {
 
             } else {
                 Logger.error("reason " + edt__release_remark.getText().toString());
@@ -172,24 +174,24 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
     }
 
     private boolean ifOTHERRemarksVisible() {
-        if(edt__release_remark.getVisibility() == View.VISIBLE){
+        if (edt__release_remark.getVisibility() == View.VISIBLE) {
             if (edt__release_remark.getText().toString().equals("")) {
-                global.showCustomToast(activity,activity.getResources().getString(R.string.enter_remarks), Toast.LENGTH_SHORT);
+                global.showCustomToast(activity, activity.getResources().getString(R.string.enter_remarks), Toast.LENGTH_SHORT);
 //                Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
                 return true;
-            }else {
+            } else {
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
     }
 
     private String getReasonRemarks() {
         String st = "";
-        if(edt__release_remark.getVisibility() == View.VISIBLE){
-            st = remarksResponseModelmain.getRemarks().toString().trim()+" - "+edt__release_remark.getText().toString().trim();
-        }else {
+        if (edt__release_remark.getVisibility() == View.VISIBLE) {
+            st = remarksResponseModelmain.getRemarks().toString().trim() + " - " + edt__release_remark.getText().toString().trim();
+        } else {
             st = remarksResponseModelmain.getRemarks().toString().trim();
         }
 

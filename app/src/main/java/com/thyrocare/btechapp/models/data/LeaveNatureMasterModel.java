@@ -9,12 +9,22 @@ import android.os.Parcelable;
 
 public class LeaveNatureMasterModel extends BaseModel implements Parcelable {
 
+    public static final Creator<LeaveNatureMasterModel> CREATOR = new Creator<LeaveNatureMasterModel>() {
+        @Override
+        public LeaveNatureMasterModel createFromParcel(Parcel in) {
+            return new LeaveNatureMasterModel(in);
+        }
+
+        @Override
+        public LeaveNatureMasterModel[] newArray(int size) {
+            return new LeaveNatureMasterModel[size];
+        }
+    };
     Integer Id;
     String Nature;
 
-
     public LeaveNatureMasterModel() {
-        super ();
+        super();
     }
 
     protected LeaveNatureMasterModel(Parcel in) {
@@ -35,18 +45,6 @@ public class LeaveNatureMasterModel extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<LeaveNatureMasterModel> CREATOR = new Creator<LeaveNatureMasterModel>() {
-        @Override
-        public LeaveNatureMasterModel createFromParcel(Parcel in) {
-            return new LeaveNatureMasterModel(in);
-        }
-
-        @Override
-        public LeaveNatureMasterModel[] newArray(int size) {
-            return new LeaveNatureMasterModel[size];
-        }
-    };
 
     public Integer getId() {
         return Id;

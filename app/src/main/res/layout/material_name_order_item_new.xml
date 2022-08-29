@@ -129,11 +129,11 @@
                         android:layout_height="@dimen/_30sdp"
                         android:layout_weight="1"
                         android:background="@drawable/btn_material_popup_border"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/black"
                         android:digits="@string/Mobile_no_validation"
+                        android:gravity="center_vertical"
                         android:inputType="phone"
-                        android:paddingLeft="@dimen/_7sdp"/>
+                        android:paddingLeft="@dimen/_7sdp"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -166,11 +166,11 @@
                         android:layout_height="@dimen/_30sdp"
                         android:layout_weight="1"
                         android:background="@drawable/btn_material_popup_border"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/black"
                         android:digits="@string/Mobile_no_validation"
+                        android:gravity="center_vertical"
                         android:inputType="phone"
-                        android:paddingLeft="@dimen/_7sdp"/>
+                        android:paddingLeft="@dimen/_7sdp"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -201,8 +201,8 @@
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_30sdp"
                         android:layout_weight="1"
-                        android:paddingLeft="@dimen/_7sdp"
                         android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/_7sdp"
                         android:textColor="@color/black" />
                 </LinearLayout>
 
@@ -268,9 +268,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
             android:background="@color/white"
-            android:orientation="horizontal"
-            android:layout_margin="@dimen/_10sdp">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnCancel"

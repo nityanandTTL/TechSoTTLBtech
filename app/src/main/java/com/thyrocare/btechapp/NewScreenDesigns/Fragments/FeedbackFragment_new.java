@@ -64,11 +64,11 @@ public class FeedbackFragment_new extends AppCompatActivity {
     ArrayList<String> arrFeedbackList;
     ArrayAdapter<String> spinnerAdapter;
     String feedbackType, query;
-    private AppPreferenceManager appPreferenceManager;
-    private String deviceInfo = "";
     TextView tv_toolbar;
     Toolbar toolbar;
-    ImageView iv_back,iv_home;
+    ImageView iv_back, iv_home;
+    private AppPreferenceManager appPreferenceManager;
+    private String deviceInfo = "";
 
    /* public FeedbackFragment_new() {
         // Required empty public constructor
@@ -80,7 +80,6 @@ public class FeedbackFragment_new extends AppCompatActivity {
         fragment.setArguments(args);
         return fragment;
     }*/
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,12 +107,12 @@ public class FeedbackFragment_new extends AppCompatActivity {
     }
 
     public void initUI() {
-        spnType =findViewById(R.id.spinType);
+        spnType = findViewById(R.id.spinType);
         edtQuery = findViewById(R.id.edtQuery);
         btnSubmit = findViewById(R.id.btnSubmit);
         toolbar = findViewById(R.id.toolbar);
-        iv_back =   findViewById(R.id.iv_back);
-        iv_home =   findViewById(R.id.iv_home);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
         tv_toolbar = findViewById(R.id.tv_toolbar);
         tv_toolbar.setText("Feedback");
     }
@@ -128,7 +127,7 @@ public class FeedbackFragment_new extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity,HomeScreenActivity.class);
+                Intent intent = new Intent(activity, HomeScreenActivity.class);
                 startActivity(intent);
             }
         });
@@ -136,7 +135,7 @@ public class FeedbackFragment_new extends AppCompatActivity {
         iv_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity,HomeScreenActivity.class);
+                Intent intent = new Intent(activity, HomeScreenActivity.class);
                 startActivity(intent);
             }
         });

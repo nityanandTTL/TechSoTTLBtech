@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+
 import androidx.core.app.NotificationCompat;
 
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -27,8 +28,8 @@ import java.util.List;
  */
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
-    private NotificationManager mManager;
     AppPreferenceManager appPreferenceManager;
+    private NotificationManager mManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {

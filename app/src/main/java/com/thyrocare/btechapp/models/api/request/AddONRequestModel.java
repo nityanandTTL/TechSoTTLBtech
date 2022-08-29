@@ -8,6 +8,7 @@ public class AddONRequestModel {
     private ArrayList<test> test;
     private String coupon;
     private String promocode;
+    private String dos_order_id;
 
     public String getDos_order_id() {
         return dos_order_id;
@@ -16,9 +17,6 @@ public class AddONRequestModel {
     public void setDos_order_id(String dos_order_id) {
         this.dos_order_id = dos_order_id;
     }
-
-    private String dos_order_id;
-
 
     public String getPromocode() {
         return promocode;
@@ -94,6 +92,7 @@ public class AddONRequestModel {
     public static class test {
         private Integer id;
         private String type;
+        private Integer test_id;
 
         public Integer getTest_id() {
             return test_id;
@@ -102,9 +101,6 @@ public class AddONRequestModel {
         public void setTest_id(Integer test_id) {
             this.test_id = test_id;
         }
-
-        private Integer test_id;
-
 
         public Integer getId() {
             return id;

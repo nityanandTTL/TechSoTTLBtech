@@ -31,44 +31,6 @@ public class Tsp_HubScanBarcodeListAdapter extends RecyclerView.Adapter<Tsp_HubS
     private IntentIntegrator intentIntegrator;
     private CallbackInterface mCallback;
 
-    public void setOnShareClickedListener(TSP_SendFragment tsp_sendFragment) {
-        mCallback = tsp_sendFragment;
-        Logger.debug("result***123" + String.valueOf(mCallback));
-    }
-
-
-    public interface CallbackInterface {
-
-        /**
-         * Callback invoked when clicked
-         *
-         * @param position - the position
-         */
-        void onHandleSelection(int position);
-    }
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView editBarcode;
-        ImageView imgGreenTick;
-        ImageView imgRedCross;
-        View itemView;
-        ImageView btnScanBarcode;
-
-        private MyViewHolder(View view) {
-            super(view);
-            this.itemView = view;
-            initComp(view);
-        }
-
-        private void initComp(View view) {
-            editBarcode = (TextView) view.findViewById(R.id.editbarcode);
-            imgGreenTick = (ImageView) view.findViewById(R.id.scanned_status_green);
-            imgRedCross = (ImageView) view.findViewById(R.id.scanned_status_red);
-            btnScanBarcode = (ImageView) view.findViewById(R.id.btnScanBarcode);
-        }
-    }
-
-
     public Tsp_HubScanBarcodeListAdapter(ArrayList<Tsp_ScanBarcodeDataModel> barcodeModels, Activity activity) {
         this.barcodeModels = barcodeModels;
         this.activity = activity;
@@ -77,8 +39,13 @@ public class Tsp_HubScanBarcodeListAdapter extends RecyclerView.Adapter<Tsp_HubS
             Logger.debug("result***" + "try");
         } catch (ClassCastException ex) {
             //.. should log the error or throw and exception
-            MessageLogger.LogError("MyAdapter", "Must implement the CallbackInterface in the Activity   "+ ex);
+            MessageLogger.LogError("MyAdapter", "Must implement the CallbackInterface in the Activity   " + ex);
         }
+    }
+
+    public void setOnShareClickedListener(TSP_SendFragment tsp_sendFragment) {
+        mCallback = tsp_sendFragment;
+        Logger.debug("result***123" + String.valueOf(mCallback));
     }
 
     @Override
@@ -119,9 +86,39 @@ public class Tsp_HubScanBarcodeListAdapter extends RecyclerView.Adapter<Tsp_HubS
         }
     }
 
-
     @Override
     public int getItemCount() {
         return barcodeModels.size();
+    }
+
+    public interface CallbackInterface {
+
+        /**
+         * Callback invoked when clicked
+         *
+         * @param position - the position
+         */
+        void onHandleSelection(int position);
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView editBarcode;
+        ImageView imgGreenTick;
+        ImageView imgRedCross;
+        View itemView;
+        ImageView btnScanBarcode;
+
+        private MyViewHolder(View view) {
+            super(view);
+            this.itemView = view;
+            initComp(view);
+        }
+
+        private void initComp(View view) {
+            editBarcode = (TextView) view.findViewById(R.id.editbarcode);
+            imgGreenTick = (ImageView) view.findViewById(R.id.scanned_status_green);
+            imgRedCross = (ImageView) view.findViewById(R.id.scanned_status_red);
+            btnScanBarcode = (ImageView) view.findViewById(R.id.btnScanBarcode);
+        }
     }
 }

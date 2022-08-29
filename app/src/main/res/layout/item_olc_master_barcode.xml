@@ -12,8 +12,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="3dp"
         android:layout_marginRight="@dimen/dp_5"
+        android:layout_marginBottom="3dp"
         android:background="@drawable/bg_sample_type_edta"
         android:gravity="center"
         android:padding="@dimen/dp_5"
@@ -22,18 +22,17 @@
         android:textSize="16sp" />
 
     <EditText
-        android:enabled="false"
-        android:editable="false"
         android:id="@+id/edt_barcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/edittext_modified_states"
+        android:editable="false"
+        android:enabled="false"
         android:hint="Enter Barcode"
         android:inputType="text"
         android:maxLength="8"
-        android:padding="@dimen/dp_5"
-        />
+        android:padding="@dimen/dp_5" />
 
     <ImageView
         android:id="@+id/scan_barcode_button"

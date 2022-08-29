@@ -76,18 +76,21 @@ public class TSP_SendFragment extends AppCompatActivity implements Tsp_HubScanBa
     public static final String TAG_FRAGMENT = TSP_SendFragment.class.getSimpleName();
     View rootview;
     EditText edt_datetimepicker;
+    EditText edt_cid, edt_rpl, edt_cpl, edt_routingmode, edt_remarks;//edt_barcode;
+    Button btn_send;
+    Spinner spinnerMode;
+    Tsp_SendMode_DataModel tsp_sendMode_dataModel1;
+    String regexp = ".{1,7}";
+    AppPreferenceManager appPreferenceManager;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
     private int sampleCollectedYear;
     private int sampleCollectedMonth;
     private int sampleCollectedDay;
     private Calendar now;
     private int TIME_PICKER_INTERVAL = 30;
-    EditText edt_cid, edt_rpl, edt_cpl, edt_routingmode, edt_remarks;//edt_barcode;
-    Button btn_send;
-    Spinner spinnerMode;
     private ArrayList<Tsp_SendMode_DataModel> tsp_sendMode_dataModelsArr;
     private ArrayList<String> Modes;
-    Tsp_SendMode_DataModel tsp_sendMode_dataModel1;
-    String regexp = ".{1,7}";
     /*barcode*/
     private IntentIntegrator intentIntegrator;
     private RecyclerView recyclerView;
@@ -95,10 +98,6 @@ public class TSP_SendFragment extends AppCompatActivity implements Tsp_HubScanBa
     private Tsp_HubScanBarcodeListAdapter hubScanBarcodeListAdapter;
     private Global global;
     private Activity mActivity;
-    AppPreferenceManager appPreferenceManager;
-
-    TextView tv_toolbar;
-    ImageView iv_back,iv_home;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -289,9 +288,9 @@ public class TSP_SendFragment extends AppCompatActivity implements Tsp_HubScanBa
         now = Calendar.getInstance();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        tv_toolbar =  findViewById(R.id.tv_toolbar);
-        iv_back =  findViewById(R.id.iv_back);
-        iv_home =  findViewById(R.id.iv_home);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
 
         tv_toolbar.setText("Send");
     }
@@ -429,7 +428,7 @@ public class TSP_SendFragment extends AppCompatActivity implements Tsp_HubScanBa
                                     @Override
                                     public void onClick(DialogInterface arg0, int arg1) {
 
-                                        startActivity(new Intent(mActivity,HomeScreenActivity.class));
+                                        startActivity(new Intent(mActivity, HomeScreenActivity.class));
 
                                     }
                                 });

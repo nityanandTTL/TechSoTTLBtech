@@ -12,206 +12,203 @@ import android.view.WindowManager;
 public class AlertDialogMessage {
 
 
-	private AlertDialogOkListener alertDialogOkListener;
+    public static AlertDialog alertDialog;
+    public Typeface fontOpenSansSemiBold;
+    private AlertDialogOkListener alertDialogOkListener;
+    private AlertDialogCancelListener alertDialogCancelListener;
 
-	private AlertDialogCancelListener alertDialogCancelListener;
+    public static void cancelPreviousAlertDialog() {
 
-	public static AlertDialog alertDialog;
+        try {
+            if (alertDialog != null && alertDialog.getContext() != null) {
+                alertDialog.dismiss();
 
-	public Typeface fontOpenSansSemiBold;
+            }
+        } catch (Exception e) {
+        }
 
-	public void setAlertDialogOkListener(AlertDialogOkListener alertDialogOkListener) {
-		this.alertDialogOkListener = alertDialogOkListener;
-	}
+    }
 
-	public void setAlertDialogCancelListener(AlertDialogCancelListener alertDialogCancelListener) {
-		this.alertDialogCancelListener = alertDialogCancelListener;
-	}
+    public void setAlertDialogOkListener(AlertDialogOkListener alertDialogOkListener) {
+        this.alertDialogOkListener = alertDialogOkListener;
+    }
 
-	public static void cancelPreviousAlertDialog() {
+    public void setAlertDialogCancelListener(AlertDialogCancelListener alertDialogCancelListener) {
+        this.alertDialogCancelListener = alertDialogCancelListener;
+    }
 
-		try {
-			if (alertDialog != null && alertDialog.getContext() != null){
-				alertDialog.dismiss();
+    @SuppressLint("NewApi")
+    public void showAlert(Context context, String title, String message,
+                          boolean isCancellable) {
 
-			}
-		} catch (Exception e){
-		}
+        if (context == null) {
+            return;
+        }
 
-	}
+        cancelPreviousAlertDialog();
 
-	@SuppressLint("NewApi")
-	public void showAlert(Context context, String title, String message,
-	                      boolean isCancellable) {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+        builder1.setTitle(title);
+        builder1.setMessage(message);
 
-		if (context == null){
-			return;
-		}
+        builder1.setCancelable(isCancellable);
+        builder1.setPositiveButton("OK", new AlertDialogOkButtonListener());
+        alertDialog = builder1.create();
+        alertDialog.show();
 
-		cancelPreviousAlertDialog();
+    }
 
-		AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-		builder1.setTitle(title);
-		builder1.setMessage(message);
+    public void showAlert(Context context, String message, boolean isCancellable) {
 
-		builder1.setCancelable(isCancellable);
-		builder1.setPositiveButton("OK", new AlertDialogOkButtonListener());
-		alertDialog = builder1.create();
-		alertDialog.show();
+        if (context == null) {
+            return;
+        }
 
-	}
+        cancelPreviousAlertDialog();
 
-	public void showAlert(Context context, String message, boolean isCancellable) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message);
+        builder.setCancelable(isCancellable);
+        builder.setPositiveButton("OK", new AlertDialogOkButtonListener());
 
-		if (context == null){
-			return;
-		}
+        alertDialog = builder.create();
+        alertDialog.setCancelable(isCancellable);
+        alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        alertDialog.show();
 
-		cancelPreviousAlertDialog();
+    }
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setMessage(message);
-		builder.setCancelable(isCancellable);
-		builder.setPositiveButton("OK", new AlertDialogOkButtonListener());
+    public void showSingleButtonAlert(Context context, String message,
+                                      String positiveButton, boolean isCancellable) {
 
-		alertDialog = builder.create();
-		alertDialog.setCancelable(isCancellable);
-		alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-		alertDialog.show();
+        if (context == null) {
+            return;
+        }
 
-	}
+        cancelPreviousAlertDialog();
 
-	public void showSingleButtonAlert(Context context, String message,
-	                                  String positiveButton, boolean isCancellable) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message);
+        builder.setCancelable(isCancellable);
+        builder.setPositiveButton(positiveButton,
+                new AlertDialogOkButtonListener());
+        alertDialog = builder.create();
+        alertDialog.setCancelable(isCancellable);
+        alertDialog.show();
 
-		if (context == null){
-			return;
-		}
+    }
 
-		cancelPreviousAlertDialog();
+    public void showAlertOkCancel(Context context, String message,
+                                  boolean isCancellable) {
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setMessage(message);
-		builder.setCancelable(isCancellable);
-		builder.setPositiveButton(positiveButton,
-		                          new AlertDialogOkButtonListener());
-		alertDialog = builder.create();
-		alertDialog.setCancelable(isCancellable);
-		alertDialog.show();
+        if (context == null) {
+            return;
+        }
 
-	}
+        cancelPreviousAlertDialog();
 
-	public void showAlertOkCancel(Context context, String message,
-	                              boolean isCancellable) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message);
+        builder.setCancelable(isCancellable);
+        builder.setPositiveButton("Ok", new AlertDialogOkButtonListener());
+        builder.setNegativeButton("Cancel", new AlertDialogCancelButtonListener());
 
-		if (context == null){
-			return;
-		}
+        alertDialog = builder.create();
+        alertDialog.setCancelable(isCancellable);
+        alertDialog.show();
 
-		cancelPreviousAlertDialog();
+    }
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setMessage(message);
-		builder.setCancelable(isCancellable);
-		builder.setPositiveButton("Ok", new AlertDialogOkButtonListener());
-		builder.setNegativeButton("Cancel", new AlertDialogCancelButtonListener());
+    public void showAlertYesNo(Context context, String message,
+                               boolean isCancellable) {
 
-		alertDialog = builder.create();
-		alertDialog.setCancelable(isCancellable);
-		alertDialog.show();
+        if (context == null) {
+            return;
+        }
 
-	}
+        cancelPreviousAlertDialog();
 
-	public void showAlertYesNo(Context context, String message,
-	                           boolean isCancellable) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message);
+        builder.setCancelable(isCancellable);
+        builder.setPositiveButton("Yes", new AlertDialogOkButtonListener());
+        builder.setNegativeButton("No", new AlertDialogCancelButtonListener());
 
-		if (context == null){
-			return;
-		}
+        alertDialog = builder.create();
+        alertDialog.setCancelable(isCancellable);
+        alertDialog.show();
 
-		cancelPreviousAlertDialog();
+    }
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setMessage(message);
-		builder.setCancelable(isCancellable);
-		builder.setPositiveButton("Yes", new AlertDialogOkButtonListener());
-		builder.setNegativeButton("No", new AlertDialogCancelButtonListener());
+    public void showAlertTwoButtonAlert(Context context, String message,
+                                        String positiveButton, String negativeButton, boolean isCancellable) {
 
-		alertDialog = builder.create();
-		alertDialog.setCancelable(isCancellable);
-		alertDialog.show();
+        if (context == null) {
+            return;
+        }
 
-	}
+        cancelPreviousAlertDialog();
 
-	public void showAlertTwoButtonAlert(Context context, String message,
-	                                    String positiveButton, String negativeButton, boolean isCancellable) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message);
+        builder.setCancelable(isCancellable);
+        builder.setPositiveButton(positiveButton,
+                new AlertDialogOkButtonListener());
+        builder.setNegativeButton(negativeButton,
+                new AlertDialogCancelButtonListener());
 
-		if (context == null){
-			return;
-		}
+        alertDialog = builder.create();
+        alertDialog.setCancelable(isCancellable);
+        alertDialog.show();
 
-		cancelPreviousAlertDialog();
+    }
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setMessage(message);
-		builder.setCancelable(isCancellable);
-		builder.setPositiveButton(positiveButton,
-		                          new AlertDialogOkButtonListener());
-		builder.setNegativeButton(negativeButton,
-		                          new AlertDialogCancelButtonListener());
+    public interface AlertDialogOkListener {
 
-		alertDialog = builder.create();
-		alertDialog.setCancelable(isCancellable);
-		alertDialog.show();
+        public void onAlertDialogOkButtonListener();
 
-	}
+    }
 
-	private class AlertDialogOkButtonListener implements OnClickListener {
-		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			dialog.cancel();
-			if (alertDialogOkListener != null){
-				alertDialogOkListener.onAlertDialogOkButtonListener();
-			}
+    public interface AlertDialogCancelListener {
 
-		}
+        public void onAlertDialogCancelButtonListener();
 
-	}
+    }
 
-	private class AlertDialogCancelButtonListener implements OnClickListener {
-		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			dialog.cancel();
-			if (alertDialogCancelListener != null){
-				alertDialogCancelListener.onAlertDialogCancelButtonListener();
-			}
+    public interface AlertDialogListener {
 
-		}
+        public void onAlertDialogOkButtonListener();
 
-	}
+    }
 
-	public interface AlertDialogOkListener {
+    public interface AlertDialogOkSweptListener {
+        public void OKSweptOnclickListener(DialogInterface dialogInterface);
 
-		public void onAlertDialogOkButtonListener();
+    }
 
-	}
+    private class AlertDialogOkButtonListener implements OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dialog.cancel();
+            if (alertDialogOkListener != null) {
+                alertDialogOkListener.onAlertDialogOkButtonListener();
+            }
 
-	public interface AlertDialogCancelListener {
+        }
 
-		public void onAlertDialogCancelButtonListener();
+    }
 
-	}
+    private class AlertDialogCancelButtonListener implements OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dialog.cancel();
+            if (alertDialogCancelListener != null) {
+                alertDialogCancelListener.onAlertDialogCancelButtonListener();
+            }
 
-	public interface AlertDialogListener {
+        }
 
-		public void onAlertDialogOkButtonListener();
-
-	}
-
-	public interface AlertDialogOkSweptListener {
-		public void OKSweptOnclickListener(DialogInterface dialogInterface);
-
-	}
+    }
 
 	/*public Dialog showSweptAlert(Context context, String message,
 	                             boolean isCancellable) {

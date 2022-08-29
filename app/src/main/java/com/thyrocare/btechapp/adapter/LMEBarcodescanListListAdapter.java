@@ -5,6 +5,7 @@ package com.thyrocare.btechapp.adapter;
  */
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,29 +24,6 @@ public class LMEBarcodescanListListAdapter extends RecyclerView.Adapter<LMEBarco
 
     private ArrayList<SampleDropBarcodeList> barcodeModels;
     private LMEMapDisplayFragmentActivity activity;
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView editBarcode, txt_samplecnt;
-        ImageView imgGreenTick;
-        ImageView imgRedCross;
-        View itemView;
-        LinearLayout ll_edt_barcode;
-
-        private MyViewHolder(View view) {
-            super(view);
-            this.itemView = view;
-            initComp(view);
-        }
-
-        private void initComp(View view) {
-            editBarcode = (TextView) view.findViewById(R.id.editbarcode);
-            txt_samplecnt = (TextView) view.findViewById(R.id.txt_samplecnt);
-            ll_edt_barcode = (LinearLayout) view.findViewById(R.id.ll_edt_barcode);
-            imgGreenTick = (ImageView) view.findViewById(R.id.scanned_status_green);
-            imgRedCross = (ImageView) view.findViewById(R.id.scanned_status_red);
-        }
-    }
-
 
     public LMEBarcodescanListListAdapter(ArrayList<SampleDropBarcodeList> barcodeModels, LMEMapDisplayFragmentActivity activity) {
         this.barcodeModels = barcodeModels;
@@ -84,5 +62,27 @@ public class LMEBarcodescanListListAdapter extends RecyclerView.Adapter<LMEBarco
     @Override
     public int getItemCount() {
         return barcodeModels.size();
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView editBarcode, txt_samplecnt;
+        ImageView imgGreenTick;
+        ImageView imgRedCross;
+        View itemView;
+        LinearLayout ll_edt_barcode;
+
+        private MyViewHolder(View view) {
+            super(view);
+            this.itemView = view;
+            initComp(view);
+        }
+
+        private void initComp(View view) {
+            editBarcode = (TextView) view.findViewById(R.id.editbarcode);
+            txt_samplecnt = (TextView) view.findViewById(R.id.txt_samplecnt);
+            ll_edt_barcode = (LinearLayout) view.findViewById(R.id.ll_edt_barcode);
+            imgGreenTick = (ImageView) view.findViewById(R.id.scanned_status_green);
+            imgRedCross = (ImageView) view.findViewById(R.id.scanned_status_red);
+        }
     }
 }

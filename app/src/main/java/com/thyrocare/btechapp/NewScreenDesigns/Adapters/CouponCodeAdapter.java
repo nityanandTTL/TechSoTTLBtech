@@ -68,9 +68,9 @@ public class CouponCodeAdapter extends RecyclerView.Adapter<CouponCodeAdapter.vi
                 }
             }
         });
-        if (!appPreferenceManager.isPEPartner()){
+        if (!appPreferenceManager.isPEPartner()) {
             holder.img_couponimage.setImageResource(R.drawable.tc_coupon_icon);
-        }else{
+        } else {
             holder.img_couponimage.setImageResource(R.drawable.default_coupon);
         }
         holder.tv_show_moreless.setVisibility(InputUtils.isNull(couponCodeResponseModel.getData().get(position).getCouponSubHead()) ? View.GONE : View.VISIBLE);
@@ -78,9 +78,9 @@ public class CouponCodeAdapter extends RecyclerView.Adapter<CouponCodeAdapter.vi
         holder.tv_ApplycouponCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (appPreferenceManager.isPEPartner()){
+                if (appPreferenceManager.isPEPartner()) {
                     getClickedPECoupon.onApplyClick(couponCodeResponseModel.getData().get(position).getCouponCode());
-                }else{
+                } else {
                     getClickedPECoupon.onTCCouponVerification(couponCodeResponseModel.getData().get(position));
                 }
 

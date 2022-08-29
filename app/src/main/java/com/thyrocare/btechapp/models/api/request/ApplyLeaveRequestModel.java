@@ -5,6 +5,15 @@ package com.thyrocare.btechapp.models.api.request;
  */
 
 public class ApplyLeaveRequestModel {
+    Integer BtechId;
+    String LeaveType;
+    String Fromdate;
+    String Todate;
+    Integer Nature;
+    long days;
+    String Remarks;
+    Integer EnteredBy;
+
     public Integer getBtechId() {
         return BtechId;
     }
@@ -21,8 +30,6 @@ public class ApplyLeaveRequestModel {
         LeaveType = leaveType;
     }
 
-
-
     public Integer getNature() {
         return Nature;
     }
@@ -30,8 +37,6 @@ public class ApplyLeaveRequestModel {
     public void setNature(Integer nature) {
         Nature = nature;
     }
-
-
 
     public String getRemarks() {
         return Remarks;
@@ -65,13 +70,6 @@ public class ApplyLeaveRequestModel {
         EnteredBy = enteredBy;
     }
 
-    Integer BtechId;
-    String LeaveType;
-    String Fromdate;
-    String Todate;
-    Integer Nature;
-    long days;
-
     public long getDays() {
         return days;
     }
@@ -79,9 +77,6 @@ public class ApplyLeaveRequestModel {
     public void setDays(long days) {
         this.days = days;
     }
-
-    String Remarks;
-  Integer EnteredBy;
 
 
 }

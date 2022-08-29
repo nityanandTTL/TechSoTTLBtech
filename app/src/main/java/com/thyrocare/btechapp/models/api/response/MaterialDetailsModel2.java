@@ -5,7 +5,18 @@ import android.os.Parcelable;
 
 public class MaterialDetailsModel2 implements Parcelable {
 
-    String MaterialId,MaterialName,OpeningStock,UsedStock;
+    public static final Creator<MaterialDetailsModel2> CREATOR = new Creator<MaterialDetailsModel2>() {
+        @Override
+        public MaterialDetailsModel2 createFromParcel(Parcel in) {
+            return new MaterialDetailsModel2(in);
+        }
+
+        @Override
+        public MaterialDetailsModel2[] newArray(int size) {
+            return new MaterialDetailsModel2[size];
+        }
+    };
+    String MaterialId, MaterialName, OpeningStock, UsedStock;
 
     public MaterialDetailsModel2() {
     }
@@ -29,18 +40,6 @@ public class MaterialDetailsModel2 implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<MaterialDetailsModel2> CREATOR = new Creator<MaterialDetailsModel2>() {
-        @Override
-        public MaterialDetailsModel2 createFromParcel(Parcel in) {
-            return new MaterialDetailsModel2(in);
-        }
-
-        @Override
-        public MaterialDetailsModel2[] newArray(int size) {
-            return new MaterialDetailsModel2[size];
-        }
-    };
 
     public String getMaterialId() {
         return MaterialId;

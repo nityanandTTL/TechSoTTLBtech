@@ -9,13 +9,11 @@ public class AgeModel {
     private int months;
     private int years;
 
-    private AgeModel()
-    {
+    private AgeModel() {
         //Prevent default constructor
     }
 
-    public AgeModel(int days, int months, int years)
-    {
+    public AgeModel(int days, int months, int years) {
         this.days = days;
         this.months = months;
         this.years = years;
@@ -44,9 +42,9 @@ public class AgeModel {
     public void setYears(int years) {
         this.years = years;
     }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return years + "Y | " + months + "M | " + days + "D";
     }
 

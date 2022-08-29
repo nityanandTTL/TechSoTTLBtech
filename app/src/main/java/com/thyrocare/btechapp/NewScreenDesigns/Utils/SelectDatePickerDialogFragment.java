@@ -6,12 +6,13 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+
 import androidx.fragment.app.DialogFragment;
+
 import android.widget.DatePicker;
 
 import java.util.Calendar;
 import java.util.Date;
-
 
 
 @SuppressLint("ValidFragment")
@@ -43,7 +44,7 @@ public class SelectDatePickerDialogFragment extends DialogFragment implements Da
         datePickerDialog.setTitle(Title);
         DatePicker dp = datePickerDialog.getDatePicker();
 //        dp.setMinDate(Mindate);
-        dp.setMinDate(System.currentTimeMillis() -1000);
+        dp.setMinDate(System.currentTimeMillis() - 1000);
         dp.setMaxDate(MaxDate);
 
         return datePickerDialog;
@@ -61,9 +62,9 @@ public class SelectDatePickerDialogFragment extends DialogFragment implements Da
         calendar.set(Calendar.DAY_OF_MONTH, day);
 
 
-        String strSelectedDate = DateUtil.getDateFromLong(calendar.getTimeInMillis(),OutputDateFormat);
-        if (onDateSelectedListener != null){
-            onDateSelectedListener.onDateSelected(strSelectedDate,calendar.getTime());
+        String strSelectedDate = DateUtil.getDateFromLong(calendar.getTimeInMillis(), OutputDateFormat);
+        if (onDateSelectedListener != null) {
+            onDateSelectedListener.onDateSelected(strSelectedDate, calendar.getTime());
         }
 
     }

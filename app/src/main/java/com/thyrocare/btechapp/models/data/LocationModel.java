@@ -7,7 +7,18 @@ import android.os.Parcelable;
  * Created by Orion on 5/25/2017.
  */
 
-public class LocationModel implements Parcelable{
+public class LocationModel implements Parcelable {
+    public static final Creator<LocationModel> CREATOR = new Creator<LocationModel>() {
+        @Override
+        public LocationModel createFromParcel(Parcel in) {
+            return new LocationModel(in);
+        }
+
+        @Override
+        public LocationModel[] newArray(int size) {
+            return new LocationModel[size];
+        }
+    };
     private double lat;
     private double lng;
     private long timestamp;
@@ -32,18 +43,6 @@ public class LocationModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<LocationModel> CREATOR = new Creator<LocationModel>() {
-        @Override
-        public LocationModel createFromParcel(Parcel in) {
-            return new LocationModel(in);
-        }
-
-        @Override
-        public LocationModel[] newArray(int size) {
-            return new LocationModel[size];
-        }
-    };
 
     public double getLat() {
         return lat;

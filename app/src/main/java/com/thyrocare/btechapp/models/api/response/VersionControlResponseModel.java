@@ -7,9 +7,20 @@ import android.os.Parcelable;
  * Created by Orion on 5/11/2017.
  */
 
-public class VersionControlResponseModel implements Parcelable{
+public class VersionControlResponseModel implements Parcelable {
 
 
+    public static final Creator<VersionControlResponseModel> CREATOR = new Creator<VersionControlResponseModel>() {
+        @Override
+        public VersionControlResponseModel createFromParcel(Parcel in) {
+            return new VersionControlResponseModel(in);
+        }
+
+        @Override
+        public VersionControlResponseModel[] newArray(int size) {
+            return new VersionControlResponseModel[size];
+        }
+    };
     int Id;
     int APICurrentVerson;
     int APIMinVerson;
@@ -20,7 +31,6 @@ public class VersionControlResponseModel implements Parcelable{
     String EntryDate;
     String LastUpdated;
 
-
     protected VersionControlResponseModel(Parcel in) {
         Id = in.readInt();
         APICurrentVerson = in.readInt();
@@ -30,6 +40,9 @@ public class VersionControlResponseModel implements Parcelable{
         AppUrl = in.readString();
         EntryDate = in.readString();
         LastUpdated = in.readString();
+    }
+
+    public VersionControlResponseModel() {
     }
 
     @Override
@@ -48,18 +61,6 @@ public class VersionControlResponseModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<VersionControlResponseModel> CREATOR = new Creator<VersionControlResponseModel>() {
-        @Override
-        public VersionControlResponseModel createFromParcel(Parcel in) {
-            return new VersionControlResponseModel(in);
-        }
-
-        @Override
-        public VersionControlResponseModel[] newArray(int size) {
-            return new VersionControlResponseModel[size];
-        }
-    };
 
     public int getId() {
         return Id;
@@ -131,8 +132,5 @@ public class VersionControlResponseModel implements Parcelable{
 
     public void setLastUpdated(String lastUpdated) {
         LastUpdated = lastUpdated;
-    }
-
-    public VersionControlResponseModel() {
     }
 }

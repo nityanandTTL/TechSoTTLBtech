@@ -4,6 +4,17 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class PostOrderDataResponseModel implements Parcelable {
+    public static final Creator<PostOrderDataResponseModel> CREATOR = new Creator<PostOrderDataResponseModel>() {
+        @Override
+        public PostOrderDataResponseModel createFromParcel(Parcel in) {
+            return new PostOrderDataResponseModel(in);
+        }
+
+        @Override
+        public PostOrderDataResponseModel[] newArray(int size) {
+            return new PostOrderDataResponseModel[size];
+        }
+    };
     private String AGE, GENDER, LEAD_ID, NAME;
 
     protected PostOrderDataResponseModel(Parcel in) {
@@ -25,18 +36,6 @@ public class PostOrderDataResponseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<PostOrderDataResponseModel> CREATOR = new Creator<PostOrderDataResponseModel>() {
-        @Override
-        public PostOrderDataResponseModel createFromParcel(Parcel in) {
-            return new PostOrderDataResponseModel(in);
-        }
-
-        @Override
-        public PostOrderDataResponseModel[] newArray(int size) {
-            return new PostOrderDataResponseModel[size];
-        }
-    };
 
     public String getAGE() {
         return AGE;

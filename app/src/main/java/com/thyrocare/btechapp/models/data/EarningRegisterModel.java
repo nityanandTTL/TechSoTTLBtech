@@ -8,9 +8,31 @@ import android.os.Parcelable;
  */
 
 public class EarningRegisterModel extends BaseModel implements Parcelable {
+    public static final Creator<EarningRegisterModel> CREATOR = new Creator<EarningRegisterModel>() {
+        @Override
+        public EarningRegisterModel createFromParcel(Parcel in) {
+            return new EarningRegisterModel(in);
+        }
+
+        @Override
+        public EarningRegisterModel[] newArray(int size) {
+            return new EarningRegisterModel[size];
+        }
+    };
     String Date;
     Integer Amount;
     String Remarks;
+
+    public EarningRegisterModel() {
+        super();
+    }
+
+    protected EarningRegisterModel(Parcel in) {
+        super(in);
+        Date = in.readString();
+        Amount = in.readInt();
+        Remarks = in.readString();
+    }
 
     public String getDate() {
         return Date;
@@ -36,17 +58,6 @@ public class EarningRegisterModel extends BaseModel implements Parcelable {
         Remarks = remarks;
     }
 
-    public EarningRegisterModel() {
-        super();
-    }
-
-    protected EarningRegisterModel(Parcel in) {
-        super(in);
-        Date = in.readString();
-        Amount=in.readInt();
-        Remarks = in.readString();
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
@@ -59,17 +70,5 @@ public class EarningRegisterModel extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<EarningRegisterModel> CREATOR = new Creator<EarningRegisterModel>() {
-        @Override
-        public EarningRegisterModel createFromParcel(Parcel in) {
-            return new EarningRegisterModel(in);
-        }
-
-        @Override
-        public EarningRegisterModel[] newArray(int size) {
-            return new EarningRegisterModel[size];
-        }
-    };
 
 }

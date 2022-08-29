@@ -62,15 +62,15 @@ public class ServerdOrderFragment extends AppCompatActivity {
     Activity mActivity;
     ConnectionDetector cd;
     Global globalclass;
-    private RelativeLayout rel_dateSelector;
-    private TextView tv_selectedDate, tv_noDatafound;
     LinearLayout rel_main;
-    private EditText edt_Search;
-    private RecyclerView recycle_servedOrders;
     ArrayList<ServedOrderResponseModel.btchOrd> ServedOrderArylist;
-    private AppPreferenceManager appPreferenceManager;
     TextView tv_toolbar;
     ImageView iv_back, iv_home;
+    private RelativeLayout rel_dateSelector;
+    private TextView tv_selectedDate, tv_noDatafound;
+    private EditText edt_Search;
+    private RecyclerView recycle_servedOrders;
+    private AppPreferenceManager appPreferenceManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

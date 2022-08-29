@@ -1,13 +1,13 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle"
-    android:padding="@dimen/dp_15">
+    android:padding="@dimen/dp_15"
+    android:shape="rectangle">
 
     <!-- this one is ths color of the Rounded Button -->
     <corners
-        android:bottomRightRadius="@dimen/dp_50"
         android:bottomLeftRadius="@dimen/dp_50"
+        android:bottomRightRadius="@dimen/dp_50"
         android:topLeftRadius="@dimen/dp_50"
-        android:topRightRadius="@dimen/dp_50"/>
+        android:topRightRadius="@dimen/dp_50" />
 
 
     <gradient

@@ -7,10 +7,12 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.Settings;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.View;
@@ -19,7 +21,9 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.thyrocare.btechapp.R;
+
 import application.ApplicationController;
+
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 
@@ -29,131 +33,15 @@ import java.util.regex.Pattern;
 
 public class AbstractActivity extends AppCompatActivity implements ActivityHelper {
 
-    private ActivityHelper ah = new ActivityHelperImpl(this);
-    protected AppPreferenceManager appPreferenceManager;
     public Typeface fontOpenRobotoRegular;
     public Typeface fontOpenRobotoMedium;
     public Typeface fontOpenRobotoLight;
     public Typeface fontArialBold;
+    protected AppPreferenceManager appPreferenceManager;
     String screenId = "";
+    private ActivityHelper ah = new ActivityHelperImpl(this);
     private ProgressDialog progressDialog;
     private double PIC_WIDTH = 1000;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        ApplicationController.ACTIVITY_STACK.add(this);
-        appPreferenceManager = new AppPreferenceManager(this);
-        appPreferenceManager.setIsAppInBackground(false);
-        setFont();
-
-        super.onCreate(savedInstanceState);
-
-
-    }
-
-    public int getScale() {
-        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        int width = display.getWidth();
-        Double val = new Double(width) / new Double(PIC_WIDTH);
-        val = val * 100d;
-        return val.intValue();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
-    private void setFont() {
-        fontOpenRobotoRegular = Typeface.createFromAsset(getAssets(), "fonts/roboto-regular.ttf");
-        fontOpenRobotoMedium = Typeface.createFromAsset(getAssets(), "fonts/roboto-medium.ttf");
-        fontOpenRobotoLight = Typeface.createFromAsset(getAssets(), "fonts/roboto-light.ttf");
-        fontArialBold = Typeface.createFromAsset(getAssets(), "fonts/arialbd.ttf");
-    }
-
-    @Override
-    protected void onStop() {
-        // TODO Auto-generated method stub
-        super.onStop();
-        appPreferenceManager.setIsAppInBackground(true);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (appPreferenceManager.isAppInBackground()) {
-            appPreferenceManager.setIsAppInBackground(false);
-        }
-
-    }
-
-    @Override
-    protected void onPause() {
-        ApplicationController.IS_PAUSED = true;
-        appPreferenceManager.setIsAppInBackground(false);
-        super.onPause();
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        ApplicationController.ACTIVITY_STACK.remove(this);
-
-        super.onDestroy();
-    }
-
-    @Override
-    public void hideKeyboard(View view) {
-
-        ah.hideKeyboard(view);
-
-    }
-
-    /* For creating required typeface */
-    @Override
-    public Typeface createTypeFace(String fontName) {
-
-        return ah.createTypeFace(fontName);
-
-    }
-
-    @Override
-    public Drawable createRepeatableDrawable(int imageId) {
-        return ah.createRepeatableDrawable(imageId);
-    }
-
-    /* For taking network state */
-    @Override
-    public boolean isNetworkAvailable(Activity activity) {
-        return ah.isNetworkAvailable(activity);
-    }
-
-    /* Switch to some activity with bundle values and kill current activity */
-    @Override
-    public void switchToActivity(Activity current,
-                                 Class<? extends Activity> otherActivityClass, Bundle extras) {
-
-        ah.switchToActivity(current, otherActivityClass, extras);
-
-    }
-
-    /* Go to some activity with bundle values */
-    @Override
-    public void goToActivity(Activity current,
-                             Class<? extends Activity> otherActivityClass, Bundle extras) {
-
-        ah.goToActivity(current, otherActivityClass, extras);
-    }
-
-    @Override
-    public void initUI() {
-
-    }
-
-    // validate First Name
 
     public static boolean validateFName(String firstName) {
 
@@ -219,6 +107,122 @@ public class AbstractActivity extends AppCompatActivity implements ActivityHelpe
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        ApplicationController.ACTIVITY_STACK.add(this);
+        appPreferenceManager = new AppPreferenceManager(this);
+        appPreferenceManager.setIsAppInBackground(false);
+        setFont();
+
+        super.onCreate(savedInstanceState);
+
+
+    }
+
+    public int getScale() {
+        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        int width = display.getWidth();
+        Double val = new Double(width) / new Double(PIC_WIDTH);
+        val = val * 100d;
+        return val.intValue();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    private void setFont() {
+        fontOpenRobotoRegular = Typeface.createFromAsset(getAssets(), "fonts/roboto-regular.ttf");
+        fontOpenRobotoMedium = Typeface.createFromAsset(getAssets(), "fonts/roboto-medium.ttf");
+        fontOpenRobotoLight = Typeface.createFromAsset(getAssets(), "fonts/roboto-light.ttf");
+        fontArialBold = Typeface.createFromAsset(getAssets(), "fonts/arialbd.ttf");
+    }
+
+    @Override
+    protected void onStop() {
+        // TODO Auto-generated method stub
+        super.onStop();
+        appPreferenceManager.setIsAppInBackground(true);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (appPreferenceManager.isAppInBackground()) {
+            appPreferenceManager.setIsAppInBackground(false);
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        ApplicationController.IS_PAUSED = true;
+        appPreferenceManager.setIsAppInBackground(false);
+        super.onPause();
+
+    }
+
+    // validate First Name
+
+    @Override
+    protected void onDestroy() {
+        ApplicationController.ACTIVITY_STACK.remove(this);
+
+        super.onDestroy();
+    }
+
+    @Override
+    public void hideKeyboard(View view) {
+
+        ah.hideKeyboard(view);
+
+    }
+
+    /* For creating required typeface */
+    @Override
+    public Typeface createTypeFace(String fontName) {
+
+        return ah.createTypeFace(fontName);
+
+    }
+
+    @Override
+    public Drawable createRepeatableDrawable(int imageId) {
+        return ah.createRepeatableDrawable(imageId);
+    }
+
+    /* For taking network state */
+    @Override
+    public boolean isNetworkAvailable(Activity activity) {
+        return ah.isNetworkAvailable(activity);
+    }
+
+    /* Switch to some activity with bundle values and kill current activity */
+    @Override
+    public void switchToActivity(Activity current,
+                                 Class<? extends Activity> otherActivityClass, Bundle extras) {
+
+        ah.switchToActivity(current, otherActivityClass, extras);
+
+    }
+
+    /* Go to some activity with bundle values */
+    @Override
+    public void goToActivity(Activity current,
+                             Class<? extends Activity> otherActivityClass, Bundle extras) {
+
+        ah.goToActivity(current, otherActivityClass, extras);
+    }
+
+    @Override
+    public void initUI() {
+
+    }
+
     public void showProgressDialog(Activity activity, String message) {
         Logger.debug("Progress dialog open");
         progressDialog = new ProgressDialog(activity);
@@ -274,13 +278,13 @@ public class AbstractActivity extends AppCompatActivity implements ActivityHelpe
 			 */
             ft.addToBackStack(destinationFragmetTag);
         } else {
-			/*
-			 * and remove named backstack:
-			 * manager.popBackStack("name of your backstack",
-			 * FragmentManager.POP_BACK_STACK_INCLUSIVE); or remove whole:
-			 * manager.popBackStack(null,
-			 * FragmentManager.POP_BACK_STACK_INCLUSIVE);
-			 */
+            /*
+             * and remove named backstack:
+             * manager.popBackStack("name of your backstack",
+             * FragmentManager.POP_BACK_STACK_INCLUSIVE); or remove whole:
+             * manager.popBackStack(null,
+             * FragmentManager.POP_BACK_STACK_INCLUSIVE);
+             */
             try {
                 manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             } catch (Exception e) {

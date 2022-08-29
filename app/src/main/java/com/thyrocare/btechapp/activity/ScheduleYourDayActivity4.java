@@ -3,7 +3,9 @@ package com.thyrocare.btechapp.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AlertDialog;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -60,6 +62,11 @@ public class ScheduleYourDayActivity4 extends AbstractActivity {
      * The constant TAG_FRAGMENT.
      */
     public static final String TAG_FRAGMENT = "SCHEDULE_YOUR_DAY_FRAGMENT";
+    Switch btn_switch;
+    /**
+     * The Day afterttomorrow as string.
+     */
+    String dayAfterttomorrowAsString;
     private ScheduleYourDayActivity4 activity;
     private AppPreferenceManager appPreferenceManager;
     private Button txtNo, txtYes;
@@ -73,13 +80,7 @@ public class ScheduleYourDayActivity4 extends AbstractActivity {
     private SetBtechAvailabilityAPIRequestModel savedModel;
     private TextView date;
     private String value;
-    Switch btn_switch;
-
     private String lasScheduleDate;
-    /**
-     * The Day afterttomorrow as string.
-     */
-    String dayAfterttomorrowAsString;
     private String disableNo = "";
     private Global global;
 
@@ -138,9 +139,9 @@ public class ScheduleYourDayActivity4 extends AbstractActivity {
 
 
 
-      /*  activity2.toolbarHome.setTitle("Schedule your Day");
+    /*  activity2.toolbarHome.setTitle("Schedule your Day");
 
-      */
+     */
 
 
     //changes_5june2017
@@ -186,7 +187,7 @@ public class ScheduleYourDayActivity4 extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 //changes_5june2017
-              /*  if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {*/
+                /*  if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {*/
                 txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
                 txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 llSlotsDisplay.setVisibility(View.VISIBLE);
@@ -313,12 +314,12 @@ public class ScheduleYourDayActivity4 extends AbstractActivity {
         btn_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     llSlotsDisplay.setVisibility(View.VISIBLE);
                     isAvailable = true;
                     btnProceed.setVisibility(View.VISIBLE);
                     fetchData();
-                }else{
+                } else {
                     llSlotsDisplay.setVisibility(View.GONE);
                     btnProceed.setVisibility(View.INVISIBLE);
                     isAvailable = false;
@@ -361,7 +362,6 @@ public class ScheduleYourDayActivity4 extends AbstractActivity {
         });
 
 
-
     }
 
     private void CallFetchSlotDetailsApi() {
@@ -369,9 +369,9 @@ public class ScheduleYourDayActivity4 extends AbstractActivity {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<SlotModel>> responseCall = apiInterface.CallFetchSlotDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID());
         global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback< ArrayList<SlotModel>>() {
+        responseCall.enqueue(new Callback<ArrayList<SlotModel>>() {
             @Override
-            public void onResponse(Call< ArrayList<SlotModel>> call, retrofit2.Response< ArrayList<SlotModel>> response) {
+            public void onResponse(Call<ArrayList<SlotModel>> call, retrofit2.Response<ArrayList<SlotModel>> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     slotsArr = response.body();
@@ -391,7 +391,7 @@ public class ScheduleYourDayActivity4 extends AbstractActivity {
             }
 
             @Override
-            public void onFailure(Call< ArrayList<SlotModel>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<SlotModel>> call, Throwable t) {
                 global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
@@ -405,8 +405,8 @@ public class ScheduleYourDayActivity4 extends AbstractActivity {
     public void CallLogOutFromDevice() {
         try {
             TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
-             new LogUserActivityTagging(activity, LOGOUT,"");
-                    appPreferenceManager.clearAllPreferences();
+            new LogUserActivityTagging(activity, LOGOUT, "");
+            appPreferenceManager.clearAllPreferences();
             try {
                 new DhbDao(activity).deleteTablesonLogout();
             } catch (Exception e) {

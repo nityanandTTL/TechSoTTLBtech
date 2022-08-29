@@ -6,5 +6,6 @@ package com.thyrocare.btechapp.delegate;
 
 public interface CustomUpdateDialogOkButtonOnClickedDelegate {
     void onUpdateClicked();
+
     void onOkClicked();
 }

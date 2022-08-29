@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="2dp"
         android:background="@color/bg_content"
         android:baselineAligned="false"
         android:orientation="horizontal">
@@ -53,20 +53,20 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/bgTitleRight"
-            android:paddingBottom="20dp"
-            android:paddingEnd="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
             android:paddingStart="15dp"
-            android:paddingTop="20dp">
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:paddingEnd="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="20dp">
 
             <ImageView
                 android:id="@+id/title_from_to_dots"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
-                android:layout_marginEnd="10dp"
                 android:layout_marginTop="-8dp"
+                android:layout_marginEnd="10dp"
                 android:src="@drawable/user_profile" />
 
             <TextView
@@ -185,8 +185,8 @@
                 android:id="@+id/img_edit"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
                 android:src="@drawable/edit_order_icon"
                 android:visibility="invisible" />
 
@@ -194,8 +194,8 @@
                 android:id="@+id/img_release"
                 android:layout_width="40dp"
                 android:layout_height="20dp"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
                 android:src="@drawable/trash" />
 
         </RelativeLayout>
@@ -204,9 +204,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/bg_content">
 
         <RelativeLayout
@@ -294,8 +294,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/ll_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/purple_btn_bg"
             android:gravity="center"
             android:minEms="10"

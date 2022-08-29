@@ -17,8 +17,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_margin="8dp"
-            android:fitsSystemWindows="true"
-          />
+            android:fitsSystemWindows="true" />
 
     </LinearLayout>
 

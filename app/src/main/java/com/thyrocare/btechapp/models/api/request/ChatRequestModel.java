@@ -9,6 +9,17 @@ import android.os.Parcelable;
 
 public class ChatRequestModel implements Parcelable {
 
+    public static final Creator<ChatRequestModel> CREATOR = new Creator<ChatRequestModel>() {
+        @Override
+        public ChatRequestModel createFromParcel(Parcel in) {
+            return new ChatRequestModel(in);
+        }
+
+        @Override
+        public ChatRequestModel[] newArray(int size) {
+            return new ChatRequestModel[size];
+        }
+    };
     private String firstName;
     private String lastName;
     private String email;
@@ -16,9 +27,9 @@ public class ChatRequestModel implements Parcelable {
     private String password;
     private String code;
 
+
     public ChatRequestModel() {
     }
-
 
     protected ChatRequestModel(Parcel in) {
         firstName = in.readString();
@@ -43,18 +54,6 @@ public class ChatRequestModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<ChatRequestModel> CREATOR = new Creator<ChatRequestModel>() {
-        @Override
-        public ChatRequestModel createFromParcel(Parcel in) {
-            return new ChatRequestModel(in);
-        }
-
-        @Override
-        public ChatRequestModel[] newArray(int size) {
-            return new ChatRequestModel[size];
-        }
-    };
 
     public String getFirstName() {
         return firstName;

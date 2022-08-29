@@ -181,8 +181,7 @@ public class SearchableListDialog extends DialogFragment implements
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
         dismiss();
     }

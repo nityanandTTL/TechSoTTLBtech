@@ -18,15 +18,15 @@ import java.util.List;
  * @author Rishi K
  */
 public class DbAccessHelper {
-    public static String DATABASE_NAME = DbHelper.DB_NAME;
     private final static int DATABASE_VERSION = DbHelper.DB_VERSION;
+    public static String DATABASE_NAME = DbHelper.DB_NAME;
     private static List<DbModel> models;
-    private Context context;
-    private SQLiteDatabase db;
-    private SQLiteStatement insertStmt;
     private static String databasePath = null;
     private static String TAG = "DB-HELPER";
     private static DbAccessHelper dbHelper = null;
+    private Context context;
+    private SQLiteDatabase db;
+    private SQLiteStatement insertStmt;
 
     private DbAccessHelper(Context context) {
         this.context = context;
@@ -56,15 +56,15 @@ public class DbAccessHelper {
         return dbHelper;
     }
 
-	/*
+    /*
      * public DbHelper(Context mContext,List<DbModel> models) { this.context =
-	 * mContext; this.models = models; openHelper = new
-	 * OpenHelper(this.context); openHelper.close(); if (db != null &&
-	 * db.isOpen()) { db.close(); openHelper.close(); } db =
-	 * openHelper.getWritableDatabase();
-	 * 
-	 * }
-	 */
+     * mContext; this.models = models; openHelper = new
+     * OpenHelper(this.context); openHelper.close(); if (db != null &&
+     * db.isOpen()) { db.close(); openHelper.close(); } db =
+     * openHelper.getWritableDatabase();
+     *
+     * }
+     */
 
     public void close() {
         if (db != null) {

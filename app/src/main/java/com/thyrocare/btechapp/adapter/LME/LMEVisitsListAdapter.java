@@ -2,6 +2,7 @@ package com.thyrocare.btechapp.adapter.LME;
 
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +24,9 @@ import java.util.Locale;
 
 public class LMEVisitsListAdapter extends RecyclerView.Adapter<LMEVisitsListAdapter.MyViewHolder> {
 
+    private final ArrayList<SampleDropDetailsbyTSPLMEDetailsModel> arraylist;
     ArrayList<SampleDropDetailsbyTSPLMEDetailsModel> mListArray;
     LME_OrdersDisplayFragment mLME_OrdersDisplayFragment;
-    private final ArrayList<SampleDropDetailsbyTSPLMEDetailsModel> arraylist;
 
     public LMEVisitsListAdapter(ArrayList<SampleDropDetailsbyTSPLMEDetailsModel> materialDetailsModels, LME_OrdersDisplayFragment fragment) {
         this.mListArray = materialDetailsModels;

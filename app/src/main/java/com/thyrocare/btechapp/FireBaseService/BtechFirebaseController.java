@@ -28,14 +28,14 @@ public class BtechFirebaseController {
     String str_CouponCollection;
     FirebaseFirestore btechFirebaseFireStore;
     Global global;
-Activity activity;
+    Activity activity;
 
     public BtechFirebaseController(AddEditBenificaryActivity addEditBenificaryActivity, String CouponCollection) {
         this.addEditBenificaryActivity = addEditBenificaryActivity;
         this.str_CouponCollection = CouponCollection;
         btechFirebaseFireStore = FirebaseFirestore.getInstance();
         global = new Global(addEditBenificaryActivity);
-        this.activity=addEditBenificaryActivity;
+        this.activity = addEditBenificaryActivity;
     }
 
     public void getAllCoupons(String CouponDocument, final boolean pePartner) {
@@ -53,7 +53,7 @@ Activity activity;
                                 model.Data = new ArrayList<>();
                                 CouponCodeResponseModel.Coupons responseModel;
                                 for (int i = 0; i < testlist.size(); i++) {
-                                    if (Boolean.parseBoolean(testlist.get(i).get("Status"))){
+                                    if (Boolean.parseBoolean(testlist.get(i).get("Status"))) {
                                         responseModel = new CouponCodeResponseModel.Coupons();
                                         responseModel.setCouponCode(testlist.get(i).get("CouponCode"));
                                         responseModel.setCouponHead(testlist.get(i).get("CouponHead"));

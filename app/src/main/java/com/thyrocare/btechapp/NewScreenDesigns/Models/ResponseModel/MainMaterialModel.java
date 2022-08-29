@@ -59,6 +59,7 @@ public class MainMaterialModel {
         private String MaterialName;
         private String OpeningStock;
         private String UsedStock;
+        private String ExpectedStock;
 
         public String getExpectedStock() {
             return ExpectedStock;
@@ -67,8 +68,6 @@ public class MainMaterialModel {
         public void setExpectedStock(String expectedStock) {
             ExpectedStock = expectedStock;
         }
-
-        private String ExpectedStock;
 
         public String getMaterialId() {
             return MaterialId;

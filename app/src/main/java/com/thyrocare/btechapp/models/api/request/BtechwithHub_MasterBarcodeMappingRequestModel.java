@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 
 public class BtechwithHub_MasterBarcodeMappingRequestModel {
-    private String MasterBarcode,BtechId, HubId;
+    private String MasterBarcode, BtechId, HubId;
     private ArrayList<BtechwithHub_BarcodeDataModel> barcodes;
 
     public String getMasterBarcode() {

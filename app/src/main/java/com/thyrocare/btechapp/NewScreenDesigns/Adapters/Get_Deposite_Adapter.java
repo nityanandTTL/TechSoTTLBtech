@@ -2,8 +2,10 @@ package com.thyrocare.btechapp.NewScreenDesigns.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +29,13 @@ public class Get_Deposite_Adapter extends RecyclerView.Adapter<Get_Deposite_Adap
     @NonNull
     @Override
     public MyViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_ledgersub_earning_new,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_ledgersub_earning_new, parent, false);
         return new MyViewholder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewholder holder, int position) {
-        holder.txt_Amount.setText(get_deposite_details_models.get(position).getAmount()+"");
+        holder.txt_Amount.setText(get_deposite_details_models.get(position).getAmount() + "");
         holder.txt_Registerdate.setText(get_deposite_details_models.get(position).getDate());
         holder.txt_Remarks.setText(get_deposite_details_models.get(position).getRemarks());
     }
@@ -44,7 +46,8 @@ public class Get_Deposite_Adapter extends RecyclerView.Adapter<Get_Deposite_Adap
     }
 
     public class MyViewholder extends RecyclerView.ViewHolder {
-        TextView txt_Remarks,txt_Amount,txt_Registerdate;
+        TextView txt_Remarks, txt_Amount, txt_Registerdate;
+
         public MyViewholder(@NonNull View itemView) {
             super(itemView);
             txt_Amount = itemView.findViewById(R.id.txt_Amount);

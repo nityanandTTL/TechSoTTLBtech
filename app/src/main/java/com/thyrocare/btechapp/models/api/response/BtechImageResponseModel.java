@@ -40,6 +40,10 @@ public class BtechImageResponseModel {
         return flag;
     }
 
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
     public String getEndpointKey() {
         return EndpointKey;
     }
@@ -54,9 +58,5 @@ public class BtechImageResponseModel {
 
     public void setSubscriptionKey(String subscriptionKey) {
         SubscriptionKey = subscriptionKey;
-    }
-
-    public void setFlag(int flag) {
-        this.flag = flag;
     }
 }

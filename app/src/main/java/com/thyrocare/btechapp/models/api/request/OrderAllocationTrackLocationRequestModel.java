@@ -10,6 +10,17 @@ import android.os.Parcelable;
 public class OrderAllocationTrackLocationRequestModel implements Parcelable {
 
 
+    public static final Creator<OrderAllocationTrackLocationRequestModel> CREATOR = new Creator<OrderAllocationTrackLocationRequestModel>() {
+        @Override
+        public OrderAllocationTrackLocationRequestModel createFromParcel(Parcel in) {
+            return new OrderAllocationTrackLocationRequestModel(in);
+        }
+
+        @Override
+        public OrderAllocationTrackLocationRequestModel[] newArray(int size) {
+            return new OrderAllocationTrackLocationRequestModel[size];
+        }
+    };
     private String BtechId;
     private String VisitId;
     private String Latitude;
@@ -22,6 +33,9 @@ public class OrderAllocationTrackLocationRequestModel implements Parcelable {
         Latitude = in.readString();
         Longitude = in.readString();
         Status = in.readInt();
+    }
+
+    public OrderAllocationTrackLocationRequestModel() {
     }
 
     @Override
@@ -37,18 +51,6 @@ public class OrderAllocationTrackLocationRequestModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<OrderAllocationTrackLocationRequestModel> CREATOR = new Creator<OrderAllocationTrackLocationRequestModel>() {
-        @Override
-        public OrderAllocationTrackLocationRequestModel createFromParcel(Parcel in) {
-            return new OrderAllocationTrackLocationRequestModel(in);
-        }
-
-        @Override
-        public OrderAllocationTrackLocationRequestModel[] newArray(int size) {
-            return new OrderAllocationTrackLocationRequestModel[size];
-        }
-    };
 
     public String getBtechId() {
         return BtechId;
@@ -88,8 +90,5 @@ public class OrderAllocationTrackLocationRequestModel implements Parcelable {
 
     public void setStatus(int status) {
         Status = status;
-    }
-
-    public OrderAllocationTrackLocationRequestModel() {
     }
 }

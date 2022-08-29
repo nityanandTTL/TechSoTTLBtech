@@ -6,6 +6,6 @@ package com.thyrocare.btechapp.utils.app;
 public interface GeoLocationDialogDelegate {
 
 
-	public void onGeoLocDialogCancelPressed();
+    public void onGeoLocDialogCancelPressed();
 
 }

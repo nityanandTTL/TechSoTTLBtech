@@ -3,7 +3,7 @@ package com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel;
 import org.parceler.Parcel;
 
 @Parcel
-public class LoginResponseModel  {
+public class LoginResponseModel {
 
 
     String userName;

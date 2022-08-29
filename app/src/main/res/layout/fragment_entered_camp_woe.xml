@@ -13,45 +13,45 @@
             android:id="@+id/lin_SearchAndDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="10"
-            android:padding="@dimen/_2sdp">
+            android:padding="@dimen/_2sdp"
+            android:weightSum="10">
 
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
                 android:layout_gravity="center_vertical"
-                android:padding="@dimen/_5sdp"
-                android:background="@drawable/rounded_background_empty_orange_less_padding">
+                android:layout_weight="4"
+                android:background="@drawable/rounded_background_empty_orange_less_padding"
+                android:padding="@dimen/_5sdp">
 
                 <TextView
                     android:id="@+id/tv_date"
                     android:layout_width="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:padding="@dimen/_4sdp"
                     android:text="Select Date"
-                    android:textStyle="bold"
                     android:textSize="@dimen/_12sdp"
-                    android:padding="@dimen/_4sdp"/>
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/img_dateIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
-                    android:src="@drawable/ic_calendar"/>
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_calendar" />
             </RelativeLayout>
 
 
             <RelativeLayout
                 android:id="@+id/rel_serach"
                 android:layout_width="0dp"
-                android:layout_weight="6"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_2sdp"
-                android:padding="@dimen/_3sdp"
-                android:background="@drawable/rounded_background_empty_orange_less_padding">
+                android:layout_weight="6"
+                android:background="@drawable/rounded_background_empty_orange_less_padding"
+                android:padding="@dimen/_3sdp">
 
                 <ImageView
                     android:id="@+id/img_search"
@@ -76,22 +76,19 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycle_CampWOEMIS"
-            android:layout_below="@+id/lin_SearchAndDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_2sdp"/>
+            android:layout_below="@+id/lin_SearchAndDate"
+            android:layout_margin="@dimen/_2sdp" />
 
         <TextView
             android:id="@+id/tv_noDatafound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="No Data Found"
-            android:textSize="@dimen/_20sdp"
-            android:layout_centerInParent="true"/>
+            android:textSize="@dimen/_20sdp" />
     </RelativeLayout>
-
-
-
 
 
 </FrameLayout>

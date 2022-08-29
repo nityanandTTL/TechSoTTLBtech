@@ -6,7 +6,7 @@ import android.os.Parcelable;
  * Created by Orion on 5/4/2017.
  */
 
-public class FinalMaterialModel extends  BaseModel implements Parcelable{
+public class FinalMaterialModel extends BaseModel implements Parcelable {
 
 
     private MaterialDetailsModel materialDetailsModel;

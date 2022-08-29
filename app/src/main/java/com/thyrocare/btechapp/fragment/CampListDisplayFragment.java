@@ -66,6 +66,9 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 public class CampListDisplayFragment extends AbstractFragment {
 
     public static final String TAG_FRAGMENT = CampListDisplayFragment.class.getSimpleName();
+    public static String products;
+    CampListDetailDisplayAdapter campListDetailDisplayAdapter;
+    IntentIntegrator integrator;
     private HomeScreenActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private DhbDao dhbDao;
@@ -73,17 +76,14 @@ public class CampListDisplayFragment extends AbstractFragment {
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
     private View rootView;
     private ListView recyclerView;
-    public static String products;
     private TextView txtNoRecord;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConfirmOrderReleaseDialog cdd;
     private ArrayList<CampBtechModel> btechs;
     private ArrayList<CampDetailModel> campDetailModels;
-    private CampDetailModel campDetailsResponseModel=new CampDetailModel();
+    private CampDetailModel campDetailsResponseModel = new CampDetailModel();
     private CampListDisplayResponseModel campListDisplayResponseModel;
-    CampListDetailDisplayAdapter campListDetailDisplayAdapter;
     private int position;
-    IntentIntegrator integrator;
     private ArrayList<CampAllOrderDetailsModel> campAllOrderDetailsModelslist;
     private Global global;
 
@@ -188,6 +188,7 @@ public class CampListDisplayFragment extends AbstractFragment {
                     Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<CampListDisplayResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -197,26 +198,11 @@ public class CampListDisplayFragment extends AbstractFragment {
     }
 
 
-
     @Override
     public void initUI() {
         recyclerView = (ListView) rootView.findViewById(R.id.rv_camp_list_display);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.srl_camp_list_display);
         txtNoRecord = (TextView) rootView.findViewById(R.id.txt_no_camp_detail);
-    }
-
-    private class CampListDisplayRecyclerViewAdapterDelegateResult implements CampListDisplayRecyclerViewAdapterDelegate {
-        @Override
-        public void onItemClick(CampDetailModel campDetailModel, int status, int pos) {
-            Logger.error("Item Clicked");
-            Logger.error("" + campDetailModel.getCampId());
-            startCampApi(campDetailModel, status, pos);
-        }
-
-        @Override
-        public void onNavigationStart(CampDetailModel campListDisplayResponseModel) {
-
-        }
     }
 
     private void startCampApi(CampDetailModel campDetailModel, int i, int pos) {
@@ -229,9 +215,9 @@ public class CampListDisplayFragment extends AbstractFragment {
             Intent intent = new Intent(Intent.ACTION_CALL);
             intent.setData(Uri.parse("tel:" + campDetailModel.getLeaderContactNo()));
             activity.startActivity(intent);
-        }else{
+        } else {
             if (isNetworkAvailable(activity)) {
-                callCampStartRequestApi(campStartedRequestModel,campDetailModel);
+                callCampStartRequestApi(campStartedRequestModel, campDetailModel);
             } else {
                 Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }
@@ -250,16 +236,16 @@ public class CampListDisplayFragment extends AbstractFragment {
             public void onResponse(Call<String> call, Response<String> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful()) {
-                    if (campStartedRequestModel.getType() == 7){
+                    if (campStartedRequestModel.getType() == 7) {
                         Toast.makeText(activity, "" + response.body(), Toast.LENGTH_SHORT).show();
                         Logger.error("" + position);
                         campDetailModels.get(position).setStarted(true);
                         campListDetailDisplayAdapter.notifyDataSetChanged();
-                    }else if (campStartedRequestModel.getType() == 8){
+                    } else if (campStartedRequestModel.getType() == 8) {
                         Toast.makeText(activity, "" + response.body(), Toast.LENGTH_SHORT).show();
-                    }else if (campStartedRequestModel.getType() == 3){
+                    } else if (campStartedRequestModel.getType() == 3) {
                         Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
-                        Logger.error("campDetailModels after arrived "+campDetailModels.size());
+                        Logger.error("campDetailModels after arrived " + campDetailModels.size());
                         intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModel);
                         startActivity(intentOrderBooking);
                     }
@@ -284,9 +270,9 @@ public class CampListDisplayFragment extends AbstractFragment {
 
         }
         if (scanningResult != null && scanningResult.getContents() != null) {
-            if (scanningResult.getContents().startsWith("0")|| scanningResult.getContents().startsWith("$")){
+            if (scanningResult.getContents().startsWith("0") || scanningResult.getContents().startsWith("$")) {
                 Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 //  String scanned_barcode = scanningResult.getContents();
                 Logger.error("" + scanningResult);
                 Logger.error("scanned_barcode " + scanningResult.getContents());
@@ -313,43 +299,57 @@ public class CampListDisplayFragment extends AbstractFragment {
 
     private void CallGetSendQRCodeApi(String contents) {
 
-            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-            Call<CampScanQRResponseModel> responseCall = apiInterface.CallgetSendQRCodeRequestAPI(contents);
-            global.showProgressDialog(activity, "Fetching products. Please wait..");
-            responseCall.enqueue(new Callback<CampScanQRResponseModel>() {
-                @Override
-                public void onResponse(Call<CampScanQRResponseModel> call, retrofit2.Response<CampScanQRResponseModel> response) {
-                    global.hideProgressDialog(activity);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        Call<CampScanQRResponseModel> responseCall = apiInterface.CallgetSendQRCodeRequestAPI(contents);
+        global.showProgressDialog(activity, "Fetching products. Please wait..");
+        responseCall.enqueue(new Callback<CampScanQRResponseModel>() {
+            @Override
+            public void onResponse(Call<CampScanQRResponseModel> call, retrofit2.Response<CampScanQRResponseModel> response) {
+                global.hideProgressDialog(activity);
 
-                    if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null) {
 
-                        CampScanQRResponseModel campScanQRResponseModel = response.body();
+                    CampScanQRResponseModel campScanQRResponseModel = response.body();
 
-                        if (campScanQRResponseModel != null && campScanQRResponseModel.getAllOrderdetails().size() > 0) {
-                            for (int i = 0; i < campScanQRResponseModel.getAllOrderdetails().size(); i++) {
-                                for (int j = 0; j <
-                                        campScanQRResponseModel.getAllOrderdetails().get(i).getBenMaster().size(); j++) {
-                                    campScanQRResponseModel.getAllOrderdetails().get(i).getBenMaster().get(j).setOrderNo(campScanQRResponseModel.getAllOrderdetails().get(i).getOrderNo());
-                                }
+                    if (campScanQRResponseModel != null && campScanQRResponseModel.getAllOrderdetails().size() > 0) {
+                        for (int i = 0; i < campScanQRResponseModel.getAllOrderdetails().size(); i++) {
+                            for (int j = 0; j <
+                                    campScanQRResponseModel.getAllOrderdetails().get(i).getBenMaster().size(); j++) {
+                                campScanQRResponseModel.getAllOrderdetails().get(i).getBenMaster().get(j).setOrderNo(campScanQRResponseModel.getAllOrderdetails().get(i).getOrderNo());
                             }
-                            campAllOrderDetailsModelslist = campScanQRResponseModel.getAllOrderdetails();
-                            Logger.error("camp detail size " + campScanQRResponseModel.getAllOrderdetails().size());
                         }
-                        Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
-                        intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModels);
-                        //  intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campScanQRResponseModel);
-                        startActivity(intentOrderBooking);
-                    } else {
-                        Toast.makeText(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
+                        campAllOrderDetailsModelslist = campScanQRResponseModel.getAllOrderdetails();
+                        Logger.error("camp detail size " + campScanQRResponseModel.getAllOrderdetails().size());
                     }
+                    Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
+                    intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModels);
+                    //  intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campScanQRResponseModel);
+                    startActivity(intentOrderBooking);
+                } else {
+                    Toast.makeText(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
+            }
 
-                @Override
-                public void onFailure(Call<CampScanQRResponseModel> call, Throwable t) {
-                    global.hideProgressDialog(activity);
-                    global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
-                }
-            });
+            @Override
+            public void onFailure(Call<CampScanQRResponseModel> call, Throwable t) {
+                global.hideProgressDialog(activity);
+                global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
+            }
+        });
+    }
+
+    private class CampListDisplayRecyclerViewAdapterDelegateResult implements CampListDisplayRecyclerViewAdapterDelegate {
+        @Override
+        public void onItemClick(CampDetailModel campDetailModel, int status, int pos) {
+            Logger.error("Item Clicked");
+            Logger.error("" + campDetailModel.getCampId());
+            startCampApi(campDetailModel, status, pos);
+        }
+
+        @Override
+        public void onNavigationStart(CampDetailModel campListDisplayResponseModel) {
+
+        }
     }
 
 }

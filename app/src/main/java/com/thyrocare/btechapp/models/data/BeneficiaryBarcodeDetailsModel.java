@@ -7,8 +7,19 @@ import android.os.Parcelable;
  * Created by Orion on 4/19/2017.
  */
 
-public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcelable{
+public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcelable {
 
+    public static final Creator<BeneficiaryBarcodeDetailsModel> CREATOR = new Creator<BeneficiaryBarcodeDetailsModel>() {
+        @Override
+        public BeneficiaryBarcodeDetailsModel createFromParcel(Parcel in) {
+            return new BeneficiaryBarcodeDetailsModel(in);
+        }
+
+        @Override
+        public BeneficiaryBarcodeDetailsModel[] newArray(int size) {
+            return new BeneficiaryBarcodeDetailsModel[size];
+        }
+    };
     private String id;
     private int BenId;
     private String OrderNo;
@@ -21,10 +32,10 @@ public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcela
     private int ProcessAt;
     private boolean isRBS_PPBS;
 
+
     public BeneficiaryBarcodeDetailsModel() {
         super();
     }
-
 
     protected BeneficiaryBarcodeDetailsModel(Parcel in) {
         super(in);
@@ -61,18 +72,6 @@ public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcela
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BeneficiaryBarcodeDetailsModel> CREATOR = new Creator<BeneficiaryBarcodeDetailsModel>() {
-        @Override
-        public BeneficiaryBarcodeDetailsModel createFromParcel(Parcel in) {
-            return new BeneficiaryBarcodeDetailsModel(in);
-        }
-
-        @Override
-        public BeneficiaryBarcodeDetailsModel[] newArray(int size) {
-            return new BeneficiaryBarcodeDetailsModel[size];
-        }
-    };
 
     public String getRescanBarcode() {
         return RescanBarcode;

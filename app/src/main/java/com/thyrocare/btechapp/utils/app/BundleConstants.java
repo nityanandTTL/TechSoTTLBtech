@@ -94,13 +94,21 @@ public class BundleConstants {
     public static final String PERSUASION = "PERSUASION";
     public static final String RESCHEDULED = "RESCHEDULED";
     public static final String TEST_EDIT_PE = "TEST_EDIT_PE";
-    public static String PINCODE="PINCODE";
-
+    public static final String YES_ACTION = "YES_ACTION";
+    public static final String NO_ACTION = "NO_ACTION";
+    public static final int HARDCOPY_CHARGES = 75;
+    public static final int APPID_TRACKACTIVITY = 2;
+    public static final String LOGIN = "LOGIN";
+    public static final String LOGOUT = "LOGOUT";
+    public static final String API_FOR_OTP = "sNhdlQjqvoD7zCbzf56sxppBJX3MmdWSAomi@RBhXRrVcGyko7hIzQ==";
+    public static final String Apikey_WOE = "68rbZ40eNeRephUzIDTos9SsQIm4mHlT3lCNnqI)Ivk=";
+    public static String PINCODE = "PINCODE";
     // neha G --------------------------
     public static int DataInVisitModel = 0;
     public static int OrderAccept = 0;
     public static int not_avail_tom = 0;
     public static int Day_aftr_tom = 0;
+    //neha G---------------------------------
     public static String ShowTimeInNotificatn = "";
     public static int DoneworkOrder = 0;
     public static int delay = 0;
@@ -109,15 +117,10 @@ public class BundleConstants {
     public static int RemoveBenId = 0;
     public static String VISIT_ID = "OrderId";
     public static String FlagAcceptReject = "FlagAcceptRej";
-    //neha G---------------------------------
-
-    public static final String YES_ACTION = "YES_ACTION";
-    public static final String NO_ACTION = "NO_ACTION";
     public static String YESNO_ID = "yesno";
     public static String ORDER_SLOTID = "orderslotid";
     public static boolean ORDER_Notification = false;
     public static int batch_code = 0;
-
     //Flag 1 for Face detection, 0 for disable, 2 for faceCount
     public static int Flag_facedetection = 0;
     public static boolean b_facedetection = true;
@@ -125,15 +128,6 @@ public class BundleConstants {
     public static String locationText = "Select Location";
     public static ArrayList<Venupunture_Temporary_ImageModel> TempVenuImageArylist = new ArrayList<>();
     public static boolean isBarcodeConfirmPopupShown = false;
-
-    public static final int HARDCOPY_CHARGES = 75;
-
-    public static final int APPID_TRACKACTIVITY = 2;
-    public static final String LOGIN = "LOGIN";
-    public static final String LOGOUT = "LOGOUT";
-
-    public static final String API_FOR_OTP = "sNhdlQjqvoD7zCbzf56sxppBJX3MmdWSAomi@RBhXRrVcGyko7hIzQ==";
-    public static final String Apikey_WOE = "68rbZ40eNeRephUzIDTos9SsQIm4mHlT3lCNnqI)Ivk=";
     public static int addPaymentFlag = 0;
     public static int setRefreshStartArriveActivity = 0;
     public static int setStechDialogFlag = 0;
@@ -141,27 +135,27 @@ public class BundleConstants {
 
     public static String WOE = "WOE";
     public static int callOTPFlag = 0;
-    public static String PROCESSING_LOCATION="processing_location";
-    public static String ADDRESS="address";
-    public static String newTimeTWO="newTimeTWO";
+    public static String PROCESSING_LOCATION = "processing_location";
+    public static String ADDRESS = "address";
+    public static String newTimeTWO = "newTimeTWO";
     public static String newTimeTWOHalf = "newTimeTWOHalf";
     public static String isNBT = "isNBT";
-    public static String PERATES ="PETestRates";
+    public static String PERATES = "PETestRates";
     public static int days = 7;
-    public static String B2BLogin ="Y";
-    public static String CheckInternetConnection ="Please check internet connection.";
+    public static String B2BLogin = "Y";
+    public static String CheckInternetConnection = "Please check internet connection.";
     public static String Reschedule = "OrderReschedule";
-    public static String setSelectedOrder="";
+    public static String setSelectedOrder = "";
     public static boolean setVisitOrderScreen = false;
     public static String EDIT_TEST = "EDIT_TESTS";
     public static boolean setPEOrderEdit = false;
     public static boolean setSecondOrderFlag = false;
-    public static String OrderReleaseOptionsID ="58";
+    public static String OrderReleaseOptionsID = "58";
     public static Integer ToDisplayTimerOnSelectedPosition = 381;
 
     public static boolean isPEPartner = false;
     public static boolean PEDSAOrder = false;
     public static boolean PE_HARD_BLOCKING = false;
 
-    public static String VenepunctureImage_path ="";
+    public static String VenepunctureImage_path = "";
 }

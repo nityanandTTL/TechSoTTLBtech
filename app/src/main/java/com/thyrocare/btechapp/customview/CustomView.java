@@ -63,7 +63,7 @@ public class CustomView extends View {
         double imageHeight = mBitmap.getHeight();
         double scale = Math.min(viewWidth / imageWidth, viewHeight / imageHeight);
 
-        Rect destBounds = new Rect(0, 0, (int)(imageWidth * scale), (int)(imageHeight * scale));
+        Rect destBounds = new Rect(0, 0, (int) (imageWidth * scale), (int) (imageHeight * scale));
         canvas.drawBitmap(mBitmap, null, destBounds, null);
         return scale;
     }
@@ -79,10 +79,10 @@ public class CustomView extends View {
 
         for (int i = 0; i < mFaces.size(); ++i) {
             Face face = mFaces.valueAt(i);
-            canvas.drawRect((float)(face.getPosition().x * scale),
-                    (float)(face.getPosition().y * scale),
-                    (float)((face.getPosition().x + face.getWidth()) * scale),
-                    (float)((face.getPosition().y + face.getHeight()) * scale),
+            canvas.drawRect((float) (face.getPosition().x * scale),
+                    (float) (face.getPosition().y * scale),
+                    (float) ((face.getPosition().x + face.getWidth()) * scale),
+                    (float) ((face.getPosition().y + face.getHeight()) * scale),
                     paint);
         }
     }
@@ -90,7 +90,7 @@ public class CustomView extends View {
     /**
      * Draws a small circle for each detected landmark, centered at the detected landmark position.
      * <p>
-     *
+     * <p>
      * Note that eye landmarks are defined to be the midpoint between the detected eye corner
      * positions, which tends to place the eye landmarks at the lower eyelid rather than at the
      * pupil position.
@@ -124,7 +124,7 @@ public class CustomView extends View {
 
         for (int i = 0; i < mFaces.size(); ++i) {
             Face face = mFaces.valueAt(i);
-            float cx = (float)(face.getPosition().x * scale);
+            float cx = (float) (face.getPosition().x * scale);
             float cy = (float) (face.getPosition().y * scale);
             canvas.drawText(String.valueOf(face.getIsSmilingProbability()), cx, cy + 10.0f, paint);
         }

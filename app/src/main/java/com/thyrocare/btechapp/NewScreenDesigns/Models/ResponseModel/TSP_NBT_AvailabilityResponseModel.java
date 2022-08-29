@@ -5,16 +5,6 @@ import android.os.Parcelable;
 
 public class TSP_NBT_AvailabilityResponseModel implements Parcelable {
 
-    private String BtechID;
-    private String Date;
-    private String Name;
-
-    protected TSP_NBT_AvailabilityResponseModel(Parcel in) {
-        BtechID = in.readString();
-        Date = in.readString();
-        Name = in.readString();
-    }
-
     public static final Creator<TSP_NBT_AvailabilityResponseModel> CREATOR = new Creator<TSP_NBT_AvailabilityResponseModel>() {
         @Override
         public TSP_NBT_AvailabilityResponseModel createFromParcel(Parcel in) {
@@ -26,6 +16,15 @@ public class TSP_NBT_AvailabilityResponseModel implements Parcelable {
             return new TSP_NBT_AvailabilityResponseModel[size];
         }
     };
+    private String BtechID;
+    private String Date;
+    private String Name;
+
+    protected TSP_NBT_AvailabilityResponseModel(Parcel in) {
+        BtechID = in.readString();
+        Date = in.readString();
+        Name = in.readString();
+    }
 
     public String getBtechID() {
         return BtechID;

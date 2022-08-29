@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/blue_shadow"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/blue_shadow">
 
     <LinearLayout
         android:id="@+id/ll_new"
@@ -79,10 +79,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"
-            android:text="Capture Photo"
-            android:textStyle="bold"
             android:background="@drawable/btn_bg_new"
-            android:textColor="@color/bg_new_color" />
+            android:text="Capture Photo"
+            android:textColor="@color/bg_new_color"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

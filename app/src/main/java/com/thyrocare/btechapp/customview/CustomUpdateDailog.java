@@ -23,7 +23,7 @@ public class CustomUpdateDailog extends Dialog implements View.OnClickListener {
     public Button btn_update, btn_ok;
     public TextView tv_title;
     public EditText edt_remark;
-    private CustomUpdateDialogOkButtonOnClickedDelegate customupdateDialogOkButtonOnClickedDelegate ;
+    private CustomUpdateDialogOkButtonOnClickedDelegate customupdateDialogOkButtonOnClickedDelegate;
 
     public CustomUpdateDailog(Context context, CustomUpdateDialogOkButtonOnClickedDelegate customupdateDialogOkButtonOnClickedDelegate) {
         super(context);
@@ -56,10 +56,9 @@ public class CustomUpdateDailog extends Dialog implements View.OnClickListener {
         if (v.getId() == R.id.btn_Update) {
             customupdateDialogOkButtonOnClickedDelegate.onUpdateClicked();
             dismiss();
-        }
-        else if (v.getId() == R.id.btn_ok) {
+        } else if (v.getId() == R.id.btn_ok) {
             customupdateDialogOkButtonOnClickedDelegate.onOkClicked();
-           // dismiss();
+            // dismiss();
         }
     }
 }

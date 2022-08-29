@@ -38,10 +38,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/drawable_spinner_bg"
-                    android:padding="@dimen/_8sdp"
                     android:dropDownVerticalOffset="50dp"
+                    android:padding="@dimen/_8sdp"
                     android:textColor="@color/grey"
-                    android:textSize="@dimen/value"/>
+                    android:textSize="@dimen/value" />
             </androidx.cardview.widget.CardView>
 
 

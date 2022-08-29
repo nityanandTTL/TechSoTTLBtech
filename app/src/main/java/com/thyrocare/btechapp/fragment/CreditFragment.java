@@ -98,6 +98,30 @@ public class CreditFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static CreditFragment newInstance() {
+        CreditFragment fragment = new CreditFragment();
+        Bundle args = new Bundle();
+
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static String encodeTobase64(Bitmap image) {
+        Bitmap immagex = image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        immagex.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
+
+        MessageLogger.LogError("LOOK", imageEncoded);
+        return imageEncoded;
+    }
+
+    public static Bitmap decodeBase64(String input) {
+        byte[] decodedByte = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -160,14 +184,6 @@ public class CreditFragment extends Fragment {
 
     }
 
-    public static CreditFragment newInstance() {
-        CreditFragment fragment = new CreditFragment();
-        Bundle args = new Bundle();
-
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -198,7 +214,6 @@ public class CreditFragment extends Fragment {
             Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private void setListeners() {
         btn_submit.setOnClickListener(new View.OnClickListener() {
@@ -512,22 +527,6 @@ public class CreditFragment extends Fragment {
         }
 
         return null;
-    }
-
-    public static String encodeTobase64(Bitmap image) {
-        Bitmap immagex = image;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        immagex.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] b = baos.toByteArray();
-        String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
-
-        MessageLogger.LogError("LOOK", imageEncoded);
-        return imageEncoded;
-    }
-
-    public static Bitmap decodeBase64(String input) {
-        byte[] decodedByte = Base64.decode(input, 0);
-        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
     }
 
     private void CallGetPaymentModeMasterApi() {

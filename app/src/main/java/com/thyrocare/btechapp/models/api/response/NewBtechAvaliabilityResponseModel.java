@@ -6,7 +6,7 @@ import com.thyrocare.btechapp.models.data.Numberofdaysdatamodel;
  * Created by Orion on 6/22/2017.
  */
 
-public class NewBtechAvaliabilityResponseModel  {
+public class NewBtechAvaliabilityResponseModel {
     private Numberofdaysdatamodel NumberOfDays;
 
     public NewBtechAvaliabilityResponseModel() {

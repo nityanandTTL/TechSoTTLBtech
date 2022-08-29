@@ -3,6 +3,7 @@ package com.thyrocare.btechapp.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.provider.Settings;
+
 import androidx.annotation.Nullable;
 
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -32,7 +33,7 @@ public class Timecheckservice extends IntentService {
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-      Thread  t = new Thread(new Runnable() {
+        Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {

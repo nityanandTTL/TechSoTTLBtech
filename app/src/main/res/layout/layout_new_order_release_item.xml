@@ -24,9 +24,9 @@
                 android:id="@+id/tv_textNew"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/bg_new_color"
                 android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/_5sdp" />
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:textColor="@color/bg_new_color" />
         </LinearLayout>
 
         <EditText
@@ -35,13 +35,13 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_5sdp"
             android:layout_marginRight="@dimen/_5sdp"
-            android:paddingTop="@dimen/_2sdp"
-            android:paddingLeft="@dimen/_10sdp"
             android:background="@drawable/editbox_bg"
             android:gravity="start"
-            android:lines="4"
             android:hint="Enter remarks*"
+            android:lines="4"
             android:maxLines="4"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingTop="@dimen/_2sdp"
             android:visibility="gone" />
 
     </LinearLayout>

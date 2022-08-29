@@ -7,5 +7,6 @@ import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
  */
 public interface ConfirmOrderReleaseDialogButtonClickedDelegate {
     void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remark);
+
     void onCancelButtonClicked();
 }

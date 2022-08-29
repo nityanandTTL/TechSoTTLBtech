@@ -6,11 +6,22 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 /**
- * Created by Orion on 4/19/2017.*/
-
+ * Created by Orion on 4/19/2017.
+ */
 
 
 public class OrderDetailsModel extends BaseModel implements Parcelable {
+    public static final Creator<OrderDetailsModel> CREATOR = new Creator<OrderDetailsModel>() {
+        @Override
+        public OrderDetailsModel createFromParcel(Parcel in) {
+            return new OrderDetailsModel(in);
+        }
+
+        @Override
+        public OrderDetailsModel[] newArray(int size) {
+            return new OrderDetailsModel[size];
+        }
+    };
     private int BrandId;//
     private String OrderNo;//
     private String Address;
@@ -48,7 +59,6 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private boolean EditOrder;
     private boolean EuOrders;
     private boolean EditME;
-
     private ArrayList<KitsCountModel> kits;
 
     protected OrderDetailsModel(Parcel in) {
@@ -91,6 +101,10 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         EuOrders = in.readByte() != 0;
         EditME = in.readByte() != 0;
 //        kits = in.createTypedArrayList(KitsCountModel.CREATOR);
+    }
+
+    public OrderDetailsModel() {
+        super();
     }
 
     @Override
@@ -141,18 +155,6 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         return 0;
     }
 
-    public static final Creator<OrderDetailsModel> CREATOR = new Creator<OrderDetailsModel>() {
-        @Override
-        public OrderDetailsModel createFromParcel(Parcel in) {
-            return new OrderDetailsModel(in);
-        }
-
-        @Override
-        public OrderDetailsModel[] newArray(int size) {
-            return new OrderDetailsModel[size];
-        }
-    };
-
     public boolean isDirectVisit() {
         return DirectVisit;
     }
@@ -191,10 +193,6 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public void setCampId(String campId) {
         CampId = campId;
-    }
-
-    public OrderDetailsModel() {
-        super();
     }
 
     public String getServicetype() {
@@ -366,7 +364,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         this.benMaster = benMaster;
     }
 
-public ArrayList<KitsCountModel> getKits() {
+    public ArrayList<KitsCountModel> getKits() {
         return kits;
     }
 

@@ -39,7 +39,8 @@ public class ClientEntryController {
         this.newClientEntry = newClientEntry;
         globalclass = new Global(activity);
     }
-    public void PostRegisterapicall(NewClientModel newClientpostmodel){
+
+    public void PostRegisterapicall(NewClientModel newClientpostmodel) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallNewClientEntryRegistrationAPI(newClientpostmodel);
         globalclass.showProgressDialog(activity, PLEASE_WAIT);
@@ -50,29 +51,30 @@ public class ClientEntryController {
                 if (res.isSuccessful() && res.body() != null) {
                     try {
                         JSONObject response = new JSONObject(res.body());
-                        if (response.getString("Response").equalsIgnoreCase("Success")){
+                        if (response.getString("Response").equalsIgnoreCase("Success")) {
                             responsenewCliententryModel = new ResponseClientEntryModel();
                             responsenewCliententryModel.setResponse(response.getString("Response"));
                             responsenewCliententryModel.setMessage(response.getString("message"));
                             responsenewCliententryModel.setDocStatus(response.getString("docStatus"));
                             responsenewCliententryModel.setResId(response.getString("ResId"));
-                            Toast.makeText(activity,response.getString("Response"),Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, response.getString("Response"), Toast.LENGTH_LONG).show();
                             newClientEntry.RefreshFields();
-                        }else{
-                            globalclass.showalert_OK(response.optString("message","Something went wrong, please try after sometime."),activity);
+                        } else {
+                            globalclass.showalert_OK(response.optString("message", "Something went wrong, please try after sometime."), activity);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(activity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
+                        Toast.makeText(activity, SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
                     }
-                }else{
-                    Toast.makeText(activity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalclass.hideProgressDialog(activity);
-                Toast.makeText(activity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
+                Toast.makeText(activity, SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
             }
         });
 

@@ -7,6 +7,13 @@ package com.thyrocare.btechapp.models.api.response;
 public class MaterialResponseModel {
 
 
+    Integer MaterialId;
+    String MaterialName;
+    String ShortName;
+    String UnitCost;
+    String UnitSize;
+    String Tax;
+
     public Integer getMaterialId() {
         return MaterialId;
     }
@@ -54,11 +61,4 @@ public class MaterialResponseModel {
     public void setTax(String tax) {
         Tax = tax;
     }
-
-    Integer MaterialId;
-    String MaterialName;
-    String ShortName;
-    String UnitCost;
-    String UnitSize;
-    String Tax;
 }

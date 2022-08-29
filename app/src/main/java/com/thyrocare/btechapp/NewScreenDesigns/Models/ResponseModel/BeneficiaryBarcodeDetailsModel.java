@@ -10,6 +10,17 @@ import android.os.Parcelable;
 
 public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcelable {
 
+    public static final Creator<BeneficiaryBarcodeDetailsModel> CREATOR = new Creator<BeneficiaryBarcodeDetailsModel>() {
+        @Override
+        public BeneficiaryBarcodeDetailsModel createFromParcel(Parcel in) {
+            return new BeneficiaryBarcodeDetailsModel(in);
+        }
+
+        @Override
+        public BeneficiaryBarcodeDetailsModel[] newArray(int size) {
+            return new BeneficiaryBarcodeDetailsModel[size];
+        }
+    };
     private String id;
     private int BenId;
     private String OrderNo;
@@ -55,18 +66,6 @@ public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcela
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BeneficiaryBarcodeDetailsModel> CREATOR = new Creator<BeneficiaryBarcodeDetailsModel>() {
-        @Override
-        public BeneficiaryBarcodeDetailsModel createFromParcel(Parcel in) {
-            return new BeneficiaryBarcodeDetailsModel(in);
-        }
-
-        @Override
-        public BeneficiaryBarcodeDetailsModel[] newArray(int size) {
-            return new BeneficiaryBarcodeDetailsModel[size];
-        }
-    };
 
     @Override
     public String toString() {

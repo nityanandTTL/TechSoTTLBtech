@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class PaymentDoCaptureResponseAPIResponseModel implements Parcelable {
+    public static final Creator<PaymentDoCaptureResponseAPIResponseModel> CREATOR = new Creator<PaymentDoCaptureResponseAPIResponseModel>() {
+        @Override
+        public PaymentDoCaptureResponseAPIResponseModel createFromParcel(Parcel in) {
+            return new PaymentDoCaptureResponseAPIResponseModel(in);
+        }
+
+        @Override
+        public PaymentDoCaptureResponseAPIResponseModel[] newArray(int size) {
+            return new PaymentDoCaptureResponseAPIResponseModel[size];
+        }
+    };
     private String ResponseCode;
     private String TransactionId;
     private String OrderNo;
@@ -50,18 +61,6 @@ public class PaymentDoCaptureResponseAPIResponseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<PaymentDoCaptureResponseAPIResponseModel> CREATOR = new Creator<PaymentDoCaptureResponseAPIResponseModel>() {
-        @Override
-        public PaymentDoCaptureResponseAPIResponseModel createFromParcel(Parcel in) {
-            return new PaymentDoCaptureResponseAPIResponseModel(in);
-        }
-
-        @Override
-        public PaymentDoCaptureResponseAPIResponseModel[] newArray(int size) {
-            return new PaymentDoCaptureResponseAPIResponseModel[size];
-        }
-    };
 
     public String getResponseCode() {
         return ResponseCode;

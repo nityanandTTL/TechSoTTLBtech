@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.appcompat.widget.SearchView;
+
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -302,11 +304,11 @@ public class DisplayTestsMasterListActivity extends AbstractActivity {
             public boolean onQueryTextSubmit(String query) {
                 if (expAdapter != null) {
                     expAdapter.filterData(query);
-                    if(!query.isEmpty()){
-                        for(int i=0; i < expAdapter.getGroupCount(); i++)
+                    if (!query.isEmpty()) {
+                        for (int i = 0; i < expAdapter.getGroupCount(); i++)
                             expandList.expandGroup(i);
-                    }else{
-                        for(int i=0; i < expAdapter.getGroupCount(); i++)
+                    } else {
+                        for (int i = 0; i < expAdapter.getGroupCount(); i++)
                             expandList.collapseGroup(i);
                     }
                 }
@@ -317,11 +319,11 @@ public class DisplayTestsMasterListActivity extends AbstractActivity {
             public boolean onQueryTextChange(String query) {
                 if (expAdapter != null) {
                     expAdapter.filterData(query);
-                    if(!query.isEmpty()){
-                        for(int i=0; i < expAdapter.getGroupCount(); i++)
+                    if (!query.isEmpty()) {
+                        for (int i = 0; i < expAdapter.getGroupCount(); i++)
                             expandList.expandGroup(i);
-                    }else{
-                        for(int i=0; i < expAdapter.getGroupCount(); i++)
+                    } else {
+                        for (int i = 0; i < expAdapter.getGroupCount(); i++)
                             expandList.collapseGroup(i);
                     }
 
@@ -334,7 +336,7 @@ public class DisplayTestsMasterListActivity extends AbstractActivity {
             public boolean onClose() {
                 if (expAdapter != null) {
                     expAdapter.filterData("");
-                    for(int i=0; i < expAdapter.getGroupCount(); i++)
+                    for (int i = 0; i < expAdapter.getGroupCount(); i++)
                         expandList.collapseGroup(i);
                 }
                 return false;
@@ -380,7 +382,7 @@ public class DisplayTestsMasterListActivity extends AbstractActivity {
                                                     testTypeWiseTestRateMasterModels_new.add(testTypeWiseTestRateMasterModels.get(i));
                                                 }
                                             }
-                                        }else{
+                                        } else {
                                             testTypeWiseTestRateMasterModels_new.add(testTypeWiseTestRateMasterModels.get(i));
                                         }
                                     }

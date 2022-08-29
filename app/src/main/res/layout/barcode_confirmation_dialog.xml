@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rel_main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,43 +9,43 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_2"
         android:text="Barcode Check"
         android:textColor="@color/black"
-        android:textStyle="bold"
         android:textSize="@dimen/dp_9"
-        android:layout_margin="@dimen/dp_2"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_msg"
-        android:layout_below="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_title"
         android:layout_marginLeft="@dimen/dp_8"
         android:text="" />
 
     <TextView
         android:id="@+id/tv_positivebtn"
-        android:layout_below="@+id/tv_msg"
-        android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="@dimen/dp_5"
+        android:layout_below="@+id/tv_msg"
+        android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/dp_8"
-        android:text="YES"/>
+        android:text="YES"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp_5"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_negativebtn"
-        android:layout_below="@+id/tv_msg"
-        android:layout_toLeftOf="@+id/tv_positivebtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="@dimen/dp_5"
+        android:layout_below="@+id/tv_msg"
         android:layout_margin="@dimen/dp_8"
-        android:text="NO"/>
+        android:layout_toLeftOf="@+id/tv_positivebtn"
+        android:text="NO"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp_5"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

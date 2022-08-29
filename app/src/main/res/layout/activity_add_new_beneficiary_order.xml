@@ -37,9 +37,9 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_above="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/card_view"
         android:layout_below="@+id/rel_Header"
         android:layout_margin="@dimen/_5sdp"
         android:orientation="vertical">
@@ -83,7 +83,6 @@
         </androidx.cardview.widget.CardView>
 
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -124,9 +123,9 @@
                 <Spinner
                     android:id="@+id/spn_purpose"
                     android:layout_width="match_parent"
-                    android:entries="@array/gender"
                     android:layout_height="wrap_content"
                     android:background="@drawable/drawable_spinner_bg"
+                    android:entries="@array/gender"
                     android:padding="@dimen/_8sdp" />
             </androidx.cardview.widget.CardView>
 
@@ -144,9 +143,9 @@
             android:paddingLeft="@dimen/_10sdp"
             android:paddingTop="@dimen/_6sdp"
             android:paddingRight="@dimen/_4sdp"
-            android:visibility="gone"
             android:paddingBottom="@dimen/_2sdp"
-            android:textSize="14sp">
+            android:textSize="14sp"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/img_gender_male"
@@ -425,9 +424,9 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/_10sdp"
         app:cardCornerRadius="@dimen/_5sdp"
         app:cardElevation="@dimen/_5sdp">

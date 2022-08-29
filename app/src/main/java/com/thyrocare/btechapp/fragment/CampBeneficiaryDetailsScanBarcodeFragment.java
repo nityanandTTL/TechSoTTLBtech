@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AlertDialog;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +53,6 @@ import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.TestRateMasterModel;
 
 
-
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
@@ -74,11 +75,18 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SO
  */
 public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment implements View.OnClickListener {
     public static final String TAG_FRAGMENT = CampBeneficiaryDetailsScanBarcodeFragment.class.getSimpleName();
+    private static final int REQUEST_CAMERA = 100;
+    private static RefreshCampBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegateResult;
+    RelativeLayout rl_2;
+    CampDetailModel campDetailModel = new CampDetailModel();
+    ArrayList<CampDetailsBenMasterModel> campDetailsBenMasterModelsArray = new ArrayList<>();
+    IntentIntegrator integrator;
+    int benId;
+    ImageView img_male, img_female;
     private OrderBookingResponseVisitModel orderBookingResponseVisitModel = new OrderBookingResponseVisitModel();
     private BeneficiaryDetailsModel beneficiaryDetailsModel;
     private CampOrderBookingActivity activity;
     private ArrayList<OrderBookingResponseBeneficiaryModel> orderBookingResponseBeneficiaryModelArr = new ArrayList<>();
-    private static final int REQUEST_CAMERA = 100;
     private View rootview;
     private ImageView img_vsg;
     private CampDetailsBenMasterModel beneficiaryDetailsArr;
@@ -93,7 +101,6 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> benCHArr;
     private ArrayList<BeneficiaryLabAlertsModel> benLAArr;
     private ArrayList<LabAlertMasterModel> labAlertsArr;
-    private static RefreshCampBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegateResult;
     private EditText edt_name, edt_mobile, edt_email, edt_age, edt_amount, edt_address, edt_pincode;
     private Button btn_scan_qr, btn_enter_manually, btn_next;
     private TextView tv_age, tv_gender, edt_test_alerts, edt_brand_name;
@@ -101,22 +108,16 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     private ArrayList<String> tests_iems = new ArrayList<>();
     private Spinner sp_test;
     private String test_codes;
-    RelativeLayout rl_2;
     private String[] test_code_arr;
     private ArrayList<String> strings = new ArrayList<>();
     private LinearLayout ll_test_scan;
     private ArrayList<TestRateMasterModel> testRateMasterModels = new ArrayList<>();
-    CampDetailModel campDetailModel = new CampDetailModel();
     private ArrayList<BeneficiaryBarcodeDetailsModel> barcodeDetailsArr;
-    ArrayList<CampDetailsBenMasterModel> campDetailsBenMasterModelsArray = new ArrayList<>();
     private DhbDao dhbDao;
     private boolean issampleTypeScan;
     private String orderNO;
     private int clearText = 0;
     private String currentSampleType;
-    IntentIntegrator integrator;
-    int benId;
-    ImageView img_male, img_female;
     private CampScanQRResponseModel campScanQRResponseModel;
     private BrandMasterModel brandMasterModel;
     private TextView txt_name, tv_location;
@@ -412,7 +413,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         final IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanningResult != null && scanningResult.getContents() != null) {
-         final    String scanned_barcode = scanningResult.getContents();
+            final String scanned_barcode = scanningResult.getContents();
             Logger.error("" + scanningResult);
             Logger.error("scanned_barcode " + scanningResult.getContents());
             // Toast.makeText(activity, "" + scanningResult, Toast.LENGTH_SHORT).show();
@@ -426,36 +427,36 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                             dialog.dismiss();
                         }
                     }).setPositiveButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                  //  dialog.dismiss();
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //  dialog.dismiss();
 
-                    if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$")|| scanned_barcode.startsWith("1")|| scanned_barcode.startsWith(" ")) {
-                        Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+                            if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ")) {
+                                Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+                            } else {
+                                if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
 
-                            Logger.error("barcodeDetailsArr size: " + barcodeDetailsArr.size());
-                            for (int i = 0; i < barcodeDetailsArr.size(); i++) {
-                                Logger.error("barcodeDetailsArr tostring: " + barcodeDetailsArr.toArray().toString());
-                                if (barcodeDetailsArr.get(i).getSamplType().equals(currentSampleType)) {
-                                    for (BeneficiaryBarcodeDetailsModel benBarcode :
-                                            barcodeDetailsArr) {
-                                        if (!InputUtils.isNull(benBarcode.getBarcode()) && benBarcode.getBarcode().equals(scanned_barcode)) {
-                                            if (benBarcode.getSamplType().equals(currentSampleType)) {
+                                    Logger.error("barcodeDetailsArr size: " + barcodeDetailsArr.size());
+                                    for (int i = 0; i < barcodeDetailsArr.size(); i++) {
+                                        Logger.error("barcodeDetailsArr tostring: " + barcodeDetailsArr.toArray().toString());
+                                        if (barcodeDetailsArr.get(i).getSamplType().equals(currentSampleType)) {
+                                            for (BeneficiaryBarcodeDetailsModel benBarcode :
+                                                    barcodeDetailsArr) {
+                                                if (!InputUtils.isNull(benBarcode.getBarcode()) && benBarcode.getBarcode().equals(scanned_barcode)) {
+                                                    if (benBarcode.getSamplType().equals(currentSampleType)) {
 
-                                            } else {
-                                                Toast.makeText(activity, "Barcode Already Scanned for Sample Type " + currentSampleType, Toast.LENGTH_SHORT).show();
-                                                return;
+                                                    } else {
+                                                        Toast.makeText(activity, "Barcode Already Scanned for Sample Type " + currentSampleType, Toast.LENGTH_SHORT).show();
+                                                        return;
+                                                    }
+                                                }
                                             }
-                                        }
-                                    }
 
-                                    barcodeDetailsArr.get(i).setBarcode(scanningResult.getContents());
-                                    Logger.debug(barcodeDetailsArr.toString());
-                                    break;
-                                }
-                            } /*for (int i = 0; i < beneficiaryDetailsArr.getSampleType().size(); i++) {
+                                            barcodeDetailsArr.get(i).setBarcode(scanningResult.getContents());
+                                            Logger.debug(barcodeDetailsArr.toString());
+                                            break;
+                                        }
+                                    } /*for (int i = 0; i < beneficiaryDetailsArr.getSampleType().size(); i++) {
                     Logger.error("barcodeDetailsArr tostring: "+ barcodeDetailsArr.toArray().toString());
 
                     if ( beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equals(currentSampleType)) {
@@ -474,12 +475,11 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                         break;
                     }
                 }*/
-                            initScanBarcodeView();
+                                    initScanBarcodeView();
+                                }
+                            }
                         }
-                    }
-                }
-            });
-
+                    });
 
 
         } else {
@@ -735,29 +735,30 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
 
     }
 
-    public void CallWorkOrderEntryAPI(OrderBookingRequestModel orderBookingRequestModel){
+    public void CallWorkOrderEntryAPI(OrderBookingRequestModel orderBookingRequestModel) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallWorkOrderEntryAPI(orderBookingRequestModel);
-        globalclass.showProgressDialog(activity, PLEASE_WAIT,false);
+        globalclass.showProgressDialog(activity, PLEASE_WAIT, false);
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> res) {
                 globalclass.hideProgressDialog(activity);
                 if (res.isSuccessful() && res.body() != null) {
 
-                    Toast.makeText(activity, "SUCCESS" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "SUCCESS", Toast.LENGTH_SHORT).show();
                     clearText = 1;
                     clearEntries();
                     initScanBarcodeView();
 
-                }else{
-                    Toast.makeText(activity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalclass.hideProgressDialog(activity);
-                Toast.makeText(activity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
+                Toast.makeText(activity, SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
             }
         });
     }
@@ -767,21 +768,22 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<OrderBookingResponseVisitModel> responseCall = apiInterface.CallOrderBookingApi(orderBookingRequestModel);
-        globalclass.showProgressDialog(activity,activity.getResources().getString(R.string.progress_message_uploading_order_details_please_wait),false);
+        globalclass.showProgressDialog(activity, activity.getResources().getString(R.string.progress_message_uploading_order_details_please_wait), false);
         responseCall.enqueue(new Callback<OrderBookingResponseVisitModel>() {
             @Override
             public void onResponse(Call<OrderBookingResponseVisitModel> call, retrofit2.Response<OrderBookingResponseVisitModel> response) {
                 globalclass.hideProgressDialog(activity);
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     callWoeApi();
-                }else{
-                   globalclass.showCustomToast(activity,ConstantsMessages.SOMETHING_WENT_WRONG);
+                } else {
+                    globalclass.showCustomToast(activity, ConstantsMessages.SOMETHING_WENT_WRONG);
                 }
             }
+
             @Override
             public void onFailure(Call<OrderBookingResponseVisitModel> call, Throwable t) {
                 globalclass.hideProgressDialog(activity);
-                globalclass.showCustomToast(activity,ConstantsMessages.UNABLE_TO_CONNECT);
+                globalclass.showCustomToast(activity, ConstantsMessages.UNABLE_TO_CONNECT);
             }
         });
     }

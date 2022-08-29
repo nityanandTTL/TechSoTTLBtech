@@ -9,6 +9,38 @@ import android.os.Parcelable;
 
 public class MaterialDetailsModel extends BaseModel implements Parcelable {
 
+    public static final Creator<MaterialDetailsModel> CREATOR = new Creator<MaterialDetailsModel>() {
+        @Override
+        public MaterialDetailsModel createFromParcel(Parcel in) {
+            return new MaterialDetailsModel(in);
+        }
+
+        @Override
+        public MaterialDetailsModel[] newArray(int size) {
+            return new MaterialDetailsModel[size];
+        }
+    };
+    Integer MaterialId;
+    String MaterialName;
+    String ShortName;
+    String UnitCost;
+    String UnitSize;
+    String Tax;
+
+    public MaterialDetailsModel() {
+        super();
+    }
+
+    protected MaterialDetailsModel(Parcel in) {
+        super(in);
+        MaterialId = in.readInt();
+        MaterialName = in.readString();
+        ShortName = in.readString();
+        UnitCost = in.readString();
+        UnitSize = in.readString();
+        Tax = in.readString();
+    }
+
     public Integer getMaterialId() {
         return MaterialId;
     }
@@ -57,27 +89,6 @@ public class MaterialDetailsModel extends BaseModel implements Parcelable {
         Tax = tax;
     }
 
-    Integer MaterialId;
-    String MaterialName;
-    String ShortName;
-    String UnitCost;
-    String UnitSize;
-    String Tax;
-
-    public MaterialDetailsModel() {
-        super ();
-    }
-
-    protected MaterialDetailsModel(Parcel in) {
-        super(in);
-        MaterialId = in.readInt();
-        MaterialName = in.readString();
-        ShortName = in.readString();
-        UnitCost = in.readString();
-        UnitSize = in.readString();
-        Tax = in.readString();
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
@@ -93,16 +104,4 @@ public class MaterialDetailsModel extends BaseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<MaterialDetailsModel> CREATOR = new Creator<MaterialDetailsModel>() {
-        @Override
-        public MaterialDetailsModel createFromParcel(Parcel in) {
-            return new MaterialDetailsModel(in);
-        }
-
-        @Override
-        public MaterialDetailsModel[] newArray(int size) {
-            return new MaterialDetailsModel[size];
-        }
-    };
 }

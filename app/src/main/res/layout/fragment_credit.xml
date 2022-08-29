@@ -88,8 +88,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_5"
             android:layout_marginStart="@dimen/dp_5"
+            android:layout_marginEnd="@dimen/dp_5"
             android:text="TSP"
             android:visibility="gone" />
 
@@ -106,10 +106,9 @@
             android:id="@+id/tv_branch_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_5"
             android:layout_marginStart="@dimen/dp_5"
+            android:layout_marginEnd="@dimen/dp_5"
             android:text="Enter Branch Name" />
-
 
 
         <EditText
@@ -120,8 +119,8 @@
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
             android:drawableRight="@android:drawable/arrow_down_float"
-            android:elevation="4dp"
             android:editable="false"
+            android:elevation="4dp"
             android:textColor="@color/gray"
             android:textSize="14sp" />
 
@@ -129,8 +128,8 @@
             android:id="@+id/tv_select_instrument"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_5"
             android:layout_marginStart="@dimen/dp_5"
+            android:layout_marginEnd="@dimen/dp_5"
             android:text="Select Instrument" />
 
         <TextView
@@ -165,7 +164,6 @@
                 android:textColor="@android:color/darker_gray" />
 
         </com.google.android.material.textfield.TextInputLayout>
-
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -293,7 +291,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -303,8 +300,8 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dp_5"
                 android:layout_marginStart="@dimen/dp_5"
+                android:layout_marginEnd="@dimen/dp_5"
                 android:layout_weight="1"
                 android:text="Paper Proof[File Type: .jpg,.png]"
                 android:textColor="@android:color/darker_gray"
@@ -356,6 +353,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Remarks">
+
             <EditText
                 android:id="@+id/edt_remark"
                 android:layout_width="match_parent"
@@ -368,7 +366,6 @@
                 android:textColor="@android:color/darker_gray" />
 
         </com.google.android.material.textfield.TextInputLayout>
-
 
 
         <Button

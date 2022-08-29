@@ -6,11 +6,22 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 /**
- * Created by Orion on 6/20/2017.*/
-
+ * Created by Orion on 6/20/2017.
+ */
 
 
 public class BeneficiaryTestDetailsModel implements Parcelable {
+    public static final Creator<BeneficiaryTestDetailsModel> CREATOR = new Creator<BeneficiaryTestDetailsModel>() {
+        @Override
+        public BeneficiaryTestDetailsModel createFromParcel(Parcel in) {
+            return new BeneficiaryTestDetailsModel(in);
+        }
+
+        @Override
+        public BeneficiaryTestDetailsModel[] newArray(int size) {
+            return new BeneficiaryTestDetailsModel[size];
+        }
+    };
     private String Tests;
     private String Fasting;
     private String ProjId;
@@ -45,18 +56,6 @@ public class BeneficiaryTestDetailsModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BeneficiaryTestDetailsModel> CREATOR = new Creator<BeneficiaryTestDetailsModel>() {
-        @Override
-        public BeneficiaryTestDetailsModel createFromParcel(Parcel in) {
-            return new BeneficiaryTestDetailsModel(in);
-        }
-
-        @Override
-        public BeneficiaryTestDetailsModel[] newArray(int size) {
-            return new BeneficiaryTestDetailsModel[size];
-        }
-    };
 
     public String getTests() {
         return Tests;

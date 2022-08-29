@@ -34,8 +34,8 @@ public class NewCampWOEModuleActivity extends AppCompatActivity implements GoToC
     Global globalclass;
     ConnectionDetector cd;
     AppPreferenceManager appPreferenceManager;
-    private LinearLayout lin_Enter,lin_Entered;
-    private TextView tv_enter,tv_entered;
+    private LinearLayout lin_Enter, lin_Entered;
+    private TextView tv_enter, tv_entered;
     private FrameLayout fragment_main;
     private Object currentFragment;
 

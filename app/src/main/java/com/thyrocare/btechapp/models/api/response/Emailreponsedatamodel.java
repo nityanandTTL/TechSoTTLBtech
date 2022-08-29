@@ -4,7 +4,7 @@ package com.thyrocare.btechapp.models.api.response;
  * Created by e4904@thyrocare.com on 24/3/18.
  */
 
-public class Emailreponsedatamodel  {
+public class Emailreponsedatamodel {
     private String result;
     private String reason;
     private String disposable;
@@ -18,8 +18,6 @@ public class Emailreponsedatamodel  {
     private String did_you_mean;
     private String success;
     private String message;
-
-
 
 
     public String getResult() {

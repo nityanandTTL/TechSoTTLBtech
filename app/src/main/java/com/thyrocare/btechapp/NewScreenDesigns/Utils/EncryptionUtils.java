@@ -25,11 +25,19 @@ import javax.crypto.spec.SecretKeySpec;
 public class EncryptionUtils {
 
 
-
     private final static String HEX = "0123456789ABCDEF";
-    private SecretKey secretKey;
     private static final String ALGO = "AES";
     private static final byte[] keyValue = new byte[]{'T', 'h', 'y', 'r', 'o', 'c', 'a', 'r', 'e', '$', '1', '2', '3', '4', '5', '6'};
+    public static SecretKey secret;
+    public static String password;
+
+    // ------------------------------------------------TODO Encryption type 1-------------------------------------------------
+    public static Key publicKey = null;
+
+
+    // ------------------------------------------------TODO Encryption type 2 (AES - symmetric)-------------------------------------------------
+    public static Key privateKey = null;
+    private SecretKey secretKey;
 
     public EncryptionUtils() {
         try {
@@ -43,36 +51,13 @@ public class EncryptionUtils {
         }
     }
 
-    // ------------------------------------------------TODO Encryption type 1-------------------------------------------------
-
-    public byte[] makeAes(byte[] rawMessage, int cipherMode) {
-        try {
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(cipherMode, this.secretKey);
-            byte[] output = cipher.doFinal(rawMessage);
-            return output;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-
-    // ------------------------------------------------TODO Encryption type 2 (AES - symmetric)-------------------------------------------------
-
-    public static SecretKey secret;
-    public static String password;
-
     public static SecretKey generateKey()
-            throws NoSuchAlgorithmException, InvalidKeySpecException
-    {
+            throws NoSuchAlgorithmException, InvalidKeySpecException {
         return secret = new SecretKeySpec(password.getBytes(), "AES");
     }
 
     public static byte[] encryptMsg(String message, SecretKey secret)
-            throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidParameterSpecException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException
-    {
+            throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidParameterSpecException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
         /* Encrypt the message. */
         Cipher cipher = null;
         cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -81,9 +66,11 @@ public class EncryptionUtils {
         return cipherText;
     }
 
+
+    // ------------------------------------------------TODO Encryption type 2 (RSA - Asymmetric)-------------------------------------------------
+
     public static String decryptMsg(byte[] cipherText, SecretKey secret)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidParameterSpecException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException
-    {
+            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidParameterSpecException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
         /* Decrypt the message, given derived encContentValues and initialization vector. */
         Cipher cipher = null;
         cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -92,13 +79,7 @@ public class EncryptionUtils {
         return decryptString;
     }
 
-
-    // ------------------------------------------------TODO Encryption type 2 (RSA - Asymmetric)-------------------------------------------------
-
-    public  static Key publicKey = null;
-    public  static Key privateKey = null;
-
-    public  static void RSAKeyPair(){
+    public static void RSAKeyPair() {
 
         // Generate key pair for 2048-bit RSA encryption and decryption
         try {
@@ -113,7 +94,7 @@ public class EncryptionUtils {
 
     }
 
-    public static void GenerateEncodedString( String targetString){
+    public static void GenerateEncodedString(String targetString) {
         // Encode the original data with the RSA private key
         byte[] encodedBytes = null;
         try {
@@ -128,7 +109,7 @@ public class EncryptionUtils {
         }
     }
 
-    public static void GenerateDecodedString( byte[] encodedBytes){
+    public static void GenerateDecodedString(byte[] encodedBytes) {
         // Encode the original data with the RSA private key
         // Decode the encoded data with the RSA public key
         byte[] decodedBytes = null;
@@ -140,15 +121,13 @@ public class EncryptionUtils {
             MessageLogger.LogError("Crypto", "RSA decryption error");
         }
 
-        if (BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             MessageLogger.LogDebug("Decoded string: ", new String(decodedBytes));
         }
 
     }
 
-// ------------------------------------------------TODO Encryption type 3 (base 64)-------------------------------------------------
-
-    public static String EncodeString64(String stringToEncode){
+    public static String EncodeString64(String stringToEncode) {
         String base64 = null;
         try {
             byte[] data = stringToEncode.getBytes("UTF-8");
@@ -158,10 +137,12 @@ public class EncryptionUtils {
             e.printStackTrace();
         }
 
-        return  base64;
+        return base64;
     }
 
-    public static String DecodeString64(String stringToDecode){
+// ------------------------------------------------TODO Encryption type 3 (base 64)-------------------------------------------------
+
+    public static String DecodeString64(String stringToDecode) {
         String decodedString = "";
         try {
             byte[] data = Base64.decode(stringToDecode, Base64.DEFAULT);
@@ -171,20 +152,17 @@ public class EncryptionUtils {
             e.printStackTrace();
         }
 
-        return  decodedString;
+        return decodedString;
     }
 
-    // ------------------------------------------------TODO Encryption type 4 (base 64 + AES Cipher)-------------------------------------------------
-
-
-    public static String encryptSSL(String data)  {
+    public static String encryptSSL(String data) {
         String StrEncrypt = "";
         try {
             Key key = generateSSLKey();
             Cipher c = Cipher.getInstance(ALGO);
             c.init(Cipher.ENCRYPT_MODE, key);
             byte[] encVal = c.doFinal(data.getBytes());
-            StrEncrypt = Base64.encodeToString(encVal,Base64.DEFAULT);
+            StrEncrypt = Base64.encodeToString(encVal, Base64.DEFAULT);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
@@ -192,13 +170,15 @@ public class EncryptionUtils {
         return StrEncrypt;
     }
 
-    public static String decryptSSL(String encryptedData)  {
+    // ------------------------------------------------TODO Encryption type 4 (base 64 + AES Cipher)-------------------------------------------------
+
+    public static String decryptSSL(String encryptedData) {
         String decryptedValue = "";
         try {
             Key key = generateSSLKey();
             Cipher c = Cipher.getInstance(ALGO);
             c.init(Cipher.DECRYPT_MODE, key);
-            byte[] decordedValue =  Base64.decode(encryptedData, Base64.DEFAULT);
+            byte[] decordedValue = Base64.decode(encryptedData, Base64.DEFAULT);
             byte[] decValue = c.doFinal(decordedValue);
             decryptedValue = new String(decValue);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
@@ -207,7 +187,7 @@ public class EncryptionUtils {
         return decryptedValue;
     }
 
-    private static Key generateSSLKey()  {
+    private static Key generateSSLKey() {
         Key key = null;
         try {
             key = new SecretKeySpec(keyValue, ALGO);
@@ -217,9 +197,6 @@ public class EncryptionUtils {
 
         return key;
     }
-
-    // ------------------------------------------------TODO Encryption type 5 (HEX + AES Cipher)-------------------------------------------------
-
 
     public static String Ecrp_Hex(String cleartext) {
         byte[] result = new byte[0];
@@ -232,6 +209,7 @@ public class EncryptionUtils {
         return toHex(result);
     }
 
+    // ------------------------------------------------TODO Encryption type 5 (HEX + AES Cipher)-------------------------------------------------
 
     public static String Dcrp_Hex(String encrypted) {
         byte[] result = new byte[0];
@@ -289,6 +267,18 @@ public class EncryptionUtils {
         sb.append(HEX.charAt((b >> 4) & 0x0f)).append(HEX.charAt(b & 0x0f));
     }
 
+    public byte[] makeAes(byte[] rawMessage, int cipherMode) {
+        try {
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(cipherMode, this.secretKey);
+            byte[] output = cipher.doFinal(rawMessage);
+            return output;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 
 }

@@ -100,8 +100,8 @@ import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 
 public class SelfieUploadActivity extends AbstractActivity implements View.OnClickListener {
     private static final String TAG = SelfieUploadActivity.class.getSimpleName();
+    private static final int REQUEST_CAMERA = 100;
     TextView tv_username, tv_user_address;
-
     //changes_1june2017
     //RoundedImageView img_user_picture;
     CircularImageView img_user_picture;
@@ -109,24 +109,26 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     Button btn_takePhoto, btn_uploadPhoto;
     String userChoosenTask, encodedProImg;
     Bitmap thumbnail, thumbnailToDisplay;// = null;
-    private static final int REQUEST_CAMERA = 100;
     Activity activity;
     AppPreferenceManager appPreferenceManager;
+    SyncStatusReceiver syncStatusReceiver;
+    Uri outPutfileUri;
+    ProgressDialog progressDialog;
+    ImageView iv_refresh, iv_capture, iv_verify_selfie;
+    String url = "";
+    String imageurl = "";
+    String sevenDate = "";
     private DhbDao dhbDao;
     private PowerManager.WakeLock wakeLock;
     private ProgressDialog syncBarProgressDialog;
     private boolean isAfterMasterSyncDone;
-    SyncStatusReceiver syncStatusReceiver;
     private int leaveFlag = 0;
     private String fromdateapi, todateapi;
-    Uri outPutfileUri;
     private Button Logout;
     private int faceDetected = 0;
-
     // The IDs of the two faces to be verified.
     private UUID mFaceId0;
     private UUID mFaceId1;
-    ProgressDialog progressDialog;
     private String sub_key = "";
     private String end_key = "";
     private File imagefile;
@@ -135,10 +137,14 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private EditText edt_bodyTemp;
     private Spinner spn_aarogyaApp;
     private String strAarogyaSetuApp = "";
-    ImageView iv_refresh, iv_capture, iv_verify_selfie;
-    String url = "";
-    String imageurl = "";
-    String sevenDate = "";
+
+    public static boolean checkCameraFront(Context context) {
+        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -350,7 +356,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         });
     }
 
-
     public void initUI() {
         super.initUI();
         Logout = (Button) findViewById(R.id.btn_Logout);
@@ -409,7 +414,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             //showImage(thumbnail);
         }
     }
-
 
     private void CallSelfieUploadAPI(String Btechid, final File imagefile) {
 
@@ -560,15 +564,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
         selectImage();
     }
-
-    public static boolean checkCameraFront(Context context) {
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -748,110 +743,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             }
             dhbDao.deleteTablesonLogout();
         }
-    }
-
-    public class SyncStatusReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (intent != null && intent.getAction() != null) {
-
-                if (intent.getAction().equals(AppConstants.OFFLINE_STATUS_ACTION_IN_PROGRESS)
-                        || intent.getAction().equals(AppConstants.MASTER_TABLE_UPDATE_ACTION_IN_PROGRESS)) {
-
-                    int totalUploadCount = 0, uploadedCount = 0;
-
-                    if (intent.getExtras() != null) {
-                        if (intent.getExtras().containsKey(AppConstants.MASTER_TABLE_UPDATE_TOTAL_COUNT)) {
-                            totalUploadCount = intent.getExtras().getInt(AppConstants.MASTER_TABLE_UPDATE_TOTAL_COUNT);
-                        }
-                        if (intent.getExtras().containsKey(AppConstants.MASTER_TABLE_UPDATE_COMPLETED_COUNT)) {
-                            uploadedCount = intent.getExtras().getInt(AppConstants.MASTER_TABLE_UPDATE_COMPLETED_COUNT);
-                        }
-                    }
-
-                    initSyncProgressBarDialog();
-
-                    if (totalUploadCount == 0 && uploadedCount == 0) {
-                        setSyncProgressDialogTypeToHorizontalOrSpinner(false);
-                        showSyncProgressBarDialog();
-                    } else {
-                        setSyncProgressDialogTypeToHorizontalOrSpinner(true);
-
-                        syncBarProgressDialog.setMax(totalUploadCount);
-
-                        if (uploadedCount <= totalUploadCount) {
-                            syncBarProgressDialog.setProgress(uploadedCount);
-                            showSyncProgressBarDialog();
-                        } else {
-
-                            syncBarProgressDialog.setProgress(totalUploadCount);
-                            showSyncProgressBarDialog();
-
-//						if(ApplicationController.isOfflineSyncServiceIsInProgress(activity)){
-//							stopOfflineSyncService(activity);
-//						}
-                        }
-                    }
-
-                } else if (intent.getAction().equals(AppConstants.MASTER_TABLE_UPDATE_ACTION_DONE)) {
-
-                    if (intent.getExtras() != null) {
-                        boolean isIssueFoundInSync = false;
-                        if (intent.getExtras().containsKey(AppConstants.MASTER_TABLE_UPDATE_ISSUE_FOUND)) {
-                            isIssueFoundInSync = intent.getExtras().getBoolean(AppConstants.MASTER_TABLE_UPDATE_ISSUE_FOUND);
-                        }
-
-                        if (isMasterTableSyncServiceIsInProgress()) {
-                            stopMasterTableSyncService();
-                        }
-
-                        if (isIssueFoundInSync) {
-                            TastyToast.makeText(activity, getString(R.string.sync_master_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-                            // Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
-
-                            if (appPreferenceManager != null) {
-                                new LogUserActivityTagging(activity, LOGOUT, "");
-                                appPreferenceManager.clearAllPreferences();
-                            }
-
-                            //appPreferenceManager.setIsAfterLogin(false);
-                            if (dhbDao == null) {
-                                dhbDao = new DhbDao(activity);
-                            }
-                            dhbDao.deleteTablesonLogout();
-                            TastyToast.makeText(activity, getString(R.string.sync_master_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-                            //  Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
-
-                        } else {
-//                            TastyToast.makeText(activity, getString(R.string.sync_done_master_table), TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-                            //Toast.makeText(activity, getResources().getString(R.string.sync_done_master_table), Toast.LENGTH_SHORT).show();
-
-                            appPreferenceManager.set7date(sevenDate);
-                            appPreferenceManager.setIsAfterLogin(true);
-                            isAfterMasterSyncDone = true;
-                            appPreferenceManager.setLeaveFlag(leaveFlag);
-                            appPreferenceManager.setLeaveFromDate(fromdateapi);
-                            appPreferenceManager.setLeaveToDate(todateapi);
-                            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                            i.putExtra("LEAVEINTIMATION", "0");
-                            startActivity(i);
-                        }
-
-                        hideSyncProgressBarDialog();
-                        syncBarProgressDialog = null;
-                    }
-
-                } else if (intent.getAction().equals(AppConstants.OFFLINE_STATUS_ACTION_NO_DATA)
-                        || intent.getAction().equals(AppConstants.MASTER_TABLE_UPDATE_ACTION_NO_DATA)) {
-                    TastyToast.makeText(activity, getString(R.string.sync_no_data), TastyToast.LENGTH_LONG, TastyToast.INFO);
-                    // Toast.makeText(activity, getResources().getString(R.string.sync_no_data), Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        }
-
     }
 
     public void acquirewakeLock() {
@@ -1036,76 +927,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         }
     }
 
-    // Background task of face detection.
-    private class DetectionTask extends AsyncTask<InputStream, String, com.microsoft.projectoxford.face.contract.Face[]> {
-        // Index indicates detecting in which of the two images.
-        private int mIndex;
-        private boolean mSucceed = true;
-
-        DetectionTask(int index) {
-            mIndex = index;
-        }
-
-        @Override
-        protected com.microsoft.projectoxford.face.contract.Face[] doInBackground(InputStream... params) {
-            // Get an instance of face service client to detect faces in image.
-            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(end_key, sub_key);
-            try {
-                publishProgress("Detecting...");
-
-                // Start detection.
-                return faceServiceClient.detect(
-                        params[0],  /* Input stream of image to detect */
-                        true,       /* Whether to return face ID */
-                        false,       /* Whether to return face landmarks */
-                        /* Which face attributes to analyze, currently we support:
-                           age,gender,headPose,smile,facialHair */
-                        null);
-            } catch (Exception e) {
-                mSucceed = false;
-                publishProgress(e.getMessage());
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            if (mIndex == 1) {
-                if (progressDialog != null) {
-                    progressDialog = null;
-                }
-                progressDialog = new ProgressDialog(activity);
-                progressDialog.setTitle(getString(R.string.loading));
-                progressDialog.show();
-            }
-        }
-
-        @Override
-        protected void onProgressUpdate(String... progress) {
-            if (mIndex == 1) {
-                progressDialog.setMessage(progress[0]);
-            }
-        }
-
-        @Override
-        protected void onPostExecute(com.microsoft.projectoxford.face.contract.Face[] result) {
-            if (mIndex == 1) {
-                try {
-                    if (progressDialog != null) {
-                        if (progressDialog.isShowing()) {
-                            progressDialog.dismiss();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // Show the result on screen when detection is done.
-            setUiAfterDetection(result, mIndex, mSucceed);
-        }
-    }
-
     // Show the result on screen when detection in image that indicated by index is done.
     private void setUiAfterDetection(com.microsoft.projectoxford.face.contract.Face[] result, int index, boolean succeed) {
         List<com.microsoft.projectoxford.face.contract.Face> faces;
@@ -1156,73 +977,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
         if (result != null && result.length == 0) {
             TastyToast.makeText(activity, getString(R.string.no_face_detected), TastyToast.LENGTH_LONG, TastyToast.WARNING);
-        }
-    }
-
-    // Background task for face verification.
-    private class VerificationTask extends AsyncTask<Void, String, com.microsoft.projectoxford.face.contract.VerifyResult> {
-        // The IDs of two face to verify.
-        private UUID mFaceId0;
-        private UUID mFaceId1;
-
-        VerificationTask(UUID faceId0, UUID faceId1) {
-            mFaceId0 = faceId0;
-            mFaceId1 = faceId1;
-        }
-
-        @Override
-        protected com.microsoft.projectoxford.face.contract.VerifyResult doInBackground(Void... params) {
-            // Get an instance of face service client to detect faces in image.
-            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(end_key, sub_key);
-            try {
-                publishProgress("Verifying...");
-
-                // Start verification.
-                return faceServiceClient.verify(
-                        mFaceId0,      /* The first face ID to verify */
-                        mFaceId1);     /* The second face ID to verify */
-            } catch (Exception e) {
-                publishProgress(e.getMessage());
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            if (progressDialog != null) {
-                progressDialog = null;
-            }
-            progressDialog = new ProgressDialog(activity);
-            progressDialog.setTitle(getString(R.string.loading));
-            progressDialog.show();
-        }
-
-        @Override
-        protected void onProgressUpdate(String... progress) {
-            progressDialog.setMessage(progress[0]);
-        }
-
-        @Override
-        protected void onPostExecute(com.microsoft.projectoxford.face.contract.VerifyResult result) {
-
-            try {
-                if (progressDialog != null) {
-                    if (progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (result != null) {
-                /*addLog("Response: Success. Face " + mFaceId0 + " and face "
-                        + mFaceId1 + (result.isIdentical ? " " : " don't ")
-                        + "belong to the same person");*/
-            }
-
-            // Show the result on screen when verification is done.
-            setUiAfterVerification(result);
         }
     }
 
@@ -1369,5 +1123,246 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             e.printStackTrace();
         }
 
+    }
+
+    public class SyncStatusReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (intent != null && intent.getAction() != null) {
+
+                if (intent.getAction().equals(AppConstants.OFFLINE_STATUS_ACTION_IN_PROGRESS)
+                        || intent.getAction().equals(AppConstants.MASTER_TABLE_UPDATE_ACTION_IN_PROGRESS)) {
+
+                    int totalUploadCount = 0, uploadedCount = 0;
+
+                    if (intent.getExtras() != null) {
+                        if (intent.getExtras().containsKey(AppConstants.MASTER_TABLE_UPDATE_TOTAL_COUNT)) {
+                            totalUploadCount = intent.getExtras().getInt(AppConstants.MASTER_TABLE_UPDATE_TOTAL_COUNT);
+                        }
+                        if (intent.getExtras().containsKey(AppConstants.MASTER_TABLE_UPDATE_COMPLETED_COUNT)) {
+                            uploadedCount = intent.getExtras().getInt(AppConstants.MASTER_TABLE_UPDATE_COMPLETED_COUNT);
+                        }
+                    }
+
+                    initSyncProgressBarDialog();
+
+                    if (totalUploadCount == 0 && uploadedCount == 0) {
+                        setSyncProgressDialogTypeToHorizontalOrSpinner(false);
+                        showSyncProgressBarDialog();
+                    } else {
+                        setSyncProgressDialogTypeToHorizontalOrSpinner(true);
+
+                        syncBarProgressDialog.setMax(totalUploadCount);
+
+                        if (uploadedCount <= totalUploadCount) {
+                            syncBarProgressDialog.setProgress(uploadedCount);
+                            showSyncProgressBarDialog();
+                        } else {
+
+                            syncBarProgressDialog.setProgress(totalUploadCount);
+                            showSyncProgressBarDialog();
+
+//						if(ApplicationController.isOfflineSyncServiceIsInProgress(activity)){
+//							stopOfflineSyncService(activity);
+//						}
+                        }
+                    }
+
+                } else if (intent.getAction().equals(AppConstants.MASTER_TABLE_UPDATE_ACTION_DONE)) {
+
+                    if (intent.getExtras() != null) {
+                        boolean isIssueFoundInSync = false;
+                        if (intent.getExtras().containsKey(AppConstants.MASTER_TABLE_UPDATE_ISSUE_FOUND)) {
+                            isIssueFoundInSync = intent.getExtras().getBoolean(AppConstants.MASTER_TABLE_UPDATE_ISSUE_FOUND);
+                        }
+
+                        if (isMasterTableSyncServiceIsInProgress()) {
+                            stopMasterTableSyncService();
+                        }
+
+                        if (isIssueFoundInSync) {
+                            TastyToast.makeText(activity, getString(R.string.sync_master_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                            // Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
+
+                            if (appPreferenceManager != null) {
+                                new LogUserActivityTagging(activity, LOGOUT, "");
+                                appPreferenceManager.clearAllPreferences();
+                            }
+
+                            //appPreferenceManager.setIsAfterLogin(false);
+                            if (dhbDao == null) {
+                                dhbDao = new DhbDao(activity);
+                            }
+                            dhbDao.deleteTablesonLogout();
+                            TastyToast.makeText(activity, getString(R.string.sync_master_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                            //  Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
+
+                        } else {
+//                            TastyToast.makeText(activity, getString(R.string.sync_done_master_table), TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                            //Toast.makeText(activity, getResources().getString(R.string.sync_done_master_table), Toast.LENGTH_SHORT).show();
+
+                            appPreferenceManager.set7date(sevenDate);
+                            appPreferenceManager.setIsAfterLogin(true);
+                            isAfterMasterSyncDone = true;
+                            appPreferenceManager.setLeaveFlag(leaveFlag);
+                            appPreferenceManager.setLeaveFromDate(fromdateapi);
+                            appPreferenceManager.setLeaveToDate(todateapi);
+                            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                            i.putExtra("LEAVEINTIMATION", "0");
+                            startActivity(i);
+                        }
+
+                        hideSyncProgressBarDialog();
+                        syncBarProgressDialog = null;
+                    }
+
+                } else if (intent.getAction().equals(AppConstants.OFFLINE_STATUS_ACTION_NO_DATA)
+                        || intent.getAction().equals(AppConstants.MASTER_TABLE_UPDATE_ACTION_NO_DATA)) {
+                    TastyToast.makeText(activity, getString(R.string.sync_no_data), TastyToast.LENGTH_LONG, TastyToast.INFO);
+                    // Toast.makeText(activity, getResources().getString(R.string.sync_no_data), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        }
+
+    }
+
+    // Background task of face detection.
+    private class DetectionTask extends AsyncTask<InputStream, String, com.microsoft.projectoxford.face.contract.Face[]> {
+        // Index indicates detecting in which of the two images.
+        private int mIndex;
+        private boolean mSucceed = true;
+
+        DetectionTask(int index) {
+            mIndex = index;
+        }
+
+        @Override
+        protected com.microsoft.projectoxford.face.contract.Face[] doInBackground(InputStream... params) {
+            // Get an instance of face service client to detect faces in image.
+            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(end_key, sub_key);
+            try {
+                publishProgress("Detecting...");
+
+                // Start detection.
+                return faceServiceClient.detect(
+                        params[0],  /* Input stream of image to detect */
+                        true,       /* Whether to return face ID */
+                        false,       /* Whether to return face landmarks */
+                        /* Which face attributes to analyze, currently we support:
+                           age,gender,headPose,smile,facialHair */
+                        null);
+            } catch (Exception e) {
+                mSucceed = false;
+                publishProgress(e.getMessage());
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if (mIndex == 1) {
+                if (progressDialog != null) {
+                    progressDialog = null;
+                }
+                progressDialog = new ProgressDialog(activity);
+                progressDialog.setTitle(getString(R.string.loading));
+                progressDialog.show();
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(String... progress) {
+            if (mIndex == 1) {
+                progressDialog.setMessage(progress[0]);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(com.microsoft.projectoxford.face.contract.Face[] result) {
+            if (mIndex == 1) {
+                try {
+                    if (progressDialog != null) {
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Show the result on screen when detection is done.
+            setUiAfterDetection(result, mIndex, mSucceed);
+        }
+    }
+
+    // Background task for face verification.
+    private class VerificationTask extends AsyncTask<Void, String, com.microsoft.projectoxford.face.contract.VerifyResult> {
+        // The IDs of two face to verify.
+        private UUID mFaceId0;
+        private UUID mFaceId1;
+
+        VerificationTask(UUID faceId0, UUID faceId1) {
+            mFaceId0 = faceId0;
+            mFaceId1 = faceId1;
+        }
+
+        @Override
+        protected com.microsoft.projectoxford.face.contract.VerifyResult doInBackground(Void... params) {
+            // Get an instance of face service client to detect faces in image.
+            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(end_key, sub_key);
+            try {
+                publishProgress("Verifying...");
+
+                // Start verification.
+                return faceServiceClient.verify(
+                        mFaceId0,      /* The first face ID to verify */
+                        mFaceId1);     /* The second face ID to verify */
+            } catch (Exception e) {
+                publishProgress(e.getMessage());
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if (progressDialog != null) {
+                progressDialog = null;
+            }
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle(getString(R.string.loading));
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(String... progress) {
+            progressDialog.setMessage(progress[0]);
+        }
+
+        @Override
+        protected void onPostExecute(com.microsoft.projectoxford.face.contract.VerifyResult result) {
+
+            try {
+                if (progressDialog != null) {
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (result != null) {
+                /*addLog("Response: Success. Face " + mFaceId0 + " and face "
+                        + mFaceId1 + (result.isIdentical ? " " : " don't ")
+                        + "belong to the same person");*/
+            }
+
+            // Show the result on screen when verification is done.
+            setUiAfterVerification(result);
+        }
     }
 }

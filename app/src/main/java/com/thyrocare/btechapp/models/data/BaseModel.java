@@ -7,7 +7,18 @@ import android.os.Parcelable;
  * Created by Orion on 4/19/2017.
  */
 
-public class BaseModel implements Parcelable{
+public class BaseModel implements Parcelable {
+    public static final Creator<BaseModel> CREATOR = new Creator<BaseModel>() {
+        @Override
+        public BaseModel createFromParcel(Parcel in) {
+            return new BaseModel(in);
+        }
+
+        @Override
+        public BaseModel[] newArray(int size) {
+            return new BaseModel[size];
+        }
+    };
     private String recordStatus;
     private long createdAt;
     private String createdBy;
@@ -15,7 +26,6 @@ public class BaseModel implements Parcelable{
     private String updatedBy;
     private String syncStatus;
     private String syncAction;
-
 
     public BaseModel() {
         recordStatus = "A";
@@ -46,18 +56,6 @@ public class BaseModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BaseModel> CREATOR = new Creator<BaseModel>() {
-        @Override
-        public BaseModel createFromParcel(Parcel in) {
-            return new BaseModel(in);
-        }
-
-        @Override
-        public BaseModel[] newArray(int size) {
-            return new BaseModel[size];
-        }
-    };
 
     public String getRecordStatus() {
         return recordStatus;

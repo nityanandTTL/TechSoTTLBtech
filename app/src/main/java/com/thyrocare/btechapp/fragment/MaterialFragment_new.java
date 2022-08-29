@@ -53,16 +53,16 @@ public class MaterialFragment_new extends AbstractFragment {
 
 
     public static final String TAG_FRAGMENT = "MATERIAL_FRAGMENT";
+    static MaterialFragment_new fragment;
     HomeScreenActivity activity;
     AppPreferenceManager appPreferenceManager;
-    private View rootView;
-    private MaterialBtechStockResponseModel materialINVResponseModel;
     TableLayout materialtable;
     Dialog dialog_edt;
-    static MaterialFragment_new fragment;
     ArrayList<MaterialsStocksModel_new> stockModelsArr;
     Button update;
     CustomOKDialog cdd;
+    private View rootView;
+    private MaterialBtechStockResponseModel materialINVResponseModel;
     private Global global;
 
 
@@ -150,10 +150,10 @@ public class MaterialFragment_new extends AbstractFragment {
                         });
                         cdd.show();
                         cdd.setCancelable(false);
-                    }else {
+                    } else {
                         TastyToast.makeText(activity, "No data to update", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
                     }
-                }else {
+                } else {
                     TastyToast.makeText(activity, "No data to update", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
                 }
             }
@@ -183,6 +183,7 @@ public class MaterialFragment_new extends AbstractFragment {
                     initData();
                 }
             }
+
             @Override
             public void onFailure(Call<MaterialBtechStockResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -363,26 +364,27 @@ public class MaterialFragment_new extends AbstractFragment {
         dialog_edt.show();
     }
 
-    private void CallgetPostStockMaterialOrderAPI(UpdateMaterial setmaterialorderRequestModel){
+    private void CallgetPostStockMaterialOrderAPI(UpdateMaterial setmaterialorderRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetPostStockMaterialOrderAPI(setmaterialorderRequestModel);
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 global.hideProgressDialog(activity);
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     Toast.makeText(activity, "Material stock updated successfully.", LENGTH_SHORT).show();
                     try {
                         activity.getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }else{
+                } else {
                     Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(activity);

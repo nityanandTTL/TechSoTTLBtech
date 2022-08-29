@@ -135,8 +135,17 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     Global globalclass;
     ConnectionDetector cd;
     AppPreferenceManager appPreferenceManager;
-    private OrderVisitDetailsModel orderVisitDetailsModel;
     ArrayList<BeneficiaryDetailsModel> beneficaryWiseArylst;
+    Spinner spn_collection;
+    ArrayList<String> testList;
+    TextView tv_note;
+    LinearLayout ll_Note;
+    String processLocation;
+    TextView tv_pay;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
+    String strPaytype;
+    private OrderVisitDetailsModel orderVisitDetailsModel;
     private LinearLayout lin_bottom;
     private TextView txt_amount;
     private TextView txtNoRecord;
@@ -159,7 +168,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     private EditText edt_mobileOTP, edt_EmailOTP;
     private TextView tv_reSendMobileOTP, tv_reSendEmailOTP;
     private CountDownTimer MobileResendOTPcdTimer, EmailResendOTPcdTimer;
-    Spinner spn_collection;
     private ArrayList<GetCollectionRespModel.CenterListDTO> getcollearray;
     private String address;
     private Boolean canSubmit = false;
@@ -168,14 +176,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     private TextView btn_capture_photo;
     private TextView tv_view_photo;
     private Uri uri;
-    ArrayList<String> testList;
-    TextView tv_note;
-    LinearLayout ll_Note;
-    String processLocation;
-    TextView tv_pay;
-    TextView tv_toolbar;
-    ImageView iv_back, iv_home;
-    String strPaytype;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1779,7 +1779,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                 min = 60 - cal1.get(Calendar.MINUTE);
             }
             cal1.add(Calendar.MINUTE, min);
-             min = 0;
+            min = 0;
             if (cal2.get(Calendar.MINUTE) != 0 && cal2.get(Calendar.MINUTE) <= 30) {
                 min = 30 - cal2.get(Calendar.MINUTE);
             } else if (cal2.get(Calendar.MINUTE) > 30 && cal2.get(Calendar.MINUTE) < 60) {

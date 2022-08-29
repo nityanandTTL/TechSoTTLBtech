@@ -119,6 +119,7 @@ import com.thyrocare.btechapp.models.api.response.SignInResponseModel;
 import com.thyrocare.btechapp.models.api.response.SignSummaryResponseModel;
 import com.thyrocare.btechapp.models.api.response.TCVerifyCouponResponseModel;
 import com.thyrocare.btechapp.models.api.response.TestBookingResponseModel;
+import com.thyrocare.btechapp.models.api.response.UpdatePaymentResponseModel;
 import com.thyrocare.btechapp.models.api.response.VerifyCouponResponseModel;
 import com.thyrocare.btechapp.models.api.response.VideosResponseModel;
 import com.thyrocare.btechapp.models.data.HCWRequestModel;
@@ -513,4 +514,8 @@ public interface PostAPIInterface {
             @Part("BENID") RequestBody benID,
             @Part("TYPE") RequestBody type,
             @Part MultipartBody.Part vialFileMultiBody);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("api/OrderAllocation/Updatepayment/{Orderno}")
+    Call<UpdatePaymentResponseModel> updatePayment(@Path("Orderno") String orderno);
 }

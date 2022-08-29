@@ -9,15 +9,6 @@ import android.os.Parcelable;
 
 public class Tsp_ScanBarcodeDataModel implements Parcelable {
 
-    private String Barcode;
-    private boolean IsReceived;
-
-
-    protected Tsp_ScanBarcodeDataModel(Parcel in) {
-        Barcode = in.readString();
-        IsReceived = in.readByte() != 0;
-    }
-
     public static final Creator<Tsp_ScanBarcodeDataModel> CREATOR = new Creator<Tsp_ScanBarcodeDataModel>() {
         @Override
         public Tsp_ScanBarcodeDataModel createFromParcel(Parcel in) {
@@ -29,6 +20,13 @@ public class Tsp_ScanBarcodeDataModel implements Parcelable {
             return new Tsp_ScanBarcodeDataModel[size];
         }
     };
+    private String Barcode;
+    private boolean IsReceived;
+
+    protected Tsp_ScanBarcodeDataModel(Parcel in) {
+        Barcode = in.readString();
+        IsReceived = in.readByte() != 0;
+    }
 
     public String getBarcode() {
         return Barcode;

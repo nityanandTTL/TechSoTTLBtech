@@ -10,6 +10,14 @@ public class TestTypeWiseTestRateMasterModelsList {
     String testType;
     ArrayList<TestRateMasterModel> testRateMasterModels;
 
+    public TestTypeWiseTestRateMasterModelsList() {
+    }
+
+    public TestTypeWiseTestRateMasterModelsList(String testType, ArrayList<TestRateMasterModel> testRateMasterModels) {
+        this.testType = testType;
+        this.testRateMasterModels = testRateMasterModels;
+    }
+
     public String getTestType() {
         return testType;
     }
@@ -23,14 +31,6 @@ public class TestTypeWiseTestRateMasterModelsList {
     }
 
     public void setTestRateMasterModels(ArrayList<TestRateMasterModel> testRateMasterModels) {
-        this.testRateMasterModels = testRateMasterModels;
-    }
-
-    public TestTypeWiseTestRateMasterModelsList() {
-    }
-
-    public TestTypeWiseTestRateMasterModelsList(String testType, ArrayList<TestRateMasterModel> testRateMasterModels) {
-        this.testType = testType;
         this.testRateMasterModels = testRateMasterModels;
     }
 }

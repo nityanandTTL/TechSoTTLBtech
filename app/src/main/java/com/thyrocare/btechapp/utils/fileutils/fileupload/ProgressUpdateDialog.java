@@ -11,33 +11,33 @@ import com.thyrocare.btechapp.R;
 
 public class ProgressUpdateDialog extends Dialog {
 
-	private RoundCornerProgressBar pbLoading;
+    private RoundCornerProgressBar pbLoading;
 
-	public ProgressUpdateDialog(Context context) {
-		super(context);
-		// TODO Auto-generated constructor stub
-	}
+    public ProgressUpdateDialog(Context context) {
+        super(context);
+        // TODO Auto-generated constructor stub
+    }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-		setContentView(R.layout.dialog_images_load);
-		initLayout();
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        setContentView(R.layout.dialog_images_load);
+        initLayout();
+    }
 
-	private void initLayout() {
+    private void initLayout() {
 
-		pbLoading = (RoundCornerProgressBar) findViewById(R.id.progress);
+        pbLoading = (RoundCornerProgressBar) findViewById(R.id.progress);
 
-		pbLoading.setMax(100);
+        pbLoading.setMax(100);
 
-	}
+    }
 
-	public void setProgressBar(int perc) {
+    public void setProgressBar(int perc) {
 
-		pbLoading.setProgress(perc);
+        pbLoading.setProgress(perc);
 
-	}
+    }
 
 }

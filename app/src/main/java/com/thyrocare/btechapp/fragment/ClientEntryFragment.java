@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -48,7 +49,9 @@ import com.thyrocare.btechapp.NewScreenDesigns.Controllers.PostEmailValidationCo
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ImagePicker;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
+
 import application.ApplicationController;
+
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.models.api.request.NewClientModel;
 import com.thyrocare.btechapp.utils.app.Global;
@@ -69,20 +72,17 @@ import static com.thyrocare.btechapp.utils.app.AppConstants.BDNAPIKEY;
  * A simple {@link Fragment} subclass.
  */
 
-public class ClientEntryFragment extends Fragment  {
+public class ClientEntryFragment extends Fragment {
     public static final String TAG_FRAGMENT = ClientEntryFragment.class.getSimpleName();
+    public static String longitude, latitude, img_64;
     EditText edtName, edtMobile, edtEmail, edtAddress, edtPincode, edtInchargeName;
     Button btnSubmit;
     ImageView btnCamera;
-
-
     HomeScreenActivity mActivity;
-    public static String longitude, latitude, img_64;
     TextView txtLocation, btnUpload;
     NewClientModel newClientpostmodel;
-    private int Gallary = 1123;
     ProgressDialog progressDialog;
-
+    private int Gallary = 1123;
     private int CameraCode = 2;
     private int PLACE_PICKER_REQUEST = 4;
     private Global globalClass;
@@ -110,6 +110,12 @@ public class ClientEntryFragment extends Fragment  {
         return encodeString;
     }
 
+    public static ClientEntryFragment newInstance() {
+        ClientEntryFragment fragment = new ClientEntryFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -151,7 +157,7 @@ public class ClientEntryFragment extends Fragment  {
             public void onClick(View view) {
 
                 TedPermission.with(mActivity)
-                        .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
+                        .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                         .setRationaleMessage("We need permission to capture Image from your device.")
                         .setRationaleConfirmText("OK")
                         .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission > Camera, Storage")
@@ -181,10 +187,10 @@ public class ClientEntryFragment extends Fragment  {
                 else {
 
                     if (!Places.isInitialized()) {
-                        Places.initialize(mActivity,  getResources().getString(R.string.google_maps_key));
+                        Places.initialize(mActivity, getResources().getString(R.string.google_maps_key));
                     }
                     // Set the fields to specify which types of place data to return.
-                    List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.ADDRESS);
+                    List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS);
                     // Start the autocomplete intent.
                     Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
                             .build(mActivity);
@@ -336,23 +342,16 @@ public class ClientEntryFragment extends Fragment  {
             @Override
             public void onClick(View view) {
 
-                if (cd.isConnectingToInternet()){
+                if (cd.isConnectingToInternet()) {
                     CallEmailValidationApi(edtEmail.getText().toString().trim());
-                }else{
-                    globalClass.showCustomToast(mActivity,CheckInternetConnectionMsg);
+                } else {
+                    globalClass.showCustomToast(mActivity, CheckInternetConnectionMsg);
                 }
             }
         });
 
 
         return view;
-    }
-
-    public static ClientEntryFragment newInstance() {
-        ClientEntryFragment fragment = new ClientEntryFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     private void CallEmailValidationApi(String EmailID) {
@@ -391,89 +390,89 @@ public class ClientEntryFragment extends Fragment  {
         String incharge = edtInchargeName.getText().toString().trim();
 
         if (TextUtils.isEmpty(name)) {
-            globalClass.showalert_OK("Enter Client Name",mActivity);
+            globalClass.showalert_OK("Enter Client Name", mActivity);
             edtName.requestFocus();
             return false;
         }
         if (!TextUtils.isEmpty(name) && name.trim().length() < 2) {
-            globalClass.showalert_OK("Client name should be of minimum 2 characters",mActivity);
+            globalClass.showalert_OK("Client name should be of minimum 2 characters", mActivity);
             edtName.requestFocus();
             return false;
         }
 
         if (TextUtils.isEmpty(mobile)) {
-            globalClass.showalert_OK("Enter Mobile No.",mActivity);
+            globalClass.showalert_OK("Enter Mobile No.", mActivity);
             edtMobile.requestFocus();
             return false;
         }
         if (mobile.startsWith("0") || mobile.startsWith("1") || mobile.startsWith("2") || mobile.startsWith("3") || mobile.startsWith("4") || mobile.startsWith("5")) {
-            globalClass.showalert_OK("Mobile number should start with 6,7,8 or 9",mActivity);
+            globalClass.showalert_OK("Mobile number should start with 6,7,8 or 9", mActivity);
             edtMobile.requestFocus();
             return false;
         }
 
         if (mobile.trim().length() != 10) {
-            globalClass.showalert_OK("Mobile number should be of 10 digit",mActivity);
+            globalClass.showalert_OK("Mobile number should be of 10 digit", mActivity);
             edtMobile.requestFocus();
             return false;
         }
         if (TextUtils.isEmpty(edtEmail.getText())) {
-            globalClass.showalert_OK("Enter Email Id",mActivity);
+            globalClass.showalert_OK("Enter Email Id", mActivity);
             edtEmail.requestFocus();
             return false;
         }
         if (!TextUtils.isEmpty(edtEmail.getText())) {
             if (edtEmail.getText().length() > 0 && !Patterns.EMAIL_ADDRESS.matcher(edtEmail.getText().toString()).matches()) {
-                globalClass.showalert_OK("Enter valid Email Id",mActivity);
+                globalClass.showalert_OK("Enter valid Email Id", mActivity);
                 edtEmail.requestFocus();
                 return false;
             }
 
             if (!isEmailValid) {
                 edtEmail.requestFocus();
-                globalClass.showalert_OK(ValidEmailIdMsg,mActivity);
+                globalClass.showalert_OK(ValidEmailIdMsg, mActivity);
                 return false;
             }
 
         }
         if (TextUtils.isEmpty(location)) {
-            globalClass.showalert_OK("Select Location",mActivity);
+            globalClass.showalert_OK("Select Location", mActivity);
             txtLocation.requestFocus();
             return false;
         }
         if (TextUtils.isEmpty(address)) {
-            globalClass.showalert_OK("Enter Address",mActivity);
+            globalClass.showalert_OK("Enter Address", mActivity);
             edtAddress.requestFocus();
             return false;
         }
         if (TextUtils.isEmpty(pincode)) {
-            globalClass.showalert_OK("Enter Pincode",mActivity);
+            globalClass.showalert_OK("Enter Pincode", mActivity);
             edtPincode.requestFocus();
             return false;
         }
         if (pincode.length() != 6) {
-            globalClass.showalert_OK("Pincode should be of 6 digits",mActivity);
+            globalClass.showalert_OK("Pincode should be of 6 digits", mActivity);
             edtPincode.requestFocus();
             return false;
         }
-        if (pincode.startsWith("0")||pincode.startsWith("9")) {
-            globalClass.showalert_OK("Pincode should not start with 0 or 9",mActivity);
+        if (pincode.startsWith("0") || pincode.startsWith("9")) {
+            globalClass.showalert_OK("Pincode should not start with 0 or 9", mActivity);
             edtPincode.requestFocus();
             return false;
         }
         if (TextUtils.isEmpty(incharge)) {
-            globalClass.showalert_OK("Enter Incharge Name",mActivity);
+            globalClass.showalert_OK("Enter Incharge Name", mActivity);
             edtInchargeName.requestFocus();
             return false;
         }
         if (!TextUtils.isEmpty(incharge) && incharge.trim().length() < 2) {
-            globalClass.showalert_OK("Incharge name should be of minimum 2 characters",mActivity);
+            globalClass.showalert_OK("Incharge name should be of minimum 2 characters", mActivity);
             edtInchargeName.requestFocus();
             return false;
         }
 
         if (TextUtils.isEmpty(btnUpload.getText().toString())) {
-            globalClass.showalert_OK("Please upload image to proceed",mActivity);
+            globalClass.showalert_OK("Please upload image to proceed", mActivity);
             edtInchargeName.requestFocus();
             return false;
         }
@@ -484,7 +483,7 @@ public class ClientEntryFragment extends Fragment  {
 
     private void postapi_call() {
         newClientpostmodel = new NewClientModel();
-        newClientpostmodel.setAddress(edtAddress.getText().toString().replace("+",""));
+        newClientpostmodel.setAddress(edtAddress.getText().toString().replace("+", ""));
         newClientpostmodel.setBrand("TTL");
         newClientpostmodel.setChannel("MOBILE APPLICATION");
         newClientpostmodel.setCountry("India");
@@ -570,19 +569,19 @@ public class ClientEntryFragment extends Fragment  {
     private void showCamera() {
 
         camera = new Camera.Builder()
-                    .resetToCorrectOrientation(true)// it will rotate the camera bitmap to the correct orientation from meta data
-                    .setTakePhotoRequestCode(1)
-                    .setDirectory("BtechApp/ClientEntry")
-                    .setName("Client_" + System.currentTimeMillis())
-                    .setImageFormat(com.mindorks.paracamera.Camera.IMAGE_JPEG)
-                    .setCompression(60)
-                    .setImageHeight(480)// it will try to achieve this height as close as possible maintaining the aspect ratio;
-                    .build(this);
-            try {
-                camera.takePicture();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                .resetToCorrectOrientation(true)// it will rotate the camera bitmap to the correct orientation from meta data
+                .setTakePhotoRequestCode(1)
+                .setDirectory("BtechApp/ClientEntry")
+                .setName("Client_" + System.currentTimeMillis())
+                .setImageFormat(com.mindorks.paracamera.Camera.IMAGE_JPEG)
+                .setCompression(60)
+                .setImageHeight(480)// it will try to achieve this height as close as possible maintaining the aspect ratio;
+                .build(this);
+        try {
+            camera.takePicture();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showGallery() {
@@ -603,7 +602,6 @@ public class ClientEntryFragment extends Fragment  {
 
 
     }
-
 
 
     private boolean checkpermissionLocation() {
@@ -638,18 +636,18 @@ public class ClientEntryFragment extends Fragment  {
                 }
 
 
-            } else if (requestCode == Camera.REQUEST_TAKE_PHOTO ) {
+            } else if (requestCode == Camera.REQUEST_TAKE_PHOTO) {
                 String imageurl = "";
                 try {
                     imageurl = camera.getCameraBitmapPath();
                     File ClientPicimagefile = new File(imageurl);
-                    if (ClientPicimagefile.exists()){
+                    if (ClientPicimagefile.exists()) {
                         btnCamera.setImageBitmap(camera.getCameraBitmap());
                         String imagename = ClientPicimagefile.getName();
                         btnUpload.setText(imagename);
                         btnUpload.setError(null);
                         img_64 = getFileToByte(ClientPicimagefile.getPath());
-                    }else{
+                    } else {
                         Toast.makeText(mActivity, "Failed to capture photo", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
@@ -660,7 +658,8 @@ public class ClientEntryFragment extends Fragment  {
                 try {
                     /*final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageuri);
                     final Bitmap selectImage = BitmapFactory.decodeStream(imageStream);*/
-                    final Bitmap selectImage = ImagePicker.getImageFromResult(mActivity, resultCode, data);;
+                    final Bitmap selectImage = ImagePicker.getImageFromResult(mActivity, resultCode, data);
+                    ;
                     btnCamera.setImageBitmap(selectImage);
                     Uri selectedimage = data.getData();
                     String image_Path = getPath(getContext().getContentResolver(), selectedimage);

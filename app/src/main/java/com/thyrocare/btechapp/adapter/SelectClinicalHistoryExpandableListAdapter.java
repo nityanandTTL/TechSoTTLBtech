@@ -26,6 +26,7 @@ public class SelectClinicalHistoryExpandableListAdapter extends BaseExpandableLi
     private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr;
     private int BenId;
     private SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate;
+
     public SelectClinicalHistoryExpandableListAdapter(Context context, ArrayList<BeneficiaryTestDetailsModel> testsList, ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr, int benId, SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate) {
         this.context = context;
         this.testsList = testsList;
@@ -108,7 +109,7 @@ public class SelectClinicalHistoryExpandableListAdapter extends BaseExpandableLi
         beneficiaryTestWiseClinicalHistoryModel.setBenId(BenId);
         beneficiaryTestWiseClinicalHistoryModel.setTest(testsList.get(groupPosition).getTests());
         beneficiaryTestWiseClinicalHistoryModel.setClinicalHistoryId(testClinicalHistoryModel.getClinicalHtrId());
-        if(chArr!=null) {
+        if (chArr != null) {
             if (chArr.contains(beneficiaryTestWiseClinicalHistoryModel)) {
                 holder.imgCheck.setVisibility(View.GONE);
                 holder.imgChecked.setVisibility(View.VISIBLE);
@@ -116,8 +117,7 @@ public class SelectClinicalHistoryExpandableListAdapter extends BaseExpandableLi
                 holder.imgCheck.setVisibility(View.VISIBLE);
                 holder.imgChecked.setVisibility(View.GONE);
             }
-        }
-        else{
+        } else {
             chArr = new ArrayList<>();
         }
         holder.imgCheck.setOnClickListener(new View.OnClickListener() {
@@ -139,17 +139,17 @@ public class SelectClinicalHistoryExpandableListAdapter extends BaseExpandableLi
         return convertView;
     }
 
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+    }
+
     private class ViewParentHolder {
         TextView txtHeader;
     }
 
     private class ViewChildHolder {
-        ImageView imgCheck,imgChecked;
+        ImageView imgCheck, imgChecked;
         TextView txt_test;
-    }
-
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
     }
 }

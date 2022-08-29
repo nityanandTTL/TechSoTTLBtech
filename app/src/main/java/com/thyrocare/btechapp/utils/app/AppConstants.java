@@ -6,9 +6,9 @@ AppConstants {
     // ------------ CONSTANTS -------------
 
     //public static final int ANDROID_APP_VERSION = 33;//33-5sept-address crashes,inspp validation
-   // public static final int ANDROID_APP_VERSION = 34;//34-12sept-RESET PASSWORD DESIGN, BARCODE 1 VALIDATION, EMAIL VALIDATION
-   // public static final int ANDROID_APP_VERSION = 35;//35-12sept-RESET PASSWORD DESIGN, BARCODE 1 VALIDATION, EMAIL VALIDATION
- //   public static final int ANDROID_APP_VERSION = 36;//36-12oct-leave intimation 2 task, order pass, LME
+    // public static final int ANDROID_APP_VERSION = 34;//34-12sept-RESET PASSWORD DESIGN, BARCODE 1 VALIDATION, EMAIL VALIDATION
+    // public static final int ANDROID_APP_VERSION = 35;//35-12sept-RESET PASSWORD DESIGN, BARCODE 1 VALIDATION, EMAIL VALIDATION
+    //   public static final int ANDROID_APP_VERSION = 36;//36-12oct-leave intimation 2 task, order pass, LME
     //37-5Dec-last task by Jai - RBS PPBS in diffrerent vials, Direct visit
 
 
@@ -74,7 +74,7 @@ AppConstants {
 
     public static final String EXTERNAL_DIR = "/DHB";
     public static final String RateCalDate = "Ratecaldate";
-     String OFFLINE_STATUS_ACTION_DONE = "com.app.thyrocare.offlineStatusDone";
+    String OFFLINE_STATUS_ACTION_DONE = "com.app.thyrocare.offlineStatusDone";
     public static final String OFFLINE_STATUS_ACTION_NO_DATA = "com.app.thyrocare.offlineStatusNoData";
     public static final String OFFLINE_STATUS_ACTION_ISSUE = "com.app.thyrocare.offlineStatusIssue";
     public static final String OFFLINE_STATUS_ACTION_IN_PROGRESS = "com.app.thyrocare.offlineStatusInProgress";

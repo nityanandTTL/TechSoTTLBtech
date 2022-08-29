@@ -8,8 +8,19 @@ import android.os.Parcelable;
  * Created by Orion on 4/20/2017.
  */
 
-public class WLMISDetailsModel implements Parcelable{
+public class WLMISDetailsModel implements Parcelable {
 
+    public static final Creator<WLMISDetailsModel> CREATOR = new Creator<WLMISDetailsModel>() {
+        @Override
+        public WLMISDetailsModel createFromParcel(Parcel in) {
+            return new WLMISDetailsModel(in);
+        }
+
+        @Override
+        public WLMISDetailsModel[] newArray(int size) {
+            return new WLMISDetailsModel[size];
+        }
+    };
     private String LMECode;
     private int Batch;
     private String StartedAt;
@@ -23,18 +34,6 @@ public class WLMISDetailsModel implements Parcelable{
         CompletedAt = in.readString();
         WL = in.readInt();
     }
-
-    public static final Creator<WLMISDetailsModel> CREATOR = new Creator<WLMISDetailsModel>() {
-        @Override
-        public WLMISDetailsModel createFromParcel(Parcel in) {
-            return new WLMISDetailsModel(in);
-        }
-
-        @Override
-        public WLMISDetailsModel[] newArray(int size) {
-            return new WLMISDetailsModel[size];
-        }
-    };
 
     public String getLMECode() {
         return LMECode;

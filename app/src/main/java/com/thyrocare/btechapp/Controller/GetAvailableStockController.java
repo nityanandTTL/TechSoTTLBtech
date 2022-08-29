@@ -46,14 +46,15 @@ public class GetAvailableStockController {
                 if (res.isSuccessful() && res.body() != null) {
                     if (flag == 0)
                         stockAvailabilityActivity.getStockResponse(res.body());
-                }else{
-                    Toast.makeText(mActivity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mActivity, SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<MainMaterialModel> call, Throwable t) {
                 globalClass.hideProgressDialog(mActivity);
-                Toast.makeText(mActivity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
+                Toast.makeText(mActivity, SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
             }
         });
     }

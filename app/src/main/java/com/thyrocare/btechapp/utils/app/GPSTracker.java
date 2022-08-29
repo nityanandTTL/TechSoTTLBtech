@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+
 import androidx.core.content.ContextCompat;
 
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -26,7 +27,13 @@ import java.net.InetAddress;
 
 
 public class GPSTracker extends Service implements LocationListener {
+    // The minimum distance to change Updates in meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5; // 5 meters
+    // The minimum time between updates in milliseconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 5; // 5 seconds
     private final Context mContext;
+    // Declaring a Location Manager
+    protected LocationManager locationManager;
     // flag for GPS status
     boolean isGPSEnabled = false;
     // flag for network status
@@ -36,12 +43,6 @@ public class GPSTracker extends Service implements LocationListener {
     Location location; // location
     double latitude; // latitude
     double longitude; // longitude
-    // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5; // 5 meters
-    // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 5; // 5 seconds
-    // Declaring a Location Manager
-    protected LocationManager locationManager;
 
     public GPSTracker(Context context) {
         this.mContext = context;

@@ -7,11 +7,27 @@ import android.os.Parcelable;
  * Created by Orion on 5/16/2017.
  */
 
-public class NarrationMasterModel implements Parcelable{
+public class NarrationMasterModel implements Parcelable {
+    public static final Creator<NarrationMasterModel> CREATOR = new Creator<NarrationMasterModel>() {
+        @Override
+        public NarrationMasterModel createFromParcel(Parcel in) {
+            return new NarrationMasterModel(in);
+        }
+
+        @Override
+        public NarrationMasterModel[] newArray(int size) {
+            return new NarrationMasterModel[size];
+        }
+    };
     private String Narration;
     private int NarrationId;
 
     public NarrationMasterModel() {
+    }
+
+    protected NarrationMasterModel(Parcel in) {
+        Narration = in.readString();
+        NarrationId = in.readInt();
     }
 
     public String getNarration() {
@@ -30,11 +46,6 @@ public class NarrationMasterModel implements Parcelable{
         NarrationId = narrationId;
     }
 
-    protected NarrationMasterModel(Parcel in) {
-        Narration = in.readString();
-        NarrationId = in.readInt();
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(Narration);
@@ -45,16 +56,4 @@ public class NarrationMasterModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<NarrationMasterModel> CREATOR = new Creator<NarrationMasterModel>() {
-        @Override
-        public NarrationMasterModel createFromParcel(Parcel in) {
-            return new NarrationMasterModel(in);
-        }
-
-        @Override
-        public NarrationMasterModel[] newArray(int size) {
-            return new NarrationMasterModel[size];
-        }
-    };
 }

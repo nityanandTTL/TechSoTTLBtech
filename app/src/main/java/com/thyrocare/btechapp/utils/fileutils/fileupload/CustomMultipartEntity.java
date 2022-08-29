@@ -10,86 +10,86 @@ import java.nio.charset.Charset;
 
 public class CustomMultipartEntity extends MultipartEntity {
 
-	private final ProgressListener listener;
+    private final ProgressListener listener;
 
-	public CustomMultipartEntity(final ProgressListener listener) {
-		super();
-		this.listener = listener;
-	}
+    public CustomMultipartEntity(final ProgressListener listener) {
+        super();
+        this.listener = listener;
+    }
 
-	public CustomMultipartEntity(final HttpMultipartMode mode,
-			final ProgressListener listener) {
-		super(mode);
-		this.listener = listener;
-	}
+    public CustomMultipartEntity(final HttpMultipartMode mode,
+                                 final ProgressListener listener) {
+        super(mode);
+        this.listener = listener;
+    }
 
-	public CustomMultipartEntity(HttpMultipartMode mode, final String boundary,
-			final Charset charset, final ProgressListener listener) {
-		super(mode, boundary, charset);
-		this.listener = listener;
-	}
+    public CustomMultipartEntity(HttpMultipartMode mode, final String boundary,
+                                 final Charset charset, final ProgressListener listener) {
+        super(mode, boundary, charset);
+        this.listener = listener;
+    }
 
-	@Override
-	public void writeTo(final OutputStream outstream) throws IOException {
-		super.writeTo(new CountingOutputStream(outstream, this.listener));
-	}
+    @Override
+    public void writeTo(final OutputStream outstream) throws IOException {
+        super.writeTo(new CountingOutputStream(outstream, this.listener));
+    }
 
-	public interface ProgressListener {
-		void transferred(long num);
-	}
+    public interface ProgressListener {
+        void transferred(long num);
+    }
 
-	public static class CountingOutputStream extends FilterOutputStream {
+    public static class CountingOutputStream extends FilterOutputStream {
 
-		private final ProgressListener listener;
-		private long transferred;
+        private final ProgressListener listener;
+        private long transferred;
 
-		public CountingOutputStream(final OutputStream out,
-				final ProgressListener listener) {
-			super(out);
-			this.listener = listener;
-			this.transferred = 0;
-		}
+        public CountingOutputStream(final OutputStream out,
+                                    final ProgressListener listener) {
+            super(out);
+            this.listener = listener;
+            this.transferred = 0;
+        }
 
-		public void write(byte[] b, int off, int len) throws IOException {
+        public void write(byte[] b, int off, int len) throws IOException {
 
-			android.os.Process.setThreadPriority(12);
+            android.os.Process.setThreadPriority(12);
 
-			int length = len;
+            int length = len;
 
-			int offset = off;
+            int offset = off;
 
-			int buffer = 20480;// buffer size, I made it 20KB, 1024*20
+            int buffer = 20480;// buffer size, I made it 20KB, 1024*20
 
-			int remainer = len;
+            int remainer = len;
 
-			while (length > offset) {
+            while (length > offset) {
 
-				if (remainer < buffer)
+                if (remainer < buffer)
 
-					buffer = remainer;
+                    buffer = remainer;
 
-				out.write(b, offset, buffer);
+                out.write(b, offset, buffer);
 
-				remainer -= buffer;
+                remainer -= buffer;
 
-				offset += buffer;
+                offset += buffer;
 
-				this.transferred += buffer;
+                this.transferred += buffer;
 
-				this.listener.transferred(this.transferred);
+                this.listener.transferred(this.transferred);
 
-				// Logger.debug("Size of file transferred :" +
-				// this.transferred);
+                // Logger.debug("Size of file transferred :" +
+                // this.transferred);
 
-				// out.flush();
+                // out.flush();
 
-			}
-		}
+            }
+        }
 
-		public void write(int b) throws IOException {
-			out.write(b);
-			this.transferred++;
-			this.listener.transferred(this.transferred);
-		}
-	}
+        public void write(int b) throws IOException {
+            out.write(b);
+            this.transferred++;
+            this.listener.transferred(this.transferred);
+        }
+    }
 }

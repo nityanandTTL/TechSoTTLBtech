@@ -7,9 +7,20 @@ import android.os.Parcelable;
  * Created by e5209 on 9/18/2017.
  */
 
-public class TrackBtechLocationRequestModel implements Parcelable{
-private int BtechId;
-    private Double Latitude,Longitude;
+public class TrackBtechLocationRequestModel implements Parcelable {
+    public static final Creator<TrackBtechLocationRequestModel> CREATOR = new Creator<TrackBtechLocationRequestModel>() {
+        @Override
+        public TrackBtechLocationRequestModel createFromParcel(Parcel in) {
+            return new TrackBtechLocationRequestModel(in);
+        }
+
+        @Override
+        public TrackBtechLocationRequestModel[] newArray(int size) {
+            return new TrackBtechLocationRequestModel[size];
+        }
+    };
+    private int BtechId;
+    private Double Latitude, Longitude;
 
     public TrackBtechLocationRequestModel() {
     }
@@ -27,18 +38,6 @@ private int BtechId;
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<TrackBtechLocationRequestModel> CREATOR = new Creator<TrackBtechLocationRequestModel>() {
-        @Override
-        public TrackBtechLocationRequestModel createFromParcel(Parcel in) {
-            return new TrackBtechLocationRequestModel(in);
-        }
-
-        @Override
-        public TrackBtechLocationRequestModel[] newArray(int size) {
-            return new TrackBtechLocationRequestModel[size];
-        }
-    };
 
     public int getBtechId() {
         return BtechId;

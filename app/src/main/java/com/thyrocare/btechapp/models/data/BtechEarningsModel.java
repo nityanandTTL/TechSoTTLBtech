@@ -9,7 +9,18 @@ import java.util.ArrayList;
  * Created by Orion on 6/21/2017.
  */
 
-public class BtechEarningsModel implements Parcelable{
+public class BtechEarningsModel implements Parcelable {
+    public static final Creator<BtechEarningsModel> CREATOR = new Creator<BtechEarningsModel>() {
+        @Override
+        public BtechEarningsModel createFromParcel(Parcel in) {
+            return new BtechEarningsModel(in);
+        }
+
+        @Override
+        public BtechEarningsModel[] newArray(int size) {
+            return new BtechEarningsModel[size];
+        }
+    };
     ArrayList<VisitEarningsModel> visitEarnings;
 
     public BtechEarningsModel() {
@@ -28,18 +39,6 @@ public class BtechEarningsModel implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BtechEarningsModel> CREATOR = new Creator<BtechEarningsModel>() {
-        @Override
-        public BtechEarningsModel createFromParcel(Parcel in) {
-            return new BtechEarningsModel(in);
-        }
-
-        @Override
-        public BtechEarningsModel[] newArray(int size) {
-            return new BtechEarningsModel[size];
-        }
-    };
 
     public ArrayList<VisitEarningsModel> getVisitEarnings() {
         return visitEarnings;

@@ -8,7 +8,6 @@ public class HubStartRequestModel {
     private String BtechId;
 
 
-
     private String Token;
     private String HubId;
     private int Type;
@@ -36,6 +35,7 @@ public class HubStartRequestModel {
     public void setType(int type) {
         Type = type;
     }
+
     public String getToken() {
         return Token;
     }

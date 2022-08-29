@@ -86,8 +86,8 @@
                     android:id="@+id/ll_rv_last7update_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <include layout="@layout/item_ledger_module_title" />
 
@@ -97,6 +97,7 @@
                         android:layout_height="@dimen/_250sdp"
                         android:padding="@dimen/_5sdp" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/ll_norecord_id"
                     android:layout_width="match_parent"
@@ -171,9 +172,9 @@
                 <LinearLayout
                     android:id="@+id/ll_rv_deposite_id"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <include layout="@layout/item_title_ledger_earnings_new" />
 

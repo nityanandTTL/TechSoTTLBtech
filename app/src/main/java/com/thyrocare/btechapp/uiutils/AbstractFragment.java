@@ -7,10 +7,12 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,12 +29,47 @@ import java.util.regex.Pattern;
 public class AbstractFragment extends Fragment implements
         ActivityHelper {
 
-    private Context context;
     protected int sdk;
     protected AppPreferenceManager appPreferenceManager;
     protected Typeface fontOpenRobotoRegular, fontOpenRobotoMedium, fontOpenRobotoLight;
+    private Context context;
     private ActivityHelper ah;
     private Activity activity;
+
+    public static boolean validateFName(String firstName) {
+
+        return firstName.matches("[a-zA-Z-']*");
+    }
+
+    // validate last name
+    public static boolean validateLName(String lastName) {
+
+        return lastName.matches("[a-zA-Z'-]*");
+    }
+
+    public static boolean validatePhoneNumber(CharSequence target) {
+        Pattern digitPattern = Pattern.compile("[0-9+-]*");
+
+        return !TextUtils.isEmpty(target)
+                && digitPattern.matcher(target)
+                .matches();
+
+
+    }
+
+    public static boolean validateDigit(CharSequence target) {
+        Pattern digitPattern = Pattern.compile("[0-9]*");
+
+        return !TextUtils.isEmpty(target)
+                && digitPattern.matcher(target)
+                .matches();
+    }
+
+    public static boolean isValidEmail(CharSequence target) {
+        return !TextUtils.isEmpty(target)
+                && android.util.Patterns.EMAIL_ADDRESS.matcher(target)
+                .matches();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,6 +112,8 @@ public class AbstractFragment extends Fragment implements
         return null;
     }
 
+// validate First Name
+
     @Override
     public boolean isNetworkAvailable(Activity activity) {
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -101,8 +140,6 @@ public class AbstractFragment extends Fragment implements
 
         return false;
     }
-
-
 
     @Override
     public void switchToActivity(Activity current,
@@ -133,43 +170,6 @@ public class AbstractFragment extends Fragment implements
     public void onAttach(Activity activity) {
         context = (FragmentActivity) activity;
         super.onAttach(activity);
-    }
-
-// validate First Name
-
-    public static boolean validateFName(String firstName) {
-
-        return firstName.matches("[a-zA-Z-']*");
-    }
-
-    // validate last name
-    public static boolean validateLName(String lastName) {
-
-        return lastName.matches("[a-zA-Z'-]*");
-    }
-
-    public static boolean validatePhoneNumber(CharSequence target) {
-        Pattern digitPattern = Pattern.compile("[0-9+-]*");
-
-        return !TextUtils.isEmpty(target)
-                && digitPattern.matcher(target)
-                .matches();
-
-
-    }
-
-    public static boolean validateDigit(CharSequence target) {
-        Pattern digitPattern = Pattern.compile("[0-9]*");
-
-        return !TextUtils.isEmpty(target)
-                && digitPattern.matcher(target)
-                .matches();
-    }
-
-    public static boolean isValidEmail(CharSequence target) {
-        return !TextUtils.isEmpty(target)
-                && android.util.Patterns.EMAIL_ADDRESS.matcher(target)
-                .matches();
     }
 
     public void pushFragments(Fragment fragment, boolean shouldAnimate,

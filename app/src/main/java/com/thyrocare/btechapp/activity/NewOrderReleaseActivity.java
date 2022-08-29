@@ -67,12 +67,12 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
     TextView tv_toolbar;
     GetPECancelRemarksResponseModel remarksResponseModel;
     ArrayList<GetPECancelRemarksResponseModel> reasonsDTOS = new ArrayList<>();
-    String Str_remarks, Str_other, orderno, pincode,appoinmentdate,token,remarksID,reasonID;
+    String Str_remarks, Str_other, orderno, pincode, appoinmentdate, token, remarksID, reasonID;
     ConnectionDetector cd;
     AppPreferenceManager appPreferenceManager;
     Global globalclass;
     EditText edt_other;
-    int slotID,count;
+    int slotID, count;
     ArrayList<OrderVisitDetailsModel> orderVisitDetailsModelArrayList = new ArrayList<>();
     OrderVisitDetailsModel orderDetailsModel;
 
@@ -90,7 +90,7 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
         appoinmentdate = getIntent().getStringExtra(BundleConstants.APPOINTMENT_DATE);
         slotID = getIntent().getIntExtra(BundleConstants.ORDER_SLOTID, 0);
         orderDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
-        count = getIntent().getIntExtra("Bencount",0);
+        count = getIntent().getIntExtra("Bencount", 0);
         orderVisitDetailsModelArrayList = getIntent().getExtras().getParcelableArrayList(BundleConstants.VISIT_ORDER_DETAILS_MODEL_ARRAYLIST);
         remarksID = getIntent().getStringExtra(BundleConstants.REMARKS_ID);
         inITUI();
@@ -140,13 +140,13 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
                         intent.putExtra(BundleConstants.ORDER, orderno);
                         intent.putExtra(BundleConstants.PINCODE, pincode);
                         intent.putExtra(BundleConstants.RES_REMARKS, remarksResponseModel.getId());
-                        intent.putExtra(BundleConstants.ORDER_SLOTID,slotID);
-                        intent.putExtra(BundleConstants.REMARKS_ID,remarksID);
-                        intent.putExtra(BundleConstants.APPOINTMENT_DATE,appoinmentdate);
+                        intent.putExtra(BundleConstants.ORDER_SLOTID, slotID);
+                        intent.putExtra(BundleConstants.REMARKS_ID, remarksID);
+                        intent.putExtra(BundleConstants.APPOINTMENT_DATE, appoinmentdate);
                         intent.putExtra(BundleConstants.RES_RESPONSE, remarksResponseModel.getReason() + "-" + edt_other.getText().toString().trim());
-                        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL,orderDetailsModel);
-                        intent.putExtra("Bencount",count);
-                        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL_ARRAYLIST,orderVisitDetailsModelArrayList);
+                        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+                        intent.putExtra("Bencount", count);
+                        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL_ARRAYLIST, orderVisitDetailsModelArrayList);
                         startActivity(intent);
                     } else if (Global.selectedPosition == 1) {
                         dialogToCancelOrder("Do you want to cancel this order.", 2);
@@ -188,7 +188,7 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
                             dataModel.setRemarksId(Global.selectedRemarksID);
                             dataModel.setReasonId(remarksResponseModel.getId());
                             dataModel.setVisitId(orderno);
-                            dataModel.setOthers(remarksResponseModel.getReason()+edt_other.getText().toString().trim());
+                            dataModel.setOthers(remarksResponseModel.getReason() + edt_other.getText().toString().trim());
                             dataModel.setUserId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
                             dataModel.setVipOrder(false);
                             callSubmitReleaseAPI(dataModel);
@@ -245,7 +245,7 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
     private void callSubmitReleaseAPI(FixAppointmentDataModel dataModel) {
         if (cd.isConnectingToInternet()) {
             OrderReleaseRemarksController ordc = new OrderReleaseRemarksController(this);
-            ordc.updateOrderHistory(1,token, dataModel);
+            ordc.updateOrderHistory(1, token, dataModel);
         } else {
             Toast.makeText(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_SHORT).show();
         }
@@ -289,8 +289,8 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
                                     Global.todisplaytimerforPosition = false;
                                     Global.toDisplayTimerFlag = false;
                                     dialog.dismiss();
-                                    Intent intent = new Intent(mActivity,B2BVisitOrdersDisplayFragment.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    Intent intent = new Intent(mActivity, B2BVisitOrdersDisplayFragment.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
 //                                    startActivity(new Intent(mActivity, B2BVisitOrdersDisplayFragment.class));
                                 }
@@ -387,9 +387,9 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
         if (cd.isConnectingToInternet()) {
             OrderReleaseRemarksController orcController = new OrderReleaseRemarksController(this);
 //            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder){
-            if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()){
+            if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()) {
                 orcController.getPE_SMS(smsRequestModel);
-            }else {
+            } else {
                 orcController.getSMS(smsRequestModel);
             }
             /*OrderReleaseRemarksController orcController = new OrderReleaseRemarksController(this);

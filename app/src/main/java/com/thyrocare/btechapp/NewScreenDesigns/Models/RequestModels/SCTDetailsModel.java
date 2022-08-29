@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class SCTDetailsModel implements Parcelable {
+    public static final Creator<SCTDetailsModel> CREATOR = new Creator<SCTDetailsModel>() {
+        @Override
+        public SCTDetailsModel createFromParcel(Parcel in) {
+            return new SCTDetailsModel(in);
+        }
+
+        @Override
+        public SCTDetailsModel[] newArray(int size) {
+            return new SCTDetailsModel[size];
+        }
+    };
     public String SCTDate;
     public String SLA;
 
@@ -29,18 +40,6 @@ public class SCTDetailsModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SCTDetailsModel> CREATOR = new Creator<SCTDetailsModel>() {
-        @Override
-        public SCTDetailsModel createFromParcel(Parcel in) {
-            return new SCTDetailsModel(in);
-        }
-
-        @Override
-        public SCTDetailsModel[] newArray(int size) {
-            return new SCTDetailsModel[size];
-        }
-    };
 
     public String getSCTDate() {
         return SCTDate;

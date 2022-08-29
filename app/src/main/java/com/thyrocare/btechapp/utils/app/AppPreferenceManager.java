@@ -21,6 +21,11 @@ import java.util.Date;
 
 public class AppPreferenceManager {
 
+    public String ratecal = "ratecal";
+    public String OTPFlagOneTime = "OTPFlag";
+    public String Access_Token = "access_token";
+    public String PE_Partner = "PE_Partner";
+    public String PE_DSA = "PE_DSA";
     private AppPreference appPreference;
     private String maskNumber = "maskNumber";
     private String AppVersion = "app_version";
@@ -53,10 +58,8 @@ public class AppPreferenceManager {
     private String scheduleDate2 = "scheduleDate2";
     private String cashingTime = "cashingTime";
     private String CacheProduct = "CacheProduct";
-
     private String scheduleCounter = "scheduleCounter";
     private String scheduleDate = "scheduleDate";
-
     private String loginRole = "loginRole";
     private String btechID = "btechID";
     private String authToken = "authToken";
@@ -65,18 +68,10 @@ public class AppPreferenceManager {
     private String userChatWith = "userChatWith";
     private String UserDetailUserName = "userDetailUserName";
     private String UserDetailChatWith = "userDetailChatWith";
-
     private String isLoadSpotlightOnOrderd = "isLoadSpotlightOnOrderd";
     private String isLoadSpotlightOnOrderdHistory = "isLoadSpotlightOnOrderdHistory";
     private String isLoadSpotlightOnPager = "isLoadSpotlightOnPager";
     private String isLoadSpotlightOnHome = "isLoadSpotlightOnHome";
-    public String ratecal = "ratecal";
-    public String OTPFlagOneTime = "OTPFlag";
-    public String Access_Token = "access_token";
-
-    public String PE_Partner = "PE_Partner";
-    public String PE_DSA = "PE_DSA";
-
     //Neha G---------------------------------
     private String ShowTimeInNotificatn = "";
     private int not_avail_tom;
@@ -92,6 +87,15 @@ public class AppPreferenceManager {
     private String OrderNo = "";
 
 //Neha G -------------------------------------
+
+    public AppPreferenceManager(Activity activity) {
+        super();
+        appPreference = AppPreference.getAppPreferences(activity);
+    }
+
+    public AppPreferenceManager(Context context) {
+        appPreference = AppPreference.getAppPreferences(context);
+    }
 
     public NewBtechAvaliabilityResponseModel getNEWBTECHAVALIABILITYRESPONSEMODEL() {
         String value = appPreference.getString(this.NEWBTECHAVALIABILITYRESPONSEMODEL, "");
@@ -110,17 +114,14 @@ public class AppPreferenceManager {
         appPreference.putString(this.OrderNo, orderNo);
     }
 
-
     public BrandTestMasterModel getTestsProfilePOPProfile() {
         String value = appPreference.getString(this.ratecal, "");
         return new Gson().fromJson(value, BrandTestMasterModel.class);
     }
 
-
     public void setTestsProfilePOPProfile(BrandTestMasterModel allTestsProfilePOPProfile) {
         appPreference.putString(this.ratecal, new Gson().toJson(allTestsProfilePOPProfile));
     }
-
 
     public String getBtechSelfie() {
         return appPreference.getString(selfieURl, "");
@@ -130,29 +131,20 @@ public class AppPreferenceManager {
         appPreference.putString(this.selfieURl, selfieURl);
     }
 
-
     public boolean isPEPartner() {
-        return appPreference.getBoolean(PE_Partner,false);
+        return appPreference.getBoolean(PE_Partner, false);
     }
 
     public void setPE_Partner(boolean PE_Partner) {
-        appPreference.putBoolean(this.PE_Partner,PE_Partner);
+        appPreference.putBoolean(this.PE_Partner, PE_Partner);
     }
 
     public boolean PEDSAOrder() {
-        return appPreference.getBoolean(PE_DSA,false);
+        return appPreference.getBoolean(PE_DSA, false);
     }
 
     public void setPE_DSA(boolean PE_DSA) {
-        appPreference.putBoolean(this.PE_DSA,PE_DSA);
-    }
-
-    public String get7days() {
-        return appPreference.getString(date, "");
-    }
-
-    public void set7date(String date) {
-        appPreference.putString(this.date, date);
+        appPreference.putBoolean(this.PE_DSA, PE_DSA);
     }
 
 
@@ -164,6 +156,14 @@ public class AppPreferenceManager {
     public void setNEWBTECHAVALIABILITYRESPONSEMODEL(NewBtechAvaliabilityResponseModel newbtechavaliabilityresponsemodel) {
         appPreference.putString(this.NEWBTECHAVALIABILITYRESPONSEMODEL, new Gson().toJson(newbtechavaliabilityresponsemodel));
     }*/
+
+    public String get7days() {
+        return appPreference.getString(date, "");
+    }
+
+    public void set7date(String date) {
+        appPreference.putString(this.date, date);
+    }
 
     public String getCashingTime() {
         return appPreference.getString(cashingTime, "");
@@ -197,7 +197,6 @@ public class AppPreferenceManager {
         OrderAccept = orderAccept;
     }
 
-
     public String getAuthToken() {
         return appPreference.getString(authToken, "");
     }
@@ -205,7 +204,6 @@ public class AppPreferenceManager {
     public void setAuthToken(String btechID) {
         appPreference.putString(this.authToken, btechID);
     }
-
 
     public String getAccess_Token() {
         return appPreference.getString(Access_Token, "");
@@ -349,15 +347,6 @@ public class AppPreferenceManager {
 
     public void setScheduleDate2(String scheduleDate2) {
         this.scheduleDate2 = scheduleDate2;
-    }
-
-    public AppPreferenceManager(Activity activity) {
-        super();
-        appPreference = AppPreference.getAppPreferences(activity);
-    }
-
-    public AppPreferenceManager(Context context) {
-        appPreference = AppPreference.getAppPreferences(context);
     }
 
     public String getAppVersion() {

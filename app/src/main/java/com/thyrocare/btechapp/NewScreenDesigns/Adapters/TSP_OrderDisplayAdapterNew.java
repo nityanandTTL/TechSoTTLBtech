@@ -75,6 +75,8 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
 
     private static final String TAG = TSP_OrderDisplayAdapterNew.class.getSimpleName();
     private final Activity activity;
+    CharSequence[] items;
+    TSP_OrdersDisplayFragment_new tsp_ordersDisplayFragment_new;
     private String current_date;
     private AppPreferenceManager appPreferenceManager;
     private GPSTracker gpsTracker;
@@ -88,8 +90,6 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
     private String newTimeAfterMinusSixty1, cancelVisit = "n", apiTime;
     private Date apitimeinHHMMFormat;
     private Date strDate;
-    CharSequence[] items;
-    TSP_OrdersDisplayFragment_new tsp_ordersDisplayFragment_new;
     private String userChoosenReleaseTask;
     private boolean isCancelRequesGenereted = false;
 
@@ -106,46 +106,6 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
 
     public void UpdateList(ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels) {
         this.orderVisitDetailsModelsArr = orderDetailsResponseModels;
-    }
-
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView txtBtechName, txtOrderNo, txtDate, txtSlot, txtBeneficiary, txtSamples, txtAddress, txtPPBSStatus, txtFastingStatus, txtRBSStatus, direct_visit, txtKits, txt_visit_day;
-        ImageView imgRelease, imgCall, img_accept, imgProceed;
-        LinearLayout layoutAccept_Release_Ord, layoutMain, lin_bencount, lin_kits, lin_btechName, LL_swipe, ll_accept;
-        View view_seperater;
-        RelativeLayout rel_imgRelease;
-
-        public MyViewHolder(View view) {
-            super(view);
-
-            txtBtechName = (TextView) view.findViewById(R.id.txtBtechName);
-            txtOrderNo = (TextView) view.findViewById(R.id.txtOrderNo);
-            txtDate = (TextView) view.findViewById(R.id.txtDate);
-            txtSlot = (TextView) view.findViewById(R.id.txtSlot);
-            txtBeneficiary = (TextView) view.findViewById(R.id.txtBeneficiary);
-            txtKits = (TextView) view.findViewById(R.id.txtKits);
-            txtSamples = (TextView) view.findViewById(R.id.txtSamples);
-            txtAddress = (TextView) view.findViewById(R.id.txtAddress);
-            layoutAccept_Release_Ord = (LinearLayout) view.findViewById(R.id.layoutAccept_Release_Ord);
-            layoutMain = (LinearLayout) view.findViewById(R.id.layoutMain);
-            lin_bencount = (LinearLayout) view.findViewById(R.id.lin_bencount);
-            lin_btechName = (LinearLayout) view.findViewById(R.id.lin_btechName);
-            lin_kits = (LinearLayout) view.findViewById(R.id.lin_kits);
-            txtFastingStatus = (TextView) view.findViewById(R.id.txtFastingStatus);
-            txtPPBSStatus = (TextView) view.findViewById(R.id.txtPPBSStatus);
-            txtRBSStatus = (TextView) view.findViewById(R.id.txtRBSStatus);
-            direct_visit = (TextView) view.findViewById(R.id.direct_visit);
-            txt_visit_day = (TextView) view.findViewById(R.id.txt_visit_day);
-            img_accept = (ImageView) view.findViewById(R.id.img_accept);
-            imgProceed = (ImageView) view.findViewById(R.id.imgStart);
-            imgRelease = (ImageView) view.findViewById(R.id.imgRelease);
-            imgCall = (ImageView) view.findViewById(R.id.imgCall);
-            view_seperater = (View) view.findViewById(R.id.view_seperater);
-            LL_swipe = view.findViewById(R.id.LL_swipe);
-            rel_imgRelease = view.findViewById(R.id.rel_imgRelease);
-            ll_accept = view.findViewById(R.id.ll_accept);
-        }
     }
 
     @Override
@@ -240,7 +200,6 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                 }
             }
         });
-
 
 
     }
@@ -610,7 +569,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                     if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits() != null) {
                         if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits().size() != 0) {
 //                            strKit = CallViewKitsstr(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits());
-                            strKit = ""+orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits();
+                            strKit = "" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits();
                         }
                     }
                 }
@@ -656,8 +615,6 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
         return kitsReq;
     }
 
-    // TODO ---------------- methods of listeners -----------------------------------------------------
-
     private void SendinglatlongOrderAllocation(int pos) {
 
         if (ApplicationController.sendLatLongforOrderController != null) {
@@ -678,6 +635,8 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
         });
 
     }
+
+    // TODO ---------------- methods of listeners -----------------------------------------------------
 
     private void onAcceptButtonClicked(final MyViewHolder holder, final int pos) {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
@@ -999,30 +958,6 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
         builder.show();*/
     }
 
-    private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {
-
-        @Override
-        public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark, String date) {
-
-            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
-            orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId() + "");
-            orderStatusChangeRequestModel.setRemarks(remark);
-            orderStatusChangeRequestModel.setStatus(11);
-            orderStatusChangeRequestModel.setAppointmentDate(date);
-
-            if (isNetworkAvailable(activity)) {
-                CallOrderStatusChangeAPI(orderStatusChangeRequestModel);
-            } else {
-                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onCancelButtonClicked() {
-
-        }
-    }
-
     private void CallOrderStatusChangeAPI(OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
@@ -1125,6 +1060,69 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
 
         void onItemRelease(OrderVisitDetailsModel orderVisitDetailsModel);
 
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView txtBtechName, txtOrderNo, txtDate, txtSlot, txtBeneficiary, txtSamples, txtAddress, txtPPBSStatus, txtFastingStatus, txtRBSStatus, direct_visit, txtKits, txt_visit_day;
+        ImageView imgRelease, imgCall, img_accept, imgProceed;
+        LinearLayout layoutAccept_Release_Ord, layoutMain, lin_bencount, lin_kits, lin_btechName, LL_swipe, ll_accept;
+        View view_seperater;
+        RelativeLayout rel_imgRelease;
+
+        public MyViewHolder(View view) {
+            super(view);
+
+            txtBtechName = (TextView) view.findViewById(R.id.txtBtechName);
+            txtOrderNo = (TextView) view.findViewById(R.id.txtOrderNo);
+            txtDate = (TextView) view.findViewById(R.id.txtDate);
+            txtSlot = (TextView) view.findViewById(R.id.txtSlot);
+            txtBeneficiary = (TextView) view.findViewById(R.id.txtBeneficiary);
+            txtKits = (TextView) view.findViewById(R.id.txtKits);
+            txtSamples = (TextView) view.findViewById(R.id.txtSamples);
+            txtAddress = (TextView) view.findViewById(R.id.txtAddress);
+            layoutAccept_Release_Ord = (LinearLayout) view.findViewById(R.id.layoutAccept_Release_Ord);
+            layoutMain = (LinearLayout) view.findViewById(R.id.layoutMain);
+            lin_bencount = (LinearLayout) view.findViewById(R.id.lin_bencount);
+            lin_btechName = (LinearLayout) view.findViewById(R.id.lin_btechName);
+            lin_kits = (LinearLayout) view.findViewById(R.id.lin_kits);
+            txtFastingStatus = (TextView) view.findViewById(R.id.txtFastingStatus);
+            txtPPBSStatus = (TextView) view.findViewById(R.id.txtPPBSStatus);
+            txtRBSStatus = (TextView) view.findViewById(R.id.txtRBSStatus);
+            direct_visit = (TextView) view.findViewById(R.id.direct_visit);
+            txt_visit_day = (TextView) view.findViewById(R.id.txt_visit_day);
+            img_accept = (ImageView) view.findViewById(R.id.img_accept);
+            imgProceed = (ImageView) view.findViewById(R.id.imgStart);
+            imgRelease = (ImageView) view.findViewById(R.id.imgRelease);
+            imgCall = (ImageView) view.findViewById(R.id.imgCall);
+            view_seperater = (View) view.findViewById(R.id.view_seperater);
+            LL_swipe = view.findViewById(R.id.LL_swipe);
+            rel_imgRelease = view.findViewById(R.id.rel_imgRelease);
+            ll_accept = view.findViewById(R.id.ll_accept);
+        }
+    }
+
+    private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {
+
+        @Override
+        public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark, String date) {
+
+            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
+            orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId() + "");
+            orderStatusChangeRequestModel.setRemarks(remark);
+            orderStatusChangeRequestModel.setStatus(11);
+            orderStatusChangeRequestModel.setAppointmentDate(date);
+
+            if (isNetworkAvailable(activity)) {
+                CallOrderStatusChangeAPI(orderStatusChangeRequestModel);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+
+        }
     }
 
 

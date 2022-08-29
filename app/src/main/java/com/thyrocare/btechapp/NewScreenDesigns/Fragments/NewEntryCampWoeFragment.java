@@ -87,36 +87,34 @@ import static com.thyrocare.btechapp.utils.app.BundleConstants.Apikey_WOE;
 public class NewEntryCampWoeFragment extends Fragment {
 
 
+    ArrayList<SubmitB2BWoeRequestModel.Barcodelist> SelectedPatientBarcodeArrayList = new ArrayList<>();
+    ArrayList<CampPatientSearchDetailResponseModel.Camp> MainCampArraylist;
     private Activity mActivity;
     private Global globalclass;
     private ConnectionDetector cd;
     private AppPreferenceManager appPreferenceManager;
-    private ImageView img_search,img_CapturePhoto,img_deletephoto;
-    private EditText  edt_name, edt_Age,edt_search;
+    private ImageView img_search, img_CapturePhoto, img_deletephoto;
+    private EditText edt_name, edt_Age, edt_search;
     private RadioGroup rg_gender;
     private RadioButton rb_male, rb_female;
     private RecyclerView recycle_ScanBarcode;
-    private Button  btn_submit;
-    private TextView tv_viewVailPhoto,tv_uploadVailPhoto,tv_existing,tv_new;
+    private Button btn_submit;
+    private TextView tv_viewVailPhoto, tv_uploadVailPhoto, tv_existing, tv_new;
     private String strGender = "";
     private Camera camera;
     private NewCampScanBarcodeAdapter newCampScanBarcodeAdapter;
     private File VialPhotoFile;
     private boolean isVialPhotoCaptured = false;
-
     private Spinner spn_Camp;
     private SearchableSpinner spn_Search;
-
-    private CampPatientSearchDetailResponseModel.Camp  SelectedCampDetailMainModel;
-    private FinalMainCampWisePatentDetailsModel  SelectedPatientDetailMainModel;
-    ArrayList<SubmitB2BWoeRequestModel.Barcodelist> SelectedPatientBarcodeArrayList = new ArrayList<>();
+    private CampPatientSearchDetailResponseModel.Camp SelectedCampDetailMainModel;
+    private FinalMainCampWisePatentDetailsModel SelectedPatientDetailMainModel;
     private IntentIntegrator intentIntegrator;
     private String SampleTypeToScan = "";
     private int BarcodepositionToScan;
-    private String patientID  = "";
+    private String patientID = "";
     private int currentPaitientPositionInMainList = 0;
-    private RelativeLayout rel_CampSpinner,rel_serach,rel_form;
-    ArrayList<CampPatientSearchDetailResponseModel.Camp> MainCampArraylist;
+    private RelativeLayout rel_CampSpinner, rel_serach, rel_form;
     private int SelectedCampPosition;
     private LinearLayout lin_new_existingEntry;
     private boolean isNewEntry = false;
@@ -179,7 +177,7 @@ public class NewEntryCampWoeFragment extends Fragment {
         tv_existing = (TextView) v.findViewById(R.id.tv_existing);
         tv_new = (TextView) v.findViewById(R.id.tv_new);
 
-        defaultColor =  tv_new.getTextColors();
+        defaultColor = tv_new.getTextColors();
 
     }
 
@@ -201,9 +199,9 @@ public class NewEntryCampWoeFragment extends Fragment {
                         || actionId == EditorInfo.IME_ACTION_DONE
                         || event.getAction() == KeyEvent.ACTION_DOWN
                         && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    if (edt_search.getText().toString().trim().length() > 1){
+                    if (edt_search.getText().toString().trim().length() > 1) {
                         CallGetPatientDetailAPI(edt_search.getText().toString().trim());
-                    }else{
+                    } else {
                         globalclass.showalert_OK("Please enter minimum 2 characters to search ", mActivity);
                     }
                     return true;
@@ -216,9 +214,9 @@ public class NewEntryCampWoeFragment extends Fragment {
         img_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (edt_search.getText().toString().trim().length() > 1){
-                        CallGetPatientDetailAPI(edt_search.getText().toString().trim());
-                }else{
+                if (edt_search.getText().toString().trim().length() > 1) {
+                    CallGetPatientDetailAPI(edt_search.getText().toString().trim());
+                } else {
                     globalclass.showalert_OK("Please enter minimum 2 characters to search ", mActivity);
                 }
             }
@@ -257,7 +255,7 @@ public class NewEntryCampWoeFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 isVialPhotoCaptured = false;
                                 VialPhotoFile = null;
-                                if (camera != null){
+                                if (camera != null) {
                                     camera.deleteImage();
                                 }
                                 tv_viewVailPhoto.setText("Upload");
@@ -266,11 +264,11 @@ public class NewEntryCampWoeFragment extends Fragment {
                                 dialog.dismiss();
                             }
                         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
                 androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
             }
@@ -279,9 +277,9 @@ public class NewEntryCampWoeFragment extends Fragment {
         tv_viewVailPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isVialPhotoCaptured){
-                    globalclass.OpenImageDialog(VialPhotoFile.getAbsolutePath(),mActivity,false);
-                }else{
+                if (isVialPhotoCaptured) {
+                    globalclass.OpenImageDialog(VialPhotoFile.getAbsolutePath(), mActivity, false);
+                } else {
                     AskPermissionAndOpenCamera();
                 }
             }
@@ -292,18 +290,18 @@ public class NewEntryCampWoeFragment extends Fragment {
             public void onClick(View v) {
                 if (cd.isConnectingToInternet()) {
                     if (isValidToSubmit()) {
-                        if (btn_submit.getText().toString().trim().equals("Upload Vail Photo")){
-                            if (!StringUtils.isNull(patientID)){
-                                if (isNewEntry){
-                                    CallSubmitBenVailPhotoAPI("",patientID,SelectedCampDetailMainModel.getCampID());
-                                }else{
-                                    CallSubmitBenVailPhotoAPI(SelectedPatientDetailMainModel.getPatientDetails().getUniqueId(),patientID,SelectedCampDetailMainModel.getCampID());
+                        if (btn_submit.getText().toString().trim().equals("Upload Vail Photo")) {
+                            if (!StringUtils.isNull(patientID)) {
+                                if (isNewEntry) {
+                                    CallSubmitBenVailPhotoAPI("", patientID, SelectedCampDetailMainModel.getCampID());
+                                } else {
+                                    CallSubmitBenVailPhotoAPI(SelectedPatientDetailMainModel.getPatientDetails().getUniqueId(), patientID, SelectedCampDetailMainModel.getCampID());
                                 }
 
-                            }else{
-                                globalclass.showCustomToast(mActivity,"Patient ID not found to upload vial Photo.");
+                            } else {
+                                globalclass.showCustomToast(mActivity, "Patient ID not found to upload vial Photo.");
                             }
-                        }else{
+                        } else {
                             CallSubmitWOEAPI();
                         }
                     }
@@ -347,17 +345,18 @@ public class NewEntryCampWoeFragment extends Fragment {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<CampPatientSearchDetailResponseModel> responseCall = apiInterface.CallGetCampDetailAPI(campPatientDetailRequestModel);
-        globalclass.showProgressDialog(mActivity,"Please wait..");
+        globalclass.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<CampPatientSearchDetailResponseModel>() {
             @Override
             public void onResponse(Call<CampPatientSearchDetailResponseModel> call, Response<CampPatientSearchDetailResponseModel> response) {
                 globalclass.hideProgressDialog(mActivity);
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     onCampDetailsReceived(response.body());
-                }else{
+                } else {
                     ShowNoCampAssignedAlertBox();
                 }
             }
+
             @Override
             public void onFailure(Call<CampPatientSearchDetailResponseModel> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
@@ -367,42 +366,43 @@ public class NewEntryCampWoeFragment extends Fragment {
     }
 
     private void onCampDetailsReceived(CampPatientSearchDetailResponseModel responseModel) {
-        if (responseModel.getResponseID() != null && responseModel.getResponseID().equalsIgnoreCase("RES0000") && responseModel.getCamp() != null && responseModel.getCamp().size() > 0){
+        if (responseModel.getResponseID() != null && responseModel.getResponseID().equalsIgnoreCase("RES0000") && responseModel.getCamp() != null && responseModel.getCamp().size() > 0) {
             MainCampArraylist = new ArrayList<>();
             CampPatientSearchDetailResponseModel.Camp mainCampWisePatentDetailsModel = new CampPatientSearchDetailResponseModel.Camp();
             mainCampWisePatentDetailsModel.setCampName(" - Select Camp - ");
             MainCampArraylist.add(mainCampWisePatentDetailsModel);
             MainCampArraylist.addAll(responseModel.getCamp());
 
-                ArrayAdapter<CampPatientSearchDetailResponseModel.Camp> spinnerCampArrayAdapter = new ArrayAdapter<CampPatientSearchDetailResponseModel.Camp>(mActivity, android.R.layout.simple_spinner_item, MainCampArraylist);
-                spinnerCampArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spn_Camp.setAdapter(spinnerCampArrayAdapter);
-                spn_Camp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        ResetData();
-                        if (position > 0) {
-                            SelectedCampPosition = position;
-                            SelectedCampDetailMainModel = MainCampArraylist.get(position);
-                            rel_serach.setVisibility(View.VISIBLE);
-                            lin_new_existingEntry.setVisibility(View.VISIBLE);
+            ArrayAdapter<CampPatientSearchDetailResponseModel.Camp> spinnerCampArrayAdapter = new ArrayAdapter<CampPatientSearchDetailResponseModel.Camp>(mActivity, android.R.layout.simple_spinner_item, MainCampArraylist);
+            spinnerCampArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spn_Camp.setAdapter(spinnerCampArrayAdapter);
+            spn_Camp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    ResetData();
+                    if (position > 0) {
+                        SelectedCampPosition = position;
+                        SelectedCampDetailMainModel = MainCampArraylist.get(position);
+                        rel_serach.setVisibility(View.VISIBLE);
+                        lin_new_existingEntry.setVisibility(View.VISIBLE);
 //                            DisplayPaitentSpinner(SelectedCampDetailMainModel.getPatientDetails());
-                        }else{
-                            rel_serach.setVisibility(View.GONE);
-                            rel_form.setVisibility(View.GONE);
-                            lin_new_existingEntry.setVisibility(View.GONE);
-                        }
+                    } else {
+                        rel_serach.setVisibility(View.GONE);
+                        rel_form.setVisibility(View.GONE);
+                        lin_new_existingEntry.setVisibility(View.GONE);
                     }
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }
-                });
+                }
 
-            if (spn_Camp.getAdapter().getCount() == 2){
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+
+            if (spn_Camp.getAdapter().getCount() == 2) {
                 spn_Camp.setSelection(1);
             }
 
-        }else{
+        } else {
             ShowNoCampAssignedAlertBox();
         }
     }
@@ -414,29 +414,30 @@ public class NewEntryCampWoeFragment extends Fragment {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<CampWisePatientDetailResponseModel> responseCall = apiInterface.CallGetPatientDetailAPI(campWisePatientDetailRequestModel);
-        globalclass.showProgressDialog(mActivity,"Please wait..");
+        globalclass.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<CampWisePatientDetailResponseModel>() {
             @Override
             public void onResponse(Call<CampWisePatientDetailResponseModel> call, Response<CampWisePatientDetailResponseModel> response) {
                 globalclass.hideProgressDialog(mActivity);
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     CampWisePatientDetailResponseModel campWisePatientDetailResponseModel = response.body();
-                    if (campWisePatientDetailResponseModel.getPatient() != null ){
-                        DisplayPaitentSpinner(campWisePatientDetailResponseModel.getPatient(),true);
-                    }else{
-                        globalclass.showalert_OK("No Data found for '"+StrSearch+"'" ,mActivity);
+                    if (campWisePatientDetailResponseModel.getPatient() != null) {
+                        DisplayPaitentSpinner(campWisePatientDetailResponseModel.getPatient(), true);
+                    } else {
+                        globalclass.showalert_OK("No Data found for '" + StrSearch + "'", mActivity);
                         ResetData();
                     }
 
-                }else{
-                    globalclass.showalert_OK("No Data found for '"+StrSearch+"'" ,mActivity);
+                } else {
+                    globalclass.showalert_OK("No Data found for '" + StrSearch + "'", mActivity);
                     ResetData();
                 }
             }
+
             @Override
             public void onFailure(Call<CampWisePatientDetailResponseModel> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
-                globalclass.showalert_OK("No Data found for '"+StrSearch+"'" ,mActivity);
+                globalclass.showalert_OK("No Data found for '" + StrSearch + "'", mActivity);
             }
         });
     }
@@ -445,10 +446,10 @@ public class NewEntryCampWoeFragment extends Fragment {
 
         rel_serach.setVisibility(View.VISIBLE);
 
-        if (patientDetailsAryList.size() > 0){
-            final ArrayList<FinalMainCampWisePatentDetailsModel>  finalMainCampWisePatentDetailsAryList = new ArrayList<>();
+        if (patientDetailsAryList.size() > 0) {
+            final ArrayList<FinalMainCampWisePatentDetailsModel> finalMainCampWisePatentDetailsAryList = new ArrayList<>();
             rel_form.setVisibility(View.VISIBLE);
-            if (patientDetailsAryList.size() == 1){
+            if (patientDetailsAryList.size() == 1) {
                 for (int j = 0; j < patientDetailsAryList.size(); j++) {
                     FinalMainCampWisePatentDetailsModel model = new FinalMainCampWisePatentDetailsModel();
                     model.setCamp(SelectedCampDetailMainModel);
@@ -457,12 +458,12 @@ public class NewEntryCampWoeFragment extends Fragment {
                     finalMainCampWisePatentDetailsAryList.add(model);
                 }
 
-                if (finalMainCampWisePatentDetailsAryList.size() > 0){
+                if (finalMainCampWisePatentDetailsAryList.size() > 0) {
                     SelectedPatientDetailMainModel = finalMainCampWisePatentDetailsAryList.get(0);
                     DisplayPatientData(SelectedPatientDetailMainModel);
                 }
 
-            }else{
+            } else {
                 /*FinalMainCampWisePatentDetailsModel Defaultmodel = new FinalMainCampWisePatentDetailsModel();
                 Defaultmodel.setCamp(new CampPatientSearchDetailResponseModel.Camp());
                 CampPatientSearchDetailResponseModel.PatientDetails patientDetails = new CampPatientSearchDetailResponseModel.PatientDetails();
@@ -470,7 +471,7 @@ public class NewEntryCampWoeFragment extends Fragment {
                 Defaultmodel.setPatientDetails(patientDetails);
                 Defaultmodel.setBarcodelistArrayList(new ArrayList<SubmitB2BWoeRequestModel.Barcodelist>());
                 finalMainCampWisePatentDetailsAryList.add(Defaultmodel);*/
-                if (patientDetailsAryList != null &&patientDetailsAryList.size() > 0){
+                if (patientDetailsAryList != null && patientDetailsAryList.size() > 0) {
                     for (int j = 0; j < patientDetailsAryList.size(); j++) {
                         FinalMainCampWisePatentDetailsModel model = new FinalMainCampWisePatentDetailsModel();
                         model.setCamp(SelectedCampDetailMainModel);
@@ -490,26 +491,26 @@ public class NewEntryCampWoeFragment extends Fragment {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         ResetData();
 //                        if (position > 0) {
-                            rel_form.setVisibility(View.VISIBLE);
-                            currentPaitientPositionInMainList = position;
-                            SelectedPatientDetailMainModel = finalMainCampWisePatentDetailsAryList.get(position);
-                            DisplayPatientData(SelectedPatientDetailMainModel);
+                        rel_form.setVisibility(View.VISIBLE);
+                        currentPaitientPositionInMainList = position;
+                        SelectedPatientDetailMainModel = finalMainCampWisePatentDetailsAryList.get(position);
+                        DisplayPatientData(SelectedPatientDetailMainModel);
 //                        }
                     }
+
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
 
                     }
                 });
 
-                if (performClick){
+                if (performClick) {
                     spn_Search.OpenSpinnerDialog();
                 }
             }
-        }else{
-            globalclass.showCustomToast(mActivity,"No Data Found");
+        } else {
+            globalclass.showCustomToast(mActivity, "No Data Found");
         }
-
 
 
     }
@@ -517,20 +518,20 @@ public class NewEntryCampWoeFragment extends Fragment {
 
     private void DisplayPatientData(FinalMainCampWisePatentDetailsModel selectedPatientDetailMainModel) {
         edt_name.setText(selectedPatientDetailMainModel.getPatientDetails().getName());
-            edt_Age.setText(selectedPatientDetailMainModel.getPatientDetails().getAge());
-            if (selectedPatientDetailMainModel.getPatientDetails().getGender().equalsIgnoreCase("M")){
-                strGender = "M";
-                rb_male.setChecked(true);
-            }else{
-                strGender = "F";
-                rb_female.setChecked(true);
-            }
-            if (SelectedCampDetailMainModel != null && SelectedCampDetailMainModel.getBarcodelist() != null &&  SelectedCampDetailMainModel.getBarcodelist().size() > 0){
-                SelectedPatientBarcodeArrayList = null;
-                SelectedPatientBarcodeArrayList = new ArrayList<>();
-                SelectedPatientBarcodeArrayList = SelectedCampDetailMainModel.getBarcodelist();
-                DisplayBarcodesforScanning();
-            }
+        edt_Age.setText(selectedPatientDetailMainModel.getPatientDetails().getAge());
+        if (selectedPatientDetailMainModel.getPatientDetails().getGender().equalsIgnoreCase("M")) {
+            strGender = "M";
+            rb_male.setChecked(true);
+        } else {
+            strGender = "F";
+            rb_female.setChecked(true);
+        }
+        if (SelectedCampDetailMainModel != null && SelectedCampDetailMainModel.getBarcodelist() != null && SelectedCampDetailMainModel.getBarcodelist().size() > 0) {
+            SelectedPatientBarcodeArrayList = null;
+            SelectedPatientBarcodeArrayList = new ArrayList<>();
+            SelectedPatientBarcodeArrayList = SelectedCampDetailMainModel.getBarcodelist();
+            DisplayBarcodesforScanning();
+        }
 
     }
 
@@ -548,14 +549,14 @@ public class NewEntryCampWoeFragment extends Fragment {
             @Override
             public void onDeleteBarcode(String barcode) {
 
-                if (!StringUtils.isNull(barcode)){
+                if (!StringUtils.isNull(barcode)) {
                     for (int i = 0; i < SelectedPatientBarcodeArrayList.size(); i++) {
-                        if (SelectedPatientBarcodeArrayList.get(i).getBARCODE() != null && SelectedPatientBarcodeArrayList.get(i).getBARCODE().equals(barcode)){
+                        if (SelectedPatientBarcodeArrayList.get(i).getBARCODE() != null && SelectedPatientBarcodeArrayList.get(i).getBARCODE().equals(barcode)) {
                             SelectedPatientBarcodeArrayList.get(i).setBARCODE("");
                         }
                     }
-                }else{
-                    globalclass.showCustomToast(mActivity,"No barcode to delete");
+                } else {
+                    globalclass.showCustomToast(mActivity, "No barcode to delete");
                 }
                 newCampScanBarcodeAdapter.UpdateBarcodeList(SelectedPatientBarcodeArrayList);
                 newCampScanBarcodeAdapter.notifyDataSetChanged();
@@ -644,7 +645,7 @@ public class NewEntryCampWoeFragment extends Fragment {
                 VialPhotoFile = new File(imageurl);
                 if (VialPhotoFile.exists()) {
                     isVialPhotoCaptured = true;
-                    tv_viewVailPhoto.setText(Html.fromHtml("<u>"+" View "+"</u>"));
+                    tv_viewVailPhoto.setText(Html.fromHtml("<u>" + " View " + "</u>"));
                     img_deletephoto.setVisibility(View.VISIBLE);
                     img_CapturePhoto.setVisibility(View.GONE);
                 } else {
@@ -658,44 +659,44 @@ public class NewEntryCampWoeFragment extends Fragment {
 
     private void OpenBarcodeConfirmationDialog(final String scanned_barcode) {
         try {
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
-        builder1.setTitle("Check the Barcode ")
-                .setMessage("Do you want to proceed with this barcode entry " + scanned_barcode + "?")
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
+            builder1.setTitle("Check the Barcode ")
+                    .setMessage("Do you want to proceed with this barcode entry " + scanned_barcode + "?")
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                if (TextUtils.isEmpty(scanned_barcode) || scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ") /*|| Character.isDigit(scanned_barcode.charAt(0))*/) {
-                    Toast.makeText(mActivity, "Invalid barcode", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                        CallCheckbarcodeAPI(scanned_barcode);
-                    } else {
-                        Toast.makeText(mActivity, "Barcode should be of 8 digits", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        }).show();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
+                            if (TextUtils.isEmpty(scanned_barcode) || scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ") /*|| Character.isDigit(scanned_barcode.charAt(0))*/) {
+                                Toast.makeText(mActivity, "Invalid barcode", Toast.LENGTH_SHORT).show();
+                            } else {
+                                if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+                                    CallCheckbarcodeAPI(scanned_barcode);
+                                } else {
+                                    Toast.makeText(mActivity, "Barcode should be of 8 digits", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    }).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void CallCheckbarcodeAPI(final String scanned_barcode) {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(GetAPIInterface.class);
-        Call<CheckbarcodeResponseModel> responseCall = apiInterface.CallCheckBarcodeAPI(Apikey_WOE,scanned_barcode);
-        globalclass.showProgressDialog(mActivity,"Validating barcode. Please wait..",false);
+        Call<CheckbarcodeResponseModel> responseCall = apiInterface.CallCheckBarcodeAPI(Apikey_WOE, scanned_barcode);
+        globalclass.showProgressDialog(mActivity, "Validating barcode. Please wait..", false);
         responseCall.enqueue(new Callback<CheckbarcodeResponseModel>() {
             @Override
             public void onResponse(Call<CheckbarcodeResponseModel> call, retrofit2.Response<CheckbarcodeResponseModel> response) {
                 globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
-                    if (!StringUtils.isNull(response.body().getRES_ID()) && response.body().getRES_ID().equalsIgnoreCase("RES0000")){
+                    if (!StringUtils.isNull(response.body().getRES_ID()) && response.body().getRES_ID().equalsIgnoreCase("RES0000")) {
                         if (SelectedPatientBarcodeArrayList != null) {
                             for (int i = 0; i < SelectedPatientBarcodeArrayList.size(); i++) {
                                 //size 4
@@ -706,7 +707,7 @@ public class NewEntryCampWoeFragment extends Fragment {
 
                                     for (int j = 0; j < SelectedPatientBarcodeArrayList.size(); j++) {
                                         if (!InputUtils.isNull(SelectedPatientBarcodeArrayList.get(j).getBARCODE()) && SelectedPatientBarcodeArrayList.get(j).getBARCODE().equals(scanned_barcode)) {
-                                            Toast.makeText(mActivity, "Same barcode already scanned for "  + SelectedPatientBarcodeArrayList.get(j).getSAMPLE_TYPE(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(mActivity, "Same barcode already scanned for " + SelectedPatientBarcodeArrayList.get(j).getSAMPLE_TYPE(), Toast.LENGTH_SHORT).show();
                                             return;
                                         }
                                     }
@@ -714,20 +715,21 @@ public class NewEntryCampWoeFragment extends Fragment {
                                     break;
                                 }
                             }
-                            if (newCampScanBarcodeAdapter != null){
+                            if (newCampScanBarcodeAdapter != null) {
                                 newCampScanBarcodeAdapter.UpdateBarcodeList(SelectedPatientBarcodeArrayList);
                                 newCampScanBarcodeAdapter.notifyDataSetChanged();
                             }
                         } else {
                             Toast.makeText(mActivity, "Failed to update scanned barcode value", Toast.LENGTH_SHORT).show();
                         }
-                    }else{
-                        Toast.makeText(mActivity,!StringUtils.isNull(response.body().getResponse()) ?  "'"+scanned_barcode +"' "+response.body().getResponse() :  FailedToVaildateBarcode, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mActivity, !StringUtils.isNull(response.body().getResponse()) ? "'" + scanned_barcode + "' " + response.body().getResponse() : FailedToVaildateBarcode, Toast.LENGTH_SHORT).show();
                     }
-                }else{
+                } else {
                     Toast.makeText(mActivity, FailedToVaildateBarcode, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<CheckbarcodeResponseModel> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
@@ -748,15 +750,15 @@ public class NewEntryCampWoeFragment extends Fragment {
             e.printStackTrace();
         }
 
-        if (SelectedPatientBarcodeArrayList != null && SelectedPatientBarcodeArrayList.size() > 0){
+        if (SelectedPatientBarcodeArrayList != null && SelectedPatientBarcodeArrayList.size() > 0) {
             for (int i = 0; i < SelectedPatientBarcodeArrayList.size(); i++) {
-                if (StringUtils.isNull(SelectedPatientBarcodeArrayList.get(i).getBARCODE())){
-                    ErrorMsg = "Please Scan Barcode for Sample type : " + SelectedPatientBarcodeArrayList.get(i).getSAMPLE_TYPE() ;
+                if (StringUtils.isNull(SelectedPatientBarcodeArrayList.get(i).getBARCODE())) {
+                    ErrorMsg = "Please Scan Barcode for Sample type : " + SelectedPatientBarcodeArrayList.get(i).getSAMPLE_TYPE();
                     showbarcodeError = true;
                     break;
                 }
             }
-        }else{
+        } else {
             showbarcodeError = true;
             ErrorMsg = "Barocdes are Missing. Cannot Submit WOE.";
         }
@@ -771,9 +773,9 @@ public class NewEntryCampWoeFragment extends Fragment {
             ErrorMsg = ConstantsMessages.EnterValidPatientAge;
         } else if (StringUtils.isNull(strGender)) {
             ErrorMsg = ConstantsMessages.Select_PatientGender;
-        }else if (showbarcodeError){
+        } else if (showbarcodeError) {
 
-        } else{
+        } else {
             try {
                 if (VialPhotoFile == null || !VialPhotoFile.exists()) {
                     ErrorMsg = ConstantsMessages.UploadPatientVailPhoto;
@@ -782,9 +784,6 @@ public class NewEntryCampWoeFragment extends Fragment {
                 e.printStackTrace();
             }
         }
-
-
-
 
 
         if (!StringUtils.isNull(ErrorMsg)) {
@@ -800,16 +799,16 @@ public class NewEntryCampWoeFragment extends Fragment {
 
         String name = edt_name.getText().toString().trim();
         int Age = Integer.parseInt(edt_Age.getText().toString().trim());
-        String mobile  = "";
+        String mobile = "";
         String UID = "";
         String address = "";
-        if (SelectedPatientDetailMainModel != null && SelectedPatientDetailMainModel.getPatientDetails() != null && !StringUtils.isNull(SelectedPatientDetailMainModel.getPatientDetails().getContactNo())){
+        if (SelectedPatientDetailMainModel != null && SelectedPatientDetailMainModel.getPatientDetails() != null && !StringUtils.isNull(SelectedPatientDetailMainModel.getPatientDetails().getContactNo())) {
             mobile = SelectedPatientDetailMainModel.getPatientDetails().getContactNo();
         }
-        if (SelectedPatientDetailMainModel != null && SelectedPatientDetailMainModel.getPatientDetails() != null && !StringUtils.isNull(SelectedPatientDetailMainModel.getPatientDetails().getUID())){
+        if (SelectedPatientDetailMainModel != null && SelectedPatientDetailMainModel.getPatientDetails() != null && !StringUtils.isNull(SelectedPatientDetailMainModel.getPatientDetails().getUID())) {
             UID = SelectedPatientDetailMainModel.getPatientDetails().getUID();
         }
-        if (SelectedPatientDetailMainModel != null && SelectedPatientDetailMainModel.getPatientDetails() != null && !StringUtils.isNull(SelectedPatientDetailMainModel.getPatientDetails().getAddress())){
+        if (SelectedPatientDetailMainModel != null && SelectedPatientDetailMainModel.getPatientDetails() != null && !StringUtils.isNull(SelectedPatientDetailMainModel.getPatientDetails().getAddress())) {
             address = SelectedPatientDetailMainModel.getPatientDetails().getAddress();
         }
 
@@ -847,12 +846,12 @@ public class NewEntryCampWoeFragment extends Fragment {
         for (int i = 0; i < SelectedCampDetailMainModel.getBarcodelist().size(); i++) {
             Product = Product + "," + SelectedCampDetailMainModel.getBarcodelist().get(i).getTESTS();
         }
-        woe.setPRODUCT(StringUtils.removeFirstCharacter(Product.replace(",,",",")));
+        woe.setPRODUCT(StringUtils.removeFirstCharacter(Product.replace(",,", ",")));
         woe.setPurpose("");
         woe.setREF_DR_ID("");
         woe.setREF_DR_NAME(SelectedCampDetailMainModel.getRefDrname());
         woe.setREMARKS("MOBILE");
-        woe.setSPECIMEN_COLLECTION_TIME(DateUtil.getDateFromLong(System.currentTimeMillis(),"yyy-MM-dd HH:mm"));
+        woe.setSPECIMEN_COLLECTION_TIME(DateUtil.getDateFromLong(System.currentTimeMillis(), "yyy-MM-dd HH:mm"));
         woe.setSPECIMEN_SOURCE("");
         woe.setSR_NO(1);
         woe.setSTATUS("N");
@@ -875,17 +874,18 @@ public class NewEntryCampWoeFragment extends Fragment {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<B2BWoeResponseModel> responseCall = apiInterface.CallSubmitCampWOEAPI(submitB2BWoeRequestModel);
-        globalclass.showProgressDialog(mActivity,"Please wait..");
+        globalclass.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<B2BWoeResponseModel>() {
             @Override
             public void onResponse(Call<B2BWoeResponseModel> call, Response<B2BWoeResponseModel> response) {
                 globalclass.hideProgressDialog(mActivity);
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     onSubmitWoeResponseReceived(response.body());
-                }else{
+                } else {
                     Toast.makeText(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<B2BWoeResponseModel> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
@@ -896,31 +896,31 @@ public class NewEntryCampWoeFragment extends Fragment {
 
     private void onSubmitWoeResponseReceived(B2BWoeResponseModel b2BWoeResponseModel) {
 
-        if (b2BWoeResponseModel.getRES_ID() != null && b2BWoeResponseModel.getRES_ID().equalsIgnoreCase("RES0000")){
-            if (isNewEntry){
+        if (b2BWoeResponseModel.getRES_ID() != null && b2BWoeResponseModel.getRES_ID().equalsIgnoreCase("RES0000")) {
+            if (isNewEntry) {
                 if (!StringUtils.isNull(b2BWoeResponseModel.getBarcode_patient_id())
-                        && !StringUtils.isNull(SelectedCampDetailMainModel.getCampID())){
-                    CallSubmitBenVailPhotoAPI("", b2BWoeResponseModel.getBarcode_patient_id(),SelectedCampDetailMainModel.getCampID());
-                }else{
+                        && !StringUtils.isNull(SelectedCampDetailMainModel.getCampID())) {
+                    CallSubmitBenVailPhotoAPI("", b2BWoeResponseModel.getBarcode_patient_id(), SelectedCampDetailMainModel.getCampID());
+                } else {
                     patientID = !StringUtils.isNull(b2BWoeResponseModel.getBarcode_patient_id()) ? b2BWoeResponseModel.getBarcode_patient_id() : "";
                     btn_submit.setText("Upload Vail Photo");
-                    globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.",Toast.LENGTH_LONG);
+                    globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.", Toast.LENGTH_LONG);
                 }
-            }else{
+            } else {
                 if (SelectedPatientDetailMainModel.getPatientDetails() != null
                         && !StringUtils.isNull(SelectedPatientDetailMainModel.getPatientDetails().getUniqueId())
                         && !StringUtils.isNull(b2BWoeResponseModel.getBarcode_patient_id())
-                        && !StringUtils.isNull(SelectedCampDetailMainModel.getCampID())){
+                        && !StringUtils.isNull(SelectedCampDetailMainModel.getCampID())) {
 
-                    CallSubmitBenVailPhotoAPI(SelectedPatientDetailMainModel.getPatientDetails().getUniqueId(), b2BWoeResponseModel.getBarcode_patient_id(),SelectedCampDetailMainModel.getCampID());
-                }else{
+                    CallSubmitBenVailPhotoAPI(SelectedPatientDetailMainModel.getPatientDetails().getUniqueId(), b2BWoeResponseModel.getBarcode_patient_id(), SelectedCampDetailMainModel.getCampID());
+                } else {
                     patientID = !StringUtils.isNull(b2BWoeResponseModel.getBarcode_patient_id()) ? b2BWoeResponseModel.getBarcode_patient_id() : "";
                     btn_submit.setText("Upload Vail Photo");
-                    globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.",Toast.LENGTH_LONG);
+                    globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.", Toast.LENGTH_LONG);
                 }
             }
-        }else{
-            globalclass.showCustomToast(mActivity,!StringUtils.isNull(b2BWoeResponseModel.getMessage()) ? b2BWoeResponseModel.getMessage() : "Failed to submit WOE. Please try Again.");
+        } else {
+            globalclass.showCustomToast(mActivity, !StringUtils.isNull(b2BWoeResponseModel.getMessage()) ? b2BWoeResponseModel.getMessage() : "Failed to submit WOE. Please try Again.");
         }
 
     }
@@ -933,15 +933,15 @@ public class NewEntryCampWoeFragment extends Fragment {
         RequestBody requestcampID = RequestBody.create(MediaType.parse("multipart/form-data"), campID);
 
         MultipartBody.Part ImageFileMultiBody = null;
-        if(VialPhotoFile != null &&VialPhotoFile.exists()){
-            MessageLogger.info(mActivity,"FileName "+ VialPhotoFile.getName());
+        if (VialPhotoFile != null && VialPhotoFile.exists()) {
+            MessageLogger.info(mActivity, "FileName " + VialPhotoFile.getName());
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), VialPhotoFile);
             ImageFileMultiBody = MultipartBody.Part.createFormData("vailImage", VialPhotoFile.getName(), requestFile);
         }
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
-        Call<CommonResponseModel1> responseCall = apiInterface.CalluploadCAmpWOEPatientVailPhotoAPI(ImageFileMultiBody,requestuniqueID,requestwoepatientID,requestcampID);
-        globalclass.showProgressDialog(mActivity,"Please wait",false);
+        Call<CommonResponseModel1> responseCall = apiInterface.CalluploadCAmpWOEPatientVailPhotoAPI(ImageFileMultiBody, requestuniqueID, requestwoepatientID, requestcampID);
+        globalclass.showProgressDialog(mActivity, "Please wait", false);
 
         responseCall.enqueue(new Callback<CommonResponseModel1>() {
             @Override
@@ -972,7 +972,7 @@ public class NewEntryCampWoeFragment extends Fragment {
                 } else {
                     patientID = woepatientID;
                     btn_submit.setText("Upload Vail Photo");
-                    globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.",Toast.LENGTH_LONG);
+                    globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.", Toast.LENGTH_LONG);
                 }
             }
 
@@ -981,7 +981,7 @@ public class NewEntryCampWoeFragment extends Fragment {
                 globalclass.hideProgressDialog(mActivity);
                 patientID = woepatientID;
                 btn_submit.setText("Upload Vail Photo");
-                globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.",Toast.LENGTH_LONG);
+                globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.", Toast.LENGTH_LONG);
             }
         });
     }
@@ -992,7 +992,7 @@ public class NewEntryCampWoeFragment extends Fragment {
         if (MainCampArraylist != null &&
                 MainCampArraylist.size() > SelectedCampPosition &&
                 MainCampArraylist.get(SelectedCampPosition).getPatientDetails() != null &&
-                MainCampArraylist.get(SelectedCampPosition).getPatientDetails().size() > patientposition){
+                MainCampArraylist.get(SelectedCampPosition).getPatientDetails().size() > patientposition) {
 
             MainCampArraylist.get(SelectedCampPosition).getPatientDetails().remove(patientposition);
         }
@@ -1000,18 +1000,18 @@ public class NewEntryCampWoeFragment extends Fragment {
             finalMainCampWisePatentDetailsAryList.remove(currentPaitientPositionInMainList);
         }*/
 
-        if (MainCampArraylist != null && MainCampArraylist.size() > 0){
-                if (MainCampArraylist.size() == 1 ){
-                    rel_CampSpinner.setVisibility(View.GONE);
-                    SelectedCampDetailMainModel = MainCampArraylist.get(0);
-                }else{
-                    rel_CampSpinner.setVisibility(View.VISIBLE);
-                    if (spn_Camp != null && spn_Camp.getAdapter().getCount() > SelectedCampPosition) {
-                        SelectedCampDetailMainModel = null;
-                        SelectedCampDetailMainModel = new CampPatientSearchDetailResponseModel.Camp();
-                        spn_Camp.setSelection(SelectedCampPosition);
-                    }
+        if (MainCampArraylist != null && MainCampArraylist.size() > 0) {
+            if (MainCampArraylist.size() == 1) {
+                rel_CampSpinner.setVisibility(View.GONE);
+                SelectedCampDetailMainModel = MainCampArraylist.get(0);
+            } else {
+                rel_CampSpinner.setVisibility(View.VISIBLE);
+                if (spn_Camp != null && spn_Camp.getAdapter().getCount() > SelectedCampPosition) {
+                    SelectedCampDetailMainModel = null;
+                    SelectedCampDetailMainModel = new CampPatientSearchDetailResponseModel.Camp();
+                    spn_Camp.setSelection(SelectedCampPosition);
                 }
+            }
         }
     }
 
@@ -1020,7 +1020,7 @@ public class NewEntryCampWoeFragment extends Fragment {
         super.onStop();
         isVialPhotoCaptured = false;
         VialPhotoFile = null;
-        if (camera != null){
+        if (camera != null) {
             camera.deleteImage();
         }
         tv_viewVailPhoto.setText("Upload");
@@ -1038,7 +1038,7 @@ public class NewEntryCampWoeFragment extends Fragment {
         SampleTypeToScan = "";
         isVialPhotoCaptured = false;
         VialPhotoFile = null;
-        if (camera != null){
+        if (camera != null) {
             camera.deleteImage();
         }
         tv_viewVailPhoto.setText("Upload");
@@ -1047,27 +1047,27 @@ public class NewEntryCampWoeFragment extends Fragment {
 
         SelectedPatientDetailMainModel = null;
 
-        if (SelectedCampDetailMainModel != null && SelectedCampDetailMainModel.getBarcodelist() != null){
+        if (SelectedCampDetailMainModel != null && SelectedCampDetailMainModel.getBarcodelist() != null) {
             for (int i = 0; i < SelectedCampDetailMainModel.getBarcodelist().size(); i++) {
                 SelectedCampDetailMainModel.getBarcodelist().get(i).setBARCODE("");
             }
         }
-        if (isNewEntry){
+        if (isNewEntry) {
             rel_serach.setVisibility(View.GONE);
             rel_form.setVisibility(View.VISIBLE);
-            if (SelectedCampDetailMainModel != null && SelectedCampDetailMainModel.getBarcodelist() != null &&  SelectedCampDetailMainModel.getBarcodelist().size() > 0){
+            if (SelectedCampDetailMainModel != null && SelectedCampDetailMainModel.getBarcodelist() != null && SelectedCampDetailMainModel.getBarcodelist().size() > 0) {
                 SelectedPatientBarcodeArrayList = null;
                 SelectedPatientBarcodeArrayList = new ArrayList<>();
                 SelectedPatientBarcodeArrayList = SelectedCampDetailMainModel.getBarcodelist();
                 DisplayBarcodesforScanning();
             }
 
-        }else{
+        } else {
             rel_serach.setVisibility(View.VISIBLE);
             rel_form.setVisibility(View.GONE);
             SelectedPatientBarcodeArrayList = null;
             SelectedPatientBarcodeArrayList = new ArrayList<>();
-            if (newCampScanBarcodeAdapter != null){
+            if (newCampScanBarcodeAdapter != null) {
                 newCampScanBarcodeAdapter.UpdateBarcodeList(SelectedPatientBarcodeArrayList);
                 newCampScanBarcodeAdapter.notifyDataSetChanged();
             }
@@ -1086,18 +1086,18 @@ public class NewEntryCampWoeFragment extends Fragment {
                 .setPositiveButton("Go To MIS", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
-                        GoToCampMisScreen listener = (GoToCampMisScreen)getActivity();
-                        if (listener != null){
+                        GoToCampMisScreen listener = (GoToCampMisScreen) getActivity();
+                        if (listener != null) {
                             listener.GoToMisScreen();
                         }
                     }
                 }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                mActivity.finish();
-            }
-        });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        mActivity.finish();
+                    }
+                });
         androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }

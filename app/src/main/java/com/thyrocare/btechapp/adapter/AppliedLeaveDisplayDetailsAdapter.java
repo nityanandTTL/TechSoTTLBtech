@@ -5,6 +5,7 @@ package com.thyrocare.btechapp.adapter;
  */
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,27 +26,6 @@ public class AppliedLeaveDisplayDetailsAdapter extends RecyclerView.Adapter<Appl
 
     private LeaveAppliedDisplayDetailsAdapterClickedDelegate leaveAppliedDisplayDetailsAdapterClickedDelegate;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_date,tv_remark,tv_sr;
-        LinearLayout ll_leave;
-        View itemView;
-
-        public MyViewHolder(View view) {
-            super(view);
-            this.itemView = view;
-            initComp(view);
-        }
-
-        private void initComp(View view) {
-            tv_date = (TextView) view.findViewById(R.id.tv_date);
-            tv_remark = (TextView) view.findViewById(R.id.tv_remark);
-            tv_sr = (TextView) view.findViewById(R.id.tv_sr);
-            ll_leave=(LinearLayout)view.findViewById(R.id.ll_leave);
-
-        }
-    }
-
-
     public AppliedLeaveDisplayDetailsAdapter(List<LeaveAppliedResponseModel> leaveAppliedResponseModels, LeaveAppliedDisplayDetailsAdapterClickedDelegate leaveAppliedDisplayDetailsAdapterClickedDelegate) {
         this.leaveAppliedResponseModels = leaveAppliedResponseModels;
 
@@ -63,22 +43,22 @@ public class AppliedLeaveDisplayDetailsAdapter extends RecyclerView.Adapter<Appl
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final LeaveAppliedResponseModel btechOLeaveAppliedResponseModelrderModel = leaveAppliedResponseModels.get(position);
-        if (btechOLeaveAppliedResponseModelrderModel!= null) {
+        if (btechOLeaveAppliedResponseModelrderModel != null) {
 
             try {
-                holder.tv_date.setText("" + DateUtils.Req_Date_Req("" + btechOLeaveAppliedResponseModelrderModel.getLeaveDate().substring(0,10), "yyyy-MM-dd", "dd-MM-yyyy"));
+                holder.tv_date.setText("" + DateUtils.Req_Date_Req("" + btechOLeaveAppliedResponseModelrderModel.getLeaveDate().substring(0, 10), "yyyy-MM-dd", "dd-MM-yyyy"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            holder.tv_remark.setText(""+btechOLeaveAppliedResponseModelrderModel.getRemarks());
+            holder.tv_remark.setText("" + btechOLeaveAppliedResponseModelrderModel.getRemarks());
 
-            int sr_no= position +1;
-            holder.tv_sr.setText(" "+sr_no);
+            int sr_no = position + 1;
+            holder.tv_sr.setText(" " + sr_no);
             holder.ll_leave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                        
-                    leaveAppliedDisplayDetailsAdapterClickedDelegate.onClickLeave(""+btechOLeaveAppliedResponseModelrderModel.getLeaveDate());
+
+                    leaveAppliedDisplayDetailsAdapterClickedDelegate.onClickLeave("" + btechOLeaveAppliedResponseModelrderModel.getLeaveDate());
                 }
             });
 
@@ -87,9 +67,30 @@ public class AppliedLeaveDisplayDetailsAdapter extends RecyclerView.Adapter<Appl
         }
 
     }
+
     @Override
     public int getItemCount() {
         return leaveAppliedResponseModels.size();
     }
-  
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView tv_date, tv_remark, tv_sr;
+        LinearLayout ll_leave;
+        View itemView;
+
+        public MyViewHolder(View view) {
+            super(view);
+            this.itemView = view;
+            initComp(view);
+        }
+
+        private void initComp(View view) {
+            tv_date = (TextView) view.findViewById(R.id.tv_date);
+            tv_remark = (TextView) view.findViewById(R.id.tv_remark);
+            tv_sr = (TextView) view.findViewById(R.id.tv_sr);
+            ll_leave = (LinearLayout) view.findViewById(R.id.ll_leave);
+
+        }
+    }
+
 }

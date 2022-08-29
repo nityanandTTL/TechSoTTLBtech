@@ -7,6 +7,7 @@ import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
  */
 public interface OrderPassRecyclerViewAdapterDelegate {
     void onItemRelease(OrderVisitDetailsModel orderVisitDetailsModel);
-    void onItemReleaseto (String  Pincode ,OrderVisitDetailsModel orderVisitDetailsModel);
+
+    void onItemReleaseto(String Pincode, OrderVisitDetailsModel orderVisitDetailsModel);
 
 }

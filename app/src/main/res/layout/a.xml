@@ -15,8 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
             android:baselineAligned="false"
             android:orientation="horizontal">
 
@@ -50,16 +50,16 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentStart="true"
-                    android:layout_marginEnd="10dp"
                     android:layout_marginTop="-8dp"
+                    android:layout_marginEnd="10dp"
                     android:src="@drawable/user_profile" />
 
                 <TextView
-                    android:layout_marginLeft="-10dp"
                     android:id="@+id/txt_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="-10dp"
                     android:layout_toEndOf="@+id/title_from_to_dots"
                     android:editable="false"
                     android:ellipsize="marquee"
@@ -113,11 +113,11 @@
                     android:id="@+id/title_camp_date"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_alignParentStart="true"
                     android:layout_below="@+id/txt_ledger"
-                    android:layout_marginEnd="10dp"
+                    android:layout_alignParentStart="true"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="@dimen/dp_10"
+                    android:layout_marginEnd="10dp"
                     android:src="@drawable/hub_home_icon"
                     android:visibility="visible" />
 
@@ -141,8 +141,8 @@
                     android:id="@+id/title_distance_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_alignParentStart="true"
                     android:layout_below="@+id/title_camp_date"
+                    android:layout_alignParentStart="true"
                     android:layout_marginEnd="10dp"
                     android:src="@android:drawable/ic_menu_mylocation"
                     android:visibility="invisible" />
@@ -165,8 +165,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_toEndOf="@+id/txt_distance"
-                    android:paddingBottom="2dp"
                     android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:src="@drawable/vseparator"
                     android:visibility="gone" />
 
@@ -199,8 +199,8 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
 
-                    android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
                     android:src="@drawable/edit_order_icon"
                     android:visibility="gone" />
 
@@ -208,8 +208,8 @@
                     android:id="@+id/img_release"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
                     android:src="@drawable/release_order"
                     android:visibility="gone" />
 
@@ -222,8 +222,8 @@
             android:layout_height="250dp"
             android:layout_below="@+id/ll_1"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/camp_screen_bg1">
 
             <LinearLayout
@@ -238,9 +238,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:layout_marginEnd="@dimen/dp_5"
                     android:layout_marginStart="@dimen/dp_5"
+                    android:layout_marginEnd="@dimen/dp_5"
+                    android:layout_marginBottom="@dimen/dp_10"
                     android:background="@drawable/layout_bg_btech"
                     android:gravity="center">
 
@@ -256,16 +256,16 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dp_5"
                     android:layout_marginStart="@dimen/dp_5"
+                    android:layout_marginEnd="@dimen/dp_5"
                     android:background="@drawable/layout_bg">
 
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
                         android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginBottom="10dp"
                         android:layout_weight="1"
                         android:gravity="left">
 
@@ -294,9 +294,9 @@
 
                 <HorizontalScrollView
                     android:id="@+id/sc_ll_btechs"
-                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="18dp">
 
                     <LinearLayout
@@ -317,10 +317,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/rl_2"
-            android:layout_marginBottom="10dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/camp_screen_bg2">
 
             <TextView

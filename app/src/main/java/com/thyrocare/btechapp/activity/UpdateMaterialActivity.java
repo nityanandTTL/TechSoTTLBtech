@@ -2,7 +2,9 @@ package com.thyrocare.btechapp.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,14 +19,18 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.UpdateStockM
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
+
 import application.ApplicationController;
+
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.models.api.response.MaterialDetailsModel2;
 import com.thyrocare.btechapp.utils.app.AppConstants;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UpdateMaterialActivity extends AppCompatActivity {
+    String dac_code;
     private Activity mActivity;
     private ConnectionDetector cd;
     private EditText edt_opStock, edt_usedStock, edt_wastageStock, edt_defStock, edt_clStock;
@@ -32,7 +38,6 @@ public class UpdateMaterialActivity extends AppCompatActivity {
     private MaterialDetailsModel2 materialDetailsModel;
     private int opStock = 0, usedStock = 0, wastageStock = 0, defStock = 0, clStock = 0, calStock = 0;
     private boolean usedFlag = false, wastFlag = false, defFlag = false;
-    String dac_code;
 
     @SuppressLint("NewApi")
     @Override
@@ -105,7 +110,7 @@ public class UpdateMaterialActivity extends AppCompatActivity {
                 } else
                     wastageStock = 0;
 
-                    calculateCLstock(usedStock, wastageStock, defStock, edt_wastageStock);
+                calculateCLstock(usedStock, wastageStock, defStock, edt_wastageStock);
             }
 
             @Override
@@ -130,7 +135,7 @@ public class UpdateMaterialActivity extends AppCompatActivity {
                 } else
                     defStock = 0;
 
-                    calculateCLstock(usedStock, wastageStock, defStock, edt_defStock);
+                calculateCLstock(usedStock, wastageStock, defStock, edt_defStock);
             }
 
             @Override
@@ -145,23 +150,23 @@ public class UpdateMaterialActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (edt_usedStock.getText().toString().isEmpty() && edt_wastageStock.getText().toString().isEmpty() && edt_defStock.getText().toString().isEmpty()) {
-                    TastyToast.makeText(mActivity, "Enter proper values", TastyToast.LENGTH_SHORT,TastyToast.ERROR);
+                    TastyToast.makeText(mActivity, "Enter proper values", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
                 } else {
                     if (clStock > 0) {
                         if (clStock < opStock) {
                             if (usedStock == 0 && wastageStock == 0 && defStock == 0) {
-                                TastyToast.makeText(mActivity, "Enter proper values", TastyToast.LENGTH_SHORT,TastyToast.ERROR);
+                                TastyToast.makeText(mActivity, "Enter proper values", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
                             } else {
                                 if (cd.isConnectingToInternet())
                                     UpdateAvailableStock();
                                 else
-                                    TastyToast.makeText(mActivity, "Oops! Internet connection is not available", TastyToast.LENGTH_SHORT,TastyToast.ERROR);
+                                    TastyToast.makeText(mActivity, "Oops! Internet connection is not available", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
                             }
                         } else {
-                            TastyToast.makeText(mActivity, "Enter proper values", TastyToast.LENGTH_SHORT,TastyToast.ERROR).show();
+                            TastyToast.makeText(mActivity, "Enter proper values", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
                         }
                     } else {
-                        TastyToast.makeText(mActivity, "Enter proper values", TastyToast.LENGTH_SHORT,TastyToast.ERROR);
+                        TastyToast.makeText(mActivity, "Enter proper values", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
                     }
                 }
             }
@@ -196,7 +201,7 @@ public class UpdateMaterialActivity extends AppCompatActivity {
         UpdateStockModel updateStockModel = new UpdateStockModel();
         updateStockModel.setAPIKey(AppConstants.STOCKAPIKEY);
         updateStockModel.setDac_code(dac_code);
-        updateStockModel.setMaterial_id( materialDetailsModel.getMaterialId());
+        updateStockModel.setMaterial_id(materialDetailsModel.getMaterialId());
         updateStockModel.setUsed_stock(String.valueOf(usedStock));
         updateStockModel.setWastage_stock(String.valueOf(wastageStock));
         updateStockModel.setDefective_stock(String.valueOf(defStock));
@@ -213,10 +218,10 @@ public class UpdateMaterialActivity extends AppCompatActivity {
     public void getUpdatedResponse(CommonResponseModel commonResponseModel) {
 
         if (commonResponseModel.getResponse().equalsIgnoreCase("Entry done successfully")) {
-            TastyToast.makeText(mActivity, "Stock updated successfully",TastyToast.LENGTH_SHORT,TastyToast.SUCCESS);
+            TastyToast.makeText(mActivity, "Stock updated successfully", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
             finish();
         } else {
-            TastyToast.makeText(mActivity, commonResponseModel.getResponse(), Toast.LENGTH_SHORT,TastyToast.ERROR);
+            TastyToast.makeText(mActivity, commonResponseModel.getResponse(), Toast.LENGTH_SHORT, TastyToast.ERROR);
         }
     }
 }

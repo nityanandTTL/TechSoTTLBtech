@@ -5,12 +5,23 @@ import android.os.Parcelable;
 
 /**
  * Created by Orion on 5/8/2017.<br/>
- *  http://bts.dxscloud.com/btsapi/api/BtechClients/884543107<br/>
+ * http://bts.dxscloud.com/btsapi/api/BtechClients/884543107<br/>
  */
 
 public class BtechClientsModel implements Parcelable {
-    private int ClientId,Distance,Sequence;
-    private String Name,Address,Pincode,Mobile,Latitude,Longitude,PickupStatus,ScannedBracode,BarcodeType;
+    public static final Creator<BtechClientsModel> CREATOR = new Creator<BtechClientsModel>() {
+        @Override
+        public BtechClientsModel createFromParcel(Parcel in) {
+            return new BtechClientsModel(in);
+        }
+
+        @Override
+        public BtechClientsModel[] newArray(int size) {
+            return new BtechClientsModel[size];
+        }
+    };
+    private int ClientId, Distance, Sequence;
+    private String Name, Address, Pincode, Mobile, Latitude, Longitude, PickupStatus, ScannedBracode, BarcodeType;
 
     protected BtechClientsModel(Parcel in) {
         ClientId = in.readInt();
@@ -47,18 +58,6 @@ public class BtechClientsModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BtechClientsModel> CREATOR = new Creator<BtechClientsModel>() {
-        @Override
-        public BtechClientsModel createFromParcel(Parcel in) {
-            return new BtechClientsModel(in);
-        }
-
-        @Override
-        public BtechClientsModel[] newArray(int size) {
-            return new BtechClientsModel[size];
-        }
-    };
 
     public int getClientId() {
         return ClientId;

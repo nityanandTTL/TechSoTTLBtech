@@ -8,6 +8,17 @@ import android.os.Parcelable;
  */
 
 public class BtechAvaliabilityResponseModel implements Parcelable {
+    public static final Creator<BtechAvaliabilityResponseModel> CREATOR = new Creator<BtechAvaliabilityResponseModel>() {
+        @Override
+        public BtechAvaliabilityResponseModel createFromParcel(Parcel in) {
+            return new BtechAvaliabilityResponseModel(in);
+        }
+
+        @Override
+        public BtechAvaliabilityResponseModel[] newArray(int size) {
+            return new BtechAvaliabilityResponseModel[size];
+        }
+    };
     private int NumberofDays;
 
     public BtechAvaliabilityResponseModel() {
@@ -26,18 +37,6 @@ public class BtechAvaliabilityResponseModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BtechAvaliabilityResponseModel> CREATOR = new Creator<BtechAvaliabilityResponseModel>() {
-        @Override
-        public BtechAvaliabilityResponseModel createFromParcel(Parcel in) {
-            return new BtechAvaliabilityResponseModel(in);
-        }
-
-        @Override
-        public BtechAvaliabilityResponseModel[] newArray(int size) {
-            return new BtechAvaliabilityResponseModel[size];
-        }
-    };
 
     public int getNumberofDays() {
         return NumberofDays;

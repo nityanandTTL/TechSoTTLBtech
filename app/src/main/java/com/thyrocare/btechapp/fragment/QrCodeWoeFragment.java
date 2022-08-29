@@ -84,13 +84,12 @@ import static com.thyrocare.btechapp.utils.app.BundleConstants.Apikey_WOE;
 public class QrCodeWoeFragment extends Fragment {
 
     public static final String TAG_FRAGMENT = QrCodeWoeFragment.class.getSimpleName();
+    private static QrCodeWoeFragment fragment;
     Activity mActivity;
     HomeScreenActivity activity;
     AppPreferenceManager appPreferenceManager;
     ConnectionDetector cd;
     Global global;
-
-    private static QrCodeWoeFragment fragment;
     private CardView cdView_ScanQRCode, cdView_Form, cdView_UploadImageAndBarcode;
     private RelativeLayout rel_buttons;
     private EditText edt_Product, edt_Name, edt_Age, edt_mobileNumber, edt_EmailId, edt_Address, edt_Pincode;
@@ -187,7 +186,7 @@ public class QrCodeWoeFragment extends Fragment {
         cdView_ScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (cdView_Form.getVisibility() == View.VISIBLE){
+                if (cdView_Form.getVisibility() == View.VISIBLE) {
                     androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder;
                     alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(mActivity);
                     alertDialogBuilder
@@ -209,7 +208,7 @@ public class QrCodeWoeFragment extends Fragment {
                             });
                     androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else{
+                } else {
                     OpenScanPatientQrCodeScreen();
                 }
 
@@ -238,11 +237,11 @@ public class QrCodeWoeFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 String startingchar = s.toString();
-                if (!InputUtils.isNull(startingchar)){
+                if (!InputUtils.isNull(startingchar)) {
                     if (startingchar.startsWith(",") ||
                             startingchar.startsWith(".") ||
                             startingchar.startsWith("/") ||
-                            startingchar.startsWith("-") ){
+                            startingchar.startsWith("-")) {
                         edt_Address.setText("");
                     }
                 }
@@ -280,8 +279,8 @@ public class QrCodeWoeFragment extends Fragment {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
 
-                                if (patientDetailsModel != null  && !InputUtils.isNull(patientDetailsModel.getOrderNo()) && !InputUtils.isNull(patientDetailsModel.getMobile())){
-                                    CallGenerateOTPApi( patientDetailsModel.getMobile(),"SENDOTPALL");
+                                if (patientDetailsModel != null && !InputUtils.isNull(patientDetailsModel.getOrderNo()) && !InputUtils.isNull(patientDetailsModel.getMobile())) {
+                                    CallGenerateOTPApi(patientDetailsModel.getMobile(), "SENDOTPALL");
                                 }
                                 dialog.dismiss();
                             }
@@ -358,7 +357,7 @@ public class QrCodeWoeFragment extends Fragment {
         woe.setREF_DR_ID("");
         woe.setREF_DR_NAME("Self");
         woe.setREMARKS("MOBILE");
-        woe.setSPECIMEN_COLLECTION_TIME(DateUtil.getDateFromLong(System.currentTimeMillis(),"yyy-MM-dd HH:mm"));
+        woe.setSPECIMEN_COLLECTION_TIME(DateUtil.getDateFromLong(System.currentTimeMillis(), "yyy-MM-dd HH:mm"));
         woe.setSPECIMEN_SOURCE("");
         woe.setSR_NO(1);
         woe.setSTATUS("N");
@@ -374,7 +373,7 @@ public class QrCodeWoeFragment extends Fragment {
         submitB2BWoeRequestModel.setWoe(woe);
 
         ArrayList<SubmitB2BWoeRequestModel.Barcodelist> barcodelist = new ArrayList<>();
-        if (!InputUtils.isNull(patientDetailsModel.getTestData())){
+        if (!InputUtils.isNull(patientDetailsModel.getTestData())) {
             for (int i = 0; i < patientDetailsModel.getTestData().size(); i++) {
                 SubmitB2BWoeRequestModel.Barcodelist barcodelistModel = new SubmitB2BWoeRequestModel.Barcodelist();
                 barcodelistModel.setBARCODE(patientDetailsModel.getTestData().get(i).getBarcode());
@@ -395,17 +394,18 @@ public class QrCodeWoeFragment extends Fragment {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<B2BWoeResponseModel> responseCall = apiInterface.CallQrCodeBasedSubmitWOEAPI(submitB2BWoeRequestModel);
-        global.showProgressDialog(mActivity,"Please wait..");
+        global.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<B2BWoeResponseModel>() {
             @Override
             public void onResponse(Call<B2BWoeResponseModel> call, Response<B2BWoeResponseModel> response) {
                 global.hideProgressDialog(mActivity);
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     onSubmitWoeResponseReceived(response.body());
-                }else{
+                } else {
                     Toast.makeText(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<B2BWoeResponseModel> call, Throwable t) {
                 global.hideProgressDialog(mActivity);
@@ -415,7 +415,7 @@ public class QrCodeWoeFragment extends Fragment {
 
     private void onSubmitWoeResponseReceived(B2BWoeResponseModel b2BWoeResponseModel) {
 
-        if (b2BWoeResponseModel.getRES_ID() != null && b2BWoeResponseModel.getRES_ID().equalsIgnoreCase(ConstantsMessages.RES0000)){
+        if (b2BWoeResponseModel.getRES_ID() != null && b2BWoeResponseModel.getRES_ID().equalsIgnoreCase(ConstantsMessages.RES0000)) {
             androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder;
             alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(mActivity);
             alertDialogBuilder
@@ -433,8 +433,8 @@ public class QrCodeWoeFragment extends Fragment {
                     });
             androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
-        }else{
-            global.showCustomToast(mActivity,!StringUtils.isNull(b2BWoeResponseModel.getMessage()) ? b2BWoeResponseModel.getMessage() : ConstantsMessages.WOESubmitFailed);
+        } else {
+            global.showCustomToast(mActivity, !StringUtils.isNull(b2BWoeResponseModel.getMessage()) ? b2BWoeResponseModel.getMessage() : ConstantsMessages.WOESubmitFailed);
         }
 
     }
@@ -528,7 +528,7 @@ public class QrCodeWoeFragment extends Fragment {
                         patientDetailsModel = responseModel.getPatientData().get(0);
                         onPatientDetailsReceived();
                     } else {
-                        global.showCustomToast(mActivity,!InputUtils.isNull(responseModel.getResponse()) ? responseModel.getResponse() : ConstantsMessages.InvalidPatientDetails);
+                        global.showCustomToast(mActivity, !InputUtils.isNull(responseModel.getResponse()) ? responseModel.getResponse() : ConstantsMessages.InvalidPatientDetails);
                     }
                 } else {
                     global.showCustomToast(mActivity, NO_DATA_FOUND);
@@ -625,31 +625,31 @@ public class QrCodeWoeFragment extends Fragment {
                             dialog.dismiss();
                         }
                     }).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                    if (TextUtils.isEmpty(scanned_barcode) || scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ") /*|| Character.isDigit(scanned_barcode.charAt(0))*/) {
-                        Toast.makeText(mActivity, "Invalid barcode", Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                            if (!InputUtils.isNull(patientDetailsModel.getTestData())) {
-
-                                for (int i = 0; i < patientDetailsModel.getTestData().size(); i++) {
-                                    if (i == barcodePositionToScan && InputUtils.CheckEqualIgnoreCase(patientDetailsModel.getTestData().get(i).getSampleType(), barcodeSampleTypeToScan)) {
-                                        patientDetailsModel.getTestData().get(i).setBarcode(scanned_barcode);
-                                        initScanBarcodeListView();
-                                        break;
-                                    }
-                                }
+                            if (TextUtils.isEmpty(scanned_barcode) || scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ") /*|| Character.isDigit(scanned_barcode.charAt(0))*/) {
+                                Toast.makeText(mActivity, "Invalid barcode", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(mActivity, ConstantsMessages.FailedToUpdateScanBarcodevalue, Toast.LENGTH_SHORT).show();
+                                if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+                                    if (!InputUtils.isNull(patientDetailsModel.getTestData())) {
+
+                                        for (int i = 0; i < patientDetailsModel.getTestData().size(); i++) {
+                                            if (i == barcodePositionToScan && InputUtils.CheckEqualIgnoreCase(patientDetailsModel.getTestData().get(i).getSampleType(), barcodeSampleTypeToScan)) {
+                                                patientDetailsModel.getTestData().get(i).setBarcode(scanned_barcode);
+                                                initScanBarcodeListView();
+                                                break;
+                                            }
+                                        }
+                                    } else {
+                                        Toast.makeText(mActivity, ConstantsMessages.FailedToUpdateScanBarcodevalue, Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Toast.makeText(mActivity, ConstantsMessages.FailedToScanBarcode, Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        } else {
-                            Toast.makeText(mActivity, ConstantsMessages.FailedToScanBarcode, Toast.LENGTH_SHORT).show();
                         }
-                    }
-                }
-            }).show();
+                    }).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -682,7 +682,7 @@ public class QrCodeWoeFragment extends Fragment {
         });
     }
 
-    private void ShowDialogToVerifyOTP( final String MobileNo) {
+    private void ShowDialogToVerifyOTP(final String MobileNo) {
         CustomDialogforOTPValidation = new Dialog(mActivity);
         CustomDialogforOTPValidation.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         CustomDialogforOTPValidation.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -754,7 +754,7 @@ public class QrCodeWoeFragment extends Fragment {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.CallValidateOTPForQRcodeBasedWOEAPI(model);
-        global.showProgressDialog(mActivity,  ConstantsMessages.PLEASE_WAIT);
+        global.showProgressDialog(mActivity, ConstantsMessages.PLEASE_WAIT);
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {
             @Override
             public void onResponse(Call<CommonPOSTResponseModel> call, Response<CommonPOSTResponseModel> response) {
@@ -768,7 +768,7 @@ public class QrCodeWoeFragment extends Fragment {
                             CustomDialogforOTPValidation.dismiss();
                         }
                         EnableDisableAllEditFields(true);
-                    }else{
+                    } else {
                         global.showCustomToast(mActivity, ConstantsMessages.InvalidOTP);
                     }
                 } else {
@@ -840,7 +840,7 @@ public class QrCodeWoeFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == BundleConstants.START_BARCODE_SCAN) {
-            if (isBarcodeScan){
+            if (isBarcodeScan) {
                 IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
                 if ((scanningResult != null) && (scanningResult.getContents() != null)) {
                     final String scanned_barcode = scanningResult.getContents().trim();
@@ -858,7 +858,7 @@ public class QrCodeWoeFragment extends Fragment {
                     }
 
                 }
-            }else{
+            } else {
                 IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
                 if ((scanningResult != null) && (scanningResult.getContents() != null)) {
                     final String scanned_barcode = scanningResult.getContents().trim();
@@ -870,7 +870,7 @@ public class QrCodeWoeFragment extends Fragment {
                 }
             }
 
-        }  else if (requestCode == Camera.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+        } else if (requestCode == Camera.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             String imageurl = "";
             try {
                 imageurl = camera.getCameraBitmapPath();
@@ -941,9 +941,9 @@ public class QrCodeWoeFragment extends Fragment {
         edt_EmailId.setEnabled(action);
         edt_Address.setEnabled(action);
         edt_Pincode.setEnabled(action);
-        if (action){
+        if (action) {
             btn_Edit.setVisibility(View.INVISIBLE);
-        }else{
+        } else {
             btn_Edit.setVisibility(View.VISIBLE);
         }
 

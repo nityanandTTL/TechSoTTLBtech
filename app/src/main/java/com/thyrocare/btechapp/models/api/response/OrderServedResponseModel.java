@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 
 public class OrderServedResponseModel {
-   private String Response;
+    private String Response;
     private ArrayList<BtechOrderModel> btchOrd;
 
     public String getResponse() {

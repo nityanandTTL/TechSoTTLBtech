@@ -9,15 +9,17 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-    <include layout="@layout/default_toolbar"
-        android:id="@+id/appbarLayout"/>
+    <include
+        android:id="@+id/appbarLayout"
+        layout="@layout/default_toolbar" />
+
     <TextView
         android:id="@+id/no_record"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="4dp"
-        android:layout_centerInParent="true"
         android:gravity="center_horizontal"
         android:text="No Record Found"
         android:visibility="gone" />
@@ -43,8 +45,8 @@
         android:id="@+id/ll_hub_display_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
         android:orientation="vertical"
         android:weightSum="2">
 

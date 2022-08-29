@@ -12,12 +12,6 @@ public class ConstantsMessages {
     public static final String CPL = "CPL";
     public static final String ZPL = "ZPL";
     public static final String PLEASE_ADD_TEST = "Please add tests to proceed";
-
-    public static String PermissionRequiredMsg = "We need few permission for proper Working of the App.\nPlease press on allow button in next Screen for all permissions. ";
-    public static String PermissionRejectedMsg = "If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission ";
-    public static String ProvideRequestedPermission = "Please provide the permissions requested. Application will shutdown now.";
-    public static String PermissionDenied = "Permission Denied\n";
-
     public static final String OrdercontainonlyOneBeneficaryCannotremovedMsg = "This order contains only one beneficiary.Cannot remove this beneficiary.";
     public static final String AllfleidswithstarMsg = "All fields with * are mandatory";
     public static final String AllFieldMsg = "All fields are mandatory";
@@ -33,7 +27,19 @@ public class ConstantsMessages {
     public static final String AddressMoreThan15Msg = "Address should be more than 25 characters";
     public static final String NewUpdateMsg = "New update is available!";
     public static final String PressbacktocloseMsg = "Once again back to close app";
-
+    public static final String PSAandFPSAforMaleMsg = "PROSTATE SPECIFIC ANTIGEN and FREE PSA test are only for male. Kindly select another test.";
+    public static final String Alreadycontains10BenMsg = "This order already contains 10 beneficiary \n (Max Limit : 10)";
+    public static final String SelectingofferwillreplaceofferMsg = "Selecting an OFFER will replace previously selected OFFER. Do you still wish to proceed?";
+    public static final String SelectingPOPwillreplaceofferMsg = "Selecting an POP will replace previously selected POP. Do you still wish to proceed?";
+    public static final String SuretoRemoveTestMsg = "Are you sure you want to remove this test?";
+    public static final String CannotemtytestlistMsg = "Cannot empty the test list";
+    public static final String FailTodetectCityMsg = "Failed to detect city \nPlease check your internet connection !";
+    public static final String Mobilerefferedmorethan10timesMsg = "This mobile number is already referred for more than 10 times in last 90 days.Kindly enter another mobile number.";
+    public static final String FailedToSubmitRequest = "Failed to submit your request. Please try after sometime.";
+    public static String PermissionRequiredMsg = "We need few permission for proper Working of the App.\nPlease press on allow button in next Screen for all permissions. ";
+    public static String PermissionRejectedMsg = "If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission ";
+    public static String ProvideRequestedPermission = "Please provide the permissions requested. Application will shutdown now.";
+    public static String PermissionDenied = "Permission Denied\n";
     public static String PLEASE_WAIT = "Please wait..";
     public static String NO_DATA_FOUND = "No Data found";
     public static String CHECK_INTERNET_CONN = "Check your internet connection";
@@ -96,7 +102,6 @@ public class ConstantsMessages {
     public static String VALID_PINCODE = "Enter valid Pincode";
     public static String SELECT_RADIO_BTN = "Please select any one option Interested or Not Interested";
     public static String SELECT_LOCATION = "Please select a exact location from map to procced.\nClick on location icon which is at right side of address field to select location.";
-
     public static String ENTRY_SUCCESS = "Entry done successfully";
     public static String SELECT_TEST_TYPE = "Select test type";
     public static String SELECT_COLL_AMT = "Select collected amount";
@@ -115,21 +120,13 @@ public class ConstantsMessages {
     public static String ENTER_VALID_OTP = "Enter valid OTP";
     public static String OTP_SENT_SUCCESS = "OTP sent successfully";
     public static String TO_DATE_SHOULD_BE_GREATER = "To date should be greater than from date";
-
-    public static final String PSAandFPSAforMaleMsg = "PROSTATE SPECIFIC ANTIGEN and FREE PSA test are only for male. Kindly select another test.";
-    public static final String Alreadycontains10BenMsg = "This order already contains 10 beneficiary \n (Max Limit : 10)";
-    public static final String SelectingofferwillreplaceofferMsg = "Selecting an OFFER will replace previously selected OFFER. Do you still wish to proceed?";
-    public static final String SelectingPOPwillreplaceofferMsg = "Selecting an POP will replace previously selected POP. Do you still wish to proceed?";
-    public static final String SuretoRemoveTestMsg = "Are you sure you want to remove this test?";
-    public static final String CannotemtytestlistMsg = "Cannot empty the test list";
     public static String EnterPatientName = "Please Enter Patient name.";
     public static String EnterVAlidPatientName = "Patient Name should be of minimum 2 characters";
     public static String EnterPatientAge = "Enter Patient Age";
     public static String EnterValidPatientAge = "Patient Age should be between 1 to 120";
     public static String Select_PatientGender = "Select Patient Gender";
-    public static String UploadPatientVailPhoto =  "Please upload Patient Vail photo";
-
-    public static String FailedToVaildateBarcode =  "Failed to Validate barcode";
+    public static String UploadPatientVailPhoto = "Please upload Patient Vail photo";
+    public static String FailedToVaildateBarcode = "Failed to Validate barcode";
     public static String ENterBodyTemperature = "Please Enter Body Temperature in Fahrenheit (°F)";
     public static String BodyTempLimit = "Body Temperature should between 80°F to 110°F Fahrenheit";
     public static String SelecAarogyaSetuAppIsInstalled = "Please tell us if you have Aarogya Setu App installed in your device.";
@@ -137,15 +134,12 @@ public class ConstantsMessages {
     public static String EnsureToWearPPE = "Ensure to wear PPE before serving this patient";
     public static String InValidBtechID = "Unable to Identify you Identity.Please re-login and try again.";
     public static String FailedToAutodetectCity = "Failed to auto Detect your city.\nPlease city enter manually";
-    public static final String FailTodetectCityMsg = "Failed to detect city \nPlease check your internet connection !";
     public static String Recordingstarted = "Recording started";
     public static String EmailIDShouldNotStartWithSpace = "Email ID should not start with space";
     public static String RecordingCompleted = "Recording completed";
     public static String TestBookingDoneSuccessfully = "Test booking done successfully !";
     public static String WhatsAppNotinstalled = "Whatsapp not installed";
     public static String NoImageClientInstalled = "There is no email client installed";
-    public static final String Mobilerefferedmorethan10timesMsg = "This mobile number is already referred for more than 10 times in last 90 days.Kindly enter another mobile number.";
-    public static final String FailedToSubmitRequest = "Failed to submit your request. Please try after sometime.";
     public static String AreYouSureYouWantToEditPatientDetails = "Are you sure you want to edit patient Details?";
     public static String PleaseWait_RequestingOTP = "Requesting for OTP. Please wait..";
     public static String SUCCESS = "SUCCESS";
@@ -176,5 +170,5 @@ public class ConstantsMessages {
     public static String WOESubmitFailed = "Failed to submit WOE. Please try Again.";
     public static String ThisWillResetAllPatientDetails = "This will reset all patient details. Do you want to proceed ?";
     public static String InvalidSRFIDMsg = "Enter Valid SRF ID (Length Min: 5 and Max: 14)";
-    public static String BenefiaryAdded="Beneficiary added successfully";
+    public static String BenefiaryAdded = "Beneficiary added successfully";
 }

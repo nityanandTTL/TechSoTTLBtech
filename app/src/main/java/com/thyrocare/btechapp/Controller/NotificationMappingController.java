@@ -39,6 +39,7 @@ public class NotificationMappingController {
                 } else {
                 }
             }
+
             @Override
             public void onFailure(Call<NotificationMappingResponseModel> call, Throwable t) {
                 MessageLogger.LogDebug("Errror", t.getMessage());

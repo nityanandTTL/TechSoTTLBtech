@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * Created by Orion on 4/24/2017.
  */
 
-public class LabAlertSelectorDialog extends Dialog{
+public class LabAlertSelectorDialog extends Dialog {
     private Activity activity;
     private Button btnSave;
     private ArrayList<BeneficiaryLabAlertsModel> sLAArr;
@@ -28,6 +28,7 @@ public class LabAlertSelectorDialog extends Dialog{
     private SelectLabAlertsMasterDisplayAdapter sLAMDA;
     private SelectLabAlertsCheckboxDelegate selectLabAlertsCheckboxDelegate;
     private ListView lvLabAlerts;
+
     public LabAlertSelectorDialog(Activity activity, ArrayList<LabAlertMasterModel> labAlertMasterModelsArr, ArrayList<BeneficiaryLabAlertsModel> sLAArr, int benId, SelectLabAlertsCheckboxDelegate selectLabAlertsCheckboxDelegate) {
         super(activity);
         this.activity = activity;

@@ -30,12 +30,11 @@
         android:id="@+id/edt__release_remark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
-        android:layout_marginBottom="@dimen/dp_10"
         android:layout_marginLeft="@dimen/dp_6"
+        android:layout_marginTop="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_6"
+        android:layout_marginBottom="@dimen/dp_10"
         android:layout_weight="1"
-        android:visibility="gone"
         android:background="@drawable/bg_sample_type_heparin"
         android:hint="Please enter remark"
         android:lines="3"
@@ -43,7 +42,8 @@
         android:padding="10dp"
         android:paddingStart="@dimen/dp_10"
         android:textAlignment="center"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:visibility="gone" />
 
 
     <LinearLayout

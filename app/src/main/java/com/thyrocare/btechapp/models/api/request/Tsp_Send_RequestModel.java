@@ -11,8 +11,19 @@ import java.util.ArrayList;
  * Created by Orion on 7/4/2017.
  */
 
-public class Tsp_Send_RequestModel implements Parcelable{
+public class Tsp_Send_RequestModel implements Parcelable {
 
+    public static final Creator<Tsp_Send_RequestModel> CREATOR = new Creator<Tsp_Send_RequestModel>() {
+        @Override
+        public Tsp_Send_RequestModel createFromParcel(Parcel in) {
+            return new Tsp_Send_RequestModel(in);
+        }
+
+        @Override
+        public Tsp_Send_RequestModel[] newArray(int size) {
+            return new Tsp_Send_RequestModel[size];
+        }
+    };
     private String ConsignId;
     private int TSP;
     private String RoutingMode;
@@ -24,7 +35,6 @@ public class Tsp_Send_RequestModel implements Parcelable{
     private int RPL;
     private String Instructions;
     private String Remarks;
-
 
     public Tsp_Send_RequestModel(Parcel in) {
         ConsignId = in.readString();
@@ -38,18 +48,6 @@ public class Tsp_Send_RequestModel implements Parcelable{
         Instructions = in.readString();
         Remarks = in.readString();
     }
-
-    public static final Creator<Tsp_Send_RequestModel> CREATOR = new Creator<Tsp_Send_RequestModel>() {
-        @Override
-        public Tsp_Send_RequestModel createFromParcel(Parcel in) {
-            return new Tsp_Send_RequestModel(in);
-        }
-
-        @Override
-        public Tsp_Send_RequestModel[] newArray(int size) {
-            return new Tsp_Send_RequestModel[size];
-        }
-    };
 
     public Tsp_Send_RequestModel() {
 

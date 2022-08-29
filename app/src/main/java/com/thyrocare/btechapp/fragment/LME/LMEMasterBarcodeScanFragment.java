@@ -14,7 +14,9 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
+
 import application.ApplicationController;
+
 import com.thyrocare.btechapp.fragment.HomeScreenFragment;
 import com.thyrocare.btechapp.models.data.HubBarcodeModel;
 import com.thyrocare.btechapp.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
@@ -36,17 +38,17 @@ import java.util.ArrayList;
 public class LMEMasterBarcodeScanFragment extends AbstractFragment implements View.OnClickListener {
 
     public static final String TAG_FRAGMENT = LMEMasterBarcodeScanFragment.class.getSimpleName();
-    private LinearLayout ll_hub_display_footer, ll_scan_master_barcode;
+    static LMEMasterBarcodeScanFragment fragment;
     TextView tv_collection_sample;
+    SampleDropDetailsbyTSPLMEDetailsModel mSampleDropDetailsbyTSPLMEDetailsModel;
+    TextView scanned_barcode;
+    TextView txt_code, txt_cnt, txt_name, txt_address;
+    private LinearLayout ll_hub_display_footer, ll_scan_master_barcode;
     private HomeScreenActivity activity;
     private ArrayList<HubBarcodeModel> barcodeModels = new ArrayList<>();
     private String master_scanned_barcode = "";
-    SampleDropDetailsbyTSPLMEDetailsModel mSampleDropDetailsbyTSPLMEDetailsModel;
     private IntentIntegrator intentIntegrator;
     private Button btnDispatch;
-    TextView scanned_barcode;
-    static LMEMasterBarcodeScanFragment fragment;
-    TextView txt_code, txt_cnt, txt_name, txt_address;
 
     public LMEMasterBarcodeScanFragment() {
     }
@@ -102,7 +104,7 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
         txt_code.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getSourceCode());
 //        txt_cnt.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getSampleCount());
         txt_name.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getName());
-        txt_address.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getAddress() +"-"+mSampleDropDetailsbyTSPLMEDetailsModel.getPincode());
+        txt_address.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getAddress() + "-" + mSampleDropDetailsbyTSPLMEDetailsModel.getPincode());
     }
 
     @Override
@@ -122,7 +124,7 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
         try {
             GPSTracker gpsTracker = new GPSTracker(activity);
             n = new ScannedMasterBarcodebyLMEPOSTDATAModel();
-            n.setMasterBarcode(""+master_scanned_barcode.toString().trim());
+            n.setMasterBarcode("" + master_scanned_barcode.toString().trim());
 //            n.setSampleDropIds("" + sampleDropDetailsbyTSPLMEDetailsModel.getSampleDropId());
             n.setStatus("3");
             n.setLatitude(String.valueOf(gpsTracker.getLatitude()));
@@ -159,7 +161,7 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
                 if (master_scanned_barcode.toString().trim().length() != 8) {
                     Toast.makeText(activity, "Invalid master barcode", Toast.LENGTH_SHORT).show();
                 } else {
-                    scanned_barcode.setText(""+master_scanned_barcode.toString().trim());
+                    scanned_barcode.setText("" + master_scanned_barcode.toString().trim());
                     Toast.makeText(activity, "Master barcode scanned successfully", Toast.LENGTH_SHORT).show();
                 }
             }

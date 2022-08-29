@@ -17,13 +17,13 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+
 import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 /**
@@ -49,7 +49,7 @@ public class ImagePicker {
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         takePhotoIntent.putExtra("return-data", true);
-        takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".fileprovider",getTempFile(context)));
+        takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".fileprovider", getTempFile(context)));
         intentList = addIntentsToList(context, intentList, pickIntent);
         intentList = addIntentsToList(context, intentList, takePhotoIntent);
 
@@ -83,10 +83,10 @@ public class ImagePicker {
         if (resultCode == Activity.RESULT_OK) {
             Uri selectedImage;
             boolean isCamera = (imageReturnedIntent == null ||
-                    imageReturnedIntent.getData() == null  ||
+                    imageReturnedIntent.getData() == null ||
                     imageReturnedIntent.getData().toString().contains(imageFile.toString()));
             if (isCamera) {     /** CAMERA **/
-                selectedImage = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".imageprovider",imageFile);
+                selectedImage = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".imageprovider", imageFile);
             } else {            /** ALBUM **/
                 selectedImage = imageReturnedIntent.getData();
             }

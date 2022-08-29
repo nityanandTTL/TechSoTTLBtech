@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottom_sheet_dialog_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/bottom_sheet_dialog_parent">
+    android:orientation="vertical">
 
 
     <ScrollView
@@ -24,17 +24,17 @@
                 <TextView
                     android:layout_width="720dp"
                     android:layout_height="wrap_content"
+                    android:padding="@dimen/_5sdp"
                     android:text="Test Lists"
-                    android:textSize="@dimen/_14sdp"
                     android:textColor="@color/colorPrimary"
-                    android:padding="@dimen/_5sdp"/>
+                    android:textSize="@dimen/_14sdp" />
 
-<!--                <ImageView-->
-<!--                    android:id="@+id/img_close"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_alignParentEnd="true"-->
-<!--                    android:src="@drawable/red_cross_icon"/>-->
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/img_close"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_alignParentEnd="true"-->
+                <!--                    android:src="@drawable/red_cross_icon"/>-->
 
                 <ImageView
                     android:id="@+id/img_close"

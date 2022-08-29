@@ -10,6 +10,17 @@ import java.util.ArrayList;
  */
 
 public class OrderBookingResponseOrderModel implements Parcelable {
+    public static final Creator<OrderBookingResponseOrderModel> CREATOR = new Creator<OrderBookingResponseOrderModel>() {
+        @Override
+        public OrderBookingResponseOrderModel createFromParcel(Parcel in) {
+            return new OrderBookingResponseOrderModel(in);
+        }
+
+        @Override
+        public OrderBookingResponseOrderModel[] newArray(int size) {
+            return new OrderBookingResponseOrderModel[size];
+        }
+    };
     private String oldOrderId;
     private String newOrderId;
     private ArrayList<OrderBookingResponseBeneficiaryModel> benfids;
@@ -34,18 +45,6 @@ public class OrderBookingResponseOrderModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<OrderBookingResponseOrderModel> CREATOR = new Creator<OrderBookingResponseOrderModel>() {
-        @Override
-        public OrderBookingResponseOrderModel createFromParcel(Parcel in) {
-            return new OrderBookingResponseOrderModel(in);
-        }
-
-        @Override
-        public OrderBookingResponseOrderModel[] newArray(int size) {
-            return new OrderBookingResponseOrderModel[size];
-        }
-    };
 
     public String getOldOrderId() {
         return oldOrderId;

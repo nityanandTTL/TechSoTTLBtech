@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Orion on 5/8/2017.<br/>
- *  http://bts.dxscloud.com/btsapi/api/BtechClients/884543107<br/>
+ * http://bts.dxscloud.com/btsapi/api/BtechClients/884543107<br/>
  */
 
 public class BtechClientsResponseModel {

@@ -3,28 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/txt_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimaryDark"
         android:gravity="center"
         android:padding="10dp"
         android:text="@string/add_sample_barcode"
         android:textColor="@android:color/white"
-        android:background="@color/colorPrimaryDark"
         android:textSize="24sp" />
 
-<LinearLayout
-    android:id="@+id/ll_test_color"
-    android:layout_below="@+id/txt_title"
-    android:layout_width="match_parent"
-    android:layout_height="7dp"
-    android:background="@drawable/bg_sample_type_edta"
-    android:orientation="horizontal"/>
+    <LinearLayout
+        android:id="@+id/ll_test_color"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:layout_below="@+id/txt_title"
+        android:background="@drawable/bg_sample_type_edta"
+        android:orientation="horizontal" />
+
     <TextView
         android:id="@+id/txt_barcode_value"
         android:layout_width="wrap_content"
@@ -39,23 +39,23 @@
         android:id="@+id/et_barcode_value"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:textSize="20sp"
-        android:inputType="text"
-        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        android:hint="Please Enter Serum Barcode"
-
-        android:background="@drawable/edittext_modified_states"
         android:layout_below="@+id/txt_barcode_value"
-        android:layout_marginTop="20dp" />
+        android:layout_margin="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edittext_modified_states"
+        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+        android:hint="Please Enter Serum Barcode"
+        android:inputType="text"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/txt_confirm_barcode_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:layout_below="@+id/et_barcode_value"
         android:layout_marginTop="10dp"
+        android:padding="10dp"
         android:text="@string/barcode_value_confirm"
         android:textSize="20sp" />
 
@@ -63,14 +63,14 @@
         android:id="@+id/et_confirm_barcode_value"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:inputType="textPassword"
+        android:layout_below="@+id/txt_confirm_barcode_value"
+        android:layout_margin="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edittext_modified_states"
         android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         android:hint="Confirm Serum Barcode "
-        android:background="@drawable/edittext_modified_states"
-        android:layout_margin="10dp"
-        android:layout_below="@+id/txt_confirm_barcode_value"
-        android:layout_marginTop="20dp" />
+        android:inputType="textPassword"
+        android:textSize="20sp" />
 
 
     <Button
@@ -79,15 +79,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/et_confirm_barcode_value"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/purple_btn_bg"
-        android:text="Submit"
         android:minEms="5"
+        android:text="Submit"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:textSize="22sp" />
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

@@ -139,6 +139,11 @@ import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 public class HomeScreenFragment extends AbstractFragment {
 
     public static final String TAG_FRAGMENT = "HOME_SCREEN_FRAGMENT";
+    Dialog MainDailog;
+    //tsp
+    ImageView send_icon, receive_icon, earning_icon, orders_icon;
+    ImageView iv_gqc;
+    LinearLayout ll_schedule, ll_orders, ll_served, ll_hub, ll_lead, ll_pick_orders, ll_hcw, ll_password, ll_feedback, ll_video, ll_certificate, ll_logout;
     private HomeScreenActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private View rootView;
@@ -146,20 +151,11 @@ public class HomeScreenFragment extends AbstractFragment {
     private CircularImageView rvSelfie;
     private ImageView imgPayment, imgOrders, imgSchedule, imgMaterials, imgOLCPickup, imgHub, imgCamp, ordersserved, imgLedger;
     private ImageView bellicon, lme_orders_list, lme_mis_icon, lme_material_icon;
-    Dialog MainDailog;
-
-    //tsp
-    ImageView send_icon, receive_icon, earning_icon, orders_icon;
     private Intent FirebaselocationUpdateIntent;
     private Global globalclass;
-    private Button btn_leadgeneration;
-
-
-    private DhbDao dhbDao;
     //New Screen designs
-
-    ImageView iv_gqc;
-    LinearLayout ll_schedule, ll_orders, ll_served, ll_hub, ll_lead, ll_pick_orders, ll_hcw, ll_password, ll_feedback, ll_video, ll_certificate, ll_logout;
+    private Button btn_leadgeneration;
+    private DhbDao dhbDao;
 
 
     public HomeScreenFragment() {
@@ -171,6 +167,17 @@ public class HomeScreenFragment extends AbstractFragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     private void loadSpotlight(final View view) {
@@ -455,7 +462,6 @@ public class HomeScreenFragment extends AbstractFragment {
         orders_icon = (ImageView) rootView.findViewById(R.id.orders_icon);
     }
 
-
     private void getCampDetailCount() {
         if (isNetworkAvailable(activity)) {
             CallGetCampDetailsCountAPI();
@@ -523,7 +529,7 @@ public class HomeScreenFragment extends AbstractFragment {
                     receive.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            startActivity(new Intent(activity,BtechwithHub_HubMasterBarcodeScanFragment.class));
+                            startActivity(new Intent(activity, BtechwithHub_HubMasterBarcodeScanFragment.class));
                             MainDailog.dismiss();
                         }
                     });
@@ -583,14 +589,14 @@ public class HomeScreenFragment extends AbstractFragment {
         ll_schedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(activity,ScheduleYourDayFragment.class));
+                startActivity(new Intent(activity, ScheduleYourDayFragment.class));
             }
         });
 
         ll_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),ChangePasswordFragment.class);
+                Intent intent = new Intent(getActivity(), ChangePasswordFragment.class);
                 startActivity(intent);
             }
         });
@@ -753,7 +759,6 @@ public class HomeScreenFragment extends AbstractFragment {
         }
     }
 
-
     public void CallCheckUserLoginDeviceId() {
         if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
             if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
@@ -774,7 +779,6 @@ public class HomeScreenFragment extends AbstractFragment {
         MenuItem item = menu.findItem(R.id.action_settings);
         item.setVisible(false);
     }
-
 
     private void CallgetLoginDeviceDataApi() {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
@@ -815,7 +819,6 @@ public class HomeScreenFragment extends AbstractFragment {
             }
         });
     }
-
 
     private void CheckSTechLoginandShowPopUp(DeviceLoginDetailsModel deviceLoginDetailsModel) {
         if (BundleConstants.setStechDialogFlag == 0) {
@@ -912,19 +915,6 @@ public class HomeScreenFragment extends AbstractFragment {
         super.onResume();
 
     }
-
-
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
 
     public void CallLogoutRequestApi() {
 

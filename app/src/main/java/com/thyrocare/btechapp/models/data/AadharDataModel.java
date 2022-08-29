@@ -5,6 +5,17 @@ import android.os.Parcelable;
 
 public class AadharDataModel implements Parcelable {
 
+    public static final Creator<AadharDataModel> CREATOR = new Creator<AadharDataModel>() {
+        @Override
+        public AadharDataModel createFromParcel(Parcel in) {
+            return new AadharDataModel(in);
+        }
+
+        @Override
+        public AadharDataModel[] newArray(int size) {
+            return new AadharDataModel[size];
+        }
+    };
     private String name;
     private String address;
     private String gender;
@@ -22,8 +33,6 @@ public class AadharDataModel implements Parcelable {
     private String mobile;
     private String email;
     private String loc;
-
-
 
     public AadharDataModel() {
 
@@ -46,20 +55,8 @@ public class AadharDataModel implements Parcelable {
         vtc = in.readString();
         mobile = in.readString();
         email = in.readString();
-        loc=in.readString();
+        loc = in.readString();
     }
-
-    public static final Creator<AadharDataModel> CREATOR = new Creator<AadharDataModel>() {
-        @Override
-        public AadharDataModel createFromParcel(Parcel in) {
-            return new AadharDataModel(in);
-        }
-
-        @Override
-        public AadharDataModel[] newArray(int size) {
-            return new AadharDataModel[size];
-        }
-    };
 
     public String getName() {
         return name;
@@ -184,16 +181,17 @@ public class AadharDataModel implements Parcelable {
     public String getEmail() {
         return email;
     }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getLoc() {
         return loc;
     }
 
     public void setLoc(String loc) {
         this.loc = loc;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     @Override

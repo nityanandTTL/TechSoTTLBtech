@@ -53,15 +53,15 @@ import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 
 public class ChangePasswordFragment extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG_FRAGMENT = ChangePasswordFragment.class.getSimpleName();
-    private EditText edt_old_password, edt_new_password, edt_confirm_password;
-    private Button btn_reset_password;
     String regexp = ".{6,12}";
     Activity activity;
     Global globalclass;
-    private DhbDao dhbDao;
     TextView tv_toolbar;
     ImageView iv_back, iv_home;
     AppPreferenceManager appPreferenceManager;
+    private EditText edt_old_password, edt_new_password, edt_confirm_password;
+    private Button btn_reset_password;
+    private DhbDao dhbDao;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

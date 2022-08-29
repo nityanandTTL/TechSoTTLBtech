@@ -8,24 +8,24 @@ import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 
 public class DhbDao extends AbstractDao {
 
-	/*Patient Info Table*/
-	private Context context;
-	AppPreferenceManager appPreferenceManager;
+    AppPreferenceManager appPreferenceManager;
+    /*Patient Info Table*/
+    private Context context;
 
 
-	public DhbDao(Context context) {
-		this.mDbHelper = DbHelper.sharedDbHelper();
-		openDatabase();
-		this.context = context;
-		appPreferenceManager = new AppPreferenceManager(context);
-	}
+    public DhbDao(Context context) {
+        this.mDbHelper = DbHelper.sharedDbHelper();
+        openDatabase();
+        this.context = context;
+        appPreferenceManager = new AppPreferenceManager(context);
+    }
 
-	public void deleteTablesonLogout(){
-		BeneficiaryDetailsDao beneficiaryDetailsDao = new BeneficiaryDetailsDao(getDb());
-		beneficiaryDetailsDao.deleteAll();
+    public void deleteTablesonLogout() {
+        BeneficiaryDetailsDao beneficiaryDetailsDao = new BeneficiaryDetailsDao(getDb());
+        beneficiaryDetailsDao.deleteAll();
 
-		OrderDetailsDao orderDetailsDao = new OrderDetailsDao(getDb());
-		orderDetailsDao.deleteAll();
+        OrderDetailsDao orderDetailsDao = new OrderDetailsDao(getDb());
+        orderDetailsDao.deleteAll();
 
 		/* String myPath = "dhb_db.db";
 		   SQLiteDatabase.deleteDatabase(new File(context.getDatabasePath(DbHelper.DB_NAME).getAbsolutePath()));*/
@@ -35,7 +35,7 @@ public class DhbDao extends AbstractDao {
 
 		/*QueueDao queueDao = new QueueDao(getDb(), appPreferenceManager);
 		queueDao.deleteAll();*/
-	}
+    }
 
 
 }
