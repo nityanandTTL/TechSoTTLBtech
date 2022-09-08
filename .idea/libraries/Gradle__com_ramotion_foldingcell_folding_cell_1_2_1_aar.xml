@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.ramotion.foldingcell:folding-cell:1.2.1@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/53f5069ecf0197d0c99515163d4e1660/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/53f5069ecf0197d0c99515163d4e1660/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/53f5069ecf0197d0c99515163d4e1660/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fbc22ec90397e9c0243168e4ef3c1755/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fbc22ec90397e9c0243168e4ef3c1755/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fbc22ec90397e9c0243168e4ef3c1755/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

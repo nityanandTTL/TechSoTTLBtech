@@ -553,7 +553,7 @@ public class PaymentsActivity extends AbstractActivity {
                     }
                 });
                 //abhay QR view--->
-               /* View viewQRCode = activity.getLayoutInflater().inflate(R.layout.paymentsgateway_row_items, null);
+                View viewQRCode = activity.getLayoutInflater().inflate(R.layout.paymentsgateway_row_items, null);
                 TextView tv_ModeName = (TextView) viewQRCode.findViewById(R.id.txt_paymentModename);
                 ImageView iv_ModeImg = (ImageView) viewQRCode.findViewById(R.id.img_ident);
                 LinearLayout ll_QRCode = (LinearLayout) viewQRCode.findViewById(R.id.ll_rowmainelmnt);
@@ -568,7 +568,7 @@ public class PaymentsActivity extends AbstractActivity {
                     }
                 });
 
-                llPaymentModes.addView(viewQRCode);*/
+                llPaymentModes.addView(viewQRCode);
                 llPaymentModes.addView(ViewPaytmLink);
             } else {
                 View dynamicListview = activity.getLayoutInflater().inflate(R.layout.payment_recy, null);

@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.sdsmdg.tastytoast:tastytoast:0.1.1@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6db51bd3098d8cd9297ddecc4d5b084e/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6db51bd3098d8cd9297ddecc4d5b084e/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6db51bd3098d8cd9297ddecc4d5b084e/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c5432403e91b45cbb39f902437d1232b/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c5432403e91b45cbb39f902437d1232b/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c5432403e91b45cbb39f902437d1232b/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

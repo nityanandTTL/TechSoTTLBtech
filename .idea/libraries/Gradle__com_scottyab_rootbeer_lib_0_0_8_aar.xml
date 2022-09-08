@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.scottyab:rootbeer-lib:0.0.8@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d51f0ae7344b632b209a73d8e4d534fe/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d51f0ae7344b632b209a73d8e4d534fe/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d51f0ae7344b632b209a73d8e4d534fe/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e1b20b58e25e9bdd07ef4de31eb07e5e/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e1b20b58e25e9bdd07ef4de31eb07e5e/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e1b20b58e25e9bdd07ef4de31eb07e5e/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

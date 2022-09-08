@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.wooplr:Spotlight:1.2.3@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ca0f9adcfe41ef38c95a25c22022eda/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ca0f9adcfe41ef38c95a25c22022eda/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ca0f9adcfe41ef38c95a25c22022eda/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/adb77b4b1cc6faa2924ceb19fcee04b8/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/adb77b4b1cc6faa2924ceb19fcee04b8/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/adb77b4b1cc6faa2924ceb19fcee04b8/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

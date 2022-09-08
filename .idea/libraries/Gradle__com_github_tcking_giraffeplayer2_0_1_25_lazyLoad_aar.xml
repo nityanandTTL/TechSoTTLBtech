@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.tcking:giraffeplayer2:0.1.25-lazyLoad@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/66f25f57ce1fb746ecc5b9b4676bd992/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/66f25f57ce1fb746ecc5b9b4676bd992/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/66f25f57ce1fb746ecc5b9b4676bd992/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dd367b08a6d061aee5e40db441313772/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dd367b08a6d061aee5e40db441313772/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dd367b08a6d061aee5e40db441313772/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

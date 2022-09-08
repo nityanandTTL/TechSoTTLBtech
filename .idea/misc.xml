@@ -3,13 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_barcode_scan_woe_main.xml" value="0.22401315789473683" />
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_checkout_wow.xml" value="0.22401315789473683" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_pe_post_patient_details.xml" value="0.22" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_start_and_arrive.xml" value="0.22401315789473683" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/alert_test_edit.xml" value="0.22401315789473683" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/dialog_desposition.xml" value="0.2218241042345277" />
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/dialog_pe_woe.xml" value="0.22401315789473683" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/dialog_twocontacts.xml" value="0.25" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/fragment_schedule_your_day1.xml" value="0.2218241042345277" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/fragment_visit_orders_display_new.xml" value="0.22401315789473683" />
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/item_remove_test.xml" value="0.12203947368421053" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/pe_qr_code.xml" value="0.2243421052631579" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/qr_code_verifiy_payment_dialog.xml" value="0.2243421052631579" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/single_postcheckoutdata.xml" value="0.33" />

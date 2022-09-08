@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.ablanco.zoomy:zoomy:1.1.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/105836a7edafeb13667af5ef2967463a/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/105836a7edafeb13667af5ef2967463a/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/105836a7edafeb13667af5ef2967463a/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d12f3f0d295404af8fc168e3ce37677d/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d12f3f0d295404af8fc168e3ce37677d/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d12f3f0d295404af8fc168e3ce37677d/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

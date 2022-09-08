@@ -1757,6 +1757,21 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 } else {
                     txt_amount.setText("Paid");
                 }
+
+                if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
+//            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                    btn_floating_add_ben.setVisibility(View.GONE);
+//            } else if (BundleConstants.isPEPartner) {
+                } else if (appPreferenceManager.isPEPartner()) {
+                    btn_floating_add_ben.setVisibility(View.VISIBLE);
+                } else {
+                    if (orderDetailsModel.getAllOrderdetails().get(0).getAmountPayable() == 0) {
+                        btn_floating_add_ben.setVisibility(View.GONE);
+                    } else {
+                        btn_floating_add_ben.setVisibility(View.VISIBLE);
+                    }
+                }
+
             } else {
                 if (BundleConstants.isKIOSKOrder) {
                     customSwipeButton2.setVisibility(View.GONE);

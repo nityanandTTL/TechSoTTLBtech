@@ -9,8 +9,8 @@ android {
         applicationId "com.thyrocare.btechapp"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 168
-        versionName "2.9.7"
+        versionCode 169
+        versionName "2.9.8"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -180,8 +180,11 @@ dependencies {
     implementation('com.clevertap.android:clevertap-android-sdk:4.2.0') {
         exclude group: 'com.android.installreferrer'
     }
-
+    //TODO Firebase performance monitoring dependencies
+    implementation platform('com.google.firebase:firebase-bom:30.4.0')
+    implementation 'com.google.firebase:firebase-perf'
 }
 
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.firebase-perf'

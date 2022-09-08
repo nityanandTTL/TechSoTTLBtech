@@ -423,7 +423,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         } else {
             if (Constants.isWOEDone) {
                 Constants.isWOEDone = false;
-               // ReloadActivity();
+                // ReloadActivity();
                 // fetchData();
             }
         }
@@ -788,13 +788,6 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
 
                 @Override
                 public void onCallCustomer(OrderVisitDetailsModel orderVisitDetailsModels) {
-
-               /*     try {
-                        callgetDispositionData(orderVisitDetailsModels);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }*/
-
                     if (isNetworkAvailable(activity) && connectionDetector.isConnectingToInternet()) {
                         if (!InputUtils.isNull(orderVisitDetailsModels.getAllOrderdetails().get(0).getPhone()) &&
                                 (!InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModels.getAllOrderdetails().get(0).getMobile(), orderVisitDetailsModels
@@ -1425,7 +1418,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
     }
 
     private void ProceedToArriveScreen(OrderVisitDetailsModel orderVisitDetailsModel, boolean OpenMap) {
-        boolean test=false;
+        boolean test = false;
         try {
             startTrackerService();
             SendinglatlongOrderAllocation(orderVisitDetailsModel, 7);
@@ -1435,10 +1428,6 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
 //            BundleConstants.PEDSAOrder = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder();
             appPreferenceManager.setPE_DSA(orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder());
             new LogUserActivityTagging(activity, BundleConstants.WOE, remarks);
-            if  (test){
-                Intent PE_PostOrderDetailsIntent= new Intent(mActivity,PE_PostPatientDetailsActivity.class);
-                startActivity(PE_PostOrderDetailsIntent);
-            }
 //            Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
             Intent intentNavigate = new Intent(activity, StartAndArriveActivity.class);
             intentNavigate.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
