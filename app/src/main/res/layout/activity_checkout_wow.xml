@@ -53,7 +53,10 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/ll_Note"
         android:layout_below="@+id/spn_collection"
-        android:layout_margin="10dp" />
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp" />
 
     <LinearLayout
         android:id="@+id/ll_Note"

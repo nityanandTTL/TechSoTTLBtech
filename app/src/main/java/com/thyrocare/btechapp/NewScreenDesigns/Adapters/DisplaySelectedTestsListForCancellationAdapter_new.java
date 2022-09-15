@@ -11,11 +11,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
-import com.sdsmdg.tastytoast.TastyToast;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.delegate.RemoveSelectedTestFromListDelegate_new;
@@ -166,28 +163,28 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
         holder.imgRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (peselectedTestsList.size() == 1) {
-                    TastyToast.makeText(activity, ConstantsMessages.CannotemtytestlistMsg, TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
-                } else {
-                    alertDialogBuilder = new AlertDialog.Builder(activity);
-                    alertDialogBuilder
-                            .setMessage(SuretoRemoveTestMsg)
-                            .setCancelable(false)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    peselectedTestsList.remove(pos);
-                                    removeSelectedTestFromListDelegate.onRemovePEButtonClicked(peselectedTestsList);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
-                }
+                alertDialogBuilder = new AlertDialog.Builder(activity);
+                alertDialogBuilder
+                        .setMessage(SuretoRemoveTestMsg)
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                peselectedTestsList.remove(pos);
+                                removeSelectedTestFromListDelegate.onRemovePEButtonClicked(peselectedTestsList);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+                    /*selectedTestsListArr.remove(pos);
+                    removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr);*/
+
             }
         });
     }
@@ -244,17 +241,14 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
                             alertDialog.show();
 
                         } else {
-                            if (selectedTestsListArr.size() == 1) {
-                                TastyToast.makeText(activity, "At least one test is mandatory", Toast.LENGTH_SHORT, TastyToast.CONFUSING).show();
-                            } else {
-                                alertDialogBuilder = new AlertDialog.Builder(activity);
-                                alertDialogBuilder
-                                        .setMessage(SuretoRemoveTestMsg)
-                                        .setCancelable(false)
-                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                String Tests = "";
-                                                System.out.println("<<<<<<<<<<<<<<<<" + holder.txtTestName.getText().toString() + ">>>>>>>>>>>>>>>>>>>" + selectedTestsListArr.get(pos).getDescription());
+                            alertDialogBuilder = new AlertDialog.Builder(activity);
+                            alertDialogBuilder
+                                    .setMessage(SuretoRemoveTestMsg)
+                                    .setCancelable(false)
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            String Tests = "";
+                                            System.out.println("<<<<<<<<<<<<<<<<" + holder.txtTestName.getText().toString() + ">>>>>>>>>>>>>>>>>>>" + selectedTestsListArr.get(pos).getDescription());
                                             /*if (checkTest(holder.txtTestName.getText().toString(), selectedTestsListArr)) {
 
                                                 Tests = TextUtils.join(",", newDistest);
@@ -266,33 +260,31 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
                                                 removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr, Tests);
                                             }*/
 
-                                                if (!InputUtils.isNull(selectedTestsListArr.get(pos).getDescription()) ? holder.txtTestName.getText().toString().trim().equalsIgnoreCase(selectedTestsListArr.get(pos).getDescription())
-                                                        : holder.txtTestName.getText().toString().trim().equalsIgnoreCase(newDistest.get(pos))) {
-                                                    selectedTestsListArr.remove(pos);
-                                                    newDistest.remove(pos);
-                                                    Tests = TextUtils.join(",", newDistest);
-                                                    selectedTest = Tests;
-                                                    removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr, Tests);
-                                                } else {
-                                                    newDistest.remove(pos);
-                                                    selectedTestsListArr.remove(pos);
-                                                    Tests = TextUtils.join(",", newDistest);
-                                                    selectedTest = Tests;
-                                                    removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr, Tests);
-                                                }
-                                                dialog.dismiss();
+                                            if (!InputUtils.isNull(selectedTestsListArr.get(pos).getDescription()) ? holder.txtTestName.getText().toString().trim().equalsIgnoreCase(selectedTestsListArr.get(pos).getDescription())
+                                                    : holder.txtTestName.getText().toString().trim().equalsIgnoreCase(newDistest.get(pos))) {
+                                                selectedTestsListArr.remove(pos);
+                                                newDistest.remove(pos);
+                                                Tests = TextUtils.join(",", newDistest);
+                                                selectedTest = Tests;
+                                                removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr, Tests);
+                                            } else {
+                                                newDistest.remove(pos);
+                                                selectedTestsListArr.remove(pos);
+                                                Tests = TextUtils.join(",", newDistest);
+                                                selectedTest = Tests;
+                                                removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr, Tests);
                                             }
-                                        })
-                                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                AlertDialog alertDialog = alertDialogBuilder.create();
-                                alertDialog.show();
-                            }
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+                            alertDialog.show();
                         }
-
                         /*selectedTestsListArr.remove(pos);
                         removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr);*/
                     } else {

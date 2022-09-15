@@ -2,8 +2,8 @@
   <library name="Gradle: com.mindorks:paracamera:0.2.2@aar">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f69dd864df795096f87e27daab96bade/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f69dd864df795096f87e27daab96bade/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f69dd864df795096f87e27daab96bade/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f69dd864df795096f87e27daab96bade/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

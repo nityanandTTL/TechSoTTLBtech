@@ -117,6 +117,7 @@
     <color name="brown_1">#FFF5DA</color>
     <color name="grey_light">#F0F0F0</color>
     <color name="grey_dark">#37474F</color>
+    <color name="PE_green">#0e857e</color>
 
 
 </resources>

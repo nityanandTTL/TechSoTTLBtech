@@ -1,5 +1,7 @@
 package com.thyrocare.btechapp.BtechInterfaces;
 
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_PEPostCheckoutOrderResponseModel;
+import com.thyrocare.btechapp.models.api.request.GetPE_PostCheckOutPatientModel;
 import com.thyrocare.btechapp.models.api.response.CouponCodeResponseModel;
 import com.thyrocare.btechapp.models.api.response.PEQrCodeResponse;
 import com.thyrocare.btechapp.models.api.response.PEVerifyQRResponseModel;
@@ -27,6 +29,22 @@ public class AppInterfaces {
 
     public interface getUpdatePaymentResponse {
         void onResponse(UpdatePaymentResponseModel response);
+    }
+
+    public interface getPostPatientDetailsResponse {
+        void getPostPatientResponse(Get_PEPostCheckoutOrderResponseModel get_pePostCheckoutOrderResponseModel);
+    }
+
+    public interface PE_postPatientDetailsAdapterClick{
+        void selectPatientDetailsClick();
+        void editPatientDetailsClick();
+    }
+
+    public  interface getBenList{
+        void getBeneficiaryList(GetPE_PostCheckOutPatientModel responseModel);
+    }
+    public interface PatientSelector{
+        void addPatient(GetPE_PostCheckOutPatientModel addpatientModel);
     }
 
 }

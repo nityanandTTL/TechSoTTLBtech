@@ -10,6 +10,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_Leave_Ap
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_cash_register_details_Model;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_deposite_details_model;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.ServedOrderResponseModel;
+import com.thyrocare.btechapp.models.api.request.GetPE_PostCheckOutPatientModel;
 import com.thyrocare.btechapp.models.api.request.MaterialorderRequestModel;
 import com.thyrocare.btechapp.models.api.request.OlcStartRequestModel;
 import com.thyrocare.btechapp.models.api.response.BankMasterResponseModel;
@@ -341,5 +342,9 @@ public interface GetAPIInterface {
     @Headers({"Content-Type: application/json", "X-source:Thyrocare"})
     @GET("api/integration/v1/thyrocare/validate-qr")
     Call<PEVerifyQRResponseModel> peVerifyQR(@Query("partner_order_id") String orderno);
+
+    @Headers({"Content-Type: application/json", "X-source:Thyrocare"})
+    @GET("api/partner-integration/v1/{order_id}/patients")
+    Call<GetPE_PostCheckOutPatientModel> getPostCheckoutPatientList(@Path("order_no") String orderno, @Header("x-api-auth") String accessToken);
 }
 

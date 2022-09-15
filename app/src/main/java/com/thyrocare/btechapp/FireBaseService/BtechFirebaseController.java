@@ -14,6 +14,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.AddEditBenificaryActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
+import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.models.api.response.CouponCodeResponseModel;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
@@ -64,6 +66,19 @@ public class BtechFirebaseController {
                                             responseModel.setDiscount(InputUtils.isNull(testlist.get(i).get("Discount")) ? 0 : Integer.parseInt(testlist.get(i).get("Discount")));
                                             responseModel.setStatus(Boolean.parseBoolean(testlist.get(i).get("Status")));
                                         }
+                                        model.Data.add(responseModel);
+                                    }else if (Boolean.parseBoolean(testlist.get(i).get("StageCoupon")) &&
+                                            !InputUtils.CheckEqualIgnoreCase(EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD)), (EncryptionUtils.Dcrp_Hex(activity.getString(R.string.BASE_URL_TOCHECK)))
+                                            ))
+                                    {
+                                        responseModel = new CouponCodeResponseModel.Coupons();
+                                        responseModel.setCouponCode(testlist.get(i).get("CouponCode"));
+                                        responseModel.setCouponHead(testlist.get(i).get("CouponHead"));
+                                        responseModel.setCouponSubHead(testlist.get(i).get("CouponSubHead"));
+                                        responseModel.setMinRate(InputUtils.isNull(testlist.get(i).get("MinRate")) ? 0 : Integer.parseInt(testlist.get(i).get("MinRate")));
+                                        responseModel.setMaxRate(InputUtils.isNull(testlist.get(i).get("MaxRate")) ? 0 : Integer.parseInt(testlist.get(i).get("MaxRate")));
+                                        responseModel.setDiscount(InputUtils.isNull(testlist.get(i).get("Discount")) ? 0 : Integer.parseInt(testlist.get(i).get("Discount")));
+                                        responseModel.setStageCoupon(Boolean.parseBoolean(testlist.get(i).get("StageCoupon")));
                                         model.Data.add(responseModel);
                                     }
 

@@ -30,6 +30,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonRespon
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.EmailValidationResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetBtechCertifcateResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_PEPostCheckoutOrderResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.MainMaterialModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.NotificationMappingResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.ResponseModel;
@@ -82,6 +83,7 @@ import com.thyrocare.btechapp.models.api.request.StockAvailabilityRequestModel;
 import com.thyrocare.btechapp.models.api.request.TCVerifyCouponRequestModel;
 import com.thyrocare.btechapp.models.api.request.Tsp_Send_RequestModel;
 import com.thyrocare.btechapp.models.api.request.UpdateMaterial;
+import com.thyrocare.btechapp.models.api.response.AddNewPostCheckoutBenResponseModel;
 import com.thyrocare.btechapp.models.api.response.AddOnResponseModel;
 import com.thyrocare.btechapp.models.api.response.CartAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel1;
@@ -518,4 +520,7 @@ public interface PostAPIInterface {
     @Headers({"Content-Type: application/json"})
     @POST("api/OrderAllocation/Updatepayment/{Orderno}")
     Call<UpdatePaymentResponseModel> updatePayment(@Path("Orderno") String orderno);
+
+    @POST("api/partner-integration/v1/order/patients")
+    Call<AddNewPostCheckoutBenResponseModel> addnewPatient(@Body JsonObject jsonObject);
 }

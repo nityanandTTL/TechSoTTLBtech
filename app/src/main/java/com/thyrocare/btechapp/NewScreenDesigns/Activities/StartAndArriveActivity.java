@@ -304,7 +304,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 //            if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
             if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                btn_floating_add_ben.setVisibility(View.GONE);
+                btn_floating_add_ben.setVisibility(View.VISIBLE);
 //            } else if (BundleConstants.isPEPartner) {
             } else if (appPreferenceManager.isPEPartner()) {
                 btn_floating_add_ben.setVisibility(View.VISIBLE);
@@ -773,7 +773,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
             }
         });
 
-        recyle_OrderDetail.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        //TODO this below code is dumb and not needed
+
+/*        recyle_OrderDetail.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -792,7 +794,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 //                            if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
                             if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
 //                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                                btn_floating_add_ben.setVisibility(View.GONE);
+                                btn_floating_add_ben.setVisibility(View.VISIBLE);
 //                            } else if (BundleConstants.isPEPartner) {
                             } else if (appPreferenceManager.isPEPartner()) {
                                 btn_floating_add_ben.setVisibility(View.VISIBLE);
@@ -814,7 +816,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 //                            if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
                             if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
 //                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                                btn_floating_add_ben.setVisibility(View.GONE);
+                                btn_floating_add_ben.setVisibility(View.VISIBLE);
                             } else if (appPreferenceManager.isPEPartner()) {
                                 btn_floating_add_ben.setVisibility(View.VISIBLE);
                             } else {
@@ -831,9 +833,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
 //                        if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
                         if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
 //                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                            btn_floating_add_ben.setVisibility(View.GONE);
+                            btn_floating_add_ben.setVisibility(View.VISIBLE);
                         } else if (appPreferenceManager.isPEPartner()) {
-                            btn_floating_add_ben.setVisibility(View.GONE);
+                            btn_floating_add_ben.setVisibility(View.VISIBLE);
                         } else {
                             btn_floating_add_ben.setVisibility(View.GONE);
                         }
@@ -848,7 +850,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-
+*/
 
     }
 
@@ -1757,10 +1759,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 } else {
                     txt_amount.setText("Paid");
                 }
-
                 if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                    btn_floating_add_ben.setVisibility(View.GONE);
+                    btn_floating_add_ben.setVisibility(View.VISIBLE);
 //            } else if (BundleConstants.isPEPartner) {
                 } else if (appPreferenceManager.isPEPartner()) {
                     btn_floating_add_ben.setVisibility(View.VISIBLE);
@@ -3054,7 +3055,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 //                if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
                 if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
 //                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                    btn_floating_add_ben.setVisibility(View.GONE);
+                    btn_floating_add_ben.setVisibility(View.VISIBLE);
 //                } else if (BundleConstants.isPEPartner) {
                 } else if (appPreferenceManager.isPEPartner()) {
                     btn_floating_add_ben.setVisibility(View.VISIBLE);

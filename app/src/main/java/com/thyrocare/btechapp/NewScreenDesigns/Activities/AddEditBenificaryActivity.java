@@ -311,7 +311,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         //fungible
 //        if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) { //to check PEDSA order
         if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) { //to check PEDSA order
-            imgBenAddTests.setVisibility(View.GONE);
+            imgBenAddTests.setVisibility(View.VISIBLE);
 //        } else if (BundleConstants.isPEPartner) {//to check pe order
         } else if (appPreferenceManager.isPEPartner()) {//to check pe order
             imgBenAddTests.setVisibility(View.VISIBLE);
@@ -826,7 +826,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
             @Override
             public void onTCCouponVerification(CouponCodeResponseModel.Coupons verifyTcCoupon) {
-                if (SelectedTest_TCPrice <= verifyTcCoupon.getMaxRate() && SelectedTest_TCPrice > verifyTcCoupon.getMinRate()) {
+                if (SelectedTest_TCPrice < verifyTcCoupon.getMaxRate() && SelectedTest_TCPrice > verifyTcCoupon.getMinRate()) {
                     if (bottomSheet_Coupon_Dialog.isShowing())
                         bottomSheet_Coupon_Dialog.dismiss();
                     int discountedPrice = 0;

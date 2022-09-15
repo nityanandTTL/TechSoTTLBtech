@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".NewScreenDesigns.Activities.PE_PostPatientDetailsActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcl_pePostCheckOutOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:itemCount="5"
+        tools:listitem="@layout/post_checkout_singleview" />
+
+
+    <TextView
+        android:id="@+id/tv_addbenDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rl_orderEventsHandler"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="@dimen/_5sdp"
+        android:background="@color/white"
+        android:gravity="bottom|center"
+        android:paddingTop="@dimen/_8sdp"
+        android:text="Please add all beneficiary details"
+        android:textColor="@color/black"
+        android:textSize="@dimen/label" />
+
+
+        <RelativeLayout
+            android:id="@+id/rl_orderEventsHandler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_order_release"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/rounded_background_green_2"
+                android:gravity="center"
+                android:text="Order release"
+                android:textAllCaps="false"
+                android:textColor="@color/bg_new_color"
+                android:textSize="@dimen/label"
+                android:textStyle="bold" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_order_release"
+                android:gravity="bottom"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/tv_amount"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/bg_new_color"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_arrive_proceed"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
+                    android:drawableTint="@color/bg_new_color"
+                    android:gravity="center"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:text="@string/start"
+                    android:textAllCaps="false"
+                    android:textColor="@color/bg_new_color"
+                    android:textSize="@dimen/label" />
+
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+</RelativeLayout>

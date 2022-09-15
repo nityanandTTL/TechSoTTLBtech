@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_margin="@dimen/_5sdp"
+    android:gravity="bottom"
+    android:orientation="vertical">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Patients"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="Select patients that you want to add for this test"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/_12sdp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_dismiss"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_gravity="end|center_vertical"
+            android:src="@drawable/ic_dialog_close_dark"
+            app:tint="@color/black" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:background="#f3f7ff"
+        android:orientation="vertical"
+        android:padding="@dimen/_5sdp">
+
+        <TextView
+            android:id="@+id/tv_testname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test name"
+            android:textColor="@color/colorSecondaryDark"
+            android:textSize="@dimen/_20sdp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginVertical="@dimen/_15sdp"
+        android:id="@+id/tv_nodatafound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No data found"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_25sdp"
+        android:visibility="gone"
+        android:textStyle="bold"/>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_mainAddPatient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:visibility="visible"
+        android:gravity="bottom">
+
+        <RelativeLayout
+            android:id="@+id/rl_addpatient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="8dp"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/iv_addben"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/new_ben" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_toRightOf="@+id/iv_addben"
+                android:text="Add new patient"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+            <ImageView
+                android:id="@+id/iv_addnewben"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_addpe_pe_patientdetails" />
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/rl_addpatient"
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcl_ben_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                tools:itemCount="5"
+                tools:listitem="@layout/single_ben_detail" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_addPatient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_addpatient"
+            android:orientation="vertical"
+            android:padding="@dimen/_10sdp"
+            android:visibility="gone">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_10sdp"
+                app:boxStrokeColor="@color/colorAccent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_patientname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits="@string/Namevalidation"
+                    android:hint="Enter name"
+                    android:inputType="text"
+                    android:textColor="@color/black" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Age"
+                    app:boxStrokeColor="@color/PE_green">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_patientage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_4sdp"
+                        android:digits="0123456789"
+                        android:maxLength="2"
+                        android:text="1235"
+                        android:textColor="@color/black" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/tv_male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/pe_text_background"
+                    android:backgroundTint="@color/colorAccent"
+                    android:gravity="center_horizontal"
+                    android:text="Male"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/tv_female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@null"
+                    android:background="@drawable/pe_text_background"
+                    android:gravity="center_horizontal"
+                    android:text="Female"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/btn_addPatient"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@drawable/rounded_background_green_2"
+                android:backgroundTint="@color/colorAccent"
+                android:letterSpacing="0.05"
+                android:text="Save Details"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@drawable/rounded_background_green_2"
+            android:backgroundTint="@color/colorAccent"
+            android:letterSpacing="0.05"
+            android:text="Save Details"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

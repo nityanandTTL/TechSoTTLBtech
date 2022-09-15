@@ -14,11 +14,22 @@ public class CouponCodeResponseModel {
     }
 
     public static class Coupons {
-        String CouponCode, CouponSubHead, CouponHead;
-        Boolean Status;
+        String CouponCode;
+        String CouponSubHead;
+        String CouponHead;
+
+        Boolean Status,StageCoupon;
         int MinRate;
         int MaxRate;
         int Discount;
+
+        public boolean getStageCoupon() {
+            return StageCoupon;
+        }
+
+        public void setStageCoupon(boolean stageCoupon) {
+            StageCoupon = stageCoupon;
+        }
 
         public int getDiscount() {
             return Discount;

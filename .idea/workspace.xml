@@ -18,15 +18,142 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3a4f3204-c669-4a11-9e9f-d466daba4f38" name="Default Changelist" comment="V2.7.2 DsA">
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__D__Nitesh_T0763_StudioProjects_TechSoBTechApp_app_libs_httpcore_4_4_4_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__D__Nitesh_T0763_StudioProjects_TechSoBTechApp_app_libs_httpmime_4_3_6_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_activity_activity_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_activity_activity_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_appcompat_appcompat_1_2_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_appcompat_appcompat_1_2_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_appcompat_appcompat_resources_1_2_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_appcompat_appcompat_resources_1_2_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_arch_core_core_runtime_2_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_arch_core_core_runtime_2_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_asynclayoutinflater_asynclayoutinflater_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_asynclayoutinflater_asynclayoutinflater_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_cardview_cardview_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_cardview_cardview_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_coordinatorlayout_coordinatorlayout_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_coordinatorlayout_coordinatorlayout_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_core_core_1_3_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_core_core_1_3_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_cursoradapter_cursoradapter_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_cursoradapter_cursoradapter_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_customview_customview_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_customview_customview_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_documentfile_documentfile_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_documentfile_documentfile_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_drawerlayout_drawerlayout_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_drawerlayout_drawerlayout_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_fragment_fragment_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_fragment_fragment_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_interpolator_interpolator_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_interpolator_interpolator_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_legacy_legacy_support_core_ui_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_legacy_legacy_support_core_ui_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_legacy_legacy_support_core_utils_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_legacy_legacy_support_core_utils_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_legacy_legacy_support_v4_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_legacy_legacy_support_v4_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_extensions_2_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_extensions_2_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_2_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_2_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_core_2_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_core_2_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_process_2_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_process_2_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_runtime_2_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_runtime_2_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_service_2_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_service_2_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_viewmodel_2_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_viewmodel_2_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_loader_loader_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_loader_loader_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_localbroadcastmanager_localbroadcastmanager_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_localbroadcastmanager_localbroadcastmanager_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_media_media_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_media_media_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_mediarouter_mediarouter_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_mediarouter_mediarouter_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_multidex_multidex_2_0_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_multidex_multidex_2_0_1_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_palette_palette_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_palette_palette_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_print_print_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_print_print_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_recyclerview_recyclerview_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_recyclerview_recyclerview_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_savedstate_savedstate_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_savedstate_savedstate_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_slidingpanelayout_slidingpanelayout_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_slidingpanelayout_slidingpanelayout_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_swiperefreshlayout_swiperefreshlayout_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_swiperefreshlayout_swiperefreshlayout_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_test_espresso_espresso_core_3_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_test_espresso_espresso_core_3_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_test_espresso_espresso_idling_resource_3_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_test_espresso_espresso_idling_resource_3_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_test_monitor_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_test_monitor_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_test_runner_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_test_runner_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_transition_transition_1_2_0_rc01_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_transition_transition_1_2_0_rc01_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_animated_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_animated_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_versionedparcelable_versionedparcelable_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_versionedparcelable_versionedparcelable_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_viewpager_viewpager_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_viewpager_viewpager_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_ablanco_zoomy_zoomy_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_ablanco_zoomy_zoomy_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_akexorcist_RoundCornerProgressBar_2_0_3_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_akexorcist_RoundCornerProgressBar_2_0_3_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_alibaba_android_ultraviewpager_1_0_7_7_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_alibaba_android_ultraviewpager_1_0_7_7_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_volley_volley_1_1_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_volley_volley_1_1_1_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_cheekiat_slideview_1_6_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_cheekiat_slideview_1_6_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_clevertap_android_clevertap_android_sdk_4_2_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_clevertap_android_clevertap_android_sdk_4_2_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_firebase_geofire_android_2_3_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_firebase_geofire_android_2_3_1_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_bumptech_glide_gifdecoder_4_9_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_bumptech_glide_gifdecoder_4_9_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_bumptech_glide_glide_4_9_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_bumptech_glide_glide_4_9_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_dhaval2404_imagepicker_1_7_5_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_dhaval2404_imagepicker_1_7_5_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_tcking_viewquery_1_6_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_tcking_viewquery_1_6_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_auth_18_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_auth_18_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_auth_api_phone_17_4_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_auth_api_phone_17_4_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_auth_base_17_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_auth_base_17_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_clearcut_17_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_clearcut_17_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_flags_17_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_flags_17_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_gcm_17_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_gcm_17_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_iid_17_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_iid_17_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_location_17_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_location_17_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_maps_17_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_maps_17_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_phenotype_17_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_phenotype_17_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_places_placereport_17_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_places_placereport_17_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_vision_20_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_vision_20_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_vision_common_19_0_2_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_vision_common_19_0_2_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_libraries_places_places_2_2_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_libraries_places_places_2_2_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_material_material_1_0_0_beta01_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_material_material_1_0_0_beta01_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_firebase_firebase_crash_16_2_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_firebase_firebase_crash_16_2_1_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_intuit_sdp_sdp_android_1_0_6_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_intuit_sdp_sdp_android_1_0_6_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_journeyapps_zxing_android_embedded_3_5_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_journeyapps_zxing_android_embedded_3_5_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_microsoft_projectoxford_face_1_4_3_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_microsoft_projectoxford_face_1_4_3_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_mikhaellopez_circularimageview_3_0_2_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_mikhaellopez_circularimageview_3_0_2_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_mindorks_paracamera_0_2_2_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_mindorks_paracamera_0_2_2_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_ramotion_foldingcell_folding_cell_1_2_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_ramotion_foldingcell_folding_cell_1_2_1_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_scottyab_rootbeer_lib_0_0_8_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_scottyab_rootbeer_lib_0_0_8_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_sdsmdg_tastytoast_tastytoast_0_1_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_sdsmdg_tastytoast_tastytoast_0_1_1_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_squareup_okhttp3_logging_interceptor_3_12_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_squareup_okhttp3_logging_interceptor_3_12_1.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_squareup_okhttp3_okhttp_3_12_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_squareup_okhttp3_okhttp_3_12_1.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__gun0912_ted_tedpermission_2_2_2_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__gun0912_ted_tedpermission_2_2_2_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__pl_droidsonroids_gif_android_gif_drawable_1_2_10_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__pl_droidsonroids_gif_android_gif_drawable_1_2_10_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/TechSoBTechApp.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.androidTest.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.main.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.unitTest.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.main.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.test.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/release/output.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/BtechInterfaces/AppInterfaces.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/BtechInterfaces/AppInterfaces.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Controller/PEQrCodeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Controller/PEQrCodeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Controller/RemoveUrineSampleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Controller/RemoveUrineSampleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/FireBaseService/BtechFirebaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/FireBaseService/BtechFirebaseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/DisplaySelectedTestsListForCancellationAdapter_new.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/DisplaySelectedTestsListForCancellationAdapter_new.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Utils/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Utils/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Retrofit/GetAPIInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Retrofit/GetAPIInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Retrofit/PostAPIInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Retrofit/PostAPIInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/models/api/response/CouponCodeResponseModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/models/api/response/CouponCodeResponseModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/models/api/response/PEQrCodeResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/models/api/response/PEQrCodeResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/models/api/response/PEVerifyQRResponseModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/models/api/response/PEVerifyQRResponseModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/models/api/response/UpdatePaymentResponseModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/models/api/response/UpdatePaymentResponseModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_checkout_wow.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_checkout_wow.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_remove_test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_remove_test.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/pe_qr_code.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/pe_qr_code.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/qr_code_verifiy_payment_dialog.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/qr_code_verifiy_payment_dialog.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid8380.hprof" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\T0763\.android\avd\Pixel_4_XL_API_32.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\T0763\.android\avd\Pixel_4a.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -56,10 +183,10 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
+        <option value="layoutResourceFile" />
+        <option value="layoutResourceFile_vertical" />
         <option value="resourceFile" />
         <option value="Class" />
-        <option value="layoutResourceFile_vertical" />
-        <option value="layoutResourceFile" />
       </list>
     </option>
   </component>
@@ -83,9 +210,6 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/app/build.gradle" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/gradle.properties" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/build.gradle" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a7eb4385d56a6612b833292cc38048ca/jars/classes.jar!/androidx/fragment/app/FragmentActivity.class" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProjectId" id="1Zk9OrxNpH2XQnN3uwuIE0YCEsf" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -97,9 +221,9 @@
   </component>
   <component name="PropertiesComponent">
     <property name="AnalyzeApkAction.lastApkPath" value="$PROJECT_DIR$/app/release/BtechStaging.apk" />
-    <property name="ApkExportedModule" value="TechSoBTechApp.app" />
+    <property name="ApkExportedModule" value="BTech_add_patient_details_post_checkout.app" />
     <property name="BundleExportedModule" value="Btech.app" />
-    <property name="DEBUGGABLE_DEVICE" value="emulator-5554" />
+    <property name="DEBUGGABLE_DEVICE" value="Pixel_4_XL_API_32 [emulator-5554]" />
     <property name="DEBUGGABLE_PROCESS" value="com.thyrocare.btechapp" />
     <property name="DEBUGGER_ID" value="Auto" />
     <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Pixel_2_XL_API_30" />
@@ -131,8 +255,6 @@
     <property name="android-custom-viewC:/Users/2122E/AppData/Local/Android/Sdk/sources/android-30/android/widget/AbsListView.java_SELECTED" value="AbsListView" />
     <property name="android-custom-viewC:/Users/T0763/AppData/Local/Android/Sdk/sources/android-30/android/view/View.java_SELECTED" value="View" />
     <property name="android-custom-viewC:/Users/T0763/AppData/Local/Android/Sdk/sources/android-30/android/view/View.java_View_DIMENSIONS" value="1080&#10;1920" />
-    <property name="android-custom-viewC:/Users/T0763/AppData/Local/Android/Sdk/sources/android-30/android/widget/ScrollView.java_SELECTED" value="ScrollView" />
-    <property name="android-custom-viewC:/Users/T0763/AppData/Local/Android/Sdk/sources/android-30/android/widget/ScrollView.java_ScrollView_DIMENSIONS" value="1317&#10;1110" />
     <property name="android-custom-viewD:/Android projects/AndroidProjects/TechSoBTechApp/app/src/main/java/com/thyrocare/btechapp/customview/RoundedImageView.java_SELECTED" value="RoundedImageView" />
     <property name="android-custom-viewD:/Android projects/TechSoBTechApp2.7.6/app/src/main/java/com/thyrocare/btechapp/customview/CustomView.java_SELECTED" value="CustomView" />
     <property name="android.project.structure.last.selected" value="SDK Location" />
@@ -144,7 +266,7 @@
     <property name="extract.method.default.visibility" value="private" />
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/res/drawable" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/res/drawable" />
+    <property name="last_opened_file_path" value="D:/Nitesh T0763/StudioProjects/Drtapp" />
     <property name="multi-representation-previewC:/Users/2122E/.gradle/caches/modules-2/files-2.1/androidx.appcompat/appcompat/1.2.0-alpha03/361eb1fc1c5442a19c7bd5ea4ba214d08c60dac3/appcompat-1.2.0-alpha03-sources.jar!/androidx/appcompat/widget/Toolbar.java_selected" value="Custom views" />
     <property name="multi-representation-previewC:/Users/2122E/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.0.0/2151d26c3b241f0a887f2dadb9ab091649fcf020/recyclerview-1.0.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_selected" value="Custom views" />
     <property name="multi-representation-previewC:/Users/2122E/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_selected" value="Custom views" />
@@ -163,7 +285,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="memory.settings" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="PsdUISettings">
@@ -172,11 +294,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
-      <recent name="com.thyrocare.btechapp.models.api.request" />
-      <recent name="com.thyrocare.btechapp.models.api.response" />
-      <recent name="com.thyrocare.btechapp.FireBaseService" />
-      <recent name="com.thyrocare.btechapp.NewScreenDesigns.Controllers" />
       <recent name="com.thyrocare.btechapp.NewScreenDesigns.Adapters" />
+      <recent name="com.thyrocare.btechapp.models.api.response" />
+      <recent name="com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel" />
+      <recent name="com.thyrocare.btechapp.models.api.request" />
+      <recent name="com.thyrocare.btechapp.NewScreenDesigns.Controllers" />
     </key>
     <key name="android.template.packageName">
       <recent name="com.thyrocare.btechapp.NewScreenDesigns" />
@@ -187,11 +309,11 @@
       <recent name="com.thyrocare.btechapp.NewScreenDesigns.Activities" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\T0763\Desktop\BTech add patient details post checkout\app\src\main\res\drawable" />
       <recent name="D:\Nitesh T0763\StudioProjects\TechSoBTechApp\app\src\main\res\drawable" />
       <recent name="D:\Nitesh T0763\StudioProjects\TechSoBTechApp\app\src\main\java\com\thyrocare\btechapp\models\api\response" />
       <recent name="D:\Nitesh T0763\StudioProjects\TechSoBTechApp\app\src\main\res\layout" />
       <recent name="D:\Nitesh T0763\StudioProjects\TechSoBTechApp\app\src\main\java\com\thyrocare\btechapp\Controller" />
-      <recent name="C:\Users\T0763\Desktop\TechSoBTechApp TC coupon and map PE events\app\src\main\res\drawable" />
     </key>
     <key name="android.template.1271067996">
       <recent name="com.thyrocare.btechapp.activity" />
@@ -202,6 +324,9 @@
       <recent name="D:\Android projects\Latest Btech App_NK\BtechAppNew\app\src\main\res\drawable-ldrtl-xxxhdpi" />
       <recent name="D:\Android projects\Latest Btech App_NK\Latest Btech App\app" />
       <recent name="D:\Android projects\Latest Btech App_NK\Latest Btech App\app\src\main\res\drawable" />
+    </key>
+    <key name="android.template.552543500">
+      <recent name="com.thyrocare.btechapp.NewScreenDesigns.Activities" />
     </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="com.thyrocare.btechapp.Controller" />
@@ -234,7 +359,7 @@
       </method>
     </configuration>
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
-      <module name="TechSoBTechApp.app" />
+      <module name="BTech_add_patient_details_post_checkout.app" />
       <option name="DEPLOY" value="true" />
       <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
       <option name="DEPLOY_AS_INSTANT" value="false" />
@@ -535,7 +660,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/DisplaySelectedTestsListForCancellationAdapter_new.java</url>
-          <line>132</line>
+          <line>129</line>
           <option name="timeStamp" value="1666" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
@@ -545,7 +670,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/DisplaySelectedTestsListForCancellationAdapter_new.java</url>
-          <line>150</line>
+          <line>147</line>
           <option name="timeStamp" value="1678" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
@@ -635,18 +760,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/FireBaseService/BtechFirebaseController.java</url>
-          <line>70</line>
+          <line>85</line>
           <option name="timeStamp" value="1797" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/CouponCodeAdapter.java</url>
           <line>33</line>
           <option name="timeStamp" value="1798" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/FireBaseService/BtechFirebaseController.java</url>
-          <line>55</line>
-          <option name="timeStamp" value="1807" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/DisplayAllTestApdter.java</url>
@@ -680,72 +800,72 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>792</line>
+          <line>794</line>
           <option name="timeStamp" value="1816" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>814</line>
+          <line>816</line>
           <option name="timeStamp" value="1817" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>3502</line>
+          <line>3503</line>
           <option name="timeStamp" value="1822" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>2189</line>
+          <line>2190</line>
           <option name="timeStamp" value="1823" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>2164</line>
+          <line>2165</line>
           <option name="timeStamp" value="1824" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>3471</line>
+          <line>3472</line>
           <option name="timeStamp" value="1825" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>1851</line>
+          <line>1852</line>
           <option name="timeStamp" value="1826" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>1673</line>
+          <line>1685</line>
           <option name="timeStamp" value="1827" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>1811</line>
+          <line>1823</line>
           <option name="timeStamp" value="1830" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>792</line>
+          <line>799</line>
           <option name="timeStamp" value="1831" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>989</line>
+          <line>996</line>
           <option name="timeStamp" value="1832" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>1153</line>
+          <line>1160</line>
           <option name="timeStamp" value="1834" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>1179</line>
+          <line>1186</line>
           <option name="timeStamp" value="1836" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>1805</line>
+          <line>1817</line>
           <option name="timeStamp" value="1837" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
@@ -759,74 +879,64 @@
           <option name="timeStamp" value="1839" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/CheckoutWoeActivity.java</url>
-          <line>1528</line>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>493</line>
           <option name="timeStamp" value="1840" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>657</line>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>2143</line>
           <option name="timeStamp" value="1841" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/DisplaySelectedTestsListForCancellationAdapter_new.java</url>
-          <line>220</line>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>2213</line>
           <option name="timeStamp" value="1842" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
-          <line>2253</line>
+          <line>2251</line>
           <option name="timeStamp" value="1843" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/DisplaySelectedTestsListForCancellationAdapter_new.java</url>
-          <line>60</line>
+          <line>53</line>
           <option name="timeStamp" value="1844" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/DisplaySelectedTestsListForCancellationAdapter_new.java</url>
-          <line>165</line>
+          <line>80</line>
           <option name="timeStamp" value="1845" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>3352</line>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/DisplaySelectedTestsListForCancellationAdapter_new.java</url>
+          <line>194</line>
+          <option name="timeStamp" value="1847" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>314</line>
           <option name="timeStamp" value="1848" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>1426</line>
+          <line>161</line>
           <option name="timeStamp" value="1849" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>1723</line>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
+          <line>176</line>
           <option name="timeStamp" value="1850" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>284</line>
+          <line>3055</line>
           <option name="timeStamp" value="1851" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>304</line>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/PE_PostPatientDetailsActivity.java</url>
+          <line>54</line>
           <option name="timeStamp" value="1852" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>1547</line>
-          <option name="timeStamp" value="1853" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>1730</line>
-          <option name="timeStamp" value="1854" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
-          <line>1736</line>
-          <option name="timeStamp" value="1855" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

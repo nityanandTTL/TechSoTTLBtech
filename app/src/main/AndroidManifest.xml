@@ -47,6 +47,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon">
+        <activity
+            android:name=".NewScreenDesigns.Activities.PE_PostPatientDetailsActivity"
+            android:exported="false" />
         <!-- for live clevertap -->
         <!--
 <meta-data
