@@ -35,8 +35,8 @@ public class Constants {
     public static final String GETIGNINOUT = "GETIGNINOUT";
     public static final String XSource = "THYROCARE";
     public static final String clientid = "9551825306485694";
-    public static final String ARRIVED = "ARRIVED";
-    public static final String ORDER_DETAILS_MODEL = "ORDER_DETAILS_MODEL";
+    public static final String ARRIVED = "ARRIVE";
+    public static final String CONFIRM_ORDER = "Confirm Order";
     public static int ServerTime = 0;
     public static String TestingBtechID = "884544334";
     public static String StockAvialablity_TestingBtechID = "884544758";

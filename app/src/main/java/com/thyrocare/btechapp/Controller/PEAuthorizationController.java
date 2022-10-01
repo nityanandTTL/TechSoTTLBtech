@@ -2,6 +2,7 @@ package com.thyrocare.btechapp.Controller;
 
 import android.app.Activity;
 
+import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.AddEditBenificaryActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.StartAndArriveActivity;
@@ -81,7 +82,10 @@ public class PEAuthorizationController {
                             PEAuthResponseModel peAuthResponseModel = response.body();
                             if (peAuthResponseModel.isStatus() == true) {
                                 appPreferenceManager.setAuthToken(peAuthResponseModel.getData().getAuthtoken());
-                                System.out.println("shared>>>mith-----" + appPreferenceManager.getAuthToken());
+                                if (BuildConfig.DEBUG){
+                                    System.out.println("shared>>>mith-----" + appPreferenceManager.getAuthToken());
+                                }
+
                                 getPETests(flag, Str_pincode, orderNo);
 
                             } else if (peAuthResponseModel.isStatus() == false) {
@@ -109,6 +113,7 @@ public class PEAuthorizationController {
     public void getPETests(final int flag, String pincode, final String orderNo) {
 
         try {
+            globalClass.showProgressDialog(activity, ConstantsMessages.PLEASE_WAIT);
 //            if (!EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD)).equalsIgnoreCase(EncryptionUtils.Dcrp_Hex(activity.getString(R.string.BASE_URL_TOCHECK)))) {
 //                //TODO Done for staging.
 //                Str_pincode = "400072";

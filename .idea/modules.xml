@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/BTech_add_patient_details_post_checkout.iml" filepath="$PROJECT_DIR$/.idea/modules/BTech_add_patient_details_post_checkout.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/BTech_add_patient_details_post_checkout.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/BTech_add_patient_details_post_checkout.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/BTech_add_patient_details_post_checkout.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/BTech_add_patient_details_post_checkout.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/BTech_add_patient_details_post_checkout.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/BTech_add_patient_details_post_checkout.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/BTech_add_patient_details_post_checkout.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/BTech_add_patient_details_post_checkout.app.unitTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/BTech_add_patient_details_post_checkout.bil.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/BTech_add_patient_details_post_checkout.bil.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/BTech_add_patient_details_post_checkout.bil.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/BTech_add_patient_details_post_checkout.bil.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/BTech_add_patient_details_post_checkout.bil.test.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/BTech_add_patient_details_post_checkout.bil.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/btech_github.iml" filepath="$PROJECT_DIR$/.idea/modules/btech_github.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/btech_github.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/btech_github.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/btech_github.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/btech_github.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/btech_github.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/btech_github.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/btech_github.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/btech_github.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/btech_github.bil.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/btech_github.bil.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/btech_github.bil.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/btech_github.bil.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/btech_github.bil.test.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/btech_github.bil.test.iml" />
     </modules>
   </component>
 </project>

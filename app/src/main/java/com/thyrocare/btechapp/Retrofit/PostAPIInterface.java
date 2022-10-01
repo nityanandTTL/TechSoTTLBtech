@@ -30,7 +30,6 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonRespon
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.EmailValidationResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetBtechCertifcateResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_PEPostCheckoutOrderResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.MainMaterialModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.NotificationMappingResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.ResponseModel;
@@ -83,7 +82,7 @@ import com.thyrocare.btechapp.models.api.request.StockAvailabilityRequestModel;
 import com.thyrocare.btechapp.models.api.request.TCVerifyCouponRequestModel;
 import com.thyrocare.btechapp.models.api.request.Tsp_Send_RequestModel;
 import com.thyrocare.btechapp.models.api.request.UpdateMaterial;
-import com.thyrocare.btechapp.models.api.response.AddNewPostCheckoutBenResponseModel;
+import com.thyrocare.btechapp.models.api.response.AddPatientResponseModel;
 import com.thyrocare.btechapp.models.api.response.AddOnResponseModel;
 import com.thyrocare.btechapp.models.api.response.CartAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel1;
@@ -127,6 +126,8 @@ import com.thyrocare.btechapp.models.api.response.VideosResponseModel;
 import com.thyrocare.btechapp.models.data.HCWRequestModel;
 import com.thyrocare.btechapp.models.data.HCWResponseModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
+
+import org.json.JSONObject;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -521,6 +522,8 @@ public interface PostAPIInterface {
     @POST("api/OrderAllocation/Updatepayment/{Orderno}")
     Call<UpdatePaymentResponseModel> updatePayment(@Path("Orderno") String orderno);
 
-    @POST("api/partner-integration/v1/order/patients")
-    Call<AddNewPostCheckoutBenResponseModel> addnewPatient(@Body JsonObject jsonObject);
+    @Headers({"X-SOURCE: Thyrocare"})
+    @POST("api/partner-integration/v1/order/{order_id}/patients")
+    Call<AddPatientResponseModel> addNewPatient(@Body JSONObject jsonObject, @Header("X-API-AUTH") String authToken);
+
 }

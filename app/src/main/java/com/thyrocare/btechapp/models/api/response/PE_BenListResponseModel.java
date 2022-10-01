@@ -1,6 +1,6 @@
 package com.thyrocare.btechapp.models.api.response;
 
-public class AddNewPostCheckoutBenResponseModel {
+class AddNewPostCheckoutBenResponseModel {
     String status;
 
     public String getStatus() {

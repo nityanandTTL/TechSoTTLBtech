@@ -64,6 +64,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.Controller.OrderReleaseRemarksController;
 import com.thyrocare.btechapp.Controller.PEAuthorizationController;
 import com.thyrocare.btechapp.Controller.PEOrderEditController;
@@ -302,7 +303,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
             //fungible
 //            if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
-            if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
+            if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder() && orderDetailsModel.getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ARRIVE")) {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 btn_floating_add_ben.setVisibility(View.VISIBLE);
 //            } else if (BundleConstants.isPEPartner) {
@@ -772,86 +773,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
             }
         });
-
-        //TODO this below code is dumb and not needed
-
-/*        recyle_OrderDetail.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                try {
-                    if (btn_Proceed.getVisibility() == View.VISIBLE) {
-                        if (orderDetailsModel != null
-                                && orderDetailsModel.getAllOrderdetails() != null
-                                && orderDetailsModel.getAllOrderdetails().size() > 0
-                                && orderDetailsModel.getAllOrderdetails().get(0).getBenMaster() != null
-                                && orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().size() > 3) {
-
-                            //fungible
-                            //TODO hide add ben for TC PE DSA order
-                            //fungible
-//                            if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
-                            if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
-//                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                                btn_floating_add_ben.setVisibility(View.VISIBLE);
-//                            } else if (BundleConstants.isPEPartner) {
-                            } else if (appPreferenceManager.isPEPartner()) {
-                                btn_floating_add_ben.setVisibility(View.VISIBLE);
-                            } else {
-                                if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
-                                    btn_floating_add_ben.setVisibility(View.GONE);
-                                } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
-                                    if (!recyle_OrderDetail.canScrollVertically(1)) {
-                                        btn_floating_add_ben.setVisibility(View.VISIBLE);
-                                    } else {
-                                        btn_floating_add_ben.setVisibility(View.VISIBLE);
-                                    }
-                                } else {
-                                    btn_floating_add_ben.setVisibility(View.GONE);
-                                }
-                            }
-                        } else {
-                            //fungible
-//                            if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
-                            if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
-//                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                                btn_floating_add_ben.setVisibility(View.VISIBLE);
-                            } else if (appPreferenceManager.isPEPartner()) {
-                                btn_floating_add_ben.setVisibility(View.VISIBLE);
-                            } else {
-                                if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
-                                    btn_floating_add_ben.setVisibility(View.GONE);
-                                } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
-                                    btn_floating_add_ben.setVisibility(View.VISIBLE);
-                                } else {
-                                    btn_floating_add_ben.setVisibility(View.GONE);
-                                }
-                            }
-                        }
-                    } else {
-//                        if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
-                        if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
-//                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                            btn_floating_add_ben.setVisibility(View.VISIBLE);
-                        } else if (appPreferenceManager.isPEPartner()) {
-                            btn_floating_add_ben.setVisibility(View.VISIBLE);
-                        } else {
-                            btn_floating_add_ben.setVisibility(View.GONE);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
-*/
-
     }
 
     private boolean checkForTest(int value) {
@@ -1759,11 +1680,12 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 } else {
                     txt_amount.setText("Paid");
                 }
-                if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
+
+                if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder() && status.equalsIgnoreCase("ARRIVE")) {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     btn_floating_add_ben.setVisibility(View.VISIBLE);
 //            } else if (BundleConstants.isPEPartner) {
-                } else if (appPreferenceManager.isPEPartner()) {
+                } else if (appPreferenceManager.isPEPartner() && status.equalsIgnoreCase("ARRIVE")) {
                     btn_floating_add_ben.setVisibility(View.VISIBLE);
                 } else {
                     if (orderDetailsModel.getAllOrderdetails().get(0).getAmountPayable() == 0) {
@@ -3070,10 +2992,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
 //                if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
                 if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
 //                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                    btn_floating_add_ben.setVisibility(View.GONE);
+                    btn_floating_add_ben.setVisibility(View.VISIBLE);
 //                } else if (BundleConstants.isPEPartner) {
                 } else if (appPreferenceManager.isPEPartner()) {
-                    btn_floating_add_ben.setVisibility(View.VISIBLE);
+                    btn_floating_add_ben.setVisibility(View.GONE);
                 } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
                     btn_floating_add_ben.setVisibility(View.VISIBLE);
                 } else {

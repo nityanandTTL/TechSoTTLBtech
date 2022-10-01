@@ -10,9 +10,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_Leave_Ap
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_cash_register_details_Model;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_deposite_details_model;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.ServedOrderResponseModel;
-import com.thyrocare.btechapp.models.api.request.GetPE_PostCheckOutPatientModel;
-import com.thyrocare.btechapp.models.api.request.MaterialorderRequestModel;
-import com.thyrocare.btechapp.models.api.request.OlcStartRequestModel;
+import com.thyrocare.btechapp.models.api.request.GetPatientListResponseModel;
 import com.thyrocare.btechapp.models.api.response.BankMasterResponseModel;
 import com.thyrocare.btechapp.models.api.response.BtechClientsResponseModel;
 import com.thyrocare.btechapp.models.api.response.BtechCollectionsResponseModel;
@@ -44,7 +42,6 @@ import com.thyrocare.btechapp.models.api.response.PEQrCodeResponse;
 import com.thyrocare.btechapp.models.api.response.PEVerifyQRResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentModeMasterResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
-import com.thyrocare.btechapp.models.api.response.QrcodeBasedPatientDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.RemarksRequestToReleaseResponseModel;
 import com.thyrocare.btechapp.models.api.response.RemarksResponseModel;
 import com.thyrocare.btechapp.models.api.response.Tsp_ScanBarcodeResponseModel;
@@ -66,11 +63,9 @@ import com.thyrocare.btechapp.models.data.WLMISDetailsModel;
 import java.util.ArrayList;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
-import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -344,7 +339,7 @@ public interface GetAPIInterface {
     Call<PEVerifyQRResponseModel> peVerifyQR(@Query("partner_order_id") String orderno);
 
     @Headers({"Content-Type: application/json", "X-source:Thyrocare"})
-    @GET("api/partner-integration/v1/{order_id}/patients")
-    Call<GetPE_PostCheckOutPatientModel> getPostCheckoutPatientList(@Path("order_no") String orderno, @Header("x-api-auth") String accessToken);
+    @GET("api/partner-integration/v1/orders/{partner_order_id}/patients")
+    Call<GetPatientListResponseModel> getPostCheckoutPatientList(@Header("x-api-auth") String accessToken, @Path("partner_order_id") String orderID);
 }
 

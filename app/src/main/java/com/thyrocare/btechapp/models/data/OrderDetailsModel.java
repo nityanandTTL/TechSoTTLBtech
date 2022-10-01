@@ -85,6 +85,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private boolean isPEDSAOrder;
     private boolean IsPEDSATCPhlebo;
     private String Phone;
+    private String isAddOn;
 
     protected OrderDetailsModel(Parcel in) {
         super(in);
@@ -148,11 +149,19 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         PPE_AlertMsg = in.readString();
         timeSlot = in.readString();
         Phone = in.readString();
+        isAddOn = in.readString();
     }
-
 
     public OrderDetailsModel() {
         super();
+    }
+
+    public String getIsAddOn() {
+        return isAddOn;
+    }
+
+    public void setIsAddOn(String isAddOn) {
+        this.isAddOn = isAddOn;
     }
 
     public String getPhone() {
@@ -226,6 +235,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeString(PPE_AlertMsg);
         dest.writeString(timeSlot);
         dest.writeString(Phone);
+        dest.writeString(isAddOn);
     }
 
     @Override

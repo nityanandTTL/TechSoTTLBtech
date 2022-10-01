@@ -59,6 +59,7 @@ public class RemoveUrineSampleController {
                             TastyToast.makeText(activity, !InputUtils.isNull(response.body().getResponse())?response.body().getResponse().toString().trim(): ConstantsMessages.SomethingWentwrngMsg,TastyToast.LENGTH_SHORT,TastyToast.ERROR);
                         }
                     } catch (Exception e) {
+
                         e.printStackTrace();
                     }
                 }

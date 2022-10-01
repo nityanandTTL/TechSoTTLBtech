@@ -11,7 +11,6 @@
         android:id="@+id/rcl_pePostCheckOutOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:itemCount="5"
         tools:listitem="@layout/post_checkout_singleview" />
 
 
@@ -86,8 +85,8 @@
                     android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
                     android:drawableTint="@color/bg_new_color"
                     android:gravity="center"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:text="@string/start"
+                    android:paddingRight="@dimen/_8sdp"
+                    android:text="Arrive"
                     android:textAllCaps="false"
                     android:textColor="@color/bg_new_color"
                     android:textSize="@dimen/label" />

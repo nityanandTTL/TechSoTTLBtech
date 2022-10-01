@@ -50,8 +50,8 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 30 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: C./Users/T0763/Desktop/BTech add patient details post checkout/app/libs/httpcore-4.4.4.jar" level="project" />
-    <orderEntry type="library" name="Gradle: C./Users/T0763/Desktop/BTech add patient details post checkout/app/libs/httpmime-4.3.6.jar" level="project" />
+    <orderEntry type="library" name="Gradle: C./Users/T0763/Desktop/btech github/app/libs/httpcore-4.4.4.jar" level="project" />
+    <orderEntry type="library" name="Gradle: C./Users/T0763/Desktop/btech github/app/libs/httpmime-4.3.6.jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.collection:collection:1.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-encoders-proto:16.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-encoders:17.0.0" level="project" />

@@ -152,7 +152,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     private EditText edtBenAge, edtBenName;
     private ImageView imgBenGenderF, imgBenGenderM, imgReportHC, imgBenAddTests;
     private boolean isM = false;
-    private boolean isRHC = false;
+    private boolean isRHC = true;
     private String SelectedTestCode = "";
     private int CallCartAPIFlag = 0;
     private int AddRemoveTestAPIFlag = 0;
@@ -362,8 +362,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             isM = true;
             imgBenGenderM.setImageDrawable(getResources().getDrawable(R.drawable.male_icon_orange));
             imgBenGenderF.setImageDrawable(getResources().getDrawable(R.drawable.female));
-            isRHC = true;
-            imgReportHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
+            isRHC = false;
+            imgReportHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
 
 //
         } else {
@@ -2111,8 +2111,14 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                 }
                             }
                         } else {
-                            if (selectedbeneficiaryDetailsModel.getProjId().equalsIgnoreCase(result.getTstratemaster().get(j).getTestCode()) || str[i].trim().equalsIgnoreCase(result.getTstratemaster().get(j).getDescription())) {
+                            if (selectedbeneficiaryDetailsModel.getProjId().equalsIgnoreCase(result.getTstratemaster().get(j).getTestCode())) {
                                 edit_selectedTestsList.add(result.getTstratemaster().get(j));
+                            }else{
+                                for (int k = 0; k < dsaProductsResponseModelfinal.getTstratemaster().size(); k++) {
+                                    if (selectedbeneficiaryDetailsModel.getProjId().equalsIgnoreCase(dsaProductsResponseModelfinal.getTstratemaster().get(k).getTestCode())){
+                                        edit_selectedTestsList.add(dsaProductsResponseModelfinal.getTstratemaster().get(k));
+                                    }
+                                }
                             }
                         }
                     }
@@ -2553,6 +2559,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                                     testsCode = trmm.getDescription();
                                                     orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setProjId(trmm.getTestCode());
                                                 } else {
+                                                    orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setProjId("");
                                                     testsCode = trmm.getTestCode();
                                                 }
                                             } else {
@@ -2772,6 +2779,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         ArrayList<CartRequestBeneficiaryModel> beneficiariesArr = new ArrayList<>();
         cartAPIRequestModel.setVisitId(selectedTestsList.getOrdbooking().getVisitId());
         cartAPIRequestModel.setDisAmtDue(InputUtils.isNull(SelectedCoupon) ? 0 : discountAmount);
+        System.out.println("edit_selectedTestsList size>>>>>>>>" + edit_selectedTestsList.size());
 
 
         CartRequestOrderModel crom = new CartRequestOrderModel();
@@ -2779,7 +2787,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         crom.setHC(isRHC ? 1 : 0);
         crom.setBrandId("" + selectedTestsList.getOrdbooking().getOrddtl().get(0).getBrandId());
         ordersArr.add(crom);
-
         for (int j = 0; j < selectedTestsList.getOrdbooking().getOrddtl().get(0).getBenMaster().size(); j++) {
             CartRequestBeneficiaryModel crbm = new CartRequestBeneficiaryModel();
 
@@ -2802,7 +2809,10 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
             beneficiariesArr.add(crbm);
         }
-
+        String testname = "";
+        for (int i = 0; i <edit_selectedTestsList.size(); i++) {
+            testname = testname+edit_selectedTestsList.get(i).getDescription();
+        }
 
         cartAPIRequestModel.setOrders(ordersArr);
         cartAPIRequestModel.setBeneficiaries(beneficiariesArr);
@@ -3312,11 +3322,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     }
 
     public void getCouponsResponse(CouponCodeResponseModel responseModel) {
-        if (responseModel != null) {
-            couponCodeResponseModel = responseModel;
-        } else {
-            couponCodeResponseModel = null;
-        }
+        couponCodeResponseModel = responseModel;
         bottomSheet_Coupon_Dialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
         final View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.layout_btms_coupon, null);
         bottomSheet_Coupon_Dialog.setContentView(bottomSheet);

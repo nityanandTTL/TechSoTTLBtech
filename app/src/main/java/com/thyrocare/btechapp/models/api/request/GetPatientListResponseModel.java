@@ -2,7 +2,7 @@ package com.thyrocare.btechapp.models.api.request;
 
 import java.util.ArrayList;
 
-public class GetPE_PostCheckOutPatientModel {
+public class GetPatientListResponseModel {
     ArrayList<patients> PatientDetailsList = new ArrayList<patients>();
 
     public ArrayList<patients> getPatientDetailsList() {

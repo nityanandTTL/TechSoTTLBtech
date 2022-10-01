@@ -1,10 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.firebase:geofire-android:2.3.1@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aac51c39de787d7421e97d15386cb6ea/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/78226cc38a1fcb9f9d4f8ecd26d956cc/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/78226cc38a1fcb9f9d4f8ecd26d956cc/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/78226cc38a1fcb9f9d4f8ecd26d956cc/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/78226cc38a1fcb9f9d4f8ecd26d956cc/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

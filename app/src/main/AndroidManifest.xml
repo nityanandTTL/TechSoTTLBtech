@@ -47,9 +47,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon">
-        <activity
-            android:name=".NewScreenDesigns.Activities.PE_PostPatientDetailsActivity"
-            android:exported="false" />
+
         <!-- for live clevertap -->
         <!--
 <meta-data
@@ -82,6 +80,10 @@
         <meta-data
             android:name="firebase_performance_logcat_enabled"
             android:value="true" />
+        <activity
+            android:name=".NewScreenDesigns.Activities.PE_PostPatientDetailsActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
 
         <activity
             android:name=".activity.RescheduleSlotActivity"

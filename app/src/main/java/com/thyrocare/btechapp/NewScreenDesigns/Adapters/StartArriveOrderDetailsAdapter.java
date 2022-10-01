@@ -135,6 +135,9 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                         holder.img_DeleteBen.setVisibility(View.GONE);
                         holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
                     }
+                    if (InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getIsAddOn(), "Y")) {
+                        holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
+                    }
                 } else {
                     if (BenMasterArray.size() > 1) {
                         if (orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
@@ -145,19 +148,30 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                     } else {
                         editSingleBeneficiary(holder, View.GONE);
                     }
-                }
+                }/*if (InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getIsAddOn(), "Y")) {
+                    holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
+                }*/
             } else {
                 if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (BenMasterArray.size() > 1) {
                         checBenDetails(holder, position, true);
+                        if (InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getIsAddOn(), "Y")) {
+                            holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
+                        }
                     } else {
-                        holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
+                        checBenDetails(holder, position, false);
+                        if (InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getIsAddOn(), "Y")) {
+                            holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
+                        }
                     }
                 } else {
                     if (orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
                         holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
                         holder.img_editBenDetails.setVisibility(View.VISIBLE);
                         holder.img_DeleteBen.setVisibility(View.GONE);
+                        if (InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getIsAddOn(), "Y")) {
+                            holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
+                        }
                     } else {
                         holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
                     }
@@ -243,8 +257,13 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                         holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
 //                        holder.img_DeleteBen.setVisibility(View.GONE);//As per Shrishtis logic
                     } else {
+                        holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
+//                        holder.img_editBenDetails.setVisibility(View.VISIBLE);
+
+                        holder.img_DeleteBen.setVisibility(b ? View.VISIBLE : View.GONE);
+                    }
+                    if (InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getIsAddOn(), "Y")) {
                         holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
-                        holder.img_DeleteBen.setVisibility(View.GONE);
                     }
                 }
             }

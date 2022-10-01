@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.cheekiat:slideview:1.6@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cb29561d1ffa791a2e2c4f7288c6d1ae/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cb29561d1ffa791a2e2c4f7288c6d1ae/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cb29561d1ffa791a2e2c4f7288c6d1ae/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5268effd121061cbca872f4a753ecc91/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5268effd121061cbca872f4a753ecc91/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5268effd121061cbca872f4a753ecc91/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

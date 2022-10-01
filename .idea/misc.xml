@@ -3,36 +3,27 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/drawable/bg_sample_type_serum.xml" value="0.2295" />
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_add_edit_benificary.xml" value="0.21954397394136807" />
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_barcode_scan_woe_main.xml" value="0.22401315789473683" />
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_checkout_wow.xml" value="0.22401315789473683" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_pe_post_patient_details.xml" value="0.22" />
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_selfie_upload.xml" value="0.1401315789473684" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_start_and_arrive.xml" value="0.22401315789473683" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/alert_test_edit.xml" value="0.22401315789473683" />
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/bottomsheet_otp.xml" value="0.2243421052631579" />
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/checkout_woe_adapter_item.xml" value="0.2243421052631579" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/dialog_desposition.xml" value="0.2218241042345277" />
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/dialog_pe_woe.xml" value="0.22401315789473683" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/dialog_twocontacts.xml" value="0.25" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/fragment_schedule_your_day1.xml" value="0.2218241042345277" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/fragment_visit_orders_display_new.xml" value="0.22401315789473683" />
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/item_remove_test.xml" value="0.12203947368421053" />
+        <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/layout_bottomsheet_release.xml" value="0.2243421052631579" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/pe_qr_code.xml" value="0.2243421052631579" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/qr_code_verifiy_payment_dialog.xml" value="0.2243421052631579" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/single_postcheckoutdata.xml" value="0.33" />
         <entry key="..\:/Nitesh T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/start_arive_adpater_item_view.xml" value="0.2218241042345277" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/drawable/ic_chevron_right_black_24dp.xml" value="0.157" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/drawable/pe_text_background.xml" value="0.1085" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/drawable/rounded_background_green_2.xml" value="0.1385" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/activity_add_edit_benificary.xml" value="0.22171052631578947" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/activity_checkout_wow.xml" value="0.2243421052631579" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/activity_pe_post_patient_details.xml" value="0.25" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/activity_reschedule_slot.xml" value="0.22401315789473683" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/activity_start_and_arrive.xml" value="0.22335526315789472" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/add_patient_details_btms.xml" value="0.22401315789473683" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/addtestbottomsheet.xml" value="0.12039473684210526" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/barcode_scan_viewpager_item.xml" value="0.2243421052631579" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/checkout_woe_adapter_item.xml" value="0.2243421052631579" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/fragment_visit_orders_display_new.xml" value="0.22171052631578947" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/fragment_visitb2b_orders_display.xml" value="0.2243421052631579" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/layout_bottomsheet_release.xml" value="0.2243421052631579" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/post_checkout_singleview.xml" value="0.33" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/select_patient_details_btms.xml" value="0.25" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/single_ben_detail.xml" value="0.33" />
-        <entry key="..\:/Users/T0763/Desktop/BTech add patient details post checkout/app/src/main/res/layout/start_arive_adpater_item_view.xml" value="0.2243421052631579" />
         <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/drawable/drawable_line.xml" value="0.302" />
         <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/a.xml" value="0.17447916666666666" />
         <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/activity_add_edit_benificary.xml" value="0.1" />
@@ -63,6 +54,14 @@
         <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/layout_slot_date_item.xml" value="0.35104166666666664" />
         <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/logout_bottomsheet.xml" value="0.5" />
         <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/start_arive_adpater_item_view.xml" value="0.3546875" />
+        <entry key="..\:/Users/T0763/Desktop/btech github/app/src/main/res/drawable/pe_selectedtext_bg.xml" value="0.1895" />
+        <entry key="..\:/Users/T0763/Desktop/btech github/app/src/main/res/drawable/pe_text_background.xml" value="0.1895" />
+        <entry key="..\:/Users/T0763/Desktop/btech github/app/src/main/res/layout/activity_pe_post_patient_details.xml" value="0.2243421052631579" />
+        <entry key="..\:/Users/T0763/Desktop/btech github/app/src/main/res/layout/activity_start_and_arrive.xml" value="0.1" />
+        <entry key="..\:/Users/T0763/Desktop/btech github/app/src/main/res/layout/post_checkout_singleview.xml" value="0.22401315789473683" />
+        <entry key="..\:/Users/T0763/Desktop/btech github/app/src/main/res/layout/select_patient_details_btms.xml" value="0.2243421052631579" />
+        <entry key="..\:/Users/T0763/Desktop/btech github/app/src/main/res/layout/single_ben_detail.xml" value="0.22401315789473683" />
+        <entry key="..\:/Users/T0763/Desktop/btech github/app/src/main/res/menu/start_arrive_menu_screen.xml" value="0.1" />
         <entry key="..\:/Users/T0763/GIT/TechSoWenBTech GIT/app/src/main/res/layout/activity_add_edit_benificary.xml" value="0.35104166666666664" />
         <entry key="..\:/Users/T0763/GIT/TechSoWenBTech GIT/app/src/main/res/layout/activity_add_new_beneficiary_order.xml" value="0.35104166666666664" />
         <entry key="..\:/Users/T0763/GIT/TechSoWenBTech GIT/app/src/main/res/layout/barcode_scan_viewpager_item.xml" value="0.35104166666666664" />

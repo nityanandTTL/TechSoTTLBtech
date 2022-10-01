@@ -1,12 +1,14 @@
 package com.thyrocare.btechapp.BtechInterfaces;
 
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_PEPostCheckoutOrderResponseModel;
-import com.thyrocare.btechapp.models.api.request.GetPE_PostCheckOutPatientModel;
+import com.thyrocare.btechapp.models.api.request.GetPatientListResponseModel;
 import com.thyrocare.btechapp.models.api.response.CouponCodeResponseModel;
 import com.thyrocare.btechapp.models.api.response.PEQrCodeResponse;
 import com.thyrocare.btechapp.models.api.response.PEVerifyQRResponseModel;
 import com.thyrocare.btechapp.models.api.response.TCVerifyCouponResponseModel;
 import com.thyrocare.btechapp.models.api.response.UpdatePaymentResponseModel;
+
+import java.util.ArrayList;
 
 public class AppInterfaces {
     public interface getClickedPECoupon {
@@ -41,10 +43,11 @@ public class AppInterfaces {
     }
 
     public  interface getBenList{
-        void getBeneficiaryList(GetPE_PostCheckOutPatientModel responseModel);
+        void getBeneficiaryList(GetPatientListResponseModel responseModel);
     }
     public interface PatientSelector{
-        void addPatient(GetPE_PostCheckOutPatientModel addpatientModel);
+        void addPatient(GetPatientListResponseModel addpatientModel);
+        void editPatient (GetPatientListResponseModel.patients editingPatientData);
     }
 
 }
