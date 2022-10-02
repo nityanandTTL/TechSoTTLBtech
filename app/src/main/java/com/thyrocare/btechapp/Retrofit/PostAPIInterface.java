@@ -139,6 +139,7 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
@@ -524,6 +525,10 @@ public interface PostAPIInterface {
 
     @Headers({"X-SOURCE: Thyrocare"})
     @POST("api/partner-integration/v1/order/{order_id}/patients")
-    Call<AddPatientResponseModel> addNewPatient(@Body JSONObject jsonObject, @Header("X-API-AUTH") String authToken);
+    Call<AddPatientResponseModel> addNewPatient(@Body JSONObject jsonObject, @Header("X-API-AUTH") String authToken, @Path("order_id") String OrderID);
+
+    @Headers({"X-SOURCE: Thyrocare"})
+    @PUT("api/partner-integration/v1/order/{order_id}/patients")
+    Call<AddPatientResponseModel> editPatient(@Body JSONObject jsonObject, @Header("X-API-AUTH") String authToken, @Path("order_id") String OrderID);
 
 }

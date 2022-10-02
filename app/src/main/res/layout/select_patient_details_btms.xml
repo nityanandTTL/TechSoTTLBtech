@@ -138,7 +138,7 @@
                 android:id="@+id/rcl_ben_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
+                android:visibility="visible"
                 tools:itemCount="5"
                 tools:listitem="@layout/single_ben_detail" />
 
@@ -251,7 +251,7 @@
             android:text="Save Details"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
 
     </RelativeLayout>

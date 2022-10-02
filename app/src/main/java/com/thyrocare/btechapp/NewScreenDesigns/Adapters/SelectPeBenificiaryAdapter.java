@@ -39,13 +39,15 @@ public class SelectPeBenificiaryAdapter extends RecyclerView.Adapter<SelectPeBen
 
     @Override
     public void onBindViewHolder(@NonNull SelectPeBenificiaryAdapter.ViewHolder viewHolder, int position) {
+        GetPatientListResponseModel.Data.patients singlePatient = patientResponseModel.getData().getPatients().get(position);
+
         viewHolder.cb_ben_selector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     if (benCounter <= requiredBen) { //take data to parent activity and fill the model class.
                         benCounter++;
-                        patientResponseModel.getPatientDetailsList().get(position).setSelected(true);
+                        singlePatient.setSelected(true);
                         patientSelector.addPatient(patientResponseModel);
                     } else {
                         Toast.makeText(activity, "You cannot select more than" + requiredBen + "beneficiaries", Toast.LENGTH_SHORT).show();
@@ -53,7 +55,7 @@ public class SelectPeBenificiaryAdapter extends RecyclerView.Adapter<SelectPeBen
 
                 } else {
                     benCounter--;
-                    patientResponseModel.getPatientDetailsList().get(position).setSelected(false);
+                    singlePatient.setSelected(false);
                     patientSelector.addPatient(patientResponseModel);
                 }
             }
@@ -62,15 +64,18 @@ public class SelectPeBenificiaryAdapter extends RecyclerView.Adapter<SelectPeBen
         viewHolder.tv_editben.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                patientSelector.editPatient(patientResponseModel.getPatientDetailsList().get(position));
+                patientSelector.editPatient(singlePatient, position);
             }
         });
+
+        viewHolder.ben_name.setText(singlePatient.getName());
+        viewHolder.ben_age_gender.setText(singlePatient.getAge() + " | " + singlePatient.getGender());
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return patientResponseModel.getData().getPatients().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

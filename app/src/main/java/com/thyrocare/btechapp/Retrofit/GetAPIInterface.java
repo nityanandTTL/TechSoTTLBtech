@@ -339,7 +339,7 @@ public interface GetAPIInterface {
     Call<PEVerifyQRResponseModel> peVerifyQR(@Query("partner_order_id") String orderno);
 
     @Headers({"Content-Type: application/json", "X-source:Thyrocare"})
-    @GET("api/partner-integration/v1/orders/{partner_order_id}/patients")
+    @GET("api/partner-integration/v1/order/{partner_order_id}/patient")
     Call<GetPatientListResponseModel> getPostCheckoutPatientList(@Header("x-api-auth") String accessToken, @Path("partner_order_id") String orderID);
 }
 

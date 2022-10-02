@@ -1,63 +1,100 @@
 package com.thyrocare.btechapp.models.api.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 
 public class GetPatientListResponseModel {
-    ArrayList<patients> PatientDetailsList = new ArrayList<patients>();
-
-    public ArrayList<patients> getPatientDetailsList() {
-        return PatientDetailsList;
+    public String getError() {
+        return error;
     }
 
-    public void setPatientDetailsList(ArrayList<patients> patientDetailsList) {
-        PatientDetailsList = patientDetailsList;
+    public void setError(String error) {
+        this.error = error;
     }
 
-    public class patients {
-        String id;
-        String name;
-        String age;
-        String gender;
-        boolean isSelected;
+    public Data getData() {
+        return data;
+    }
 
-        public boolean isSelected() {
-            return isSelected;
+    public void setData(Data data) {
+        this.data = data;
+    }
+
+    private String error;
+
+    private Data data;
+
+    public static class Data {
+
+        private Integer user_id;
+
+        public Integer getUser_id() {
+            return user_id;
         }
 
-        public void setSelected(boolean selected) {
-            isSelected = selected;
+        public void setUser_id(Integer user_id) {
+            this.user_id = user_id;
         }
 
-        public String getId() {
-            return id;
+        public ArrayList<Data.patients> getPatients() {
+            return patients;
         }
 
-        public void setId(String id) {
-            this.id = id;
+        public void setPatients(ArrayList<Data.patients> patients) {
+            this.patients = patients;
         }
 
-        public String getName() {
-            return name;
-        }
+        @JsonProperty("patients")
+        private ArrayList<Data.patients> patients;
 
-        public void setName(String name) {
-            this.name = name;
-        }
+        public static class patients {
 
-        public String getAge() {
-            return age;
-        }
+            private Integer id;
+            private String name;
+            private String gender;
+            private String age;
+            private Boolean isSelected;
 
-        public void setAge(String age) {
-            this.age = age;
-        }
+            public Boolean getSelected() {
+                return isSelected;
+            }
 
-        public String getGender() {
-            return gender;
-        }
+            public void setSelected(Boolean selected) {
+                isSelected = selected;
+            }
 
-        public void setGender(String gender) {
-            this.gender = gender;
+            public Integer getId() {
+                return id;
+            }
+
+            public void setId(Integer id) {
+                this.id = id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getGender() {
+                return gender;
+            }
+
+            public void setGender(String gender) {
+                this.gender = gender;
+            }
+
+            public String getAge() {
+                return age;
+            }
+
+            public void setAge(String age) {
+                this.age = age;
+            }
         }
     }
 }

@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.BtechInterfaces.AppInterfaces;
 import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.PE_PostPatientDetailsAdapter;
@@ -72,12 +73,15 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     BottomSheetDialog editPatientBottomsheet, addPatientBottomsheet;
     AppPreferenceManager appPreferenceManager;
     GetPatientListResponseModel selectedPatientModel = new GetPatientListResponseModel();
+    GetPatientListResponseModel.Data.patients editingPatientModel = new GetPatientListResponseModel.Data.patients();
+    GetPatientListResponseModel patientListResponse = new GetPatientListResponseModel();
     OrderVisitDetailsModel orderVisitDetailsModel = new OrderVisitDetailsModel();
     Global globalclass;
     ConnectionDetector cd;
     Dialog CustomDialogforOTPValidation;
     ArrayList<Get_PEPostCheckoutOrderResponseModel> Pe_PatientBaseResponseModel = new ArrayList<>();
     Boolean isArrived = false;
+    SelectPeBenificiaryAdapter selectPeBenificiaryAdapter;
 
     //TODO select patient bottomsheet views--------------------------------------------
     ImageView iv_dismiss, iv_addnewben;
@@ -87,7 +91,8 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     LinearLayout ll_addPatient;
     TextInputEditText edt_patientname, edt_patientage;
     Button btn_addPatient, btn_submit;
-    Boolean isMale =null;
+    Boolean isMale = null;
+    private int editListPosition;
     //TODO select patient bottomsheet views--------------------------------------------
 
     @Override
@@ -102,7 +107,6 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         appPreferenceManager = new AppPreferenceManager(activity);
         globalclass = new Global(activity);
         cd = new ConnectionDetector(activity);
-        //callPostCheckoutPEOrderDetails_API();
 
         Pe_PatientBaseResponseModel = setupInitialList();
         setupPostDetailsList();
@@ -160,16 +164,15 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
 
             @Override
             public void editPatientDetailsClick() {
-                openEditPatientLayout(true);
-
+                openEditSelectedPatientLayout(false);
+                //TODO open the select patient list with added patient having the checkbox clicked
             }
         });
 
         rcl_pePostCheckOutOrder.setAdapter(pe_postPatientDetailsAdapter);
     }
 
-    private void openEditPatientLayout(boolean isEdit) {
-        editPatientBottomsheet = new BottomSheetDialog(activity);
+    private void openEditSelectedPatientLayout(boolean isEdit) {
         addPatientBottomsheet = new BottomSheetDialog(activity);
         addPatientBottomsheet.setCancelable(true);
         addPatientBottomsheet.setContentView(R.layout.select_patient_details_btms);
@@ -210,7 +213,8 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         PE_PostPatientDetailsController controller = new PE_PostPatientDetailsController(PE_PostPatientDetailsActivity.this, new AppInterfaces.getBenList() {
             @Override
             public void getBeneficiaryList(GetPatientListResponseModel responseModel) {
-                showSelectPatientDetailsLayout(responseModel);
+                patientListResponse = responseModel;
+                showSelectPatientDetailsLayout(patientListResponse);
             }
         });
         controller.callPostcheckoutDetails(orderVisitDetailsModel.getVisitId());
@@ -226,28 +230,32 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         rcl_ben_list.setLayoutManager(layoutManager);
+        rcl_ben_list.setVisibility(View.VISIBLE);
 
-        SelectPeBenificiaryAdapter adapter = new SelectPeBenificiaryAdapter(responseModel, activity, new AppInterfaces.PatientSelector() {
+        selectPeBenificiaryAdapter = new SelectPeBenificiaryAdapter(responseModel, activity, new AppInterfaces.PatientSelector() {
             @Override
             public void addPatient(GetPatientListResponseModel addpatientModel) {
                 selectedPatientModel = addpatientModel;
             }
 
             @Override
-            public void editPatient( GetPatientListResponseModel.patients editingPatientData) {
-                showEditPatientDetailsLayout(editingPatientData);
+            public void editPatient(GetPatientListResponseModel.Data.patients editingPatientData, int position) {
+                editListPosition = position;
+                editingPatientModel = editingPatientData;
+                showEditPatientDetailsLayout();
             }
 
         });
-        rcl_ben_list.setAdapter(adapter);
+        selectedPatientModel = null;
+        rcl_ben_list.setAdapter(selectPeBenificiaryAdapter);
 
 
         addPatientBottomsheet.show();
     }
 
-    private void showEditPatientDetailsLayout(GetPatientListResponseModel.patients editingPatientData) {
-        if (addPatientBottomsheet.isShowing()){
-           initSelectpatientBottomsheet(true);
+    private void showEditPatientDetailsLayout() {
+        if (addPatientBottomsheet.isShowing()) {
+            initSelectpatientBottomsheet(true);
         }
     }
 
@@ -276,16 +284,22 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
 
                 } else if (isEdit && validateNewBen()) {
                     //TODO edit patient
-
+                    calleditPatientAPI();
                 }
 
             }
 
             private boolean validateNewBen() {
                 if (InputUtils.isNull(edt_patientname.getText().toString().trim())) {
+                    Toast.makeText(activity, "Please enter name", Toast.LENGTH_SHORT).show();
                     return false;
                 }
-                if (Integer.parseInt(edt_patientage.getText().toString()) > 150 || Integer.parseInt(edt_patientage.getText().toString()) == 0) {
+                if (Integer.parseInt(edt_patientage.getText().toString()) > 150 || Integer.parseInt(edt_patientage.getText().toString()) == 0 || edt_patientage.getText().toString().isEmpty()) {
+                    Toast.makeText(activity, "Please enter age", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                if (isMale = null) {
+                    Toast.makeText(activity, "Please select gender", Toast.LENGTH_SHORT).show();
                     return false;
                 }
                 return true;
@@ -297,7 +311,6 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 tv_male.setBackground(getResources().getDrawable(R.drawable.pe_selectedtext_bg));
                 tv_male.setTextColor(getResources().getColor(R.color.white));
-
                 tv_female.setBackground(getResources().getDrawable(R.drawable.pe_text_background));
                 tv_female.setTextColor(getResources().getColor(R.color.black));
                 isMale = true;
@@ -316,18 +329,32 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         });
     }
 
+    private void calleditPatientAPI() {
+        try {
+            if (cd.isConnectingToInternet()) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("name", edt_patientname.getText());
+                jsonObject.put("age", Integer.valueOf(String.valueOf(edt_patientage.getText())));
+                jsonObject.put("gender", isMale ? "MALE" : "FEMALE");
+                jsonObject.put("id", editingPatientModel.getId());
+                PE_PostPatientDetailsController controller = new PE_PostPatientDetailsController(PE_PostPatientDetailsActivity.this);
+                controller.callEditPatient(jsonObject, orderVisitDetailsModel.getVisitId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void callAddNewPEPatientAPI() {
         try {
             if (cd.isConnectingToInternet()) {
                 JSONObject jsonObject = new JSONObject();
-                int patientAge = Integer.valueOf(edt_patientage.getText().toString());
-
                 jsonObject.put("name", edt_patientname.getText());
                 jsonObject.put("age", Integer.valueOf(String.valueOf(edt_patientage.getText())));
                 jsonObject.put("gender", isMale ? "MALE" : "FEMALE");
 
                 PE_PostPatientDetailsController controller = new PE_PostPatientDetailsController(PE_PostPatientDetailsActivity.this);
-                controller.callAddPatient(jsonObject);
+                controller.callAddPatient(jsonObject, orderVisitDetailsModel.getVisitId());
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -351,8 +378,29 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         btn_addPatient = addPatientBottomsheet.findViewById(R.id.btn_addPatient);
         btn_submit = addPatientBottomsheet.findViewById(R.id.btn_submit);
         if (isEdit) {
+            rcl_ben_list.setVisibility(View.GONE);
             rl_addpatient.setVisibility(View.GONE);
             ll_addPatient.setVisibility(View.VISIBLE);
+            edt_patientname.setText(editingPatientModel.getName());
+            edt_patientage.setText(editingPatientModel.getAge());
+            isMale = InputUtils.CheckEqualIgnoreCase(editingPatientModel.getGender(), "M") || InputUtils.CheckEqualIgnoreCase(editingPatientModel.getGender(), "male");
+            btn_addPatient.setVisibility(View.VISIBLE);
+
+            if (isMale) {
+                tv_male.setBackground(getResources().getDrawable(R.drawable.pe_selectedtext_bg));
+                tv_male.setTextColor(getResources().getColor(R.color.white));
+                tv_female.setBackground(getResources().getDrawable(R.drawable.pe_text_background));
+                tv_female.setTextColor(getResources().getColor(R.color.black));
+            } else {
+                tv_female.setBackground(getResources().getDrawable(R.drawable.pe_selectedtext_bg));
+                tv_female.setTextColor(getResources().getColor(R.color.white));
+                tv_male.setBackground(getResources().getDrawable(R.drawable.pe_text_background));
+                tv_male.setTextColor(getResources().getColor(R.color.black));
+            }
+        } else {
+            btn_addPatient.setVisibility(View.GONE);
+            btn_submit.setVisibility(View.VISIBLE);
+
         }
 
 
@@ -530,9 +578,24 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     }
 
     public void onAddPatientResponseReceived(AddPatientResponseModel addPatientResponseModel) {
-        if (addPatientBottomsheet.isShowing()){
+        if (addPatientBottomsheet.isShowing()) {
             addPatientBottomsheet.dismiss();
         }
         callPostCheckoutPatientList();
+    }
+
+    public void onEditPatientResponse(AddPatientResponseModel addPatientResponseModel) {
+        if (addPatientResponseModel.data != null) {
+            patientListResponse.getData().getPatients().get(editListPosition).setAge(String.valueOf(addPatientResponseModel.getData().getAge()));
+            patientListResponse.getData().getPatients().get(editListPosition).setGender(String.valueOf(addPatientResponseModel.getData().getGender()));
+            patientListResponse.getData().getPatients().get(editListPosition).setName(String.valueOf(addPatientResponseModel.getData().getName()));
+            patientListResponse.getData().getPatients().get(editListPosition).setId(addPatientResponseModel.getData().getId());
+            TastyToast.makeText(activity, "Patient added successfully", TastyToast.LENGTH_SHORT,TastyToast.SUCCESS).show();
+
+            ll_addPatient.setVisibility(View.GONE);
+            selectPeBenificiaryAdapter.notifyItemChanged(editListPosition);
+            rcl_ben_list.setVisibility(View.VISIBLE);
+            btn_submit.setVisibility(View.VISIBLE);
+        }
     }
 }

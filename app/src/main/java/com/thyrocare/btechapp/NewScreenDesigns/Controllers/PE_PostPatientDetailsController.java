@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.BtechInterfaces.AppInterfaces;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.PE_PostPatientDetailsActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
@@ -51,17 +53,26 @@ public class PE_PostPatientDetailsController {
     }
 
     public void callPostcheckoutDetails(String visitId) {
+        globalclass.showProgressDialog(pe_postPatientDetailsActivity, "Fetching patient's list, please wait...");
         GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(pe_postPatientDetailsActivity, EncryptionUtils.Dcrp_Hex(pe_postPatientDetailsActivity.getString(R.string.PE_API))).create(GetAPIInterface.class);
         Call<GetPatientListResponseModel> call = getAPIInterface.getPostCheckoutPatientList(appPreferenceManager.getAccess_Token(), visitId);
         call.enqueue(new Callback<GetPatientListResponseModel>() {
             @Override
             public void onResponse(Call<GetPatientListResponseModel> call, Response<GetPatientListResponseModel> response) {
-                getBenList.getBeneficiaryList(response.body());
+                globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
+                if (response.isSuccessful() && response.body().getData() != null) {
+                    GetPatientListResponseModel responseModel = response.body();
+                    getBenList.getBeneficiaryList(responseModel);
+                } else {
+                    TastyToast.makeText(pe_postPatientDetailsActivity, "Failed to get the patient's list", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+                }
+
             }
 
             @Override
             public void onFailure(Call<GetPatientListResponseModel> call, Throwable t) {
-
+                globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
+                TastyToast.makeText(pe_postPatientDetailsActivity, ConstantsMessages.SomethingWentwrngMsg, TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
             }
         });
     }
@@ -95,11 +106,11 @@ public class PE_PostPatientDetailsController {
         });
     }
 
-    public void callAddPatient(JSONObject jsonObject) {
+    public void callAddPatient(JSONObject jsonObject, String visitId) {
 
         globalclass.showProgressDialog(pe_postPatientDetailsActivity, "Please wait while processing your request...");
         PostAPIInterface appInterfaces = RetroFit_APIClient.getInstance().getClient(pe_postPatientDetailsActivity, EncryptionUtils.Dcrp_Hex(pe_postPatientDetailsActivity.getString(R.string.PE_API))).create(PostAPIInterface.class);
-        Call<AddPatientResponseModel> call = appInterfaces.addNewPatient(jsonObject, appPreferenceManager.getAuthToken());
+        Call<AddPatientResponseModel> call = appInterfaces.addNewPatient(jsonObject, appPreferenceManager.getAuthToken(), visitId);
         call.enqueue(new Callback<AddPatientResponseModel>() {
             @Override
             public void onResponse(Call<AddPatientResponseModel> call, Response<AddPatientResponseModel> response) {
@@ -119,5 +130,31 @@ public class PE_PostPatientDetailsController {
                 TastyToast.makeText(pe_postPatientDetailsActivity, "Something went wrong", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
             }
         });
+    }
+
+    public void callEditPatient(JSONObject jsonObject, String visitId) {
+        globalclass.showProgressDialog(pe_postPatientDetailsActivity, "Please wait while processing your request...");
+        PostAPIInterface appInterfaces = RetroFit_APIClient.getInstance().getClient(pe_postPatientDetailsActivity, EncryptionUtils.Dcrp_Hex(pe_postPatientDetailsActivity.getString(R.string.PE_API))).create(PostAPIInterface.class);
+        Call<AddPatientResponseModel> call = appInterfaces.editPatient(jsonObject, appPreferenceManager.getAuthToken(), visitId);
+        call.enqueue(new Callback<AddPatientResponseModel>() {
+            @Override
+            public void onResponse(Call<AddPatientResponseModel> call, Response<AddPatientResponseModel> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
+                    addPatientResponseModel = response.body();
+                    pe_postPatientDetailsActivity.onEditPatientResponse(addPatientResponseModel);
+                } else {
+                    globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
+                    TastyToast.makeText(pe_postPatientDetailsActivity, addPatientResponseModel.error, TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AddPatientResponseModel> call, Throwable t) {
+                globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
+                TastyToast.makeText(pe_postPatientDetailsActivity, "Something went wrong", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+            }
+        });
+
     }
 }

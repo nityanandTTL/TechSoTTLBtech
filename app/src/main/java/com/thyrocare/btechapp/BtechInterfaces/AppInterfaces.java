@@ -8,8 +8,6 @@ import com.thyrocare.btechapp.models.api.response.PEVerifyQRResponseModel;
 import com.thyrocare.btechapp.models.api.response.TCVerifyCouponResponseModel;
 import com.thyrocare.btechapp.models.api.response.UpdatePaymentResponseModel;
 
-import java.util.ArrayList;
-
 public class AppInterfaces {
     public interface getClickedPECoupon {
         void onApplyClick(String coupon);
@@ -47,7 +45,7 @@ public class AppInterfaces {
     }
     public interface PatientSelector{
         void addPatient(GetPatientListResponseModel addpatientModel);
-        void editPatient (GetPatientListResponseModel.patients editingPatientData);
+        void editPatient(GetPatientListResponseModel.Data.patients editingPatientData, int position);
     }
 
 }
