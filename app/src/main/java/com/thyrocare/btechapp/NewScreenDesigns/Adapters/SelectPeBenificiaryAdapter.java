@@ -20,14 +20,16 @@ import com.thyrocare.btechapp.models.api.request.GetPatientListResponseModel;
 public class SelectPeBenificiaryAdapter extends RecyclerView.Adapter<SelectPeBenificiaryAdapter.ViewHolder> {
     GetPatientListResponseModel patientResponseModel;
     Activity activity;
-    int benCounter, requiredBen;
+    int benCounter = 1, requiredBen;
     AppInterfaces.PatientSelector patientSelector;
+    boolean isPatientListEdit;
 
-
-    public SelectPeBenificiaryAdapter(GetPatientListResponseModel patientResponseModel, Activity activity, AppInterfaces.PatientSelector patientSelector) {
+    public SelectPeBenificiaryAdapter(boolean isPatientListEdit, int patientCount, GetPatientListResponseModel patientResponseModel, Activity activity, AppInterfaces.PatientSelector patientSelector) {
         this.patientResponseModel = patientResponseModel;
         this.activity = activity;
         this.patientSelector = patientSelector;
+        this.requiredBen = patientCount;
+        this.isPatientListEdit = isPatientListEdit;
     }
 
     @NonNull
@@ -41,22 +43,24 @@ public class SelectPeBenificiaryAdapter extends RecyclerView.Adapter<SelectPeBen
     public void onBindViewHolder(@NonNull SelectPeBenificiaryAdapter.ViewHolder viewHolder, int position) {
         GetPatientListResponseModel.Data.patients singlePatient = patientResponseModel.getData().getPatients().get(position);
 
+        if (isPatientListEdit) {
+            viewHolder.cb_ben_selector.setSelected(singlePatient.getSelected());
+        }
+
         viewHolder.cb_ben_selector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (benCounter <= requiredBen) { //take data to parent activity and fill the model class.
+                    if (benCounter < requiredBen) { //take data to parent activity and fill the model class.
                         benCounter++;
-                        singlePatient.setSelected(true);
-                        patientSelector.addPatient(patientResponseModel);
+                        patientSelector.addPatient(position);
                     } else {
                         Toast.makeText(activity, "You cannot select more than" + requiredBen + "beneficiaries", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
                     benCounter--;
-                    singlePatient.setSelected(false);
-                    patientSelector.addPatient(patientResponseModel);
+                    patientSelector.removePatient(position);
                 }
             }
         });
@@ -64,7 +68,7 @@ public class SelectPeBenificiaryAdapter extends RecyclerView.Adapter<SelectPeBen
         viewHolder.tv_editben.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                patientSelector.editPatient(singlePatient, position);
+                patientSelector.editPatient(singlePatient);
             }
         });
 

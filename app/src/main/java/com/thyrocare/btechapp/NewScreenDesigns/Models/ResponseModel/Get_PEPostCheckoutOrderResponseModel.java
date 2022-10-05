@@ -1,5 +1,7 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel;
 
+import com.thyrocare.btechapp.models.api.request.GetPatientListResponseModel;
+
 import java.util.ArrayList;
 
 public class Get_PEPostCheckoutOrderResponseModel {
@@ -8,21 +10,22 @@ public class Get_PEPostCheckoutOrderResponseModel {
     private Integer patientCount;
     private boolean dataAdded;
     private String patientDetails;
-    private ArrayList<AddedPatients> addedPatients = new ArrayList<AddedPatients>();
+    private ArrayList<GetPatientListResponseModel.Data.patients> addedPatients = new ArrayList<>();
 
     public String getPatientDetails() {
         StringBuilder addDetailsString = new StringBuilder();
         for (int i = 0; i < addedPatients.size(); i++) {
-            addDetailsString.append(addedPatients.get(i).getBenName()).append("(").append(addedPatients.get(i).getBenGender()).append("|").append(addedPatients.get(i).getAge()).append(")\n");
+            if (addedPatients.get(i).getSelected())
+                addDetailsString.append(addedPatients.get(i).getName()).append("(").append(addedPatients.get(i).getGender()).append("|").append(addedPatients.get(i).getAge()).append(")\n");
         }
         return addDetailsString.toString();
     }
 
-    public ArrayList<AddedPatients> getAddedPatients() {
+    public ArrayList<GetPatientListResponseModel.Data.patients> getAddedPatients() {
         return addedPatients;
     }
 
-    public void setAddedPatients(ArrayList<AddedPatients> addedPatients) {
+    public void setAddedPatients(ArrayList<GetPatientListResponseModel.Data.patients> addedPatients) {
         this.addedPatients = addedPatients;
     }
 

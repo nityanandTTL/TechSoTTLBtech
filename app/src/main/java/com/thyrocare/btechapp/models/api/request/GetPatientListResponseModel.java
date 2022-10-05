@@ -61,6 +61,9 @@ public class GetPatientListResponseModel {
             }
 
             public void setSelected(Boolean selected) {
+                if (selected==null){
+                    selected=false;
+                }
                 isSelected = selected;
             }
 

@@ -45,7 +45,7 @@
                 android:layout_centerVertical="true"
                 android:text="Add beneficiary details"
                 android:textColor="@color/gray"
-                android:textSize="15dp" />
+                android:textSize="18dp" />
 
             <ImageView
                 android:id="@+id/iv_addBendetails"
@@ -71,7 +71,7 @@
                 android:layout_centerVertical="true"
                 android:text="Added beneficiary details"
                 android:textColor="@color/colorAccent"
-                android:textSize="15dp" />
+                android:textSize="18dp" />
             <ImageView
                 android:id="@+id/iv_editBenDetails"
                 android:layout_width="@dimen/_20sdp"

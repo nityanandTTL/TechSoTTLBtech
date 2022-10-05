@@ -30,6 +30,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.appbar.AppBarLayout;
+import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.R;
 
@@ -730,5 +731,11 @@ public class Global {
 
     public interface OnBarcodeDialogSubmitClickListener {
         public void onSubmitButtonClicked(String barcode);
+    }
+
+    public static void sout(String TagToString, Object whatToPrint) {
+        if (BuildConfig.DEBUG) {
+            System.out.println(TagToString + " " + whatToPrint);
+        }
     }
 }

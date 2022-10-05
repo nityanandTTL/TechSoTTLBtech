@@ -35,17 +35,22 @@ public class AppInterfaces {
         void getPostPatientResponse(Get_PEPostCheckoutOrderResponseModel get_pePostCheckoutOrderResponseModel);
     }
 
-    public interface PE_postPatientDetailsAdapterClick{
-        void selectPatientDetailsClick();
-        void editPatientDetailsClick();
+    public interface PE_postPatientDetailsAdapterClick {
+        void selectPatientDetailsClick(int position);
+
+        void editPatientDetailsClick(int position);
     }
 
-    public  interface getBenList{
+    public interface getBenList {
         void getBeneficiaryList(GetPatientListResponseModel responseModel);
     }
-    public interface PatientSelector{
-        void addPatient(GetPatientListResponseModel addpatientModel);
-        void editPatient(GetPatientListResponseModel.Data.patients editingPatientData, int position);
+
+    public interface PatientSelector {
+        void addPatient(int addPatientPosition);
+
+        void removePatient(int removePatientPosition);
+
+        void editPatient(GetPatientListResponseModel.Data.patients singlePatient);
     }
 
 }

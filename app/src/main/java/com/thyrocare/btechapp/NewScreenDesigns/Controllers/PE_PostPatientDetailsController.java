@@ -50,6 +50,7 @@ public class PE_PostPatientDetailsController {
     public PE_PostPatientDetailsController(PE_PostPatientDetailsActivity pe_postPatientDetailsActivity) {
         this.pe_postPatientDetailsActivity = pe_postPatientDetailsActivity;
         globalclass = new Global(pe_postPatientDetailsActivity);
+        appPreferenceManager = new AppPreferenceManager(pe_postPatientDetailsActivity);
     }
 
     public void callPostcheckoutDetails(String visitId) {

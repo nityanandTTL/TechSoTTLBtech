@@ -42,32 +42,30 @@ public class PE_PostPatientDetailsAdapter extends RecyclerView.Adapter<PE_PostPa
     @Override
     public void onBindViewHolder(@NonNull PostCheckoutView holder, int position) {
         Get_PEPostCheckoutOrderResponseModel singlePatientDataPostion = responseModels.get(position);
-        holder.tv_benCount.setText("Please add " + singlePatientDataPostion.getPatientCount() + "beneficiaries");
+        holder.tv_benCount.setText("Please add " + singlePatientDataPostion.getPatientCount() + " beneficiaries");
         holder.testname.setText(singlePatientDataPostion.getTestName());
-
-      /*  if (InputUtils.isNull(singlePatientDataPostion..gee)) {
-            //TODO hide patientdetails, show add patient
-            holder.rl_ben_addView.setVisibility(View.VISIBLE);
-            holder.rl_ben_editView.setVisibility(View.GONE);
-        } else {
-            holder.addedBenDetails.setText(singlePatientDataPostion.getBenDetails());
-            holder.rl_ben_addView.setVisibility(View.GONE);
-            holder.rl_ben_editView.setVisibility(View.VISIBLE);
-        }*/
 
         holder.iv_addBendetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pe_postPatientDetailsAdapterClick.selectPatientDetailsClick();
+                pe_postPatientDetailsAdapterClick.selectPatientDetailsClick(position);
             }
         });
 
         holder.iv_editBenDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pe_postPatientDetailsAdapterClick.editPatientDetailsClick();
+                pe_postPatientDetailsAdapterClick.editPatientDetailsClick(position);
             }
         });
+
+        if (singlePatientDataPostion.getPatientDetails() == null) {
+            holder.rl_ben_addView.setVisibility(View.VISIBLE);
+            holder.rl_ben_editView.setVisibility(View.GONE);
+        } else {
+            holder.rl_ben_addView.setVisibility(View.GONE);
+            holder.rl_ben_editView.setVisibility(View.VISIBLE);
+        }
 
     }
 
