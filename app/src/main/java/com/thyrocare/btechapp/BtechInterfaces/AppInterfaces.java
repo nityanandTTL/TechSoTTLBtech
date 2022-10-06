@@ -50,7 +50,7 @@ public class AppInterfaces {
 
         void removePatient(int removePatientPosition);
 
-        void editPatient(GetPatientListResponseModel.Data.patients singlePatient);
+        void editPatient(GetPatientListResponseModel.DataDTO singlePatient);
     }
 
 }

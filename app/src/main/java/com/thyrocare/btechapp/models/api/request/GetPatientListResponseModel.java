@@ -1,10 +1,13 @@
 package com.thyrocare.btechapp.models.api.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.ArrayList;
+import java.util.List;
 
 public class GetPatientListResponseModel {
+
+    public String error;
+    public ArrayList<DataDTO> data;
+
     public String getError() {
         return error;
     }
@@ -13,91 +16,65 @@ public class GetPatientListResponseModel {
         this.error = error;
     }
 
-    public Data getData() {
+    public ArrayList<DataDTO> getData() {
         return data;
     }
 
-    public void setData(Data data) {
+    public void setData(ArrayList<DataDTO> data) {
         this.data = data;
     }
 
-    private String error;
+    public void addData(DataDTO data) {
+        this.data.add(data);
+    }
 
-    private Data data;
+    public static class DataDTO {
+        public int id;
+        public String name;
+        public int gender;
+        public int age;
+        public boolean isSelected;
 
-    public static class Data {
-
-        private Integer user_id;
-
-        public Integer getUser_id() {
-            return user_id;
+        public int getId() {
+            return id;
         }
 
-        public void setUser_id(Integer user_id) {
-            this.user_id = user_id;
+        public void setId(int id) {
+            this.id = id;
         }
 
-        public ArrayList<Data.patients> getPatients() {
-            return patients;
+        public String getName() {
+            return name;
         }
 
-        public void setPatients(ArrayList<Data.patients> patients) {
-            this.patients = patients;
+        public void setName(String name) {
+            this.name = name;
         }
 
-        @JsonProperty("patients")
-        private ArrayList<Data.patients> patients;
-
-        public static class patients {
-
-            private Integer id;
-            private String name;
-            private String gender;
-            private String age;
-            private Boolean isSelected;
-
-            public Boolean getSelected() {
-                return isSelected;
-            }
-
-            public void setSelected(Boolean selected) {
-                if (selected==null){
-                    selected=false;
-                }
-                isSelected = selected;
-            }
-
-            public Integer getId() {
-                return id;
-            }
-
-            public void setId(Integer id) {
-                this.id = id;
-            }
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
-            public String getGender() {
-                return gender;
-            }
-
-            public void setGender(String gender) {
-                this.gender = gender;
-            }
-
-            public String getAge() {
-                return age;
-            }
-
-            public void setAge(String age) {
-                this.age = age;
-            }
+        public int getGender() {
+            return gender;
         }
+
+        public void setGender(int gender) {
+            this.gender = gender;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        public void setAge(int age) {
+            this.age = age;
+        }
+
+        public boolean isSelected() {
+            return isSelected;
+        }
+
+        public void setSelected(boolean selected) {
+            isSelected = selected;
+        }
+
+
     }
 }

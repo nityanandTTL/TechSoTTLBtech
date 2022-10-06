@@ -72,14 +72,14 @@
                 android:text="Added beneficiary details"
                 android:textColor="@color/colorAccent"
                 android:textSize="18dp" />
+
             <ImageView
                 android:id="@+id/iv_editBenDetails"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_baseline_edit"
-                />
+                android:src="@drawable/ic_baseline_edit" />
         </RelativeLayout>
 
     </LinearLayout>

@@ -6,7 +6,7 @@ public class AddPatientResponseModel {
 
     public String error;
     public Data data;
-    public int status;
+    public boolean status;
 
     public String getError() {
         return error;
@@ -24,11 +24,11 @@ public class AddPatientResponseModel {
         this.data = data;
     }
 
-    public int getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 

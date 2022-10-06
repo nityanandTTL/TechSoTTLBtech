@@ -1,11 +1,13 @@
 package com.thyrocare.btechapp.Retrofit;
 
 import com.google.gson.JsonObject;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.AddEditPatientModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.AvailableStockModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.BtechWiseVersionTrackerRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.CampPatientDetailRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.CampWisePatientDetailRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.CampWoeMISReuestModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.ConfirmOrderRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.EmailVaildationPostModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.FeedbackModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.FixAppointmentDataModel;
@@ -87,6 +89,7 @@ import com.thyrocare.btechapp.models.api.response.AddOnResponseModel;
 import com.thyrocare.btechapp.models.api.response.CartAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel1;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
+import com.thyrocare.btechapp.models.api.response.ConfirmOrderResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetBenWiseBtechListResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetCollectionReqModel;
 import com.thyrocare.btechapp.models.api.response.GetCollectionRespModel;
@@ -525,10 +528,14 @@ public interface PostAPIInterface {
 
     @Headers({"X-SOURCE: Thyrocare"})
     @POST("api/partner-integration/v1/order/{order_id}/patients")
-    Call<AddPatientResponseModel> addNewPatient(@Body JSONObject jsonObject, @Header("X-API-AUTH") String authToken, @Path("order_id") String OrderID);
+    Call<AddPatientResponseModel> addNewPatient(@Body  AddEditPatientModel model, @Header("X-API-AUTH") String authToken, @Path("order_id") String OrderID);
 
     @Headers({"X-SOURCE: Thyrocare"})
     @PUT("api/partner-integration/v1/order/{order_id}/patients")
-    Call<AddPatientResponseModel> editPatient(@Body JSONObject jsonObject, @Header("X-API-AUTH") String authToken, @Path("order_id") String OrderID);
+    Call<AddPatientResponseModel> editPatient(@Body AddEditPatientModel model, @Header("X-API-AUTH") String authToken, @Path("order_id") String OrderID);
+
+    @Headers({"X-SOURCE: Thyrocare"})
+    @PUT("api/createPatient/phlebo")
+    Call<ConfirmOrderResponseModel> confirmOrder(@Body ConfirmOrderRequestModel model, @Header("X-API-AUTH") String authToken);
 
 }

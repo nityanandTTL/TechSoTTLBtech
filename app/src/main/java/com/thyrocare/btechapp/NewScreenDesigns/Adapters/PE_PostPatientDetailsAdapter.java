@@ -59,12 +59,14 @@ public class PE_PostPatientDetailsAdapter extends RecyclerView.Adapter<PE_PostPa
             }
         });
 
-        if (singlePatientDataPostion.getPatientDetails() == null) {
+        if (singlePatientDataPostion.getPatientDetails().equals("")) {
             holder.rl_ben_addView.setVisibility(View.VISIBLE);
             holder.rl_ben_editView.setVisibility(View.GONE);
+
         } else {
             holder.rl_ben_addView.setVisibility(View.GONE);
             holder.rl_ben_editView.setVisibility(View.VISIBLE);
+            holder.addedBenDetails.setText(singlePatientDataPostion.getPatientDetails());
         }
 
     }

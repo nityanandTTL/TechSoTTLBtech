@@ -4,7 +4,7 @@
     <bytecodeTargetLevel target="1.7">
       <module name="Btech.app" target="11" />
       <module name="btech_github.app" target="11" />
-      <module name="Btech_post_checkout.app" target="11" />
+      <module name="Btech_Post_checkout.app" target="11" />
       <module name="TechSoBTechApp.app" target="11" />
       <module name="TechSoBTechApp2.7.6.app" target="1.8" />
       <module name="TechSoBTechApp_hub_drop.app" target="11" />

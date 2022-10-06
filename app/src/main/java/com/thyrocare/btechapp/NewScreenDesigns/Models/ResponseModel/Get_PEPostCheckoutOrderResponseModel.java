@@ -1,6 +1,7 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel;
 
 import com.thyrocare.btechapp.models.api.request.GetPatientListResponseModel;
+import com.thyrocare.btechapp.utils.app.Global;
 
 import java.util.ArrayList;
 
@@ -9,23 +10,47 @@ public class Get_PEPostCheckoutOrderResponseModel {
     private String testName;
     private Integer patientCount;
     private boolean dataAdded;
-    private String patientDetails;
-    private ArrayList<GetPatientListResponseModel.Data.patients> addedPatients = new ArrayList<>();
+    private String testtype;
+    private String projectID;
+
+    public String getTesttype() {
+        return testtype;
+    }
+
+    public void setTesttype(String testtype) {
+        this.testtype = testtype;
+    }
+
+    public String getProjectID() {
+        return projectID;
+    }
+
+    public void setProjectID(String projectID) {
+        this.projectID = projectID;
+    }
+
+    private ArrayList<GetPatientListResponseModel.DataDTO> addedPatients = new ArrayList<>();
 
     public String getPatientDetails() {
-        StringBuilder addDetailsString = new StringBuilder();
-        for (int i = 0; i < addedPatients.size(); i++) {
-            if (addedPatients.get(i).getSelected())
-                addDetailsString.append(addedPatients.get(i).getName()).append("(").append(addedPatients.get(i).getGender()).append("|").append(addedPatients.get(i).getAge()).append(")\n");
+        String addDetailsString = "";
+        try {
+            for (int i = 0; i < addedPatients.size(); i++) {
+                String Gender = addedPatients.get(i).getGender() == 1 ? "Male" : "Female";
+                if (addedPatients.get(i).isSelected())
+                    addDetailsString = addDetailsString + addedPatients.get(i).getName() + " ( " + Gender + " | " + addedPatients.get(i).getAge() + " ) \n";
+            }
+            Global.sout("added patient string", addDetailsString.toString());
+        } catch (Exception e) {
+            Global.sout("adddetailsString exception", e.getLocalizedMessage());
         }
         return addDetailsString.toString();
     }
 
-    public ArrayList<GetPatientListResponseModel.Data.patients> getAddedPatients() {
+    public ArrayList<GetPatientListResponseModel.DataDTO> getAddedPatients() {
         return addedPatients;
     }
 
-    public void setAddedPatients(ArrayList<GetPatientListResponseModel.Data.patients> addedPatients) {
+    public void setAddedPatients(ArrayList<GetPatientListResponseModel.DataDTO> addedPatients) {
         this.addedPatients = addedPatients;
     }
 

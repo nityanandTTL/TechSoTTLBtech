@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -28,14 +29,19 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.BtechInterfaces.AppInterfaces;
 import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.PE_PostPatientDetailsAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.SelectPeBenificiaryAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Controllers.PE_PostPatientDetailsController;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.AddEditPatientModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.ConfirmOrderRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_PEPostCheckoutOrderResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
@@ -45,6 +51,7 @@ import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.btechapp.models.api.request.SendOTPRequestModel;
 import com.thyrocare.btechapp.models.api.response.AddPatientResponseModel;
+import com.thyrocare.btechapp.models.api.response.ConfirmOrderResponseModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryTestDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
@@ -72,7 +79,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     BottomSheetDialog editPatientBottomsheet, addPatientBottomsheet;
     AppPreferenceManager appPreferenceManager;
     GetPatientListResponseModel selectedPatientModel = new GetPatientListResponseModel();
-    GetPatientListResponseModel.Data.patients editingPatientModel = new GetPatientListResponseModel.Data.patients();
+    GetPatientListResponseModel.DataDTO editingPatientModel = new GetPatientListResponseModel.DataDTO();
     GetPatientListResponseModel patientListResponse = new GetPatientListResponseModel();
     OrderVisitDetailsModel orderVisitDetailsModel = new OrderVisitDetailsModel();
     Global globalclass;
@@ -82,6 +89,10 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     Boolean isArrived = false;
     SelectPeBenificiaryAdapter selectPeBenificiaryAdapter;
     PE_PostPatientDetailsAdapter pe_postPatientDetailsAdapter;
+    ConfirmOrderRequestModel confirmOrderRequestModel = new ConfirmOrderRequestModel();
+    ArrayList<intialListModelClass> patientMapModel = new ArrayList<>();
+    boolean patientListEdit = false;
+    int postionToAddTest = 0, positionOfTest = 0;
 
     //TODO select patient bottomsheet views--------------------------------------------
     ImageView iv_dismiss, iv_addnewben;
@@ -125,11 +136,10 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         btn_arrive_proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (BuildConfig.DEBUG) {
-                    //TODO skipped the OTP part for debug app
-                    callOrderStatusChangeApi(3, "Arrive", "", "");
-                } else if (InputUtils.CheckEqualIgnoreCase(btn_arrive_proceed.getText().toString(), Constants.ARRIVED)) {
+                if (!isArrived) {
                     callOTPGenerationAPI();
+                } else {
+                    callConfirmOrderAPI();
                 }
             }
 
@@ -141,6 +151,63 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                 controller.callSendOTPAPI(otpRequestModel, orderVisitDetailsModel);
             }
         });
+    }
+
+    private void callConfirmOrderAPI() {
+        if (validateBaseModel(Pe_PatientBaseResponseModel)) {
+
+
+            for (int i = 0; i < Pe_PatientBaseResponseModel.size(); i++) {
+                ConfirmOrderRequestModel.PatientsDTO.ProductsDTO singleTestData = new ConfirmOrderRequestModel.PatientsDTO.ProductsDTO();
+                singleTestData.setDos_code(Pe_PatientBaseResponseModel.get(i).getTestName());
+                singleTestData.setLab_dos_name(Pe_PatientBaseResponseModel.get(i).getTestName());
+                singleTestData.setType(Pe_PatientBaseResponseModel.get(i).getTesttype());
+                singleTestData.setPackageId(Pe_PatientBaseResponseModel.get(i).getProjectID());
+
+                for (int j = 0; j < Pe_PatientBaseResponseModel.get(i).getAddedPatients().size(); j++) {
+                    if (patientExist(Pe_PatientBaseResponseModel.get(i).getAddedPatients().get(j).getId())) {
+                        confirmOrderRequestModel.getPatients().get(postionToAddTest).addProducts(singleTestData);
+                    } else {
+                        ConfirmOrderRequestModel.PatientsDTO singlePatientData = new ConfirmOrderRequestModel.PatientsDTO();
+                        singlePatientData.setAge(String.valueOf(Pe_PatientBaseResponseModel.get(i).getAddedPatients().get(j).getAge()));
+                        singlePatientData.setName(Pe_PatientBaseResponseModel.get(i).getAddedPatients().get(j).getName());
+                        singlePatientData.setGender(Pe_PatientBaseResponseModel.get(i).getAddedPatients().get(j).getGender() == 1 ? "M" : "F");
+                        singlePatientData.setLeadId(String.valueOf(Pe_PatientBaseResponseModel.get(i).getAddedPatients().get(j).getId()));
+                        singlePatientData.addProducts(singleTestData);
+                        confirmOrderRequestModel.addPatient(singlePatientData);
+                    }
+
+                }
+            }
+            confirmOrderRequestModel.setOrderId(orderVisitDetailsModel.getAllOrderdetails().get(0).getOrderNo());
+            confirmOrderRequestModel.setPhleboId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+            Global.sout("confirm order request model>>>>>\n", new Gson().toJson(confirmOrderRequestModel));
+
+            PE_PostPatientDetailsController controller = new PE_PostPatientDetailsController(PE_PostPatientDetailsActivity.this);
+            controller.callConfirmOrderAPI(confirmOrderRequestModel);
+
+        }
+
+    }
+
+    private boolean patientExist(int singlePatientID) {
+        for (int i = 0; i < confirmOrderRequestModel.getPatients().size(); i++) {
+            if (confirmOrderRequestModel.getPatients().get(i).getLeadId().equals(String.valueOf(singlePatientID))) {
+                postionToAddTest = i;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean validateBaseModel(ArrayList<Get_PEPostCheckoutOrderResponseModel> pe_patientBaseResponseModel) {
+        for (int i = 0; i < pe_patientBaseResponseModel.size(); i++) {
+            if (pe_patientBaseResponseModel.get(i).getAddedPatients() == null) {
+                Toast.makeText(activity, "Please fill all beneficiary data", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        return true;
     }
 
     private void setupPostDetailsList() {
@@ -174,27 +241,47 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     @NonNull
     private ArrayList<Get_PEPostCheckoutOrderResponseModel> setupInitialList() {
         HashMap<String, Integer> Test_PatientMap = new HashMap<>();
+
         for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); i++) {
             ArrayList<BeneficiaryTestDetailsModel> benSampleType = orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType();
             for (int j = 0; j < benSampleType.size(); j++) {
                 String Testname = benSampleType.get(j).getTests();
-                if (Test_PatientMap.containsKey(Testname)) {
-                    Test_PatientMap.put(Testname, Test_PatientMap.get(Testname) + 1);
+                if (testExist(benSampleType.get(j).getTests())) {
+                    patientMapModel.get(positionOfTest).setCount(patientMapModel.get(positionOfTest).getCount() + 1);
+
                 } else {
-                    Test_PatientMap.put(Testname, 1);
+                    intialListModelClass modelClass = new intialListModelClass();
+                    modelClass.setCount(1);
+                    modelClass.setProjID(benSampleType.get(j).getProjId());
+                    modelClass.setTestname(benSampleType.get(j).getTests());
+                    modelClass.setTestType(benSampleType.get(j).getTestType());
+                    patientMapModel.add(modelClass);
                 }
             }
         }
         ArrayList<Get_PEPostCheckoutOrderResponseModel> responseModel = new ArrayList<>();
         Get_PEPostCheckoutOrderResponseModel model;
 
-        for (Map.Entry<String, Integer> entry : Test_PatientMap.entrySet()) {
+        for (int i = 0; i < patientMapModel.size(); i++) {
             model = new Get_PEPostCheckoutOrderResponseModel();
-            model.setTestName(entry.getKey());
-            model.setPatientCount(entry.getValue());
+            model.setTestName(patientMapModel.get(i).getTestname());
+            model.setTesttype(patientMapModel.get(i).getTestType());
+            model.setProjectID(patientMapModel.get(i).getProjID());
+            model.setPatientCount(patientMapModel.get(i).getCount());
             responseModel.add(model);
         }
         return responseModel;
+    }
+
+    private boolean testExist(String tests) {
+        for (int i = 0; i < patientMapModel.size(); i++) {
+            if (patientMapModel.get(i).getTestname().contains(tests)) {
+                positionOfTest = i;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void callPostCheckoutPatientList() {
@@ -204,13 +291,13 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                 patientListResponse = responseModel;
                 if (Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientDetails() != null) {
                     for (int i = 0; i < Pe_PatientBaseResponseModel.get(baseModelPosition).getAddedPatients().size(); i++) {
-                        if (patientListResponse.getData().getPatients().get(i).getId() == Pe_PatientBaseResponseModel.get(baseModelPosition).getAddedPatients().get(i).getId()) {
-                            patientListResponse.getData().getPatients().get(i).setSelected(true);
-                        } else {
-                            patientListResponse.getData().getPatients().get(i).setSelected(false);
+                        for (int j = 0; j < patientListResponse.getData().size(); j++) {
+                            if (patientListResponse.getData().get(j).getId() == Pe_PatientBaseResponseModel.get(baseModelPosition).getAddedPatients().get(i).getId()) {
+                                patientListResponse.getData().get(j).setSelected(true);
+                            }
                         }
-
                     }
+                    patientListEdit = true;
                 }
                 showSelectPatientDetailsLayout(patientListResponse);
             }
@@ -230,19 +317,19 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         rcl_ben_list.setLayoutManager(layoutManager);
         rcl_ben_list.setVisibility(View.VISIBLE);
 
-        selectPeBenificiaryAdapter = new SelectPeBenificiaryAdapter(false, Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientCount(), patientListResponseModel, activity, new AppInterfaces.PatientSelector() {
+        selectPeBenificiaryAdapter = new SelectPeBenificiaryAdapter(patientListEdit, Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientCount(), patientListResponseModel, activity, new AppInterfaces.PatientSelector() {
             @Override
             public void addPatient(int addPatientPosition) {
-                patientListResponse.getData().getPatients().get(addPatientPosition).setSelected(true);
+                patientListResponse.getData().get(addPatientPosition).setSelected(true);
             }
 
             @Override
             public void removePatient(int removePatientPostion) {
-                patientListResponse.getData().getPatients().get(removePatientPostion).setSelected(false);
+                patientListResponse.getData().get(removePatientPostion).setSelected(false);
             }
 
             @Override
-            public void editPatient(GetPatientListResponseModel.Data.patients singlePatient) {
+            public void editPatient(GetPatientListResponseModel.DataDTO singlePatient) {
                 editingPatientModel = singlePatient;
                 showEditPatientDetailsLayout();
             }
@@ -255,6 +342,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     private void showEditPatientDetailsLayout() {
         if (addPatientBottomsheet.isShowing()) {
             initSelectpatientBottomsheet(true, baseModelPosition);
+            initselectPatientListeners(true);
         }
     }
 
@@ -297,7 +385,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                     Toast.makeText(activity, "Please enter age", Toast.LENGTH_SHORT).show();
                     return false;
                 }
-                if (isMale = null) {
+                if (isMale == null) {
                     Toast.makeText(activity, "Please select gender", Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -331,16 +419,24 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    selectedPatientModel = patientListResponse;
-                    for (int i = 0; i < patientListResponse.getData().getPatients().size(); i++) {
-                        if (!patientListResponse.getData().getPatients().get(i).getSelected()) {
-                            selectedPatientModel.getData().getPatients().remove(i);
+                    /*selectedPatientModel = patientListResponse;*/
+                    ArrayList<GetPatientListResponseModel.DataDTO> testArray = new ArrayList<>();
+                    for (int i = 0; i < patientListResponse.getData().size(); i++) {
+                        if (patientListResponse.getData().get(i).isSelected()) {
+                            testArray.add(patientListResponse.getData().get(i));
                         }
                     }
-                    Global.sout("selected Patient mode>>>>>>>>>>>>>>>", selectedPatientModel);
-                    Pe_PatientBaseResponseModel.get(baseModelPosition).setAddedPatients(selectedPatientModel.getData().getPatients());
-                    Global.sout("selected Patient mode>>>>>>>>>>>>>>>", Pe_PatientBaseResponseModel);
-                    pe_postPatientDetailsAdapter.notifyDataSetChanged();
+                    selectedPatientModel.setData(testArray);
+                    if (Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientCount() >= selectedPatientModel.getData().size()) {
+                        addPatientBottomsheet.dismiss();
+                        Global.sout("selected Patient mode>>>>>>>>>>>>>>>", selectedPatientModel);
+                        Pe_PatientBaseResponseModel.get(baseModelPosition).setAddedPatients(selectedPatientModel.getData());
+                        Global.sout("selected Patient mode>>>>>>>>>>>>>>>", Pe_PatientBaseResponseModel);
+                        pe_postPatientDetailsAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(activity, "Please select " + Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientCount() + " or less patients", Toast.LENGTH_SHORT).show();
+                    }
+
                 } catch (Exception e) {
                     Global.sout("btn_submit_exception", e.getLocalizedMessage());
                 }
@@ -352,13 +448,14 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     private void calleditPatientAPI() {
         try {
             if (cd.isConnectingToInternet()) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("name", edt_patientname.getText());
-                jsonObject.put("age", Integer.valueOf(String.valueOf(edt_patientage.getText())));
-                jsonObject.put("gender", isMale ? "MALE" : "FEMALE");
-                jsonObject.put("id", editingPatientModel.getId());
+                AddEditPatientModel model = new AddEditPatientModel();
+                model.setName(edt_patientname.getText().toString());
+                model.setAge(Integer.valueOf(edt_patientage.getText().toString()));
+                model.setGender(isMale ? 1 : 2);
+                model.setId(editingPatientModel.getId());
+
                 PE_PostPatientDetailsController controller = new PE_PostPatientDetailsController(PE_PostPatientDetailsActivity.this);
-                controller.callEditPatient(jsonObject, orderVisitDetailsModel.getVisitId());
+                controller.callEditPatient(model, orderVisitDetailsModel.getVisitId());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -368,15 +465,16 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     private void callAddNewPEPatientAPI() {
         try {
             if (cd.isConnectingToInternet()) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("name", edt_patientname.getText());
-                jsonObject.put("age", Integer.valueOf(String.valueOf(edt_patientage.getText())));
-                jsonObject.put("gender", isMale ? "MALE" : "FEMALE");
+                AddEditPatientModel model = new AddEditPatientModel();
+
+                model.setName(edt_patientname.getText().toString());
+                model.setAge(Integer.valueOf(edt_patientage.getText().toString()));
+                model.setGender(isMale ? 1 : 2);
 
                 PE_PostPatientDetailsController controller = new PE_PostPatientDetailsController(PE_PostPatientDetailsActivity.this);
-                controller.callAddPatient(jsonObject, orderVisitDetailsModel.getVisitId());
+                controller.callAddPatient(model, orderVisitDetailsModel.getVisitId());
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -406,9 +504,8 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
             rl_addpatient.setVisibility(View.GONE);
             ll_addPatient.setVisibility(View.VISIBLE);
             edt_patientname.setText(editingPatientModel.getName());
-            edt_patientage.setText(editingPatientModel.getAge());
-            isMale = InputUtils.CheckEqualIgnoreCase(editingPatientModel.getGender(), "M") || InputUtils.CheckEqualIgnoreCase(editingPatientModel.getGender(), "male");
-            btn_addPatient.setVisibility(View.VISIBLE);
+            edt_patientage.setText(String.valueOf(editingPatientModel.getAge()));
+            isMale = editingPatientModel.getGender() == 1;
             tv_select_editPatient.setText("Edit Patients");
 
             if (isMale) {
@@ -423,7 +520,6 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                 tv_male.setTextColor(getResources().getColor(R.color.black));
             }
         } else {
-            btn_addPatient.setVisibility(View.GONE);
             btn_submit.setVisibility(View.VISIBLE);
         }
     }
@@ -603,12 +699,64 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         if (addPatientBottomsheet.isShowing()) {
             addPatientBottomsheet.dismiss();
         }
-        callPostCheckoutPatientList();
+        if (!addPatientResponseModel.getStatus()) {
+            callPostCheckoutPatientList();
+        } else {
+            TastyToast.makeText(activity, SomethingWentwrngMsg, TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+        }
+
     }
 
     public void onEditPatientResponse(AddPatientResponseModel addPatientResponseModel) {
-        if (addPatientResponseModel.data != null && addPatientResponseModel.getError().equalsIgnoreCase("")) {
+        if (addPatientBottomsheet.isShowing())
+            addPatientBottomsheet.dismiss();
+        if (addPatientResponseModel.getData() != null) {
             callPostCheckoutPatientList();
+        }
+    }
+
+    public void onConfirmOrderResponseReceived(ConfirmOrderResponseModel confirmOrderResponseModel) {
+        if (confirmOrderResponseModel.isStatus()){
+            startActivity(new Intent(PE_PostPatientDetailsActivity.this, StartAndArriveActivity.class));
+        }else{
+            TastyToast.makeText(activity, SomethingWentwrngMsg, TastyToast.LENGTH_SHORT,TastyToast.ERROR).show();
+        }
+    }
+
+    public class intialListModelClass {
+        String testname, projID, testType;
+        int count;
+
+        public String getTestname() {
+            return testname;
+        }
+
+        public void setTestname(String testname) {
+            this.testname = testname;
+        }
+
+        public String getProjID() {
+            return projID;
+        }
+
+        public void setProjID(String projID) {
+            this.projID = projID;
+        }
+
+        public String getTestType() {
+            return testType;
+        }
+
+        public void setTestType(String testType) {
+            this.testType = testType;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
         }
     }
 }

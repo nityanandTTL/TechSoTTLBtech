@@ -249,7 +249,7 @@
             android:background="@drawable/rounded_background_green_2"
             android:backgroundTint="@color/colorAccent"
             android:letterSpacing="0.05"
-            android:text="Save Details"
+            android:text="Save"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:visibility="visible" />
