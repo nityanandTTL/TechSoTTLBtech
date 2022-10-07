@@ -3,6 +3,7 @@ package com.thyrocare.btechapp.Controller;
 import android.app.Activity;
 
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.PE_PostPatientDetailsActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.StartAndArriveActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.FixAppointmentDataModel;
@@ -44,6 +45,7 @@ public class OrderReleaseRemarksController {
     Global globalClass;
     int flag;
     AppPreferenceManager appPreferenceManager;
+    PE_PostPatientDetailsActivity pe_postPatientDetailsActivity;
 
     public OrderReleaseRemarksController(StartAndArriveActivity startAndArriveActivity) {
         this.activity = startAndArriveActivity;
@@ -72,6 +74,14 @@ public class OrderReleaseRemarksController {
     public OrderReleaseRemarksController(RescheduleSlotActivity rescheduleSlotActivity) {
         this.activity = rescheduleSlotActivity;
         this.rescheduleSlotActivity = rescheduleSlotActivity;
+        appPreferenceManager = new AppPreferenceManager(activity);
+        globalClass = new Global(activity);
+        flag = 4;
+    }
+
+    public OrderReleaseRemarksController(PE_PostPatientDetailsActivity pe_postPatientDetailsActivity) {
+        this.activity = rescheduleSlotActivity;
+        this.pe_postPatientDetailsActivity = pe_postPatientDetailsActivity;
         appPreferenceManager = new AppPreferenceManager(activity);
         globalClass = new Global(activity);
         flag = 4;

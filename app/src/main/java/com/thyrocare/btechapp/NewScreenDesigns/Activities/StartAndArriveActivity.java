@@ -348,7 +348,12 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     btn_arrive.setVisibility(View.VISIBLE);
                     btn_start.setVisibility(View.GONE);
                     if (cd.isConnectingToInternet()) {
-                        CallOrderDetailAPI("Start");
+                        if (InputUtils.CheckEqualIgnoreCase(BundleConstants.POSTCHECKOUT_INTENT, "TRUE")) {
+                            CallOrderDetailAPI("Arrive");
+                        } else {
+                            CallOrderDetailAPI("Start");
+                        }
+
                     } else {
                         globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_LONG);
                     }

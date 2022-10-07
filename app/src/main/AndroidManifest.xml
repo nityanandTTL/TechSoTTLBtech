@@ -83,7 +83,7 @@
         <activity
             android:name=".NewScreenDesigns.Activities.PE_PostPatientDetailsActivity"
             android:screenOrientation="portrait"
-            android:exported="false" />
+             />
 
         <activity
             android:name=".activity.RescheduleSlotActivity"

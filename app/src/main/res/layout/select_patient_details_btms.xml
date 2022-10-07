@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:layout_margin="@dimen/_5sdp"
-    android:gravity="bottom"
     android:orientation="vertical">
 
     <LinearLayout
@@ -67,28 +66,14 @@
             android:textSize="@dimen/_20sdp" />
     </LinearLayout>
 
-    <TextView
-        android:layout_marginVertical="@dimen/_15sdp"
-        android:id="@+id/tv_nodatafound"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No data found"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_25sdp"
-        android:visibility="gone"
-        android:textStyle="bold"/>
-
 
     <RelativeLayout
         android:id="@+id/rl_mainAddPatient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         android:layout_marginTop="@dimen/_5sdp"
         android:visibility="visible"
-        android:gravity="bottom">
+        android:layout_gravity="center_vertical">
 
         <RelativeLayout
             android:id="@+id/rl_addpatient"
@@ -128,24 +113,37 @@
 
         <LinearLayout
 
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/btn_submit"
             android:layout_below="@+id/rl_addpatient"
-            android:layout_gravity="bottom"
-            android:gravity="bottom"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcl_ben_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:visibility="visible"
-                tools:itemCount="5"
+                tools:itemCount="2"
                 tools:listitem="@layout/single_ben_detail" />
 
 
         </LinearLayout>
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@drawable/rounded_background_green_2"
+            android:backgroundTint="@color/colorAccent"
+            android:letterSpacing="0.05"
+            android:text="Save"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:visibility="visible" />
 
+        <!--add patient view-->
         <LinearLayout
             android:id="@+id/ll_addPatient"
             android:layout_width="match_parent"
@@ -240,19 +238,6 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_submit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:background="@drawable/rounded_background_green_2"
-            android:backgroundTint="@color/colorAccent"
-            android:letterSpacing="0.05"
-            android:text="Save"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:visibility="visible" />
 
 
     </RelativeLayout>

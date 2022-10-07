@@ -102,6 +102,7 @@ public class BundleConstants {
     public static final String LOGOUT = "LOGOUT";
     public static final String API_FOR_OTP = "sNhdlQjqvoD7zCbzf56sxppBJX3MmdWSAomi@RBhXRrVcGyko7hIzQ==";
     public static final String Apikey_WOE = "68rbZ40eNeRephUzIDTos9SsQIm4mHlT3lCNnqI)Ivk=";
+    public static String POSTCHECKOUT_INTENT = "FALSE";
     public static String PINCODE = "PINCODE";
     // neha G --------------------------
     public static int DataInVisitModel = 0;

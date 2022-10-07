@@ -18,6 +18,7 @@ import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.models.api.request.GetPatientListResponseModel;
 import com.thyrocare.btechapp.models.api.request.SendOTPRequestModel;
+import com.thyrocare.btechapp.models.api.response.AddPatientResponseModel;
 import com.thyrocare.btechapp.models.api.response.ConfirmOrderResponseModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
@@ -37,6 +38,7 @@ public class PE_PostPatientDetailsController {
     Global globalclass;
     AppPreferenceManager appPreferenceManager;
     ConfirmOrderResponseModel confirmOrderResponseModel = new ConfirmOrderResponseModel();
+    AddPatientResponseModel addPatientResponseModel = new AddPatientResponseModel();
 
 
     public PE_PostPatientDetailsController(PE_PostPatientDetailsActivity pe_postPatientDetailsActivity, AppInterfaces.getBenList getBenList) {
@@ -110,47 +112,48 @@ public class PE_PostPatientDetailsController {
 
         globalclass.showProgressDialog(pe_postPatientDetailsActivity, "Please wait while processing your request...");
         PostAPIInterface appInterfaces = RetroFit_APIClient.getInstance().getClient(pe_postPatientDetailsActivity, EncryptionUtils.Dcrp_Hex(pe_postPatientDetailsActivity.getString(R.string.PE_API))).create(PostAPIInterface.class);
-        Call<ConfirmOrderResponseModel> call = appInterfaces.addNewPatient(model, appPreferenceManager.getAuthToken(), visitId);
-        call.enqueue(new Callback<ConfirmOrderResponseModel>() {
+        Call<AddPatientResponseModel> call = appInterfaces.addNewPatient(model, appPreferenceManager.getAuthToken(), visitId);
+        call.enqueue(new Callback<AddPatientResponseModel>() {
             @Override
-            public void onResponse(Call<ConfirmOrderResponseModel> call, Response<ConfirmOrderResponseModel> response) {
+            public void onResponse(Call<AddPatientResponseModel> call, Response<AddPatientResponseModel> response) {
+                globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
                 if (response.isSuccessful() && response.body() != null) {
-                    globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
                     addPatientResponseModel = response.body();
                     pe_postPatientDetailsActivity.onAddPatientResponseReceived(addPatientResponseModel);
-                } else {
-                    globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
+                } else if (response.code() == 409) {
                     TastyToast.makeText(pe_postPatientDetailsActivity, addPatientResponseModel.error, TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+                } else {
+                    TastyToast.makeText(pe_postPatientDetailsActivity, ConstantsMessages.SomethingWentwrngMsg, TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<ConfirmOrderResponseModel> call, Throwable t) {
+            public void onFailure(Call<AddPatientResponseModel> call, Throwable t) {
                 globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
                 TastyToast.makeText(pe_postPatientDetailsActivity, "Something went wrong", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
             }
         });
+
     }
 
-    public void callEditPatient(AddEditPatientModel jsonObject, String visitId) {
+    public void callEditPatient(AddEditPatientModel requestModel, String visitId) {
         globalclass.showProgressDialog(pe_postPatientDetailsActivity, "Please wait while processing your request...");
         PostAPIInterface appInterfaces = RetroFit_APIClient.getInstance().getClient(pe_postPatientDetailsActivity, EncryptionUtils.Dcrp_Hex(pe_postPatientDetailsActivity.getString(R.string.PE_API))).create(PostAPIInterface.class);
-        Call<ConfirmOrderResponseModel> call = appInterfaces.editPatient(jsonObject, appPreferenceManager.getAuthToken(), visitId);
-        call.enqueue(new Callback<ConfirmOrderResponseModel>() {
+        Call<AddPatientResponseModel> call = appInterfaces.editPatient(requestModel, appPreferenceManager.getAuthToken(), visitId);
+        call.enqueue(new Callback<AddPatientResponseModel>() {
             @Override
-            public void onResponse(Call<ConfirmOrderResponseModel> call, Response<ConfirmOrderResponseModel> response) {
+            public void onResponse(Call<AddPatientResponseModel> call, Response<AddPatientResponseModel> response) {
+                globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
                 if (response.isSuccessful() && response.body() != null) {
-                    globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
                     addPatientResponseModel = response.body();
                     pe_postPatientDetailsActivity.onEditPatientResponse(addPatientResponseModel);
                 } else {
-                    globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
                     TastyToast.makeText(pe_postPatientDetailsActivity, addPatientResponseModel.error, TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<ConfirmOrderResponseModel> call, Throwable t) {
+            public void onFailure(Call<AddPatientResponseModel> call, Throwable t) {
                 globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
                 TastyToast.makeText(pe_postPatientDetailsActivity, "Something went wrong", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
             }
@@ -166,13 +169,12 @@ public class PE_PostPatientDetailsController {
             call.enqueue(new Callback<ConfirmOrderResponseModel>() {
                 @Override
                 public void onResponse(Call<ConfirmOrderResponseModel> call, Response<ConfirmOrderResponseModel> response) {
+                    globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
                     if (response.isSuccessful() && response.body() != null) {
-                        globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
                         confirmOrderResponseModel = response.body();
                         pe_postPatientDetailsActivity.onConfirmOrderResponseReceived(confirmOrderResponseModel);
                     } else {
-                        globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
-                        TastyToast.makeText(pe_postPatientDetailsActivity, confirmOrderResponseModel.getMessage(), TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+                        TastyToast.makeText(pe_postPatientDetailsActivity, ConstantsMessages.SomethingWentwrngMsg/*confirmOrderResponseModel.getMessage()*/, TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
                     }
                 }
 

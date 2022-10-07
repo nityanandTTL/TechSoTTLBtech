@@ -1,21 +1,27 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Activities;
 
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
+import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 import static com.thyrocare.btechapp.utils.app.AppConstants.MSG_SERVER_EXCEPTION;
+import static com.thyrocare.btechapp.utils.app.CommonUtils.isValidForEditing;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -33,9 +39,11 @@ import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.BtechInterfaces.AppInterfaces;
 import com.thyrocare.btechapp.BuildConfig;
+import com.thyrocare.btechapp.Controller.OrderReleaseRemarksController;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.PE_PostPatientDetailsAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.SelectPeBenificiaryAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Controllers.PE_PostPatientDetailsController;
+import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.AddEditPatientModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.ConfirmOrderRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_PEPostCheckoutOrderResponseModel;
@@ -43,27 +51,38 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
+import com.thyrocare.btechapp.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
+import com.thyrocare.btechapp.delegate.OrderRescheduleDialogButtonClickedDelegate;
+import com.thyrocare.btechapp.dialog.ConfirmRequestReleaseDialog;
+import com.thyrocare.btechapp.dialog.RescheduleOrderDialog;
 import com.thyrocare.btechapp.models.api.request.GetPatientListResponseModel;
 import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.btechapp.models.api.request.SendOTPRequestModel;
+import com.thyrocare.btechapp.models.api.request.ServiceUpdateRequestModel;
 import com.thyrocare.btechapp.models.api.response.AddPatientResponseModel;
 import com.thyrocare.btechapp.models.api.response.ConfirmOrderResponseModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryTestDetailsModel;
+import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
+import com.thyrocare.btechapp.utils.app.DateUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
+import org.joda.time.DateTimeComparator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,7 +95,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     TextView tv_addbenDetails, tv_order_release, tv_amount;
     Button btn_arrive_proceed;
     Activity activity;
-    BottomSheetDialog editPatientBottomsheet, addPatientBottomsheet;
+    BottomSheetDialog addPatientBottomsheet;
     AppPreferenceManager appPreferenceManager;
     GetPatientListResponseModel selectedPatientModel = new GetPatientListResponseModel();
     GetPatientListResponseModel.DataDTO editingPatientModel = new GetPatientListResponseModel.DataDTO();
@@ -103,9 +122,17 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     TextInputEditText edt_patientname, edt_patientage;
     Button btn_addPatient, btn_submit;
     Boolean isMale = null;
-    private int editListPosition;
     private int baseModelPosition;
     //TODO select patient bottomsheet views--------------------------------------------
+
+    //TODO order release views and variables-------------------------------------------
+
+    private String cancelVisit = "n";
+    private ConfirmRequestReleaseDialog crr;
+    private int newAddedPatientID = 0;
+
+    //TODO order release views and variables-------------------------------------------
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,12 +178,23 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                 controller.callSendOTPAPI(otpRequestModel, orderVisitDetailsModel);
             }
         });
+
+        tv_order_release.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (orderVisitDetailsModel.getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("PARTIAL SERVICED") && isValidForEditing(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
+                    onReleaseButtonClicked();
+                } else {
+                    onOrderRelease();
+                }
+            }
+        });
+
     }
 
     private void callConfirmOrderAPI() {
         if (validateBaseModel(Pe_PatientBaseResponseModel)) {
-
-
+            confirmOrderRequestModel = new ConfirmOrderRequestModel();
             for (int i = 0; i < Pe_PatientBaseResponseModel.size(); i++) {
                 ConfirmOrderRequestModel.PatientsDTO.ProductsDTO singleTestData = new ConfirmOrderRequestModel.PatientsDTO.ProductsDTO();
                 singleTestData.setDos_code(Pe_PatientBaseResponseModel.get(i).getTestName());
@@ -202,7 +240,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
 
     private boolean validateBaseModel(ArrayList<Get_PEPostCheckoutOrderResponseModel> pe_patientBaseResponseModel) {
         for (int i = 0; i < pe_patientBaseResponseModel.size(); i++) {
-            if (pe_patientBaseResponseModel.get(i).getAddedPatients() == null) {
+            if (pe_patientBaseResponseModel.get(i).getAddedPatients().size() == 0) {
                 Toast.makeText(activity, "Please fill all beneficiary data", Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -240,12 +278,9 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
 
     @NonNull
     private ArrayList<Get_PEPostCheckoutOrderResponseModel> setupInitialList() {
-        HashMap<String, Integer> Test_PatientMap = new HashMap<>();
-
         for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); i++) {
             ArrayList<BeneficiaryTestDetailsModel> benSampleType = orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType();
             for (int j = 0; j < benSampleType.size(); j++) {
-                String Testname = benSampleType.get(j).getTests();
                 if (testExist(benSampleType.get(j).getTests())) {
                     patientMapModel.get(positionOfTest).setCount(patientMapModel.get(positionOfTest).getCount() + 1);
 
@@ -292,7 +327,8 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                 if (Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientDetails() != null) {
                     for (int i = 0; i < Pe_PatientBaseResponseModel.get(baseModelPosition).getAddedPatients().size(); i++) {
                         for (int j = 0; j < patientListResponse.getData().size(); j++) {
-                            if (patientListResponse.getData().get(j).getId() == Pe_PatientBaseResponseModel.get(baseModelPosition).getAddedPatients().get(i).getId()) {
+                            if (patientListResponse.getData().get(j).getId() == Pe_PatientBaseResponseModel.get(baseModelPosition).getAddedPatients().get(i).getId() ||
+                                    newAddedPatientID == Pe_PatientBaseResponseModel.get(baseModelPosition).getAddedPatients().get(i).getId()) {
                                 patientListResponse.getData().get(j).setSelected(true);
                             }
                         }
@@ -358,6 +394,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 rcl_ben_list.setVisibility(View.GONE);
+                btn_submit.setVisibility(View.GONE);
                 ll_addPatient.setVisibility(View.VISIBLE);
                 iv_addnewben.setVisibility(View.GONE);
             }
@@ -382,7 +419,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                     return false;
                 }
                 if (Integer.parseInt(edt_patientage.getText().toString()) > 150 || Integer.parseInt(edt_patientage.getText().toString()) == 0 || edt_patientage.getText().toString().isEmpty()) {
-                    Toast.makeText(activity, "Please enter age", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Please enter valid age", Toast.LENGTH_SHORT).show();
                     return false;
                 }
                 if (isMale == null) {
@@ -418,21 +455,27 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int checker = 0;
                 try {
                     /*selectedPatientModel = patientListResponse;*/
                     ArrayList<GetPatientListResponseModel.DataDTO> testArray = new ArrayList<>();
                     for (int i = 0; i < patientListResponse.getData().size(); i++) {
                         if (patientListResponse.getData().get(i).isSelected()) {
                             testArray.add(patientListResponse.getData().get(i));
+                            checker++;
                         }
                     }
                     selectedPatientModel.setData(testArray);
-                    if (Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientCount() >= selectedPatientModel.getData().size()) {
+                    if (Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientCount() >= selectedPatientModel.getData().size() && checker != 0) {
                         addPatientBottomsheet.dismiss();
                         Global.sout("selected Patient mode>>>>>>>>>>>>>>>", selectedPatientModel);
                         Pe_PatientBaseResponseModel.get(baseModelPosition).setAddedPatients(selectedPatientModel.getData());
                         Global.sout("selected Patient mode>>>>>>>>>>>>>>>", Pe_PatientBaseResponseModel);
+                        Pe_PatientBaseResponseModel.get(baseModelPosition).setDataAdded(true);
                         pe_postPatientDetailsAdapter.notifyDataSetChanged();
+                        if (checkModelStatus()) {
+                            tv_addbenDetails.setVisibility(View.GONE);
+                        }
                     } else {
                         Toast.makeText(activity, "Please select " + Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientCount() + " or less patients", Toast.LENGTH_SHORT).show();
                     }
@@ -441,6 +484,15 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                     Global.sout("btn_submit_exception", e.getLocalizedMessage());
                 }
 
+            }
+
+            private boolean checkModelStatus() {
+                for (int i = 0; i < Pe_PatientBaseResponseModel.size(); i++) {
+                    if (!Pe_PatientBaseResponseModel.get(i).isDataAdded()) {
+                        return false;
+                    }
+                }
+                return true;
             }
         });
     }
@@ -484,7 +536,6 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         iv_dismiss = addPatientBottomsheet.findViewById(R.id.iv_dismiss);
         iv_addnewben = addPatientBottomsheet.findViewById(R.id.iv_addnewben);
         tv_testname = addPatientBottomsheet.findViewById(R.id.tv_testname);
-        tv_nodatafound = addPatientBottomsheet.findViewById(R.id.tv_nodatafound);
         tv_male = addPatientBottomsheet.findViewById(R.id.tv_male);
         tv_female = addPatientBottomsheet.findViewById(R.id.tv_female);
         rl_mainAddPatient = addPatientBottomsheet.findViewById(R.id.rl_mainAddPatient);
@@ -696,13 +747,12 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     }
 
     public void onAddPatientResponseReceived(AddPatientResponseModel addPatientResponseModel) {
-        if (addPatientBottomsheet.isShowing()) {
+        if (addPatientResponseModel.getStatus() && addPatientBottomsheet.isShowing()) {
             addPatientBottomsheet.dismiss();
-        }
-        if (!addPatientResponseModel.getStatus()) {
+            newAddedPatientID = addPatientResponseModel.getData().getId();//TODO This patient will be used to set new ben checked after the patient list api is called again.
             callPostCheckoutPatientList();
         } else {
-            TastyToast.makeText(activity, SomethingWentwrngMsg, TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+            TastyToast.makeText(activity, "Failed to add the patient...", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
         }
 
     }
@@ -716,12 +766,232 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     }
 
     public void onConfirmOrderResponseReceived(ConfirmOrderResponseModel confirmOrderResponseModel) {
-        if (confirmOrderResponseModel.isStatus()){
-            startActivity(new Intent(PE_PostPatientDetailsActivity.this, StartAndArriveActivity.class));
-        }else{
-            TastyToast.makeText(activity, SomethingWentwrngMsg, TastyToast.LENGTH_SHORT,TastyToast.ERROR).show();
+        if (confirmOrderResponseModel.isStatus()) {
+            Intent intent = new Intent(PE_PostPatientDetailsActivity.this, StartAndArriveActivity.class);
+            BundleConstants.POSTCHECKOUT_INTENT ="TRUE";
+            startActivity(intent);
+
+        } else {
+            TastyToast.makeText(activity, SomethingWentwrngMsg, TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
         }
     }
+
+    //TODO order release functionality--------------------------------------------------
+    private void onReleaseButtonClicked() {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+
+        final View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.layout_bottomsheet_release, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+        TextView tv_ord_resch = bottomSheet.findViewById(R.id.tv_ord_resch);
+        TextView tv_ord_rel = bottomSheet.findViewById(R.id.tv_ord_rel);
+        TextView tv_ord_pass = bottomSheet.findViewById(R.id.tv_ord_pass);
+        TextView tv_cancel_vst = bottomSheet.findViewById(R.id.tv_cancel_vst);
+        Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+        Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+        LinearLayout ll_cancl = bottomSheet.findViewById(R.id.ll_cancl);
+        tv_ord_pass.setText("Order Release");
+
+        boolean toShowResheduleOption = false;
+        if (!InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getAppointmentDate())) {
+            Date DeviceDate = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+            Date AppointDate = DateUtils.dateFromString(orderVisitDetailsModel.getAllOrderdetails().get(0).getAppointmentDate(), format);
+            int daycount = DateTimeComparator.getDateOnlyInstance().compare(AppointDate, DeviceDate);
+            if (daycount == 0) {
+                toShowResheduleOption = true;
+            } else {
+                toShowResheduleOption = false;
+            }
+        }
+        if (orderVisitDetailsModel.getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment")
+                || orderVisitDetailsModel.getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
+            if (isValidForEditing(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
+                tv_ord_pass.setVisibility(View.GONE);
+                tv_ord_rel.setVisibility(View.GONE);
+                tv_ord_resch.setVisibility(View.GONE);
+                ll_cancl.setVisibility(View.VISIBLE);
+                tv_cancel_vst.setText("Do you want to cancel the visit?");
+                cancelVisit = "y";
+            } else {
+                ll_cancl.setVisibility(View.GONE);
+                tv_ord_pass.setVisibility(View.VISIBLE);
+                tv_ord_rel.setVisibility(View.GONE);
+                tv_ord_resch.setVisibility(View.GONE);
+            }
+        } else {
+            if (isValidForEditing(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
+
+                tv_ord_pass.setVisibility(View.GONE);
+                tv_ord_rel.setVisibility(View.GONE);
+                tv_ord_resch.setVisibility(View.GONE);
+                ll_cancl.setVisibility(View.VISIBLE);
+                tv_cancel_vst.setText("Do you want to cancel the visit?");
+                cancelVisit = "y";
+            } else {
+                if (toShowResheduleOption) {
+                    tv_ord_pass.setVisibility(View.GONE);
+                    tv_ord_rel.setVisibility(View.VISIBLE);
+                    tv_ord_resch.setVisibility(View.VISIBLE);
+                    ll_cancl.setVisibility(View.GONE);
+
+                } else {
+                    tv_ord_pass.setVisibility(View.GONE);
+                    tv_ord_rel.setVisibility(View.VISIBLE);
+                    tv_ord_resch.setVisibility(View.GONE);
+                    ll_cancl.setVisibility(View.GONE);
+                }
+            }
+
+        }
+
+        tv_ord_resch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RescheduleOrderDialog cdd = new RescheduleOrderDialog(activity, new PE_PostPatientDetailsActivity.OrderRescheduleDialogButtonClickedDelegateResult(), orderVisitDetailsModel.getAllOrderdetails().get(0));
+                cdd.show();
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        tv_ord_rel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crr = new ConfirmRequestReleaseDialog(activity, new PE_PostPatientDetailsActivity.CConfirmOrderReleaseDialogButtonClickedDelegateResult(), orderVisitDetailsModel);
+                crr.show();
+
+            }
+        });
+
+        tv_ord_pass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crr = new ConfirmRequestReleaseDialog(activity, new PE_PostPatientDetailsActivity.CConfirmOrderReleaseDialogButtonClickedDelegateResult(), orderVisitDetailsModel);
+                crr.show();
+                //TODO Removed Release pop up
+
+            }
+        });
+
+        if (ll_cancl.getVisibility() == View.VISIBLE) {
+            if (cancelVisit.equals("y")) {
+                btn_yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (cancelVisit.equals("y")) {
+                            if (isNetworkAvailable(activity)) {
+                                CallServiceUpdateAPI();
+                            } else {
+                                Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            bottomSheetDialog.dismiss();
+                        }
+                    }
+                });
+
+                btn_no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+            }
+        }
+        bottomSheetDialog.setContentView(bottomSheet);
+        bottomSheetDialog.setCancelable(true);
+        bottomSheetDialog.show();
+
+
+    }
+
+    private void CallServiceUpdateAPI() {
+
+        ServiceUpdateRequestModel serviceUpdateRequestModel = new ServiceUpdateRequestModel();
+        serviceUpdateRequestModel.setVisitId(orderVisitDetailsModel.getVisitId());
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        Call<String> responseCall = apiInterface.CallServiceUpdateAPI(serviceUpdateRequestModel);
+        globalclass.showProgressDialog(activity, activity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
+
+        responseCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                globalclass.hideProgressDialog(activity);
+                if (response.code() == 200) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+
+                    alertDialog.setMessage("Your visit has been cancelled successfully");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+//                                    finish();
+                                }
+                            });
+
+                    alertDialog.show();
+
+                } else {
+                    globalclass.showCustomToast(activity, SomethingWentwrngMsg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                globalclass.hideProgressDialog(activity);
+                MessageLogger.LogDebug("Errror", t.getMessage());
+            }
+        });
+    }
+
+    private void onOrderRelease() {
+        if (cd.isConnectingToInternet()) {
+            OrderReleaseRemarksController orc = new OrderReleaseRemarksController(PE_PostPatientDetailsActivity.this);
+            orc.getRemarks(BundleConstants.OrderReleaseOptionsID, 0);
+        } else {
+            globalclass.showCustomToast(activity, activity.getResources().getString(R.string.plz_chk_internet));
+        }
+    }
+
+    private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {
+
+        @Override
+        public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark, String date) {
+
+            if (cd.isConnectingToInternet()) {
+                callOrderStatusChangeApi(11, "Reschedule", remark, date);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+
+        }
+    }
+
+    public class CConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
+        @Override
+        public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
+            if (cd.isConnectingToInternet()) {
+                callOrderStatusChangeApi(27, "Manipulation", remarks, "");
+            } else {
+                TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            }
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+
+        }
+    }
+
+
+    //TODO order release functionality--------------------------------------------------
 
     public class intialListModelClass {
         String testname, projID, testType;

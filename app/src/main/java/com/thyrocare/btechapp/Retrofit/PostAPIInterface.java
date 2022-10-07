@@ -535,7 +535,7 @@ public interface PostAPIInterface {
     Call<AddPatientResponseModel> editPatient(@Body AddEditPatientModel model, @Header("X-API-AUTH") String authToken, @Path("order_id") String OrderID);
 
     @Headers({"X-SOURCE: Thyrocare"})
-    @PUT("api/createPatient/phlebo")
+    @POST("api/createPatient/phlebo")
     Call<ConfirmOrderResponseModel> confirmOrder(@Body ConfirmOrderRequestModel model, @Header("X-API-AUTH") String authToken);
 
 }
