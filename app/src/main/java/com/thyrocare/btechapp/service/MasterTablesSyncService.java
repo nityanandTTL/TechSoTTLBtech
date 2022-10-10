@@ -136,13 +136,15 @@ public class MasterTablesSyncService extends Service {
 
     private void callMasterTableUpdateUploadAPI(final int infoType, String brandId, final int previousCount) {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<String> responseCall;
         if (infoType == MASTER_TABLE_BRANDS) {
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, "https://phlebo-management-public.thyrocare.com/").create(GetAPIInterface.class);
             responseCall = apiInterface.CallFetchBrandMasterApi();
         } else if (infoType == MASTER_TABLE_LAB_ALERTS) {
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             responseCall = apiInterface.CallGetFetchLabAlertMasterApi();
         } else {
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             responseCall = apiInterface.CallGetFetchBrandwiseTestMasterApi(brandId);
         }
         responseCall.enqueue(new Callback<String>() {

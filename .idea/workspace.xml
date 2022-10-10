@@ -17,24 +17,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3a4f3204-c669-4a11-9e9f-d466daba4f38" name="Default Changelist" comment="Uploaded V2.9.9(170) Remove blocker for the PEDSA order edit and test edit. Added check for the project ID removal in case of the offer is removed in edit case.">
-      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Controller/OrderReleaseRemarksController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Controller/OrderReleaseRemarksController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/PE_PostPatientDetailsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/PE_PostPatientDetailsActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/PE_PostPatientDetailsAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/PE_PostPatientDetailsAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/SelectPeBenificiaryAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/SelectPeBenificiaryAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Models/ResponseModel/Get_PEPostCheckoutOrderResponseModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Models/ResponseModel/Get_PEPostCheckoutOrderResponseModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/adapter/OrderReleaseAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/adapter/OrderReleaseAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/adapter/SlotDateAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/adapter/SlotDateAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/post_checkout_singleview.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/post_checkout_singleview.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/select_patient_details_btms.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/select_patient_details_btms.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/AddRemoveTestProfileActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/AddRemoveTestProfileActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Retrofit/GetAPIInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Retrofit/GetAPIInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/fragment/LeadGenerationFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/fragment/LeadGenerationFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/service/MasterTablesSyncService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/service/MasterTablesSyncService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hs_err_pid10584.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid10408.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid11172.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid11992.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid13980.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid14132.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid14456.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid15284.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid16068.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid16128.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid2160.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid2256.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid4692.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid5924.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid6568.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid7216.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid8244.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid8360.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_pid8380.hprof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projectFilesBackup/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -126,8 +126,8 @@ public interface GetAPIInterface {
     Call<FetchOrderDetailsResponseModel> getOrderDetail(@Path("orderno") String orderno);
 
     @Headers("Content-Type: application/json")
-    @GET("api/BrandTestRateList/2")
-    Call<BrandTestMasterModel> CallGetTechsoPRoductsAPI(@Header("Authorization") String token);
+    @GET("public/brand-test-rate-list")
+    Call<BrandTestMasterModel> CallGetTechsoPRoductsAPI();
 
     @Headers("Content-Type: application/json")
     @GET("api/CampDetails/MyCampCount/{ID}")

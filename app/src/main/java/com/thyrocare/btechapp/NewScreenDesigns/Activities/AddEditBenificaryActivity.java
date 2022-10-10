@@ -1858,8 +1858,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     private void CallGetTechsoProductsAPI() {
         try {
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + "Bearer " + appPreferenceManager.getAccess_Token());
-            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-            Call<BrandTestMasterModel> responseCall = apiInterface.CallGetTechsoPRoductsAPI("Bearer " + appPreferenceManager.getAccess_Token());
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity,"https://phlebo-management-public.thyrocare.com/" ).create(GetAPIInterface.class);
+            Call<BrandTestMasterModel> responseCall = apiInterface.CallGetTechsoPRoductsAPI();
             globalclass.showProgressDialog(mActivity, "Fetching products. Please wait..");
             responseCall.enqueue(new Callback<BrandTestMasterModel>() {
                 @Override
