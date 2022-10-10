@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.PE_PostPatientDetailsActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.StartAndArriveActivity;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.models.api.response.GetRemarksResponseModel;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 public class SlotDateAdapter extends RecyclerView.Adapter<SlotDateAdapter.MyViewHolder> {
     ArrayList<GetRemarksResponseModel> remarksArray;
     StartAndArriveActivity startAndArriveActivity;
+    PE_PostPatientDetailsActivity pe_postPatientDetailsActivity;
     Context mContext;
 
     public SlotDateAdapter(StartAndArriveActivity activity, ArrayList<GetRemarksResponseModel> arrayList) {
@@ -26,6 +28,13 @@ public class SlotDateAdapter extends RecyclerView.Adapter<SlotDateAdapter.MyView
         this.mContext = activity;
         this.remarksArray = arrayList;
     }
+
+    public SlotDateAdapter(PE_PostPatientDetailsActivity activity, ArrayList<GetRemarksResponseModel> arrayList) {
+        this.pe_postPatientDetailsActivity = activity;
+        this.mContext = activity;
+        this.remarksArray = arrayList;
+    }
+
 
     @NonNull
     @Override

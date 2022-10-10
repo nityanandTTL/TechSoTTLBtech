@@ -80,11 +80,11 @@ public class OrderReleaseRemarksController {
     }
 
     public OrderReleaseRemarksController(PE_PostPatientDetailsActivity pe_postPatientDetailsActivity) {
-        this.activity = rescheduleSlotActivity;
+        this.activity = pe_postPatientDetailsActivity;
         this.pe_postPatientDetailsActivity = pe_postPatientDetailsActivity;
         appPreferenceManager = new AppPreferenceManager(activity);
         globalClass = new Global(activity);
-        flag = 4;
+        flag = 5;
     }
 
     public void getPE_SMS(final PECutomerIntimationSMSRequestModel smsRequestModel) {
@@ -273,6 +273,9 @@ public class OrderReleaseRemarksController {
                                     }
                                 }
                                 visitOrdersDisplayFragment_new.remarksArrayList(responseModelArrayList);
+                            }
+                            if (i == 5) {
+                                pe_postPatientDetailsActivity.remarksArrayList(responseModelArrayList, 0);
                             } else {
                                 startAndArriveActivity.remarksArrayList(responseModelArrayList, i);
                             }
@@ -310,6 +313,8 @@ public class OrderReleaseRemarksController {
                             responseModelArrayList = response.body();
                             if (flag == 1) {
                                 startAndArriveActivity.getReasons(responseModelArrayList, ID);
+                            } else if (flag == 5) {
+                                pe_postPatientDetailsActivity.getReasons(responseModelArrayList,ID);
                             } else {
                                 visitOrdersDisplayFragment_new.getReasons(responseModelArrayList, ID);
                             }

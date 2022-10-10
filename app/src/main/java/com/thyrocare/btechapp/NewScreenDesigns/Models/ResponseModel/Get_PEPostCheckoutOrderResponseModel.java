@@ -12,6 +12,7 @@ public class Get_PEPostCheckoutOrderResponseModel {
     private boolean dataAdded;
     private String testtype;
     private String projectID;
+    private ArrayList<GetPatientListResponseModel.DataDTO> addedPatients = new ArrayList<>();
 
     public String getTesttype() {
         return testtype;
@@ -29,8 +30,6 @@ public class Get_PEPostCheckoutOrderResponseModel {
         this.projectID = projectID;
     }
 
-    private ArrayList<GetPatientListResponseModel.DataDTO> addedPatients = new ArrayList<>();
-
     public String getPatientDetails() {
         String addDetailsString = "";
         try {
@@ -43,7 +42,7 @@ public class Get_PEPostCheckoutOrderResponseModel {
         } catch (Exception e) {
             Global.sout("adddetailsString exception", e.getLocalizedMessage());
         }
-        return addDetailsString.toString();
+        return addDetailsString.trim();
     }
 
     public ArrayList<GetPatientListResponseModel.DataDTO> getAddedPatients() {

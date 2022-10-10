@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.PE_PostPatientDetailsActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.StartAndArriveActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.R;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 public class OrderReleaseAdapter extends RecyclerView.Adapter<OrderReleaseAdapter.MyViewHolder> {
     ArrayList<String> orderArray;
     StartAndArriveActivity startAndArriveActivity;
+    PE_PostPatientDetailsActivity pe_postPatientDetailsActivity;
     Context mContext;
     int flag;
     ArrayList<GetPECancelRemarksResponseModel> arrayList;
@@ -47,6 +49,13 @@ public class OrderReleaseAdapter extends RecyclerView.Adapter<OrderReleaseAdapte
         this.mContext = activity;
         this.remarksArray = arrayList;
         flag = 2;
+    }
+
+    public OrderReleaseAdapter(PE_PostPatientDetailsActivity activity, ArrayList<GetRemarksResponseModel> arrayList) {
+        this.pe_postPatientDetailsActivity = activity;
+        this.mContext = activity;
+        this.remarksArray = arrayList;
+        flag = 3;
     }
 
 
@@ -78,8 +87,10 @@ public class OrderReleaseAdapter extends RecyclerView.Adapter<OrderReleaseAdapte
             public void onClick(View v) {
                 if (flag == 1) {
                     startAndArriveActivity.onRemarksClick(remarksArray.get(position), position);
-                } else {
+                } else if (flag ==2){
                     visitOrdersDisplayFragment_new.onRemarksClick(remarksArray.get(position), position);
+                }else if (flag==3){
+                    pe_postPatientDetailsActivity.onRemarksClick(remarksArray.get(position), position);
                 }
 
             }

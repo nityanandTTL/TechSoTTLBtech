@@ -70,6 +70,8 @@ public class SelectPeBenificiaryAdapter extends RecyclerView.Adapter<SelectPeBen
         viewHolder.ben_name.setText(singlePatient.getName());
         viewHolder.ben_age_gender.setText(singlePatient.getAge() + " | " + singlePatientGender);
 
+        viewHolder.iv_benpic.setImageResource(singlePatient.getGender() == 1 ? R.drawable.male_ben : R.drawable.female_ben);
+
     }
 
     @Override

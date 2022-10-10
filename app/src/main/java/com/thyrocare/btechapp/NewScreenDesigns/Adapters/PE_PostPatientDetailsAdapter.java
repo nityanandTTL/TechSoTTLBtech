@@ -68,7 +68,6 @@ public class PE_PostPatientDetailsAdapter extends RecyclerView.Adapter<PE_PostPa
             holder.rl_ben_editView.setVisibility(View.VISIBLE);
             holder.addedBenDetails.setText(singlePatientDataPostion.getPatientDetails());
         }
-
     }
 
     @Override
