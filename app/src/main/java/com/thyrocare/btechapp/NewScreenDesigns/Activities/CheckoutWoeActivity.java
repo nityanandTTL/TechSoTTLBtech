@@ -58,6 +58,7 @@ import com.thyrocare.btechapp.Controller.UploadSelfieWOEController;
 import com.thyrocare.btechapp.Controller.WOEController;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.CheckoutWoeAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Controllers.GetAcessTokenAndOTPAPIController;
+import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.WOEOtpValidationRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonPOSTResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
@@ -251,12 +252,18 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                 public void onFailure(Call<FetchOrderDetailsResponseModel> call, Throwable t) {
                     globalclass.hideProgressDialog(mActivity);
                     globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
+                    startActivity(new Intent(mActivity, B2BVisitOrdersDisplayFragment.class));
+                    finish();
+
                 }
             });
         } catch (Exception e) {
             globalclass.hideProgressDialog(mActivity);
             e.printStackTrace();
             globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
+            startActivity(new Intent(mActivity,B2BVisitOrdersDisplayFragment.class));
+            finish();
+
         }
     }
 

@@ -138,14 +138,16 @@ public class MasterTablesSyncService extends Service {
 
         Call<String> responseCall;
         if (infoType == MASTER_TABLE_BRANDS) {
-            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, "https://phlebo-management-public.thyrocare.com/").create(GetAPIInterface.class);
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+
             responseCall = apiInterface.CallFetchBrandMasterApi();
         } else if (infoType == MASTER_TABLE_LAB_ALERTS) {
             GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             responseCall = apiInterface.CallGetFetchLabAlertMasterApi();
         } else {
-            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-            responseCall = apiInterface.CallGetFetchBrandwiseTestMasterApi(brandId);
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, "https://phlebo-management-public.thyrocare.com/").create(GetAPIInterface.class);
+
+            responseCall = apiInterface.CallGetFetchBrandwiseTestMasterApi();
         }
         responseCall.enqueue(new Callback<String>() {
             @Override

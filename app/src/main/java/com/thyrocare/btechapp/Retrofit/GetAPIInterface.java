@@ -154,8 +154,8 @@ public interface GetAPIInterface {
     Call<String> CallGetFetchLabAlertMasterApi();
 
     @Headers("Content-Type: application/json")
-    @GET("api/BrandTestRateList/{ID}")
-    Call<String> CallGetFetchBrandwiseTestMasterApi(@Path("ID") String ID);
+    @GET("public/brand-test-rate-list")
+    Call<String> CallGetFetchBrandwiseTestMasterApi();
 
 
     @Headers("Content-Type: application/json")

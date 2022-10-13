@@ -349,7 +349,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     btn_start.setVisibility(View.GONE);
                     if (cd.isConnectingToInternet()) {
                         if (InputUtils.CheckEqualIgnoreCase(BundleConstants.POSTCHECKOUT_INTENT, "TRUE")) {
-                            CallOrderDetailAPI("Arrive");
+                            BundleConstants.POSTCHECKOUT_INTENT = "FALSE";
+                            CallOrderDetailAPI("ARRIVE");
                         } else {
                             CallOrderDetailAPI("Start");
                         }
@@ -1466,7 +1467,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                                 }
                                             }
                                         }
-                                        orderDetailsModel = null;
                                         orderDetailsModel = orderVisitDetailsModel;
                                         break;
                                     }
@@ -3372,6 +3372,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                     } else {
                                         ll_timer.setVisibility(View.GONE);
                                     }
+                                }else{
+                                    startActivity(new Intent(mActivity,B2BVisitOrdersDisplayFragment.class));
+                                    Toast.makeText(mActivity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                                    finish();
                                 }
                             }
                             break;
@@ -3383,6 +3387,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<FetchOrderDetailsResponseModel> call, Throwable t) {
                     globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
+                    startActivity(new Intent(mActivity,B2BVisitOrdersDisplayFragment.class));
+                    finish();
+
                 }
             });
         } catch (Exception e) {

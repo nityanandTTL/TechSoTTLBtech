@@ -39,7 +39,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.BtechInterfaces.AppInterfaces;
-import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.Controller.OrderReleaseRemarksController;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.PE_PostPatientDetailsAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.SelectPeBenificiaryAdapter;
@@ -50,12 +49,13 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.ConfirmOrder
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_PEPostCheckoutOrderResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
+import com.thyrocare.btechapp.activity.HomeScreenActivity;
+import com.thyrocare.btechapp.activity.KIOSK_Scanner_Activity;
 import com.thyrocare.btechapp.activity.NewOrderReleaseActivity;
 import com.thyrocare.btechapp.adapter.OrderReleaseAdapter;
 import com.thyrocare.btechapp.adapter.SlotDateAdapter;
@@ -82,23 +82,19 @@ import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import org.joda.time.DateTimeComparator;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+/**/
 public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     RecyclerView rcl_pePostCheckOutOrder;
-    TextView tv_addbenDetails, tv_order_release, tv_amount;
+    TextView tv_addbenDetails, tv_order_release, tv_amount, tv_toolbar;
     Button btn_arrive_proceed;
     Activity activity;
     BottomSheetDialog addPatientBottomsheet;
@@ -118,6 +114,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     ArrayList<intialListModelClass> patientMapModel = new ArrayList<>();
     boolean patientListEdit = false;
     int postionToAddTest = 0, positionOfTest = 0;
+    ImageView iv_back, iv_home;
 
     //TODO select patient bottomsheet views--------------------------------------------
     ImageView iv_dismiss, iv_addnewben;
@@ -151,6 +148,33 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     }
 
     private void initListners() {
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (BundleConstants.isKIOSKOrder) {
+                    Intent intent1 = new Intent(activity, KIOSK_Scanner_Activity.class);
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent1);
+                } else {
+                    Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+
+//                finish();
+            }
+        });
+
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(activity, HomeScreenActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+            }
+        });
+
         btn_arrive_proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -580,8 +604,12 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         tv_order_release = findViewById(R.id.tv_order_release);
         tv_amount = findViewById(R.id.tv_amount);
         btn_arrive_proceed = findViewById(R.id.btn_arrive_proceed);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
         rcl_pePostCheckOutOrder.setClickable(false);
         tv_addbenDetails.setVisibility(View.GONE);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        tv_toolbar.setText("Arrive");
 
         Bundle bundle = new Bundle();
         bundle = getIntent().getExtras();
@@ -771,10 +799,13 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     }
 
     public void onConfirmOrderResponseReceived(ConfirmOrderResponseModel confirmOrderResponseModel) {
-        if (confirmOrderResponseModel.isStatus()) {
+        //TODO Once a order mapping is
+        if (confirmOrderResponseModel.isStatus() == 1) {
             Intent intent = new Intent(PE_PostPatientDetailsActivity.this, StartAndArriveActivity.class);
+            intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
             BundleConstants.POSTCHECKOUT_INTENT = "TRUE";
             startActivity(intent);
+            finish();
 
         } else {
             TastyToast.makeText(activity, SomethingWentwrngMsg, TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();

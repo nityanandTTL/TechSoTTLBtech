@@ -2,7 +2,7 @@ package com.thyrocare.btechapp.models.api.response;
 
 public class ConfirmOrderResponseModel {
     String message;
-    boolean status;
+    int status;
 
     public String getMessage() {
         return message;
@@ -12,11 +12,11 @@ public class ConfirmOrderResponseModel {
         this.message = message;
     }
 
-    public boolean isStatus() {
+    public int isStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 }

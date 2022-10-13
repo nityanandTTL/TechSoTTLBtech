@@ -83,6 +83,7 @@
         <activity
             android:name=".NewScreenDesigns.Activities.PE_PostPatientDetailsActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
              />
 
         <activity

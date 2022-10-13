@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.thyrocare.btechapp.BuildConfig;
@@ -59,11 +58,11 @@ public class RetroFit_APIClient {
 //            interceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);    // production build
         }
         client.addInterceptor(interceptor);
-
+//TODO  Api timeout is increase to handle the get order details api slowness (Previous: 120 sec)
         client.protocols(Util.immutableList(Protocol.HTTP_1_1));
-        client.readTimeout(120, TimeUnit.SECONDS);
-        client.writeTimeout(120, TimeUnit.SECONDS);
-        client.connectTimeout(120, TimeUnit.SECONDS);
+        client.readTimeout(300, TimeUnit.SECONDS);
+        client.writeTimeout(300, TimeUnit.SECONDS);
+        client.connectTimeout(300, TimeUnit.SECONDS);
         client.addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -78,6 +77,8 @@ public class RetroFit_APIClient {
                 return chain.proceed(request);
             }
         });
+
+        //client.addInterceptor(new ChuckerInterceptor(mActivity));
 
         /*try {
             SharedPreferences pref_SSL = mActivity.getSharedPreferences("SSLKeysPref", 0);
@@ -132,9 +133,9 @@ public class RetroFit_APIClient {
         client.addInterceptor(interceptor);
 
 
-        client.readTimeout(60, TimeUnit.SECONDS);
-        client.writeTimeout(60, TimeUnit.SECONDS);
-        client.connectTimeout(120, TimeUnit.SECONDS);
+        client.readTimeout(300, TimeUnit.SECONDS);
+        client.writeTimeout(300, TimeUnit.SECONDS);
+        client.connectTimeout(300, TimeUnit.SECONDS);
         client.addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -149,6 +150,7 @@ public class RetroFit_APIClient {
                 return chain.proceed(request);
             }
         });
+        //client.addInterceptor(new ChuckerInterceptor(context));
 
       /*  SharedPreferences pref_SSL = context.getSharedPreferences("SSLKeysPref", 0);
         Gson gson = new Gson();

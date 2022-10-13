@@ -6,11 +6,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".NewScreenDesigns.Activities.PE_PostPatientDetailsActivity">
+    <include
+        android:id="@id/appbarLayout"
+        layout="@layout/default_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcl_pePostCheckOutOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/appbarLayout"
         tools:listitem="@layout/post_checkout_singleview" />
 
 
