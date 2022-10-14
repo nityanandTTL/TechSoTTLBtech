@@ -62,7 +62,7 @@ public class PE_PostPatientDetailsController {
             @Override
             public void onResponse(Call<GetPatientListResponseModel> call, Response<GetPatientListResponseModel> response) {
                 globalclass.hideProgressDialog(pe_postPatientDetailsActivity);
-                if (response.isSuccessful() && response.body().getData() != null) {
+                if (response.isSuccessful() && response.body() != null) {
                     GetPatientListResponseModel responseModel = response.body();
                     getBenList.getBeneficiaryList(responseModel);
                 } else {

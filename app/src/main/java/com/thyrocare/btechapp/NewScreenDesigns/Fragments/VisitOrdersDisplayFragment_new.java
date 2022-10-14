@@ -71,6 +71,7 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
+import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.activity.NewOrderReleaseActivity;
 import com.thyrocare.btechapp.adapter.OrderReleaseAdapter;
 import com.thyrocare.btechapp.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
@@ -79,6 +80,7 @@ import com.thyrocare.btechapp.dialog.ConfirmOrderPassDialog;
 import com.thyrocare.btechapp.dialog.ConfirmOrderReleaseDialog;
 import com.thyrocare.btechapp.dialog.ConfirmRequestReleaseDialog;
 import com.thyrocare.btechapp.dialog.RescheduleOrderDialog;
+import com.thyrocare.btechapp.fragment.HomeScreenFragment;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.btechapp.models.api.request.SetDispositionDataModel;
 import com.thyrocare.btechapp.models.api.response.BtechEstEarningsResponseModel;
@@ -292,6 +294,15 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         Constants.clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(activity);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+
+    }
+
     private void setListener() {
 
         btn_today.setOnClickListener(new View.OnClickListener() {
@@ -319,10 +330,13 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
             }
         });
 
+
         iv_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
 
@@ -526,7 +540,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                         global.hideProgressDialog(activity);
                         e.printStackTrace();
                         global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
-                        startActivity(new Intent(activity,B2BVisitOrdersDisplayFragment.class));
+                        startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
                         finish();
                     }
                 }
@@ -535,7 +549,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                 public void onFailure(Call<FetchOrderDetailsResponseModel> call, Throwable t) {
                     global.hideProgressDialog(activity);
                     global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
-                    startActivity(new Intent(activity,B2BVisitOrdersDisplayFragment.class));
+                    startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
                     finish();
 
                 }
@@ -789,7 +803,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                     if (isNetworkAvailable(activity)) {
                         CallOrderStatusChangeAPIAfterAcceptButtonClicked(orderStatusChangeRequestModel, orderVisitDetailsModels.getVisitId());
                     } else {
-                        TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR).show();
                     }
                 }
 
@@ -1427,12 +1441,12 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
     private void ProceedToArriveScreen(OrderVisitDetailsModel orderVisitDetailsModel, boolean OpenMap) {
         boolean test = false;
         try {
-        for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); i++) {
-                if (orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getName().startsWith("PATIENT ")){
+            for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); i++) {
+                if (orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getName().startsWith("PATIENT ")) {
                     test = true;
                     break;
                 }
-        }
+            }
             if (appPreferenceManager.isPEPartner() && test) {
                 Intent PE_PostOrderDetailsIntent = new Intent(activity, PE_PostPatientDetailsActivity.class);
                 PE_PostOrderDetailsIntent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);

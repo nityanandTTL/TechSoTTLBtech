@@ -233,8 +233,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 BundleConstants.isKIOSKOrder = false;
-                bottomSheetDialog.dismiss();
-                finish();
+                Intent intent = new Intent(mActivity, VisitOrdersDisplayFragment_new.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
 
@@ -348,12 +349,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     btn_arrive.setVisibility(View.VISIBLE);
                     btn_start.setVisibility(View.GONE);
                     if (cd.isConnectingToInternet()) {
-                        if (InputUtils.CheckEqualIgnoreCase(BundleConstants.POSTCHECKOUT_INTENT, "TRUE")) {
-                            BundleConstants.POSTCHECKOUT_INTENT = "FALSE";
-                            CallOrderDetailAPI("ARRIVE");
-                        } else {
-                            CallOrderDetailAPI("Start");
-                        }
+
+                        CallOrderDetailAPI("Start");
+
 
                     } else {
                         globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_LONG);
@@ -515,6 +513,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         PEAuthorizationController peAC = new PEAuthorizationController(this);
         peAC.getAuthorizationToken(0, orderDetailsModel.getAllOrderdetails().get(0).getPincode(), orderDetailsModel.getAllOrderdetails().get(0).getVisitId());
     }
+
 
     private void initListerners() {
 
@@ -3372,8 +3371,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                     } else {
                                         ll_timer.setVisibility(View.GONE);
                                     }
-                                }else{
-                                    startActivity(new Intent(mActivity,B2BVisitOrdersDisplayFragment.class));
+                                } else {
+                                    startActivity(new Intent(mActivity, B2BVisitOrdersDisplayFragment.class));
                                     Toast.makeText(mActivity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                                     finish();
                                 }
@@ -3387,7 +3386,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<FetchOrderDetailsResponseModel> call, Throwable t) {
                     globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
-                    startActivity(new Intent(mActivity,B2BVisitOrdersDisplayFragment.class));
+                    startActivity(new Intent(mActivity, B2BVisitOrdersDisplayFragment.class));
                     finish();
 
                 }

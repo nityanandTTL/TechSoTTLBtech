@@ -91,6 +91,7 @@ import java.util.Date;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 /**/
 public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     RecyclerView rcl_pePostCheckOutOrder;
@@ -181,7 +182,8 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                 if (!isArrived) {
                     callOTPGenerationAPI();
                 } else {
-                    callConfirmOrderAPI();
+                    showAlertForConfirmation();
+                    //callConfirmOrderAPI();
                 }
             }
 
@@ -205,6 +207,36 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void showAlertForConfirmation() {
+        String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+        View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.logout_bottomsheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+        TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+        tv_text.setText(string);
+
+        Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+        btn_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+                callConfirmOrderAPI();
+            }
+        });
+
+        Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+        btn_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        bottomSheetDialog.setContentView(bottomSheet);
+        bottomSheetDialog.setCancelable(false);
+        bottomSheetDialog.show();
     }
 
     private void callConfirmOrderAPI() {
@@ -374,25 +406,36 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         rcl_ben_list.setLayoutManager(layoutManager);
         rcl_ben_list.setVisibility(View.VISIBLE);
 
-        selectPeBenificiaryAdapter = new SelectPeBenificiaryAdapter(patientListEdit, Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientCount(), patientListResponseModel, activity, new AppInterfaces.PatientSelector() {
-            @Override
-            public void addPatient(int addPatientPosition) {
-                patientListResponse.getData().get(addPatientPosition).setSelected(true);
-            }
+        if (patientListResponseModel.getData() == null || patientListResponseModel.getData().size() == 0) {
+            rcl_ben_list.setVisibility(View.GONE);
+            btn_submit.setVisibility(View.GONE);
+            tv_nodatafound.setVisibility(View.VISIBLE);
+        } else {
+            rcl_ben_list.setVisibility(View.VISIBLE);
+            btn_submit.setVisibility(View.VISIBLE);
+            tv_nodatafound.setVisibility(View.GONE);
+            selectPeBenificiaryAdapter = new SelectPeBenificiaryAdapter(patientListEdit, Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientCount(), patientListResponseModel, activity, new AppInterfaces.PatientSelector() {
+                @Override
+                public void addPatient(int addPatientPosition) {
+                    patientListResponse.getData().get(addPatientPosition).setSelected(true);
+                }
 
-            @Override
-            public void removePatient(int removePatientPostion) {
-                patientListResponse.getData().get(removePatientPostion).setSelected(false);
-            }
+                @Override
+                public void removePatient(int removePatientPostion) {
+                    patientListResponse.getData().get(removePatientPostion).setSelected(false);
+                }
 
-            @Override
-            public void editPatient(GetPatientListResponseModel.DataDTO singlePatient) {
-                editingPatientModel = singlePatient;
-                showEditPatientDetailsLayout();
-            }
+                @Override
+                public void editPatient(GetPatientListResponseModel.DataDTO singlePatient) {
+                    editingPatientModel = singlePatient;
+                    showEditPatientDetailsLayout();
+                }
 
-        });
-        rcl_ben_list.setAdapter(selectPeBenificiaryAdapter);
+            });
+            rcl_ben_list.setAdapter(selectPeBenificiaryAdapter);
+        }
+
+
         addPatientBottomsheet.show();
     }
 
@@ -568,7 +611,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         btn_addPatient = addPatientBottomsheet.findViewById(R.id.btn_addPatient);
         btn_submit = addPatientBottomsheet.findViewById(R.id.btn_submit);
         tv_select_editPatient = addPatientBottomsheet.findViewById(R.id.tv_select_editPatient);
-
+        tv_nodatafound = addPatientBottomsheet.findViewById(R.id.tv_nodatafound);
         tv_testname.setText(Pe_PatientBaseResponseModel.get(baseModelPosition).getTestName());
 
         if (isEdit) {
@@ -803,7 +846,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         if (confirmOrderResponseModel.isStatus() == 1) {
             Intent intent = new Intent(PE_PostPatientDetailsActivity.this, StartAndArriveActivity.class);
             intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
-            BundleConstants.POSTCHECKOUT_INTENT = "TRUE";
+            BundleConstants.setRefreshStartArriveActivity = 1;
             startActivity(intent);
             finish();
 

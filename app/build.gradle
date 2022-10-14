@@ -9,8 +9,8 @@ android {
         applicationId "com.thyrocare.btechapp"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 171
-        versionName "2.10.1"
+        versionCode 172
+        versionName "2.10.2"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

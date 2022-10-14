@@ -26,19 +26,31 @@
             android:layout_gravity="center"
             android:layout_weight="2"
             android:gravity="center"
+            android:text="dfsafdfas"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/label"
             android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/iv_home"
+        <LinearLayout
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_gravity="center"
             android:layout_weight="0.5"
-            app:srcCompat="@drawable/ic_baseline_home_24" />
+            android:gravity="end"
+            android:paddingEnd="@dimen/_15sdp">
+
+            <ImageView
+                android:id="@+id/iv_home"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="end"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_baseline_home_24" />
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
 </androidx.appcompat.widget.Toolbar>

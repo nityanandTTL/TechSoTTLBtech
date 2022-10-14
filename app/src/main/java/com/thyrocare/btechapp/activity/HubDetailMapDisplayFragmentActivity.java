@@ -355,9 +355,14 @@ public class HubDetailMapDisplayFragmentActivity extends AppCompatActivity imple
         super.onResume();
     }
 
-    /*@Override
-        public void onBackPressed() {
-}*/
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(activity, HubListDisplayFragment.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+
+    }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_arrived) {
@@ -403,7 +408,9 @@ public class HubDetailMapDisplayFragmentActivity extends AppCompatActivity imple
             bottomSheetDialog.setCancelable(false);
             bottomSheetDialog.show();
         } else if (v.getId() == R.id.iv_back) {
-            finish();
+            Intent intent = new Intent(activity, HubListDisplayFragment.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
     }
 

@@ -121,7 +121,7 @@
 
                 <LinearLayout
                     android:id="@+id/ll_rclbenlist"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/rl_addpatient"
                     android:orientation="vertical">
@@ -133,6 +133,20 @@
                         android:visibility="visible"
                         tools:itemCount="5"
                         tools:listitem="@layout/single_ben_detail" />
+                    <TextView
+                        android:id="@+id/tv_nodatafound"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_50sdp"
+                        android:text="No Patient found"
+                        android:gravity="center"
+                        android:layout_marginVertical="@dimen/_10sdp"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:textSize="@dimen/_20sdp"
+
+                        />
 
                     <Button
                         android:id="@+id/btn_submit"
