@@ -2767,30 +2767,36 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     for (int k = 0; k < orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().size(); k++) {
                         if (strArr.get(j).equalsIgnoreCase(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTests())) {
                             PEOrderEditRequestModel.DataDTO.ExtraPayloadDTO.TestsDTO testsDTO = new PEOrderEditRequestModel.DataDTO.ExtraPayloadDTO.TestsDTO();
-                            if (orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType().equalsIgnoreCase("test") || orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType().equalsIgnoreCase("Profile")) {
-                                testsDTO.setDos_code(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTests());
-                                testsDTO.setLab_dos_name(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTests());
-                            } else if (orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType().equalsIgnoreCase("package")) {
-                                if (!InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getProjId()) ||
-                                        !InputUtils.CheckEqualIgnoreCase(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getProjId(), "")) {
-                                    testsDTO.setDos_code(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getProjId());
-                                    testsDTO.setLab_dos_name(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getProjId());
-                                } else {
+                            if (!InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType())) {
+                                if (orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType().equalsIgnoreCase("test") || orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType().equalsIgnoreCase("Profile")) {
                                     testsDTO.setDos_code(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTests());
                                     testsDTO.setLab_dos_name(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTests());
+                                } else if (orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType().equalsIgnoreCase("package") || orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType().equalsIgnoreCase("POP")) {
+                                    if (!InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getProjId())) {
+                                        testsDTO.setDos_code(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getProjId());
+                                        testsDTO.setLab_dos_name(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getProjId());
+                                    } else {
+                                        testsDTO.setDos_code(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTests());
+                                        testsDTO.setLab_dos_name(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTests());
+                                    }
                                 }
+
+                                for (int l = 0; l < peTestArraylist.size(); l++) {
+                                    if (strArr.get(j).equalsIgnoreCase(peTestArraylist.get(l).getName()) || strArr.get(j).equalsIgnoreCase(peTestArraylist.get(l).getPartner_lab_test_id()) || strArr.get(j).equalsIgnoreCase(peTestArraylist.get(l).getDos_code())) {
+                                        testsDTO.setPrice(Integer.parseInt(peTestArraylist.get(l).getPrice()));
+                                        testsDTO.setType(peTestArraylist.get(l).getType());
+                                    }
+                                }
+                                testsDTO.setPartner_patient_id(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getLeadId());
+                                //  testsDTO.setType(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType());
+                                dtoArrayList.add(testsDTO);
+                                break;
+                            }else{
+                                Toast.makeText(mActivity, "TestType is null.....", Toast.LENGTH_SHORT).show();
+
                             }
 
-                            for (int l = 0; l < peTestArraylist.size(); l++) {
-                                if (strArr.get(j).equalsIgnoreCase(peTestArraylist.get(l).getName()) || strArr.get(j).equalsIgnoreCase(peTestArraylist.get(l).getPartner_lab_test_id()) || strArr.get(j).equalsIgnoreCase(peTestArraylist.get(l).getDos_code())) {
-                                    testsDTO.setPrice(Integer.parseInt(peTestArraylist.get(l).getPrice()));
-                                    testsDTO.setType(peTestArraylist.get(l).getType());
-                                }
-                            }
-                            testsDTO.setPartner_patient_id(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getLeadId());
-                            //  testsDTO.setType(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType());
-                            dtoArrayList.add(testsDTO);
-                            break;
+
                         }
                     }
 

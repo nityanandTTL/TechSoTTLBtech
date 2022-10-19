@@ -16,8 +16,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -34,6 +36,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
@@ -396,9 +399,15 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
 
 
     private void showSelectPatientDetailsLayout(GetPatientListResponseModel patientListResponseModel) {
-        addPatientBottomsheet = new BottomSheetDialog(activity);
+
+        addPatientBottomsheet = new BottomSheetDialog(activity,R.style.BottomSheetTheme);
         addPatientBottomsheet.setCancelable(true);
-        addPatientBottomsheet.setContentView(R.layout.select_patient_details_btms);
+        View bottomsheetView = LayoutInflater.from(activity).inflate(R.layout.select_patient_details_btms, null);
+        addPatientBottomsheet.setContentView(bottomsheetView);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from((View) bottomsheetView.getParent());
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+
         initSelectpatientBottomsheet(false, baseModelPosition);
         initselectPatientListeners(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
