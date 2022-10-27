@@ -1776,75 +1776,38 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             }
         } else {
             BrandTestMasterModel brandTestMasterModel = new Gson().fromJson(appPreferenceManager.getCacheProduct(), BrandTestMasterModel.class);
-            // CallTestData(getBrandTestMaster(brandTestMasterModel));
-            CallTestData(getBrandTestMaster1(brandTestMasterModel, dsaProductsResponseModelfinal));
+            populateEditList(getBrandTestMaster1(brandTestMasterModel, dsaProductsResponseModelfinal));
         }
     }
 
-
-   /* private void CallGetTechsoProductsAPI() {
-
-        try {
-            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-            Call<BrandTestMasterModel> responseCall = apiInterface.CallGetTechsoPRoductsAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token());
-            globalclass.showProgressDialog(mActivity, "Fetching products. Please wait..");
-            responseCall.enqueue(new Callback<BrandTestMasterModel>() {
-                @Override
-                public void onResponse(Call<BrandTestMasterModel> call, retrofit2.Response<BrandTestMasterModel> response) {
-                    globalclass.hideProgressDialog(mActivity);
-
-                    if (response.isSuccessful() && response.body() != null) {
-                        BrandTestMasterModel brandTestMasterModel = new BrandTestMasterModel();
-                        brandTestMasterModel = getBrandTestMaster(response.body());
-                        CallTestData(brandTestMasterModel);
-
-                    } else {
-                        globalclass.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<BrandTestMasterModel> call, Throwable t) {
-                    globalclass.hideProgressDialog(mActivity);
-                    globalclass.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public BrandTestMasterModel getBrandTestMaster(BrandTestMasterModel brandTestMasterModel) {
-        Gson gson = new Gson();
-
-        BrandTestMasterModel brandTestMasterModelFinal = new BrandTestMasterModel();
-        ArrayList<TestRateMasterModel> tstratemaster = new ArrayList<>();
-
-        if (brandTestMasterModel != null && brandTestMasterModel.getTstratemaster() != null && brandTestMasterModel.getTstratemaster().size() > 0) {
-            for (int i = 0; i < brandTestMasterModel.getTstratemaster().size(); i++) {
-                if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode() != null && brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().size() > 0) {
-                    for (int j = 0; j < brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().size(); j++) {
-                        try {
-                            if (Integer.parseInt(brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().get(j).getAccessCode()) == orderVisitDetailsModel.getAllOrderdetails().get(0).getUserAccessCode()) {
-                                tstratemaster.add(brandTestMasterModel.getTstratemaster().get(i));
-                                break;
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+    private void populateEditList(BrandTestMasterModel brandTestMaster) {
+        edit_selectedTestsList = new ArrayList<>();
+        if (selectedbeneficiaryDetailsModel != null) {
+            for (int i = 0; i < selectedbeneficiaryDetailsModel.getTestSampleType().size(); i++) {
+                System.out.println("test list pos" + i);
+                String testType = selectedbeneficiaryDetailsModel.getTestSampleType().get(i).getTestType();
+                String testName = selectedbeneficiaryDetailsModel.getTestSampleType().get(i).getTests();
+                String benProjID = selectedbeneficiaryDetailsModel.getTestSampleType().get(i).getProjId();
+                for (int j = 0; j < brandTestMaster.getTstratemaster().size(); j++) {
+                    if (InputUtils.CheckEqualIgnoreCase(testType, "OFFER")) {
+                        if (InputUtils.CheckEqualIgnoreCase(benProjID, brandTestMaster.getTstratemaster().get(j).getTestCode())) {
+                            edit_selectedTestsList.add(brandTestMaster.getTstratemaster().get(j));
+                            break;
                         }
+                    } else {
+                        if (InputUtils.CheckEqualIgnoreCase(testName, brandTestMaster.getTstratemaster().get(j).getTestCode())) {
+                            Global.sout("other than offer",brandTestMaster.getTstratemaster().get(j).getTestCode());
+                            edit_selectedTestsList.add(brandTestMaster.getTstratemaster().get(j));
+                            break;
+                        }
+
                     }
                 }
             }
         }
+        Global.sout("new EDittest>>>>>>>>>>>>>>", new Gson().toJson(edit_selectedTestsList));
+    }
 
-
-        brandTestMasterModelFinal.setTstratemaster(tstratemaster);
-        brandTestMasterModelFinal.setBrandId(brandTestMasterModel.getBrandId());
-        brandTestMasterModelFinal.setBrandName(brandTestMasterModel.getBrandName());
-
-        return brandTestMasterModelFinal;
-    }*/
 
     private boolean UpdateProduct() {
         String getPreviouseMillis = appPreferenceManager.getCashingTime();
@@ -1858,7 +1821,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     private void CallGetTechsoProductsAPI() {
         try {
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + "Bearer " + appPreferenceManager.getAccess_Token());
-            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity,"https://phlebo-management-public.thyrocare.com/" ).create(GetAPIInterface.class);
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, "https://phlebo-management-public.thyrocare.com/").create(GetAPIInterface.class);
             Call<BrandTestMasterModel> responseCall = apiInterface.CallGetTechsoPRoductsAPI();
             globalclass.showProgressDialog(mActivity, "Fetching products. Please wait..");
             responseCall.enqueue(new Callback<BrandTestMasterModel>() {
@@ -1871,7 +1834,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                         appPreferenceManager.setCacheProduct(json22);
                         appPreferenceManager.setCashingTime(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"));
 
-                        CallTestData(getBrandTestMaster1(response.body(), dsaProductsResponseModelfinal));
+                        populateEditList(getBrandTestMaster1(response.body(), dsaProductsResponseModelfinal));
 
                     } else {
                         globalclass.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
@@ -1903,7 +1866,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 String st2 = brandTestMasterModel.getTstratemaster().get(i).getDescription();
 
                 System.out.println("----");
-                if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode() != null && brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().size() > 0) {
+                if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode() != null) {
                     if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().isEmpty()) {
                         testRateMasterModels.add(brandTestMasterModel.getTstratemaster().get(i));
                     }
@@ -1954,97 +1917,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         testRateMasterModels.clear();
         testRateMasterModels.addAll(tempArr);
 
-        /*for (int i = 0; i <testRateMasterModels.size(); i++) {
-            for (int j = 0; j < testRateMasterModelsNew.size(); j++) {
-                if (testRateMasterModels.get(i).getDescription().toString().trim().equalsIgnoreCase(testRateMasterModelsNew.get(j).getDescription().toString().trim()) ||
-                        testRateMasterModels.get(i).getTestId()==(testRateMasterModelsNew.get(j).getTestId())){
-                    tempArr.add(testRateMasterModelsNew.get(j));
-                    break;
-                }
-            }
-        }
-
-        testRateMasterModels.removeAll(tempArr);
-        testRateMasterModels.addAll(testRateMasterModelsNew);
-
-        for (int i = 0; i <testRateMasterModels.size() ; i++) {
-            System.out.println(testRateMasterModels.get(i).getDescription());
-        }
-*/
-        /*int position = 0;
-
-        for (TestRateMasterModel test2 : testRateMasterModelsNew) {
-            boolean found = false;
-            for (TestRateMasterModel test1 : testRateMasterModels) {
-                if (test2.getDescription().equalsIgnoreCase(test1.getDescription())) {
-                    found = true;
-                }
-            }
-            position++;
-
-            if (!found) {
-                testRateMasterModelsFinal.add(testRateMasterModelsNew.get(position));
-            }
-        }*/
-
-/*        if (dsaProductResponseModel != null && dsaProductResponseModel.getTstratemaster() != null && dsaProductResponseModel.getTstratemaster().size() > 0) {
-            for (int i = 0; i < testRateMasterModels.size(); i++) {
-                for (int j = 0; j < dsaProductResponseModel.getTstratemaster().size(); j++) {
-                    if (!testRateMasterModels.get(i).getDescription().contains(dsaProductResponseModel.getTstratemaster().get(j).getDescription())) {
-                        if (testRateMasterModelsNew.size() == 0) {
-                            testRateMasterModelsNew.add(dsaProductResponseModel.getTstratemaster().get(j));
-                        } else {
-                            for (int k = 0; k < testRateMasterModelsNew.size(); k++) {
-                                if (!testRateMasterModels.get(i).getDescription().contains(dsaProductResponseModel.getTstratemaster().get(j).getDescription())) {
-
-                                }
-
-                            }
-                        }
-                        testRateMasterModelsNew.add(dsaProductResponseModel.getTstratemaster().get(j));
-//                        break;
-                    }
-                }
-            }
-//            testRateMasterModels.addAll(dsaProductResponseModel.getTstratemaster());
-        }*/
-
-
-/*
-        Set<TestRateMasterModel>toRetain = new TreeSet<TestRateMasterModel>( TEst.CASE_INSENSITIVE_ORDER);
-        toRetain.addAll(testRateMasterModels);
-        Set<TestRateMasterModel>newList = new LinkedHashSet<>(testRateMasterModels);
-        newList.retainAll(new LinkedHashSet<TestRateMasterModel>(toRetain));
-        testRateMasterModels = new ArrayList<TestRateMasterModel>(newList);*/
-
-        /*testRateMasterModelsFinal.addAll(testRateMasterModels);
-        for (int i = 0; i < testRateMasterModels.size(); i++) {
-            for (int j = 0; j < testRateMasterModelsNew.size(); j++) {
-                if (!testRateMasterModels.get(i).getDescription().equalsIgnoreCase(testRateMasterModelsNew.get(j).getDescription())){
-                    testRateMasterModelsFinal.add(testRateMasterModelsNew.get(j));
-                }
-                break;
-            }
-        }*/
-
-
-
-        /*ArrayList<TestRateMasterModel> testRateMasterModelsFinal = new ArrayList<>();
-        for (int i = 0; i < testRateMasterModels.size(); i++) {
-            if (testRateMasterModelsFinal.size() > 0) {
-                for (int j = 0; j < testRateMasterModelsFinal.size(); j++) {
-                    if (!testRateMasterModels.get(i).getDescription().equalsIgnoreCase(testRateMasterModelsFinal.get(j).getDescription())) {
-                        testRateMasterModelsFinal.add(testRateMasterModels.get(i));
-                    }
-                }
-            } else {
-                testRateMasterModelsFinal.add(testRateMasterModels.get(i));
-            }
-        }
-        System.out.println("2Arraylist>>>>>>>>>>>>>>>"+testRateMasterModelsFinal.size());
-        testRateMasterModels.clear();
-        testRateMasterModels.addAll(testRateMasterModelsFinal);*/
-        // brandTestMasterModel1.setTstratemaster(tempArr);
         brandTestMasterModel1.setTstratemaster(testRateMasterModels);
         brandTestMasterModel1.setBrandId(brandTestMasterModel.getBrandId());
         brandTestMasterModel1.setBrandName(brandTestMasterModel.getBrandName());
@@ -2107,15 +1979,18 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                         || edit_selectedTestsList.get(k).getTestCode().equalsIgnoreCase(result.getTstratemaster().get(j).getDescription())) {
 
                                 } else if (str[i].equalsIgnoreCase(result.getTstratemaster().get(j).getTestCode()) || str[i].trim().equalsIgnoreCase(result.getTstratemaster().get(j).getDescription())) {
-                                    edit_selectedTestsList.add(result.getTstratemaster().get(j));
+                                    if (!edit_selectedTestsList.contains(result.getTstratemaster().get(j))) {
+                                        edit_selectedTestsList.add(result.getTstratemaster().get(j));
+                                    }
+
                                 }
                             }
                         } else {
                             if (selectedbeneficiaryDetailsModel.getProjId().equalsIgnoreCase(result.getTstratemaster().get(j).getTestCode())) {
                                 edit_selectedTestsList.add(result.getTstratemaster().get(j));
-                            }else{
+                            } else {
                                 for (int k = 0; k < dsaProductsResponseModelfinal.getTstratemaster().size(); k++) {
-                                    if (selectedbeneficiaryDetailsModel.getProjId().equalsIgnoreCase(dsaProductsResponseModelfinal.getTstratemaster().get(k).getTestCode())){
+                                    if (selectedbeneficiaryDetailsModel.getProjId().equalsIgnoreCase(dsaProductsResponseModelfinal.getTstratemaster().get(k).getTestCode())) {
                                         edit_selectedTestsList.add(dsaProductsResponseModelfinal.getTstratemaster().get(k));
                                     }
                                 }
@@ -2810,8 +2685,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             beneficiariesArr.add(crbm);
         }
         String testname = "";
-        for (int i = 0; i <edit_selectedTestsList.size(); i++) {
-            testname = testname+edit_selectedTestsList.get(i).getDescription();
+        for (int i = 0; i < edit_selectedTestsList.size(); i++) {
+            testname = testname + edit_selectedTestsList.get(i).getDescription();
         }
 
         cartAPIRequestModel.setOrders(ordersArr);

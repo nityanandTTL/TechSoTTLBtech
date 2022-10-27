@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TechSoBTechApp.iml" filepath="$PROJECT_DIR$/.idea/modules/TechSoBTechApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.unitTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.test.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Btech_test_filter.iml" filepath="$PROJECT_DIR$/.idea/modules/Btech_test_filter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Btech_test_filter.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Btech_test_filter.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Btech_test_filter.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Btech_test_filter.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Btech_test_filter.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Btech_test_filter.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Btech_test_filter.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Btech_test_filter.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/Btech_test_filter.bil.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/Btech_test_filter.bil.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/Btech_test_filter.bil.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/Btech_test_filter.bil.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/Btech_test_filter.bil.test.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/Btech_test_filter.bil.test.iml" />
     </modules>
   </component>
 </project>
