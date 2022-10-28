@@ -358,7 +358,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
 
     private boolean testExist(String tests) {
         for (int i = 0; i < patientMapModel.size(); i++) {
-            if (patientMapModel.get(i).getTestname().contains(tests)) {
+            if (patientMapModel.get(i).getTestname().equals(tests)) {
                 positionOfTest = i;
                 return true;
             }
@@ -400,7 +400,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
 
     private void showSelectPatientDetailsLayout(GetPatientListResponseModel patientListResponseModel) {
 
-        addPatientBottomsheet = new BottomSheetDialog(activity,R.style.BottomSheetTheme);
+        addPatientBottomsheet = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
         addPatientBottomsheet.setCancelable(true);
         View bottomsheetView = LayoutInflater.from(activity).inflate(R.layout.select_patient_details_btms, null);
         addPatientBottomsheet.setContentView(bottomsheetView);

@@ -90,6 +90,13 @@
             android:name=".activity.RescheduleSlotActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".NewScreenDesigns.Activities.Tsp_B2BVisitOrdersDisplayActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activity.NewOrderReleaseActivity"
             android:screenOrientation="portrait"

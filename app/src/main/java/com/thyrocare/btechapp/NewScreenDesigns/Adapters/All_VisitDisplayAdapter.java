@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.Tsp_B2BVisitOrdersDisplayActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
 import com.thyrocare.btechapp.R;
@@ -31,6 +32,8 @@ All_VisitDisplayAdapter extends RecyclerView.Adapter<All_VisitDisplayAdapter.MyV
     private Activity activity;
     private ArrayList<GetOrderDetailsResponseModel.GetVisitcountDTO> orderVisitDetailsModelsArr;
     private AppPreferenceManager appPreferenceManager;
+    Tsp_B2BVisitOrdersDisplayActivity mTsp_B2BVisitOrdersDisplayActivity;
+    int flag = 0;
 
     public All_VisitDisplayAdapter(B2BVisitOrdersDisplayFragment visitOrdersDisplayFragment_new, GetOrderDetailsResponseModel orderDetailsResponseModels, Activity activity) {
         this.activity = activity;
@@ -39,6 +42,17 @@ All_VisitDisplayAdapter extends RecyclerView.Adapter<All_VisitDisplayAdapter.MyV
         appPreferenceManager = new AppPreferenceManager(this.activity);
         mB2BVisitOrdersDisplayFragment = visitOrdersDisplayFragment_new;
         current_date = DateUtil.getDateFromLong(System.currentTimeMillis(), "dd-MM-yyyy");
+        flag=1;
+    }
+
+    public All_VisitDisplayAdapter(Tsp_B2BVisitOrdersDisplayActivity mTsp_B2BVisitOrdersDisplayActivity, GetOrderDetailsResponseModel orderDetailsResponseModels, Activity activity) {
+        this.activity = activity;
+        this.orderVisitDetailsModelsArr = orderDetailsResponseModels.getGetVisitcount();
+        this.orderDetailsResponseModel = orderDetailsResponseModels;
+        appPreferenceManager = new AppPreferenceManager(this.activity);
+        this.mTsp_B2BVisitOrdersDisplayActivity = mTsp_B2BVisitOrdersDisplayActivity;
+        current_date = DateUtil.getDateFromLong(System.currentTimeMillis(), "dd-MM-yyyy");
+        flag=2;
     }
 
     @Override
@@ -76,7 +90,12 @@ All_VisitDisplayAdapter extends RecyclerView.Adapter<All_VisitDisplayAdapter.MyV
             @Override
             public void onClick(View v) {
                 BundleConstants.setSelectedOrder = orderVisitDetailsModelsArr.get(pos).getVisitId();
-                mB2BVisitOrdersDisplayFragment.orderSelected(pos);
+                BundleConstants.setTspSelectedOrder = orderVisitDetailsModelsArr.get(pos).getVisitId();
+                if(flag == 1) {
+                    mB2BVisitOrdersDisplayFragment.orderSelected(pos);
+                }else if(flag == 2){
+                    mTsp_B2BVisitOrdersDisplayActivity.orderSelected();
+                }
             }
         });
 

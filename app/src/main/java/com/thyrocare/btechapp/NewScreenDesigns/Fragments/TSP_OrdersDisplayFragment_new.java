@@ -61,6 +61,7 @@ import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
+import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
@@ -187,7 +188,7 @@ public class TSP_OrdersDisplayFragment_new extends AppCompatActivity {
     private void fetchData() {
         try {
             GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-            Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getAllVisitDetails(appPreferenceManager.getLoginResponseModel().getUserID());
+            Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getOrderDetail(BundleConstants.setTspSelectedOrder);
             global.showProgressDialog(activity, activity.getResources().getString(R.string.fetchingOrders), false);
             fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
                 @Override

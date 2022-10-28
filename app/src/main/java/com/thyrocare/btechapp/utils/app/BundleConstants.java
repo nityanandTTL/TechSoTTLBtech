@@ -159,4 +159,5 @@ public class BundleConstants {
     public static boolean PE_HARD_BLOCKING = false;
 
     public static String VenepunctureImage_path = "";
+    public static String setTspSelectedOrder="";
 }

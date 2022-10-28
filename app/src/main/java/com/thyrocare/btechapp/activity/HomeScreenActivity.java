@@ -45,6 +45,7 @@ import com.thyrocare.btechapp.Controller.DeviceLogOutController;
 import com.thyrocare.btechapp.Controller.SignINOUTController;
 import com.thyrocare.btechapp.Controller.SignSummaryController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.Tsp_B2BVisitOrdersDisplayActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.BtechCertificateFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.FeedbackFragment_new;
@@ -466,7 +467,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         ll_tsp_orders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity, TSP_OrdersDisplayFragment_new.class);
+                Intent intent = new Intent(activity, Tsp_B2BVisitOrdersDisplayActivity.class);
                 startActivity(intent);
             }
         });
