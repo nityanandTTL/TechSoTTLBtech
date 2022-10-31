@@ -2170,7 +2170,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rec_orderRelease.setLayoutManager(linearLayoutManager);
 
-        OrderReleaseAdapter orAdapter = new OrderReleaseAdapter(this, remarksArray);
+        OrderReleaseAdapter orAdapter = new OrderReleaseAdapter(this, remarksArray, appPreferenceManager.isPEPartner());
         rec_orderRelease.setAdapter(orAdapter);
 
         bottomSheetOrderReschedule.setContentView(bottomSheet);
@@ -3395,6 +3395,36 @@ public class StartAndArriveActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 //        initTimer();
+    }
+
+    public void onCustomerSupportCallClicked() {
+        initiateTriPartyCall(Constants.TRIPARTY_CC_AGENT);
+    }
+
+    private void initiateTriPartyCall(String tripartyCcAgent) {
+        try {
+            TedPermission.with(mActivity)
+                    .setPermissions(Manifest.permission.CALL_PHONE)
+                    .setRationaleMessage("We need permission to make call from your device.")
+                    .setRationaleConfirmText("OK")
+                    .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission > Telephone")
+                    .setPermissionListener(new PermissionListener() {
+                        @Override
+                        public void onPermissionGranted() {
+                                Intent intent = new Intent(Intent.ACTION_CALL);
+                                intent.setData(Uri.parse("tel:" + tripartyCcAgent.replace("\"", "")));
+                                mActivity.startActivity(intent);
+                        }
+                        @Override
+                        public void onPermissionDenied(List<String> deniedPermissions) {
+                            Toast.makeText(mActivity, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }).check();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public class Btech_AsyncLoadBookingFreqApi extends AsyncTask<Void, Void, String> {

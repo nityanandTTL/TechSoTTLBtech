@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -64,12 +65,12 @@ public class SlotDateAdapter extends RecyclerView.Adapter<SlotDateAdapter.MyView
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_text;
-        LinearLayout ll_main;
+        RelativeLayout ll_main;
 
         MyViewHolder(View itemView) {
             super(itemView);
             this.tv_text = (TextView) itemView.findViewById(R.id.tv_text);
-            this.ll_main = (LinearLayout) itemView.findViewById(R.id.ll_main);
+            this.ll_main = (RelativeLayout) itemView.findViewById(R.id.ll_main);
         }
     }
 }
