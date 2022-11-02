@@ -183,8 +183,13 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!isArrived) {
-                    callOTPGenerationAPI();
-                } else {
+                    if (!appPreferenceManager.PEDSAOrder()) {
+                        callOTPGenerationAPI();
+                    } else {
+                        callOrderStatusChangeApi(3, "Arrive", "", "");
+                    }
+
+                } else if (validateBaseModel(Pe_PatientBaseResponseModel)) {
                     showAlertForConfirmation();
                     //callConfirmOrderAPI();
                 }
@@ -243,7 +248,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     }
 
     private void callConfirmOrderAPI() {
-        if (validateBaseModel(Pe_PatientBaseResponseModel)) {
+        try {
             confirmOrderRequestModel = new ConfirmOrderRequestModel();
             for (int i = 0; i < Pe_PatientBaseResponseModel.size(); i++) {
                 ConfirmOrderRequestModel.PatientsDTO.ProductsDTO singleTestData = new ConfirmOrderRequestModel.PatientsDTO.ProductsDTO();
@@ -273,9 +278,9 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
 
             PE_PostPatientDetailsController controller = new PE_PostPatientDetailsController(PE_PostPatientDetailsActivity.this);
             controller.callConfirmOrderAPI(confirmOrderRequestModel);
-
+        } catch (Exception e) {
+            Global.sout("Confirm order exception", e.getLocalizedMessage());
         }
-
     }
 
     private boolean patientExist(int singlePatientID) {
