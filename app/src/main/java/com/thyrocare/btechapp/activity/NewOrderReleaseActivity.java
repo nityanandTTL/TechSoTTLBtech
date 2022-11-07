@@ -28,6 +28,7 @@ import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.OrderReleaseRemarksController;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.FixAppointmentDataModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.OrderStatusChangeResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.ResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -273,11 +274,11 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
     private void callOrderStatusChangeApi(OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
         String id = String.valueOf(slotID);
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, id);
+        Call<OrderStatusChangeResponseModel> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, id);
         globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
-        responseCall.enqueue(new Callback<String>() {
+        responseCall.enqueue(new Callback<OrderStatusChangeResponseModel>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<OrderStatusChangeResponseModel> call, Response<OrderStatusChangeResponseModel> response) {
                 globalclass.hideProgressDialog(mActivity);
                 if (response.code() == 200) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
@@ -309,7 +310,7 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<OrderStatusChangeResponseModel> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
                 Toast.makeText(mActivity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }

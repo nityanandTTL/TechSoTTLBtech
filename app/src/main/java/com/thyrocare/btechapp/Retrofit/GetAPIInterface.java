@@ -122,7 +122,8 @@ public interface GetAPIInterface {
     Call<FetchOrderDetailsResponseModel> getOrderAllVisitDetails(@Path("btechId") String btechId, @Path("orderId") String orderId);
 
     //    @GET("api/OrderDetailsByVisit/{orderno}")
-    @GET("api/OrderVisitDetailsOptimize/GetOrderVisitDetailsorderwise/{orderno}")
+    //@GET("api/OrderVisitDetailsOptimize/GetOrderVisitDetailsorderwise/{orderno}")
+    @GET("api/GetSimplifiedDetail/GetOrderSimpleDetails/{orderno}")
     Call<FetchOrderDetailsResponseModel> getOrderDetail(@Path("orderno") String orderno);
 
     @Headers("Content-Type: application/json")

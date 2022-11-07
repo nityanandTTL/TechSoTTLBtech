@@ -21,6 +21,7 @@ import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.OrderReleaseRemarksController;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.FixAppointmentDataModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.OrderStatusChangeResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.ResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -190,12 +191,12 @@ public class RescheduleSlotActivity extends AppCompatActivity {
         orderStatusChangeRequestModel.setAppointmentDate(DateUtils.Req_Date_Req(appoinmentdate, "dd-MM-yyyy", "yyyy-MM-dd"));
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
+        Call<OrderStatusChangeResponseModel> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
         globalClass.showProgressDialog(activity, getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 
-        responseCall.enqueue(new Callback<String>() {
+        responseCall.enqueue(new Callback<OrderStatusChangeResponseModel>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<OrderStatusChangeResponseModel> call, Response<OrderStatusChangeResponseModel> response) {
                 globalClass.hideProgressDialog(activity);
                 if (response.code() == 200 || response.code() == 204) {
                     onOrderStatusChangedResponseReceived();
@@ -210,7 +211,7 @@ public class RescheduleSlotActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<OrderStatusChangeResponseModel> call, Throwable t) {
                 globalClass.hideProgressDialog(activity);
                 Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }

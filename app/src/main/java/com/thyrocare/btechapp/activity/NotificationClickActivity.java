@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.SplashActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.OrderStatusChangeResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -149,12 +150,12 @@ public class NotificationClickActivity extends AppCompatActivity {
     private void callOrderStatusChangeApi(final OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
+        Call<OrderStatusChangeResponseModel> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
         global.showProgressDialog(mActivity, ConstantsMessages.PLEASE_WAIT);
 
-        responseCall.enqueue(new Callback<String>() {
+        responseCall.enqueue(new Callback<OrderStatusChangeResponseModel>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<OrderStatusChangeResponseModel> call, Response<OrderStatusChangeResponseModel> response) {
                 global.hideProgressDialog(mActivity);
                 if (response.code() == 200 || response.code() == 204) {
                     BundleConstants.ORDER_Notification = true;
@@ -176,7 +177,7 @@ public class NotificationClickActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<OrderStatusChangeResponseModel> call, Throwable t) {
                 global.hideProgressDialog(mActivity);
                 Toast.makeText(mActivity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }

@@ -16,10 +16,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.Layout;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -50,6 +48,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFr
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.AddEditPatientModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.ConfirmOrderRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_PEPostCheckoutOrderResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.OrderStatusChangeResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -801,15 +800,16 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         }
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
+        Call<OrderStatusChangeResponseModel> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
         globalclass.showProgressDialog(activity, getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 
-        responseCall.enqueue(new Callback<String>() {
+        responseCall.enqueue(new Callback<OrderStatusChangeResponseModel>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<OrderStatusChangeResponseModel> call, Response<OrderStatusChangeResponseModel> response) {
                 globalclass.hideProgressDialog(activity);
                 if (response.code() == 200 || response.code() == 204 && response.body() != null) {
-                    onOrderStatusChangedResponseReceived(response.body());
+                    OrderStatusChangeResponseModel orderStatusChangeResponseModel = response.body();
+                    onOrderStatusChangedResponseReceived(orderStatusChangeResponseModel);
                 } else {
                     try {
                         Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
@@ -821,14 +821,14 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<OrderStatusChangeResponseModel> call, Throwable t) {
                 globalclass.hideProgressDialog(activity);
                 Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void onOrderStatusChangedResponseReceived(String msg) {
+    private void onOrderStatusChangedResponseReceived(OrderStatusChangeResponseModel orderStatusChangeResponseModel) {
 
         tv_addbenDetails.setVisibility(View.VISIBLE);
         btn_arrive_proceed.setText(Constants.CONFIRM_ORDER);

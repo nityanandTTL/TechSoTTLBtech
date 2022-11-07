@@ -34,6 +34,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetBtechCert
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.MainMaterialModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.NotificationMappingResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.OrderStatusChangeResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.ResponseModel;
 import com.thyrocare.btechapp.models.api.request.AddONRequestModel;
 import com.thyrocare.btechapp.models.api.request.BtechsRequestModel;
@@ -130,8 +131,6 @@ import com.thyrocare.btechapp.models.data.HCWRequestModel;
 import com.thyrocare.btechapp.models.data.HCWResponseModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 
-import org.json.JSONObject;
-
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -209,8 +208,11 @@ public interface PostAPIInterface {
     @POST("api/OrderAllocation/ServiceUpdate")
     Call<String> CallServiceUpdateAPI(@Body ServiceUpdateRequestModel model);
 
-    @POST("api/OrderStatusChange/{ID}")
-    Call<String> CallOrderStatusChangeAPI(@Body OrderStatusChangeRequestModel model, @Path("ID") String ID);
+   /* @POST("api/OrderStatusChange/{ID}")
+    Call<String> CallOrderStatusChangeAPI(@Body OrderStatusChangeRequestModel model, @Path("ID") String ID);*/
+
+    @POST("api/OrderStatusChangeV2/{ID}")
+    Call<OrderStatusChangeResponseModel> CallOrderStatusChangeAPI(@Body OrderStatusChangeRequestModel model, @Path("ID") String ID);
 
     @Headers("Content-Type: application/json")
     @POST("api/RemoveBeneficiary")

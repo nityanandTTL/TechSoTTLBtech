@@ -3,6 +3,7 @@ package com.thyrocare.btechapp.Retrofit;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -74,6 +75,13 @@ public class RetroFit_APIClient {
                     request = chain.request().newBuilder().addHeader(Constants.HEADER_USER_AGENT, Global.getHeaderValue(mActivity)).build();
                 }
 
+                //Nikitesh_D_V --> 1.0
+                if (BuildConfig.DEBUG) {
+                    Log.d("Headers: ", request.headers().toString());  // development build
+                }else{
+                    //Do Nothing                                           // production build
+                    //Log.d("Headers: ", request.headers().toString());
+                }
                 return chain.proceed(request);
             }
         });
@@ -147,6 +155,13 @@ public class RetroFit_APIClient {
                     request = chain.request().newBuilder().addHeader(Constants.HEADER_USER_AGENT, Global.getHeaderValue(context)).build();
                 }
 
+                //Nikitesh_D_V --> 1.0
+                if (BuildConfig.DEBUG) {
+                    Log.d("Headers: ", request.headers().toString());  // development build
+                }else{
+                    //Do Nothing                                           // production build
+                    //Log.d("Headers: ", request.headers().toString());
+                }
                 return chain.proceed(request);
             }
         });
