@@ -1,6 +1,8 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Adapters;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.renderscript.ScriptGroup;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thyrocare.btechapp.BtechInterfaces.AppInterfaces;
@@ -26,11 +29,13 @@ public class PE_PostPatientDetailsAdapter extends RecyclerView.Adapter<PE_PostPa
     Activity activity;
     AppInterfaces.PE_postPatientDetailsAdapterClick pe_postPatientDetailsAdapterClick;
     ArrayList<Get_PEPostCheckoutOrderResponseModel> responseModels = new ArrayList<>();
+    Boolean isArrived = false;
 
-    public PE_PostPatientDetailsAdapter(Activity activity, ArrayList<Get_PEPostCheckoutOrderResponseModel> responseModels, AppInterfaces.PE_postPatientDetailsAdapterClick pe_postPatientDetailsAdapterClick) {
+    public PE_PostPatientDetailsAdapter(Boolean isArrived, Activity activity, ArrayList<Get_PEPostCheckoutOrderResponseModel> responseModels, AppInterfaces.PE_postPatientDetailsAdapterClick pe_postPatientDetailsAdapterClick) {
         this.activity = activity;
         this.pe_postPatientDetailsAdapterClick = pe_postPatientDetailsAdapterClick;
         this.responseModels = responseModels;
+        this.isArrived = isArrived;
     }
 
     @Override
@@ -39,11 +44,18 @@ public class PE_PostPatientDetailsAdapter extends RecyclerView.Adapter<PE_PostPa
         return new PostCheckoutView(itemView);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(@NonNull PostCheckoutView holder, int position) {
         Get_PEPostCheckoutOrderResponseModel singlePatientDataPostion = responseModels.get(position);
         holder.tv_benCount.setText("Please add " + singlePatientDataPostion.getPatientCount() + " beneficiaries");
         holder.testname.setText(singlePatientDataPostion.getTestName());
+
+        if (isArrived) {
+            holder.iv_addBendetails.setImageTintList(null);
+        } else {
+            holder.iv_addBendetails.setImageTintList(ColorStateList.valueOf(activity.getColor(R.color.gray)));
+        }
 
         holder.iv_addBendetails.setOnClickListener(new View.OnClickListener() {
             @Override

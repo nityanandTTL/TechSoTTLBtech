@@ -7,6 +7,7 @@ import static com.thyrocare.btechapp.utils.app.AppConstants.MSG_SERVER_EXCEPTION
 import static com.thyrocare.btechapp.utils.app.CommonUtils.isValidForEditing;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,8 +17,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Layout;
 import android.text.TextUtils;
@@ -307,7 +310,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(activity);
         manager.setOrientation(RecyclerView.VERTICAL);
         rcl_pePostCheckOutOrder.setLayoutManager(manager);
-        pe_postPatientDetailsAdapter = new PE_PostPatientDetailsAdapter(activity, Pe_PatientBaseResponseModel, new AppInterfaces.PE_postPatientDetailsAdapterClick() {
+        pe_postPatientDetailsAdapter = new PE_PostPatientDetailsAdapter(isArrived,activity, Pe_PatientBaseResponseModel, new AppInterfaces.PE_postPatientDetailsAdapterClick() {
             @Override
             public void selectPatientDetailsClick(int baseModelPostion) {// TODO the position was taken here to set base model data in case of edit selected patient List.
                 baseModelPosition = baseModelPostion;
@@ -531,6 +534,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         });
 
         btn_submit.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
                 int checker = 0;
@@ -552,6 +556,8 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                         Pe_PatientBaseResponseModel.get(baseModelPosition).setDataAdded(true);
                         pe_postPatientDetailsAdapter.notifyDataSetChanged();
                         if (checkModelStatus()) {
+                            btn_arrive_proceed.setTextColor(activity.getColor(R.color.bg_new_color));
+                            btn_arrive_proceed.setCompoundDrawableTintList(ColorStateList.valueOf(activity.getColor(R.color.bg_new_color)));
                             tv_addbenDetails.setVisibility(View.GONE);
                         }
                     } else {
@@ -565,6 +571,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
             }
 
             private boolean checkModelStatus() {
+                //TODO added a check if each test have at least one patient
                 for (int i = 0; i < Pe_PatientBaseResponseModel.size(); i++) {
                     if (!Pe_PatientBaseResponseModel.get(i).isDataAdded()) {
                         return false;
@@ -805,6 +812,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         globalclass.showProgressDialog(activity, getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 
         responseCall.enqueue(new Callback<String>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 globalclass.hideProgressDialog(activity);
@@ -828,12 +836,16 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void onOrderStatusChangedResponseReceived(String msg) {
 
         tv_addbenDetails.setVisibility(View.VISIBLE);
         btn_arrive_proceed.setText(Constants.CONFIRM_ORDER);
+        btn_arrive_proceed.setTextColor(activity.getColor(R.color.grey));
+        btn_arrive_proceed.setCompoundDrawableTintList(ColorStateList.valueOf(activity.getColor(R.color.grey)));
         rcl_pePostCheckOutOrder.setClickable(true);
         isArrived = true;
+        setupPostDetailsList();
     }
 
     public void onAddPatientResponseReceived(AddPatientResponseModel addPatientResponseModel) {
