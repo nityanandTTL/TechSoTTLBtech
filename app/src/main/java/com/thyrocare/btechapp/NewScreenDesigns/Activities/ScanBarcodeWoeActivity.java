@@ -932,9 +932,11 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                                     beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(BundleConstants.VenepunctureImage_path);
 //                                    beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(BenBarcodePicimagefile.getAbsolutePath());
                                     ImageUpdated = true;
+                                    vrm = getVenupunctureUploadRequestModel(i, "VIAL", BenBarcodePicimagefile);
+                                    break;
                                 }
                                 //TODO Venupucture Image API
-                                vrm = getVenupunctureUploadRequestModel(i, "VIAL", BenBarcodePicimagefile);
+
                             }
                         }
                         callVenupuctureAPI(vrm);
