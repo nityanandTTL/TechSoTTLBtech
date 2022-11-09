@@ -165,7 +165,7 @@ public class PE_PostPatientDetailsController {
         try {
             globalclass.showProgressDialog(pe_postPatientDetailsActivity, "Please wait while processing your request...");
             PostAPIInterface appInterfaces = RetroFit_APIClient.getInstance().getClient(pe_postPatientDetailsActivity, EncryptionUtils.Dcrp_Hex(pe_postPatientDetailsActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-            Call<ConfirmOrderResponseModel> call = appInterfaces.confirmOrder(confirmOrderRequestModel, appPreferenceManager.getAuthToken());
+            Call<ConfirmOrderResponseModel> call = appInterfaces.confirmOrder(confirmOrderRequestModel/*, appPreferenceManager.getAuthToken()*/);
             call.enqueue(new Callback<ConfirmOrderResponseModel>() {
                 @Override
                 public void onResponse(Call<ConfirmOrderResponseModel> call, Response<ConfirmOrderResponseModel> response) {
