@@ -438,7 +438,7 @@ public interface PostAPIInterface {
     Call<GetTestResponseModel> postTest(@Body GetTestCodeRequestModel getTestCodeRequestModel);
 
     @POST("api/PendingVisitsOptimize/RemoveSample")
-    Call<RemoveUrineSampleRespModel> removeUrineSample(@Header("Authorization") String Token,@Body RemoveUrineReqModel removeUrineReqModel);
+    Call<RemoveUrineSampleRespModel> removeUrineSample(/*@Header("Authorization") String Token,*/@Body RemoveUrineReqModel removeUrineReqModel);
 
     @POST("api/Account/BtechSignInout")
     Call<SignInResponseModel> signINOUT(@Body SignInRequestModel signInRequestModel);

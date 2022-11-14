@@ -41,6 +41,7 @@ public class RemoveUrineSampleController {
 
     public void CallAPI(RemoveUrineReqModel removeUrineReqModel, final BeneficiaryDetailsModel beneficiaryDetailsModel, final int i) {
         try {
+            //TODO please not SNR requires auth token on stage and not on prod
             PostAPIInterface apiInterface;
             if (InputUtils.CheckEqualIgnoreCase(EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD)), (EncryptionUtils.Dcrp_Hex(activity.getString(R.string.BASE_URL_TOCHECK))))){
                 apiInterface  = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
@@ -49,7 +50,7 @@ public class RemoveUrineSampleController {
             }
 
 //            PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, "https://techsoapis.thyrocare.cloud/").create(PostAPIInterface.class);
-            Call<RemoveUrineSampleRespModel> responseModelCall = apiInterface.removeUrineSample("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(),removeUrineReqModel);
+            Call<RemoveUrineSampleRespModel> responseModelCall = apiInterface.removeUrineSample(/*"Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(),*/removeUrineReqModel);
             globalClass.showProgressDialog(activity, "Please wait..");
             responseModelCall.enqueue(new Callback<RemoveUrineSampleRespModel>() {
                 @Override
