@@ -110,7 +110,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     AppPreferenceManager appPreferenceManager;
     GetPatientListResponseModel selectedPatientModel = new GetPatientListResponseModel();
     GetPatientListResponseModel.DataDTO editingPatientModel = new GetPatientListResponseModel.DataDTO();
-    GetPatientListResponseModel patientListResponse = new GetPatientListResponseModel();
+    public static GetPatientListResponseModel patientListResponse = new GetPatientListResponseModel();
     OrderVisitDetailsModel orderVisitDetailsModel = new OrderVisitDetailsModel();
     Global globalclass;
     ConnectionDetector cd;
@@ -453,19 +453,20 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
             rcl_ben_list.setVisibility(View.VISIBLE);
             btn_submit.setVisibility(View.VISIBLE);
             tv_nodatafound.setVisibility(View.GONE);
-            selectPeBenificiaryAdapter = new SelectPeBenificiaryAdapter(patientListEdit, Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientCount(), patientListResponseModel, activity, new AppInterfaces.PatientSelector() {
+            selectPeBenificiaryAdapter = new SelectPeBenificiaryAdapter(patientListEdit, Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientCount()/*, patientListResponseModel*/, activity, new AppInterfaces.PatientSelector() {
                 @Override
                 public void addPatient(int addPatientPosition) {
-                    patientListResponse.getData().get(addPatientPosition).setSelected(true);
+//                    patientListResponse.getData().get(addPatientPosition).setSelected(true);
                 }
 
                 @Override
                 public void removePatient(int removePatientPostion) {
-                    patientListResponse.getData().get(removePatientPostion).setSelected(false);
+//                    patientListResponse.getData().get(removePatientPostion).setSelected(false);
                 }
 
                 @Override
                 public void editPatient(GetPatientListResponseModel.DataDTO singlePatient) {
+                    btn_submit.setVisibility(View.GONE);
                     editingPatientModel = singlePatient;
                     showEditPatientDetailsLayout();
                 }

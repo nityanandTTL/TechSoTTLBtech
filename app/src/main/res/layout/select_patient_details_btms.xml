@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:isScrollContainer="true"
     android:layout_margin="@dimen/_8sdp"
     android:orientation="vertical">
 
@@ -149,7 +150,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/rcl_ben_list"
-                android:layout_marginVertical="@dimen/_10sdp"
                 android:layout_marginHorizontal="@dimen/_6sdp"
                 android:background="@drawable/rounded_background_green_2"
                 android:backgroundTint="@color/colorAccent"
