@@ -46,6 +46,7 @@ import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.BtechInterfaces.AppInterfaces;
 import com.thyrocare.btechapp.Controller.OrderReleaseRemarksController;
+import com.thyrocare.btechapp.Controller.PEAuthorizationController;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.PE_PostPatientDetailsAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.SelectPeBenificiaryAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Controllers.PE_PostPatientDetailsController;
@@ -77,6 +78,7 @@ import com.thyrocare.btechapp.models.api.request.ServiceUpdateRequestModel;
 import com.thyrocare.btechapp.models.api.response.AddPatientResponseModel;
 import com.thyrocare.btechapp.models.api.response.ConfirmOrderResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetPECancelRemarksResponseModel;
+import com.thyrocare.btechapp.models.api.response.GetPETestResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetRemarksResponseModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryTestDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderDetailsModel;
@@ -150,8 +152,28 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         initViews();
         initListners();
         Pe_PatientBaseResponseModel = setupInitialList();
-        setupPostDetailsList();
 
+        callPEAuthTokenAPI();
+
+        //setupPostDetailsList();
+
+    }
+
+    private void callPEAuthTokenAPI() {
+        PEAuthorizationController authorizationController = new PEAuthorizationController(PE_PostPatientDetailsActivity.this);
+        authorizationController.getAuthorizationToken(3,orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode(),orderVisitDetailsModel.getAllOrderdetails().get(0).getOrderNo());
+    }
+
+    public void getTestList(ArrayList<GetPETestResponseModel.DataDTO> peTestList) {
+        for (int i = 0; i < Pe_PatientBaseResponseModel.size(); i++) {
+            for (int j = 0; j < peTestList.size(); j++) {
+                if (Pe_PatientBaseResponseModel.get(i).getTestName().equalsIgnoreCase(peTestList.get(j).getPartner_lab_test_id())){
+                    Pe_PatientBaseResponseModel.get(i).setTesttype(peTestList.get(j).getType());
+                    break;
+                }
+            }
+        }
+        setupPostDetailsList();
     }
 
     private void initListners() {

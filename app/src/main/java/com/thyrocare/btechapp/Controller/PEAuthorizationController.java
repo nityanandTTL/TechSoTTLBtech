@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.AddEditBenificaryActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.PE_PostPatientDetailsActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.StartAndArriveActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.AddRemoveTestProfileActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
@@ -33,6 +34,7 @@ public class PEAuthorizationController {
     Global globalClass;
     AddEditBenificaryActivity addEditBenificaryActivity;
     AddRemoveTestProfileActivity addRemoveTestProfileActivity;
+    PE_PostPatientDetailsActivity pe_postPatientDetailsActivity;
     AppPreferenceManager appPreferenceManager;
     int flag;
     String Str_pincode, Str_auth_token;
@@ -61,6 +63,14 @@ public class PEAuthorizationController {
         flag = 2;
     }
 
+    public PEAuthorizationController(PE_PostPatientDetailsActivity pe_postPatientDetailsActivity) {
+        this.activity = pe_postPatientDetailsActivity;
+        this.pe_postPatientDetailsActivity = pe_postPatientDetailsActivity;
+        globalClass = new Global(activity);
+        appPreferenceManager = new AppPreferenceManager(activity);
+        flag = 3;
+    }
+
     public void getAuthorizationToken(final int flag, String pincode, final String orderNo) {
 
         try {
@@ -82,7 +92,7 @@ public class PEAuthorizationController {
                             PEAuthResponseModel peAuthResponseModel = response.body();
                             if (peAuthResponseModel.isStatus() == true) {
                                 appPreferenceManager.setAuthToken(peAuthResponseModel.getData().getAuthtoken());
-                                if (BuildConfig.DEBUG){
+                                if (BuildConfig.DEBUG) {
                                     System.out.println("shared>>>mith-----" + appPreferenceManager.getAuthToken());
                                 }
 
@@ -146,6 +156,8 @@ public class PEAuthorizationController {
                                     addEditBenificaryActivity.getTestList(getPETestResponseModel);
                                 } else if (flag == 2) {
                                     addRemoveTestProfileActivity.getTestList(getPETestResponseModel.getData());
+                                } else if (flag == 3) {
+                                    pe_postPatientDetailsActivity.getTestList(getPETestResponseModel.getData());
                                 } else {
                                     getAuthorizationToken(flag, Str_pincode, orderNo);
                                 }
