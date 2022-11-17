@@ -18,11 +18,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Layout;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -122,7 +120,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     ConfirmOrderRequestModel confirmOrderRequestModel = new ConfirmOrderRequestModel();
     ArrayList<intialListModelClass> patientMapModel = new ArrayList<>();
     boolean patientListEdit = false;
-    int postionToAddTest = 0, positionOfTest = 0;
+    int positionToAddTest = 0, positionOfTest = 0;
     ImageView iv_back, iv_home;
 
     //TODO select patient bottomsheet views--------------------------------------------
@@ -141,7 +139,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     private int baseModelPosition;
     private String cancelVisit = "n";
     private ConfirmRequestReleaseDialog crr;
-    private int newAddedPatientID = 0;
+    private int newAddedEditedPatientID = 0;
 
     //TODO order release views and variables-------------------------------------------
 
@@ -284,7 +282,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
 
                 for (int j = 0; j < Pe_PatientBaseResponseModel.get(i).getAddedPatients().size(); j++) {
                     if (patientExist(Pe_PatientBaseResponseModel.get(i).getAddedPatients().get(j).getId())) {
-                        confirmOrderRequestModel.getPatients().get(postionToAddTest).addProducts(singleTestData);
+                        confirmOrderRequestModel.getPatients().get(positionToAddTest).addProducts(singleTestData);
                     } else {
                         ConfirmOrderRequestModel.PatientsDTO singlePatientData = new ConfirmOrderRequestModel.PatientsDTO();
                         singlePatientData.setAge(String.valueOf(Pe_PatientBaseResponseModel.get(i).getAddedPatients().get(j).getAge()));
@@ -311,7 +309,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     private boolean patientExist(int singlePatientID) {
         for (int i = 0; i < confirmOrderRequestModel.getPatients().size(); i++) {
             if (confirmOrderRequestModel.getPatients().get(i).getLeadId().equals(String.valueOf(singlePatientID))) {
-                postionToAddTest = i;
+                positionToAddTest = i;
                 return true;
             }
         }
@@ -406,7 +404,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                     for (int i = 0; i < Pe_PatientBaseResponseModel.get(baseModelPosition).getAddedPatients().size(); i++) {
                         for (int j = 0; j < patientListResponse.getData().size(); j++) {
                             if (patientListResponse.getData().get(j).getId() == Pe_PatientBaseResponseModel.get(baseModelPosition).getAddedPatients().get(i).getId() ||
-                                    newAddedPatientID == patientListResponse.getData().get(j).getId()) {
+                                    newAddedEditedPatientID == patientListResponse.getData().get(j).getId()) {
                                 patientListResponse.getData().get(j).setSelected(true);
                             }
                         }
@@ -414,13 +412,13 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                     patientListEdit = true;
                 } else {
                     for (int i = 0; i < patientListResponse.getData().size(); i++) {
-                        if (newAddedPatientID == patientListResponse.getData().get(i).getId()) {
+                        if (newAddedEditedPatientID == patientListResponse.getData().get(i).getId()) {
                             patientListResponse.getData().get(i).setSelected(true);
                         }
                     }
                     patientListEdit = true;
                 }
-                newAddedPatientID = 0;
+                newAddedEditedPatientID = 0;
                 showSelectPatientDetailsLayout(patientListResponse);
             }
         });
@@ -453,15 +451,15 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
             rcl_ben_list.setVisibility(View.VISIBLE);
             btn_submit.setVisibility(View.VISIBLE);
             tv_nodatafound.setVisibility(View.GONE);
-            selectPeBenificiaryAdapter = new SelectPeBenificiaryAdapter(patientListEdit, Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientCount()/*, patientListResponseModel*/, activity, new AppInterfaces.PatientSelector() {
+            selectPeBenificiaryAdapter = new SelectPeBenificiaryAdapter(patientListEdit, Pe_PatientBaseResponseModel.get(baseModelPosition).getPatientCount(), patientListResponseModel, activity, new AppInterfaces.PatientSelector() {
                 @Override
                 public void addPatient(int addPatientPosition) {
-//                    patientListResponse.getData().get(addPatientPosition).setSelected(true);
+                   patientListResponse.getData().get(addPatientPosition).setSelected(true);
                 }
 
                 @Override
                 public void removePatient(int removePatientPostion) {
-//                    patientListResponse.getData().get(removePatientPostion).setSelected(false);
+                   patientListResponse.getData().get(removePatientPostion).setSelected(false);
                 }
 
                 @Override
@@ -472,6 +470,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                 }
 
             });
+
             rcl_ben_list.setAdapter(selectPeBenificiaryAdapter);
         }
 
@@ -874,7 +873,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     public void onAddPatientResponseReceived(AddPatientResponseModel addPatientResponseModel) {
         if (addPatientResponseModel.getStatus() && addPatientBottomsheet.isShowing()) {
             addPatientBottomsheet.dismiss();
-            newAddedPatientID = addPatientResponseModel.getData().getId();//TODO This patient will be used to set new ben checked after the patient list api is called again.
+            newAddedEditedPatientID = addPatientResponseModel.getData().getId();//TODO This patient will be used to set new ben checked after the patient list api is called again.
             callPostCheckoutPatientList();
         } else {
             TastyToast.makeText(activity, "Failed to add the patient...", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
@@ -886,6 +885,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         if (addPatientBottomsheet.isShowing())
             addPatientBottomsheet.dismiss();
         if (addPatientResponseModel.getData() != null) {
+            newAddedEditedPatientID = addPatientResponseModel.getData().getId();
             callPostCheckoutPatientList();
         }
     }

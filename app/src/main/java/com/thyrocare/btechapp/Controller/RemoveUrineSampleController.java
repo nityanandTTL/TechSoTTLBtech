@@ -44,15 +44,13 @@ public class RemoveUrineSampleController {
             //TODO please not SNR requires auth token on stage and not on prod
             PostAPIInterface apiInterface;
             Call<RemoveUrineSampleRespModel> responseModelCall;
-            /*if (InputUtils.CheckEqualIgnoreCase(EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD)), (EncryptionUtils.Dcrp_Hex(activity.getString(R.string.BASE_URL_TOCHECK))))) {
+            if (InputUtils.CheckEqualIgnoreCase(EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD)), (EncryptionUtils.Dcrp_Hex(activity.getString(R.string.BASE_URL_TOCHECK))))) {
                 apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-                responseModelCall = apiInterface.removeUrineSample(*//*"Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(),*//*removeUrineReqModel);
-            } *//*else {
+                responseModelCall = apiInterface.removeUrineSample(/*"Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(),*/ removeUrineReqModel);
+            } else {
                 apiInterface = RetroFit_APIClient.getInstance().getClient(activity, "https://techsostaging.thyrocare.cloud/").create(PostAPIInterface.class);
                 responseModelCall = apiInterface.removeUrineSampleStaging("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(), removeUrineReqModel);
-            }*/
-            apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-            responseModelCall = apiInterface.removeUrineSample(/*"Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(),*/removeUrineReqModel);
+            }
             globalClass.showProgressDialog(activity, "Please wait..");
             responseModelCall.enqueue(new Callback<RemoveUrineSampleRespModel>() {
                 @Override

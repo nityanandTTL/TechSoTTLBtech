@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:isScrollContainer="true"
     android:layout_margin="@dimen/_8sdp"
+    android:isScrollContainer="true"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginHorizontal="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -81,8 +81,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingVertical="8dp"
             android:paddingHorizontal="@dimen/_12sdp"
+            android:paddingVertical="8dp"
             android:visibility="visible">
 
             <ImageView
@@ -128,9 +128,10 @@
                 android:layout_above="@+id/btnSubmit"
                 android:layout_marginBottom="@dimen/_4sdp"
                 android:visibility="visible"
-                tools:ignore="UnknownIdInLayout"
                 tools:itemCount="5"
-                tools:listitem="@layout/single_ben_detail" />
+                tools:listitem="@layout/single_ben_detail"
+                tools:ignore="UnknownIdInLayout" />
+
 
             <TextView
                 android:id="@+id/tv_nodatafound"
@@ -140,6 +141,7 @@
                 android:layout_marginVertical="@dimen/_10sdp"
                 android:gravity="center_horizontal"
                 android:text="No Patient found"
+                android:layout_marginBottom="@dimen/_8sdp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_20sdp"
                 android:textStyle="bold"
@@ -151,6 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/rcl_ben_list"
                 android:layout_marginHorizontal="@dimen/_6sdp"
+                android:layout_marginVertical="@dimen/_8sdp"
                 android:background="@drawable/rounded_background_green_2"
                 android:backgroundTint="@color/colorAccent"
                 android:letterSpacing="0.05"

@@ -19,18 +19,19 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.models.api.request.GetPatientListResponseModel;
 
 public class SelectPeBenificiaryAdapter extends RecyclerView.Adapter<SelectPeBenificiaryAdapter.ViewHolder> {
-   /* GetPatientListResponseModel patientResponseModel;*/
+    GetPatientListResponseModel patientResponseModel;
     Activity activity;
     int benCounter = 1, requiredBen;
     AppInterfaces.PatientSelector patientSelector;
     boolean isPatientListEdit;
 
 
-    public SelectPeBenificiaryAdapter(boolean isPatientListEdit, int patientCount,/* GetPatientListResponseModel patientResponseModel,*/ Activity activity, AppInterfaces.PatientSelector patientSelector) {
+    public SelectPeBenificiaryAdapter(boolean isPatientListEdit, int patientCount, GetPatientListResponseModel patientResponseModel, Activity activity, AppInterfaces.PatientSelector patientSelector) {
         this.activity = activity;
         this.patientSelector = patientSelector;
         this.requiredBen = patientCount;
         this.isPatientListEdit = isPatientListEdit;
+        this.patientResponseModel = patientResponseModel;
     }
 
     @NonNull
@@ -42,24 +43,20 @@ public class SelectPeBenificiaryAdapter extends RecyclerView.Adapter<SelectPeBen
 
     @Override
     public void onBindViewHolder(@NonNull SelectPeBenificiaryAdapter.ViewHolder viewHolder, int position) {
-//        GetPatientListResponseModel.DataDTO singlePatient = patientResponseModel.getData().get(position);
-        GetPatientListResponseModel.DataDTO singlePatient = PE_PostPatientDetailsActivity.patientListResponse.getData().get(position);
+        GetPatientListResponseModel.DataDTO singlePatient = patientResponseModel.getData().get(position);
         String singlePatientGender = singlePatient.getGender() == 1 ? "Male" : "Female";
 
-        if (singlePatient.isSelected){
-            viewHolder.cb_ben_selector.setChecked(true);
-        }else{
-            viewHolder.cb_ben_selector.setChecked(false);
+        if (isPatientListEdit){
+            viewHolder.cb_ben_selector.setChecked(singlePatient.isSelected);
         }
 
         viewHolder.cb_ben_selector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    singlePatient.setSelected(true);
-//                    patientSelector.addPatient(position);
+                    patientSelector.addPatient(position);
                 } else {
-                    singlePatient.setSelected(false);
+                    patientSelector.removePatient(position);
                 }
             }
         });
@@ -90,6 +87,7 @@ public class SelectPeBenificiaryAdapter extends RecyclerView.Adapter<SelectPeBen
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.setIsRecyclable(false);
             cb_ben_selector = itemView.findViewById(R.id.cb_ben_selector);
             iv_benpic = itemView.findViewById(R.id.iv_benpic);
             ben_name = itemView.findViewById(R.id.ben_name);
