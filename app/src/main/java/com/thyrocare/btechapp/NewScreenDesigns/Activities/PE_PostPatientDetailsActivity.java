@@ -41,6 +41,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.BtechInterfaces.AppInterfaces;
 import com.thyrocare.btechapp.Controller.OrderReleaseRemarksController;
@@ -49,6 +51,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Adapters.PE_PostPatientDetailsAda
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.SelectPeBenificiaryAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Controllers.PE_PostPatientDetailsController;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
+import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.AddEditPatientModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.ConfirmOrderRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_PEPostCheckoutOrderResponseModel;
@@ -56,6 +59,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
@@ -93,6 +97,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -133,6 +138,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
     Button btn_addPatient, btn_submit;
     Boolean isMale = null;
     BottomSheetDialog bottomSheetOrderReschedule, bottomSheetOrderRelease;
+    Global global;
     //TODO select patient bottomsheet views--------------------------------------------
 
     //TODO order release views and variables-------------------------------------------
@@ -150,10 +156,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         initViews();
         initListners();
         Pe_PatientBaseResponseModel = setupInitialList();
-
         callPEAuthTokenAPI();
-
-        //setupPostDetailsList();
 
     }
 
@@ -1125,7 +1128,7 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rec_orderRelease.setLayoutManager(linearLayoutManager);
 
-        OrderReleaseAdapter orAdapter = new OrderReleaseAdapter(PE_PostPatientDetailsActivity.this, remarksArray);
+        OrderReleaseAdapter orAdapter = new OrderReleaseAdapter(PE_PostPatientDetailsActivity.this, remarksArray, appPreferenceManager.isPEPartner());
         rec_orderRelease.setAdapter(orAdapter);
 
         bottomSheetOrderReschedule.setContentView(bottomSheet);
@@ -1173,6 +1176,83 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
         intent.putExtra(BundleConstants.PINCODE, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());
         startActivity(intent);
 
+    }
+    public void onCustomerSupportCallClicked() {
+        initiateTriPartyCall(Constants.TRIPARTY_CC_AGENT);
+    }
+
+    private void initiateTriPartyCall(String tripartyCcAgent) {
+        try {
+            TedPermission.with(activity)
+                    .setPermissions(Manifest.permission.CALL_PHONE)
+                    .setRationaleMessage("We need permission to make call from your device.")
+                    .setRationaleConfirmText("OK")
+                    .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission > Telephone")
+                    .setPermissionListener(new PermissionListener() {
+                        @Override
+                        public void onPermissionGranted() {
+                            Intent intent = new Intent(Intent.ACTION_CALL);
+                            intent.setData(Uri.parse("tel:" + tripartyCcAgent.replace("\"", "")));
+                            activity.startActivity(intent);
+                        }
+                        @Override
+                        public void onPermissionDenied(List<String> deniedPermissions) {
+                            Toast.makeText(activity, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }).check();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void CallPatchRequestAPI(OrderVisitDetailsModel orderVisitDetailsModels, String mobile) {
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        Call<String> responseCall = apiInterface.CallpatchRequestAPI(appPreferenceManager.getLoginResponseModel().getUserID(), mobile, orderVisitDetailsModels.getVisitId());
+        global.showProgressDialog(activity, activity.getResources().getString(R.string.loading));
+        responseCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                global.hideProgressDialog(activity);
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        String MaskedPhoneNumber = response.body();
+                        TedPermission.with(activity)
+                                .setPermissions(Manifest.permission.CALL_PHONE)
+                                .setRationaleMessage("We need permission to make call from your device.")
+                                .setRationaleConfirmText("OK")
+                                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission > Telephone")
+                                .setPermissionListener(new PermissionListener() {
+                                    @Override
+                                    public void onPermissionGranted() {
+                                        if (!StringUtils.isNull(MaskedPhoneNumber)) {
+                                            Intent intent = new Intent(Intent.ACTION_CALL);
+                                            intent.setData(Uri.parse("tel:" + MaskedPhoneNumber.replace("\"", "")));
+                                            startActivity(intent);
+                                        } else {
+                                            global.showCustomToast(activity, "Invalid number");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onPermissionDenied(List<String> deniedPermissions) {
+                                        Toast.makeText(activity, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }).check();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                global.hideProgressDialog(activity);
+
+            }
+        });
     }
 
     private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {
