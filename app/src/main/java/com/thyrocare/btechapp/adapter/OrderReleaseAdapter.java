@@ -22,7 +22,8 @@ import com.thyrocare.btechapp.models.api.response.GetRemarksResponseModel;
 
 import java.util.ArrayList;
 
-public class OrderReleaseAdapter extends RecyclerView.Adapter<OrderReleaseAdapter.MyViewHolder> {
+public class
+OrderReleaseAdapter extends RecyclerView.Adapter<OrderReleaseAdapter.MyViewHolder> {
     ArrayList<String> orderArray;
     StartAndArriveActivity startAndArriveActivity;
     PE_PostPatientDetailsActivity pe_postPatientDetailsActivity;

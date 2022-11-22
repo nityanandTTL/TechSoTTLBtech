@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -55,6 +56,12 @@ public class SlotDateAdapter extends RecyclerView.Adapter<SlotDateAdapter.MyView
                 startAndArriveActivity.onClickposition(remarksArray.get(position));
             }
         });
+        holder.iv_regularreshcedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startAndArriveActivity.onClickposition(remarksArray.get(position));
+            }
+        });
     }
 
     @Override
@@ -66,11 +73,13 @@ public class SlotDateAdapter extends RecyclerView.Adapter<SlotDateAdapter.MyView
 
         TextView tv_text;
         RelativeLayout ll_main;
+        ImageView iv_regularreshcedule;
 
         MyViewHolder(View itemView) {
             super(itemView);
             this.tv_text = (TextView) itemView.findViewById(R.id.tv_text);
             this.ll_main = (RelativeLayout) itemView.findViewById(R.id.ll_main);
+            this.iv_regularreshcedule =  itemView.findViewById(R.id.iv_regularreshcedule);
         }
     }
 }

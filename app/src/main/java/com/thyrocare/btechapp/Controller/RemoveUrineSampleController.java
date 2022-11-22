@@ -40,23 +40,30 @@ public class RemoveUrineSampleController {
 
     public void CallAPI(RemoveUrineReqModel removeUrineReqModel, final BeneficiaryDetailsModel beneficiaryDetailsModel, final int i) {
         try {
-            PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-//            PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, "https://techsoapis.thyrocare.cloud/").create(PostAPIInterface.class);
-            Call<RemoveUrineSampleRespModel> responseModelCall = apiInterface.removeUrineSample(/*"Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(),*/removeUrineReqModel);
+            //TODO please not SNR requires auth token on stage and not on prod
+            PostAPIInterface apiInterface;
+            Call<RemoveUrineSampleRespModel> responseModelCall;
+            if (InputUtils.CheckEqualIgnoreCase(EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD)), (EncryptionUtils.Dcrp_Hex(activity.getString(R.string.BASE_URL_TOCHECK))))) {
+                apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+                responseModelCall = apiInterface.removeUrineSample(/*"Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(),*/ removeUrineReqModel);
+            } else {
+                apiInterface = RetroFit_APIClient.getInstance().getClient(activity, "https://techsostaging.thyrocare.cloud/").create(PostAPIInterface.class);
+                responseModelCall = apiInterface.removeUrineSampleStaging("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(), removeUrineReqModel);
+            }
             globalClass.showProgressDialog(activity, "Please wait..");
             responseModelCall.enqueue(new Callback<RemoveUrineSampleRespModel>() {
                 @Override
                 public void onResponse(Call<RemoveUrineSampleRespModel> call, retrofit2.Response<RemoveUrineSampleRespModel> response) {
                     try {
                         globalClass.hideProgressDialog(activity);
-                        if (response.isSuccessful() && response.body()!=null){
-                            if (flag==1){
-                                if (i == 1){
-                                    scanBarcodeViewPagerAdapter.getResponse(response.body(),beneficiaryDetailsModel);
+                        if (response.isSuccessful() && response.body() != null) {
+                            if (flag == 1) {
+                                if (i == 1) {
+                                    scanBarcodeViewPagerAdapter.getResponse(response.body(), beneficiaryDetailsModel);
                                 }
                             }
-                        }else{
-                            TastyToast.makeText(activity, !InputUtils.isNull(response.body().getResponse())?response.body().getResponse().toString().trim(): ConstantsMessages.SomethingWentwrngMsg,TastyToast.LENGTH_SHORT,TastyToast.ERROR);
+                        } else {
+                            TastyToast.makeText(activity, !InputUtils.isNull(response.body().getResponse()) ? response.body().getResponse().toString().trim() : ConstantsMessages.SomethingWentwrngMsg, TastyToast.LENGTH_SHORT, TastyToast.ERROR);
                         }
                     } catch (Exception e) {
 
@@ -77,5 +84,6 @@ public class RemoveUrineSampleController {
             e.printStackTrace();
         }
     }
+
 
 }
