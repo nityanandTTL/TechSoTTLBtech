@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.grapesnberries.curllogger.CurlLoggerInterceptor;
 import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
@@ -77,6 +78,9 @@ public class RetroFit_APIClient {
                 return chain.proceed(request);
             }
         });
+        if (BuildConfig.DEBUG) {
+            client.addInterceptor(new CurlLoggerInterceptor());
+        }
 
         //client.addInterceptor(new ChuckerInterceptor(mActivity));
 
@@ -150,6 +154,9 @@ public class RetroFit_APIClient {
                 return chain.proceed(request);
             }
         });
+        if (BuildConfig.DEBUG) {
+            client.addInterceptor(new CurlLoggerInterceptor());
+        }
         //client.addInterceptor(new ChuckerInterceptor(context));
 
       /*  SharedPreferences pref_SSL = context.getSharedPreferences("SSLKeysPref", 0);

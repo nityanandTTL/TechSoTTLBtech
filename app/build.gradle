@@ -184,9 +184,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:30.4.0')
     implementation 'com.google.firebase:firebase-perf'
 
-   /* //TODO chucker
-    debugImplementation "com.github.chuckerteam.chucker:library:3.3.0"
-    releaseImplementation "com.github.chuckerteam.chucker:library-no-op:3.3.0"*/
+    //For getting Curl in Logcat
+    implementation 'com.github.grapesnberries:curlloggerinterceptor:0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
