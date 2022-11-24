@@ -12,6 +12,8 @@ import androidx.viewpager.widget.ViewPager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.text.Html;
 import android.text.TextUtils;
@@ -57,20 +59,20 @@ import static com.thyrocare.btechapp.utils.app.AppConstants.MSG_SERVER_EXCEPTION
 
 public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
-    private boolean showProduct;
+    private static boolean Is_RBS_PPBS;
     Activity mActivity;
     Global globalclass;
     ConnectionDetector cd;
-    private OrderVisitDetailsModel orderVisitDetailsModel;
     AppPreferenceManager appPreferenceManager;
     ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst;
-    private static boolean Is_RBS_PPBS;
+    boolean isHCL, isOTP;
+    String filename, filepath;
+    private boolean showProduct;
+    private OrderVisitDetailsModel orderVisitDetailsModel;
     private OnClickListeners onClickListeners;
     private BarcodeInitAdapter barcodeinitAdapter;
     private String mobile = "";
     private boolean flagremove = false;
-    boolean isHCL, isOTP;
-    String filename, filepath;
 
     public ScanBarcodeViewPagerAdapter(Activity mActivity, ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst, boolean showProduct, OrderVisitDetailsModel orderVisitDetailsModel, String mobile, boolean isHCL, String filename, boolean isOTP) {
         this.mActivity = mActivity;
@@ -138,6 +140,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         final ImageView imgDeleteA = (ImageView) itemView.findViewById(R.id.imgDeleteA);
         final ImageView img_uploadBenVail = (ImageView) itemView.findViewById(R.id.img_uploadBenVail);
         ImageView img_uploadAffidavit = (ImageView) itemView.findViewById(R.id.img_uploadAffidavit);
+        final ImageView iv_uploadedImg = (ImageView) itemView.findViewById(R.id.iv_uploadedImg);
         RecyclerView recyle_barcode = (RecyclerView) itemView.findViewById(R.id.recyle_barcode);
 
         final EditText edt_srf = (EditText) itemView.findViewById(R.id.edt_srf);
@@ -154,6 +157,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         final TextView tv_number = (TextView) itemView.findViewById(R.id.tv_number);
         final EditText edt_verify = (EditText) itemView.findViewById(R.id.edt_verify);
         final LinearLayout ll_otpvalidate = (LinearLayout) itemView.findViewById(R.id.ll_otpvalidate);
+        TextView tv_bencode_note = itemView.findViewById(R.id.tv_bencode_note);
 
         try {
             if (beneficaryWiseScanbarcodeArylst.get(position).isCovidOrder()) {
@@ -190,13 +194,16 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
                     imgDeleteA.setVisibility(View.VISIBLE);
                     img_uploadBenVail.setVisibility(View.VISIBLE);
                 } else {
-                    txt_captureAffidavitPic.setText("View Image");
-                    txt_captureAffidavitPic.setPaintFlags(txt_captureAffidavitPic.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                    txt_captureAffidavitPic.setVisibility(View.VISIBLE);
-                    txt_captureAffidavitPic.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-                    imgDelete.setVisibility(View.VISIBLE);
+
+                    txt_captureBenBarcodePic.setVisibility(View.GONE);
+                    tv_bencode_note.setVisibility(View.VISIBLE);
                     img_uploadBenVail.setVisibility(View.VISIBLE);
+                    iv_uploadedImg.setVisibility(View.VISIBLE);
+                    Bitmap bmp = BitmapFactory.decodeFile(filename);
+                    iv_uploadedImg.setImageBitmap(bmp);
+
                 }
+
             } else {
                 txt_captureAffidavitPic.setText("Upload");
                 txt_captureAffidavitPic.setPaintFlags(txt_captureAffidavitPic.getPaintFlags() | 0);
@@ -219,11 +226,15 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
 
         if (!StringUtils.isNull(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture())) {
-            txt_captureBenBarcodePic.setText("View Image");
-            txt_captureBenBarcodePic.setPaintFlags(txt_captureBenBarcodePic.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-            txt_captureBenBarcodePic.setVisibility(View.VISIBLE);
-            imgDelete.setVisibility(View.VISIBLE);
+
+            txt_captureBenBarcodePic.setVisibility(View.GONE);
+            tv_bencode_note.setVisibility(View.VISIBLE);
             img_uploadBenVail.setVisibility(View.VISIBLE);
+            iv_uploadedImg.setVisibility(View.VISIBLE);
+            Bitmap bmp = BitmapFactory.decodeFile(filename);
+            iv_uploadedImg.setImageBitmap(bmp);
+
+
         } else {
             txt_captureBenBarcodePic.setText("Upload Image");
             txt_captureBenBarcodePic.setPaintFlags(txt_captureBenBarcodePic.getPaintFlags() | 0);
@@ -278,7 +289,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
                         .setMessage("Are you sure you want to delete beneficiary")
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                            public void onClick(DialogInterface dialogInteINITrface, int i) {
                                 CallRemoveSample(beneficaryWiseScanbarcodeArylst.get(position), 2);
                                 deleteBen(position);
                             }
@@ -364,6 +375,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 if (onClickListeners != null) {
+                    iv_uploadedImg.setVisibility(View.VISIBLE);
                     onClickListeners.onVenupunturePhotoClicked(beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position);
                 }
             }
@@ -616,9 +628,9 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
                 }
 
                 @Override
-                public void onBarcodeScanClickedConfirm(String SampleType, int BenID, int barcodePosition, int BenPosition) {
+                public void onBarcodeScanClickedConfirm(String SampleType, int BenID, int barcodePosition, int BenPosition, String strbenCode) {
                     if (onClickListeners != null) {
-                        onClickListeners.onBarcodeScanClickedConfirm(SampleType, BenID, barcodePosition, BenPosition);
+                        onClickListeners.onBarcodeScanClickedConfirm(SampleType, BenID, barcodePosition, BenPosition, strbenCode);
                     }
                 }
 
@@ -627,6 +639,11 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
                     if (onClickListeners != null) {
                         onClickListeners.onBarcodeDelete(barcode, BenPosition, flag);
                     }
+                }
+
+                @Override
+                public void getBenCode(int samplePos, int benposition, String benCode) {
+                    onClickListeners.getBenCode(samplePos, benposition, benCode);
                 }
             });
 
@@ -646,7 +663,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
                 for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
                     if (beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType().equalsIgnoreCase("URINE")) {
                         beneficiaryDetailsModel.getBarcodedtl().remove(i);
-                    //    removedatafromlocal(beneficiaryDetailsModel);
+                        //    removedatafromlocal(beneficiaryDetailsModel);
                         notifyDataSetChanged();
                     }
                 }
@@ -677,7 +694,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
     public interface OnClickListeners {
         void onBarcodeScanClicked(String SampleType, int BenID, int barcodePosition, int BenPosition);
 
-        void onBarcodeScanClickedConfirm(String SampleType, int BenID, int barcodePosition, int BenPosition);
+        void onBarcodeScanClickedConfirm(String SampleType, int BenID, int barcodePosition, int BenPosition, String strbenCode);
 
         void onVenupunturePhotoClicked(int BenID, int position);
 
@@ -699,5 +716,6 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
         void onImageShow(String venepuncture, int benId, int position, int flag);
 
+        void getBenCode(int samplePos, int benposition, String benCode);
     }
 }

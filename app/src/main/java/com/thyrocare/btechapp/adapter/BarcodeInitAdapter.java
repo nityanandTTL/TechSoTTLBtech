@@ -1,18 +1,24 @@
 package com.thyrocare.btechapp.adapter;
 
 import android.app.Activity;
-import android.provider.ContactsContract;
+import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.models.data.BeneficiaryBarcodeDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
@@ -117,6 +123,15 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
         }
         holder.edtBarcode.setText(!InputUtils.isNull(barcodedetailArylist.get(position).getBarcode()) ? "  " + barcodedetailArylist.get(position).getBarcode() + "  " : "");
         holder.edt_barcode_confirm.setText(!InputUtils.isNull(barcodedetailArylist.get(position).getRescanBarcode()) ? "  " + barcodedetailArylist.get(position).getRescanBarcode() + "  " : "");
+        holder.edt_ben_code.setText(!InputUtils.isNull(beneficaryWiseScanbarcodeModel.getBarcodedtl().get(position).getBenCode()) ? beneficaryWiseScanbarcodeModel.getBarcodedtl().get(position).getBenCode() : "");
+
+        if (!InputUtils.isNull(beneficaryWiseScanbarcodeModel.getBarcodedtl().get(position).getIsBenCodeCorrect()) && !InputUtils.isNull(beneficaryWiseScanbarcodeModel.getBarcodedtl().get(position).getBarcode()))
+            if (!beneficaryWiseScanbarcodeModel.getBarcodedtl().get(position).getIsBenCodeCorrect()) {
+                holder.edt_ben_code.setError("Please enter proper beneficiary code");
+                holder.edt_ben_code.requestFocus();
+            } else {
+                holder.edt_ben_code.setError(null);
+            }
 
         final int finalI = position;
         initListeners(holder, position, finalI);
@@ -136,7 +151,8 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
             @Override
             public void onClick(View v) {
                 if (onClickListeners != null) {
-                    onClickListeners.onBarcodeScanClickedConfirm(barcodedetailArylist.get(position).getSamplType(), beneficaryWiseScanbarcodeModel.getBenId(), finalI, benposition);
+                    String strbenCode = holder.edt_ben_code.getText().toString();
+                    onClickListeners.onBarcodeScanClickedConfirm(barcodedetailArylist.get(position).getSamplType(), beneficaryWiseScanbarcodeModel.getBenId(), finalI, benposition, strbenCode);
                 }
             }
         });
@@ -154,8 +170,30 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
             @Override
             public void onClick(View v) {
                 if (onClickListeners != null) {
-                    onClickListeners.onBarcodeScanClickedConfirm(barcodedetailArylist.get(position).getSamplType(), beneficaryWiseScanbarcodeModel.getBenId(), finalI, benposition);
+                    String strbenCode = holder.edt_ben_code.getText().toString();
+                    if (!InputUtils.isNull(beneficaryWiseScanbarcodeModel.getBarcodedtl().get(position).getBenCode())) {
+                        onClickListeners.onBarcodeScanClickedConfirm(barcodedetailArylist.get(position).getSamplType(), beneficaryWiseScanbarcodeModel.getBenId(), finalI, benposition, strbenCode);
+                    } else {
+                        Toast.makeText(mActivity, "Please enter bencode to scan barcode", Toast.LENGTH_SHORT).show();
+                    }
                 }
+            }
+        });
+
+        holder.edt_ben_code.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                onClickListeners.getBenCode(position, benposition, editable.toString());
             }
         });
 
@@ -189,15 +227,20 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
     public interface OnItemClickListener {
         void onBarcodeScanClicked(String SampleType, int BenID, int barcodePosition, int BenPosition);
 
-        void onBarcodeScanClickedConfirm(String SampleType, int BenID, int barcodePosition, int BenPosition);
+        void onBarcodeScanClickedConfirm(String SampleType, int BenID, int barcodePosition, int BenPosition, String strbenCode);
 
         void onBarcodeDelete(String barcode, int BenPosition, String isflag);
+
+        void getBenCode(int samplePos, int benposition, String editable);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tv_serumtype, txtSampleType, txtSampleTypeRBS, edtBarcode, edt_barcode_confirm;
         LinearLayout lin_sampleType, ll_sample_type;
         ImageView imgScan, imgDelete, imgScanConfirm, imgDeleteconfirm;
+        TextInputEditText edt_ben_code;
+        TextInputLayout txtinput_edtbencode;
+        CardView cv_edt_barcode;
 
         public MyViewHolder(View view) {
             super(view);
@@ -214,8 +257,14 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
             edt_barcode_confirm = view.findViewById(R.id.edt_barcode_confirm);
             imgScanConfirm = view.findViewById(R.id.scan_barcode_button_confirm);
 
+            edt_ben_code = view.findViewById(R.id.edt_ben_code);
+            cv_edt_barcode = view.findViewById(R.id.cv_edt_barcode);
+            txtinput_edtbencode = view.findViewById(R.id.txtinput_edtbencode);
+            edt_ben_code.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4), new InputFilter.AllCaps()});
+
             txtSampleType.setSelected(true);
             txtSampleTypeRBS.setSelected(true);
+
 
         }
     }

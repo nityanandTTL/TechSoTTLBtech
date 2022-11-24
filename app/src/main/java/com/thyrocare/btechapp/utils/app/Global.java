@@ -607,7 +607,7 @@ public class Global {
                         .asBitmap()
                         .load(glideUrl)
                         .placeholder(R.drawable.app_logo).dontAnimate()
-                        .error(R.drawable.app_logo)
+//                        .error(R.drawable.app_logo)
                         //                .diskCacheStrategy(DiskCacheStrategy.NONE)
                         //                .skipMemoryCache(true)
                         .into(imageView);
@@ -616,7 +616,7 @@ public class Global {
                         .asBitmap()
                         .load("")
                         .placeholder(R.drawable.app_logo).dontAnimate()
-                        .error(R.drawable.app_logo)
+                        /*.error(R.drawable.app_logo)*/
                         //                .diskCacheStrategy(DiskCacheStrategy.NONE)
                         //                .skipMemoryCache(true)
                         .into(imageView);
