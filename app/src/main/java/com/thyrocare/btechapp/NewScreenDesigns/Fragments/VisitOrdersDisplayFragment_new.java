@@ -1441,12 +1441,12 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
     private void ProceedToArriveScreen(OrderVisitDetailsModel orderVisitDetailsModel, boolean OpenMap) {
         boolean test = false;
         try {
-            /*for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); i++) {
+            for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); i++) {
                 if (orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getName().startsWith("PATIENT ")) {
                     test = true;
                     break;
                 }
-            }*/
+            }
             if (appPreferenceManager.isPEPartner() && test) {
                 Intent PE_PostOrderDetailsIntent = new Intent(activity, PE_PostPatientDetailsActivity.class);
                 PE_PostOrderDetailsIntent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);

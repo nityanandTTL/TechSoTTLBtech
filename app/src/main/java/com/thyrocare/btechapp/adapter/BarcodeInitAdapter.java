@@ -188,12 +188,16 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                System.out.println("position>>>>>>>>>>>>" +position);
+                System.out.println("final I>>>>>>>>>>>>" +finalI);
+                System.out.println("adapter pos >>>>>>>>>>>>" +holder.getAdapterPosition());
+                System.out.println("ben position>>>>>>>>>>>>" +benposition);
+                onClickListeners.getBenCode(position, benposition, charSequence.toString());
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                onClickListeners.getBenCode(position, benposition, editable.toString());
+
             }
         });
 
@@ -244,6 +248,7 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
 
         public MyViewHolder(View view) {
             super(view);
+            super.setIsRecyclable(false);
             tv_serumtype = (TextView) view.findViewById(R.id.tv_serumtype);
             txtSampleType = (TextView) view.findViewById(R.id.txt_sample_type);
             lin_sampleType = (LinearLayout) view.findViewById(R.id.lin_sampleType);
