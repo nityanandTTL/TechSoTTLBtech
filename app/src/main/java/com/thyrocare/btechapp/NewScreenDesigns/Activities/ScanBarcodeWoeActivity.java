@@ -592,8 +592,6 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     }
 
     private void InitViewpager(int Currentposition) {
-
-
         if (mAdapter != null) {
             mAdapter.updateScanData(beneficaryWiseArylst, fileName, filepath);
             mAdapter.notifyDataSetChanged();
@@ -633,7 +631,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 isRescan = false; //TODO setting this to false due multipatient vial scan swap task
                 if (BuildConfig.DEBUG) {
                     //  OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
-                    EnterBarocodeManually();
+                    /*EnterBarocodeManually();*/
+                    OpenScanBarcodeScreen();
 //                   OpenScanBarcodeScreen();
                 } else {
                     OpenScanBarcodeScreen();
@@ -890,6 +889,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                         btn_Proceed.setVisibility(View.GONE);
                     }
                 }
+                InitViewpager(currenBenPosition);
 
             }
 
@@ -1203,17 +1203,40 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                                 if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
                                     if (beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl() != null) {
                                         for (int i = 0; i < beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl().size(); i++) {
-                                            if (i == currentSamplePos) {
-                                                if (isRescan) {
-                                                    beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl().get(i).setRescanBarcode(scanned_barcode);
-                                                } else {
-                                                    beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl().get(i).setRescanBarcode(scanned_barcode);
-                                                    beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl().get(i).setBarcode(scanned_barcode);
 
+                                            if (!InputUtils.isNull(beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl().get(i).getSamplType())
+                                                    && !InputUtils.isNull(SampleTypeToScan)
+                                                    && SampleTypeToScan.equals(beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl().get(i).getSamplType())
+                                                    && BarcodepositionToScan == i) {
+
+                                                for (BeneficiaryDetailsModel bdm : beneficaryWiseArylst) {
+                                                    if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
+                                                        for (BeneficiaryBarcodeDetailsModel bbdm : bdm.getBarcodedtl()) {
+                                                            if (!isRescan) {
+                                                                if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
+                                                                    Toast.makeText(mActivity, "Same barcode already scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
+                                                                    return;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 }
-                                                beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl().get(i).setBenId(BenIDToScan);
 
-                                                break;
+                                                if (i == currentSamplePos) {
+                                                    if (isRescan) {
+                                                        beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl().get(i).setRescanBarcode(scanned_barcode);
+                                                    } else {
+                                                        beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl().get(i).setRescanBarcode(scanned_barcode);
+                                                        beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl().get(i).setBarcode(scanned_barcode);
+
+                                                    }
+                                                    beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl().get(i).setBenId(BenIDToScan);
+
+                                                    break;
+                                                }
+
+                                            } else {
+                                                Toast.makeText(mActivity, "No sample to scan", Toast.LENGTH_SHORT).show();
                                             }
                                             //size 4
                                             /*if (!InputUtils.isNull(beneficaryWiseArylst.get(i).getBarcodedtl().get(i).getSamplType())
