@@ -3,11 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Nitesh T0763/StudioProjects/B2C projects/TechSoBTechApp/app/src/main/res/layout/activity_add_edit_benificary.xml" value="0.16296296296296298" />
         <entry key="..\:/Nitesh T0763/StudioProjects/B2C projects/TechSoBTechApp/app/src/main/res/layout/activity_barcode_scan_woe_main.xml" value="0.22401315789473683" />
         <entry key="..\:/Nitesh T0763/StudioProjects/B2C projects/TechSoBTechApp/app/src/main/res/layout/activity_checkout_wow.xml" value="0.11480263157894736" />
         <entry key="..\:/Nitesh T0763/StudioProjects/B2C projects/TechSoBTechApp/app/src/main/res/layout/activity_kiosk_scanner.xml" value="0.1" />
         <entry key="..\:/Nitesh T0763/StudioProjects/B2C projects/TechSoBTechApp/app/src/main/res/layout/activity_pe_post_patient_details.xml" value="0.18611111111111112" />
         <entry key="..\:/Nitesh T0763/StudioProjects/B2C projects/TechSoBTechApp/app/src/main/res/layout/barcode_scan_viewpager_item.xml" value="0.1" />
+        <entry key="..\:/Nitesh T0763/StudioProjects/B2C projects/TechSoBTechApp/app/src/main/res/layout/checkout_woe_adapter_item.xml" value="0.35052083333333334" />
         <entry key="..\:/Nitesh T0763/StudioProjects/B2C projects/TechSoBTechApp/app/src/main/res/layout/item_barcode_scan.xml" value="0.22138157894736843" />
         <entry key="..\:/Nitesh T0763/StudioProjects/B2C projects/TechSoBTechApp/app/src/main/res/layout/layout_order_release_item.xml" value="0.22138157894736843" />
         <entry key="..\:/Nitesh T0763/StudioProjects/B2C projects/TechSoBTechApp/app/src/main/res/layout/post_checkout_singleview.xml" value="0.22138157894736843" />

@@ -440,7 +440,7 @@ public interface PostAPIInterface {
     @POST("api/PendingVisitsOptimize/RemoveSample")
     Call<RemoveUrineSampleRespModel> removeUrineSample(@Body RemoveUrineReqModel removeUrineReqModel);
 
-    @POST("api/PendingVisitsOptimize/RemoveSample")//TODO because snr auth token can't be solved by api side LOL
+    @POST("api/PendingVisitsOptimize/RemoveSample")
     Call<RemoveUrineSampleRespModel> removeUrineSampleStaging(@Header("Authorization") String Token,@Body RemoveUrineReqModel removeUrineReqModel);
 
     @POST("api/Account/BtechSignInout")

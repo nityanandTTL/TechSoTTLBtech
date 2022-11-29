@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
@@ -341,7 +342,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                                         PerformStartFunction(pos, holder);
                                     }
                                 } else {
-                                    if (orderPosition == 0) {
+                                    if (orderPosition == 0 || BuildConfig.DEBUG) {
                                         if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isPPE()) {
                                             final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
                                             builder1.setMessage(ConstantsMessages.EnsureToWearPPE).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -359,7 +360,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                                     }
                                 }
                             } else {
-                                if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(0).getAllOrderdetails().get(0).IsPEDSATCPhlebo()) && orderVisitDetailsModelsArr.get(0).getAllOrderdetails().get(0).IsPEDSATCPhlebo()) {
+                                if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(0).getAllOrderdetails().get(0).IsPEDSATCPhlebo()) && orderVisitDetailsModelsArr.get(0).getAllOrderdetails().get(0).IsPEDSATCPhlebo() || BuildConfig.DEBUG) {
                                     if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isPPE()) {
                                         final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
                                         builder1.setMessage(ConstantsMessages.EnsureToWearPPE).setPositiveButton("OK", new DialogInterface.OnClickListener() {

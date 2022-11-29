@@ -108,9 +108,6 @@ public class SplashActivity extends AppCompatActivity {
         init();
         initData();
 
-        System.out.println("current techso URL>>>>>>>>> "+EncryptionUtils.Dcrp_Hex("2104026D36A80DF179ED8D55D4BA2E0230AF7976AAAA272FE902E4C453C20894490485731513E8434821934193053146"));
-
-        System.out.println( "New techso URL>>>>>>>>>>>>" + EncryptionUtils.Ecrp_Hex("https://techsostaging.thyrocare.cloud/"));
     }
 
     private void init() {
