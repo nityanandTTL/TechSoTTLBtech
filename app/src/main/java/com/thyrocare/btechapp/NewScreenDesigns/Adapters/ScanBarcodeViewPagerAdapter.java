@@ -67,6 +67,8 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
     ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst;
     boolean isHCL, isOTP;
     String filename, filepath;
+    RecyclerView recyle_barcode;
+    int Benpos = 0;
     private boolean showProduct;
     private OrderVisitDetailsModel orderVisitDetailsModel;
     private OnClickListeners onClickListeners;
@@ -86,6 +88,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         this.mobile = mobile;
         this.filename = filename;
         this.orderVisitDetailsModel = orderVisitDetailsModel;
+
     }
 
 
@@ -93,6 +96,12 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         this.beneficaryWiseScanbarcodeArylst = beneficaryWiseScanbarcodeArylst;
         this.filename = filename;
         this.filepath = filepath;
+    }
+
+    public void initSinglePage(ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst, int Benpos) {
+        this.beneficaryWiseScanbarcodeArylst = beneficaryWiseScanbarcodeArylst;
+        this.Benpos = Benpos;
+        initScanBarcodeView(Benpos, recyle_barcode);
     }
 
 
@@ -122,7 +131,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         View itemView = LayoutInflater.from(mActivity).inflate(R.layout.barcode_scan_viewpager_item, container, false);
-
+        System.out.println("adapter initialized>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
         TextView tv_benName = (TextView) itemView.findViewById(R.id.tv_benName);
         TextView tv_srf_mob = (TextView) itemView.findViewById(R.id.tv_srf_mob);
         TextView tv_OrderNo = (TextView) itemView.findViewById(R.id.tv_OrderNo);
@@ -141,7 +150,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         final ImageView img_uploadBenVail = (ImageView) itemView.findViewById(R.id.img_uploadBenVail);
         ImageView img_uploadAffidavit = (ImageView) itemView.findViewById(R.id.img_uploadAffidavit);
         final ImageView iv_uploadedImg = (ImageView) itemView.findViewById(R.id.iv_uploadedImg);
-        RecyclerView recyle_barcode = (RecyclerView) itemView.findViewById(R.id.recyle_barcode);
+        recyle_barcode = (RecyclerView) itemView.findViewById(R.id.recyle_barcode);
 
         final EditText edt_srf = (EditText) itemView.findViewById(R.id.edt_srf);
         ImageView img_resetSRF = (ImageView) itemView.findViewById(R.id.img_resetSRF);
@@ -607,7 +616,8 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
     }
 
-    private void initScanBarcodeView(final int position, RecyclerView recyle_barcode) {
+
+    public void initScanBarcodeView(final int position, RecyclerView recyle_barcode) {
         if (beneficaryWiseScanbarcodeArylst != null && beneficaryWiseScanbarcodeArylst.get(position).getBarcodedtl() != null && beneficaryWiseScanbarcodeArylst.get(position).getBarcodedtl().size() > 0) {
             // TODO code to show Primary and secondary serum
             int serumCount = 0;
