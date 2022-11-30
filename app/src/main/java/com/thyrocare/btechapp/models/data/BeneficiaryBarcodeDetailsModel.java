@@ -1,7 +1,10 @@
 package com.thyrocare.btechapp.models.data;
 
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import androidx.annotation.RequiresApi;
 
 /**
  * Created by Orion on 4/19/2017.
@@ -31,12 +34,32 @@ public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcela
     private String ClinicalHistory;
     private int ProcessAt;
     private boolean isRBS_PPBS;
+    private String benCode;
+    private Boolean isBencodeCorrect = null;
+
+    public Boolean getIsBenCodeCorrect(){
+        return isBencodeCorrect;
+    }
+    public void setIsBenCodeCorrect(Boolean isBencodeCorrect){
+        this.isBencodeCorrect = isBencodeCorrect;
+    }
+
+    public String getBenCode() {
+        return benCode;
+    }
+
+    public void setBenCode(String benCode) {
+        this.benCode = benCode;
+    }
+
+
 
 
     public BeneficiaryBarcodeDetailsModel() {
         super();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     protected BeneficiaryBarcodeDetailsModel(Parcel in) {
         super(in);
         id = in.readString();
@@ -48,10 +71,13 @@ public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcela
         RescanBarcode = in.readString();
         LabAlert = in.readInt();
         ClinicalHistory = in.readString();
+        benCode = in.readString();
+        isBencodeCorrect = in.readBoolean();
         ProcessAt = in.readInt();
         isRBS_PPBS = in.readByte() != 0;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
@@ -64,6 +90,8 @@ public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcela
         dest.writeString(RescanBarcode);
         dest.writeInt(LabAlert);
         dest.writeString(ClinicalHistory);
+        dest.writeString(benCode);
+        dest.writeBoolean(isBencodeCorrect);
         dest.writeInt(ProcessAt);
         dest.writeByte((byte) (isRBS_PPBS ? 1 : 0));
     }

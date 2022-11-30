@@ -151,6 +151,15 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp" />
 
+                    <TextView
+                        android:id="@+id/tv_bencode_note"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="* Please enter first 2 letters of name and last two digits of barcode"
+                        android:textColor="@color/light_gray"
+                        android:textSize="12dp" />
+
 
                     <LinearLayout
                         android:id="@+id/ll_urine"
@@ -548,9 +557,11 @@
 
                     </androidx.cardview.widget.CardView>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp" />
+                    <ImageView
+                        android:id="@+id/iv_uploadedImg"
+                        android:layout_width="@dimen/_300sdp"
+                        android:layout_height="@dimen/_300sdp"
+                        android:visibility="visible" />
 
                 </LinearLayout>
             </ScrollView>

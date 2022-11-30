@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Handler;
 
@@ -18,11 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import androidx.appcompat.widget.Toolbar;
-
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -30,7 +26,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,14 +59,12 @@ import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
-import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.DeviceUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 import com.thyrocare.btechapp.utils.fileutils.FilePath;
 
 import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,13 +103,14 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     private ScanBarcodeViewPagerAdapter mAdapter;
     private String SampleTypeToScan = "";
     private int BenIDToScan = 0, BarcodepositionToScan = 0;
-    private int BenPositionForScan = 0, BenPositionForDelete = 0;
+    private int i = 0, BenPositionForDelete = 0;
     private Camera camera;
     private int BenIDToCaptureVenuPhoto = 0, PositionToStoreVenuPhoto = 0, BenIDToDeleteVenuPhoto = 0, PositionToDeleteVenuPhoto = 0, BenIDToUploadAffidavit = 0, BenIDToDeleteAffidavit = 0, PositionToDeleteAffidavit = 0;
     private TextView btn_Proceed;
     private Spinner spn_ben;
     private int pick = 1123;
     private int Select_PDFFILE = 2121;
+    private String EnteredbenCode = "";
 
     @Override
     public void onBackPressed() {
@@ -325,14 +319,15 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         btn_Next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BarcodeScanviewpager.setCurrentItem(page + 1);
+                if (validateBenCode())
+                    BarcodeScanviewpager.setCurrentItem(page + 1);
             }
         });
 
         btn_Proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ValidateAllBarcodeScan()) {
+                if (ValidateAllBarcodeScan() && validateAllBenCode()) {
                     new LogUserActivityTagging(mActivity, BundleConstants.WOE, "Scan Barcode");
                     Intent intent = new Intent(mActivity, CheckoutWoeActivity.class);
                     intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
@@ -355,6 +350,96 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         });
     }
 
+    private boolean validateAllBenCode() {
+        try {
+            if (!beneficaryWiseArylst.isEmpty()) {
+                for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                    for (int j = 0; j < beneficaryWiseArylst.get(i).getBarcodedtl().size(); j++) {
+                        String currentBarcode = beneficaryWiseArylst.get(i).getBarcodedtl().get(j).getBarcode();
+                        String currentSampleType = beneficaryWiseArylst.get(i).getBarcodedtl().get(j).getSamplType();
+                        String currentBenCode = beneficaryWiseArylst.get(i).getBarcodedtl().get(j).getBenCode();
+                        String currentBenName = beneficaryWiseArylst.get(i).getName();
+                        if (InputUtils.isNull(currentSampleType) || InputUtils.isNull(currentBenCode) || InputUtils.isNull(currentBarcode)) {
+                            beneficaryWiseArylst.get(i).getBarcodedtl().get(j).setIsBenCodeCorrect(false);
+                            InitViewpager(i);
+                            return false;
+                        } else if (currentBarcode.length() < 4) {
+                            beneficaryWiseArylst.get(i).getBarcodedtl().get(j).setIsBenCodeCorrect(false);
+                            InitViewpager(i);
+                            return false;
+                        } else if (!currentBenCode.startsWith(currentBenName.substring(0, 2))
+                                || !currentBenCode.endsWith(currentBarcode.substring(currentBarcode.length() - 2))) {
+                            beneficaryWiseArylst.get(i).getBarcodedtl().get(j).setIsBenCodeCorrect(false);
+                            InitViewpager(i);
+                            return false;
+                        } else {
+                            mAdapter.updateScanData(beneficaryWiseArylst, fileName, filepath);
+                            mAdapter.notifyDataSetChanged();
+                            beneficaryWiseArylst.get(i).getBarcodedtl().get(j).setIsBenCodeCorrect(true);
+                        }
+                    }
+                }
+                return true;
+            }
+
+        } catch (Exception e) {
+            Global.sout("validate all bencode exception>>>>>>> ", e.getLocalizedMessage());
+        }
+        return false;
+    }
+
+    private boolean validateBenCode() {
+        if (!beneficaryWiseArylst.isEmpty()) {
+
+            if (!validateNullCheck()) {
+                String currentBenName = beneficaryWiseArylst.get(BarcodepositionToScan).getName().replace(" ", "");
+                for (int i = 0; i < beneficaryWiseArylst.get(BarcodepositionToScan).getBarcodedtl().size(); i++) {
+                    String currentBarcode = beneficaryWiseArylst.get(BarcodepositionToScan).getBarcodedtl().get(i).getBarcode();
+                    String currentSampleType = beneficaryWiseArylst.get(BarcodepositionToScan).getBarcodedtl().get(i).getSamplType();
+                    String currentBenCode = beneficaryWiseArylst.get(BarcodepositionToScan).getBarcodedtl().get(i).getBenCode();
+                    if (InputUtils.isNull(currentBenCode)) {
+                        beneficaryWiseArylst.get(BarcodepositionToScan).getBarcodedtl().get(i).setIsBenCodeCorrect(false);
+                        Toast.makeText(mActivity, "Please enter bencode of sample type " + currentSampleType, Toast.LENGTH_SHORT).show();
+                        InitViewpager(BarcodepositionToScan);
+                        return false;
+
+                    } else if ((InputUtils.isNull(currentBarcode))) {
+                        Toast.makeText(mActivity, "Please scan barcode for " + currentBenName + "of sample type " + currentSampleType, Toast.LENGTH_SHORT).show();
+                        InitViewpager(BarcodepositionToScan);
+                        return false;
+                    } else if (currentBarcode.length() < 4) {
+                        beneficaryWiseArylst.get(BarcodepositionToScan).getBarcodedtl().get(i).setIsBenCodeCorrect(false);
+                        InitViewpager(BarcodepositionToScan);
+                        return false;
+                    } else if (!currentBenCode.startsWith(currentBenName.substring(0, 2))
+                            || !currentBenCode.endsWith(currentBarcode.substring(currentBarcode.length() - 2))) {
+                        beneficaryWiseArylst.get(BarcodepositionToScan).getBarcodedtl().get(BarcodepositionToScan).setIsBenCodeCorrect(false);
+                        InitViewpager(BarcodepositionToScan);
+                        return false;
+                    } else {
+                        mAdapter.updateScanData(beneficaryWiseArylst, fileName, filepath);
+                        mAdapter.notifyDataSetChanged();
+                        beneficaryWiseArylst.get(BarcodepositionToScan).getBarcodedtl().get(i).setIsBenCodeCorrect(true);
+                    }
+                }
+
+            } else
+                return true;
+        }
+        return false;
+    }
+
+    private boolean validateNullCheck() {
+        for (int i = 0; i < beneficaryWiseArylst.get(BarcodepositionToScan).getBarcodedtl().size(); i++) {
+            String currentBarcode = beneficaryWiseArylst.get(BarcodepositionToScan).getBarcodedtl().get(i).getBarcode();
+            String currentBenCode = beneficaryWiseArylst.get(BarcodepositionToScan).getBarcodedtl().get(i).getBenCode();
+            if (!InputUtils.isNull(currentBenCode) || !InputUtils.isNull(currentBarcode) ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void onbackpress() {
         BundleConstants.setRefreshStartArriveActivity = 1;
         Intent intent = new Intent(mActivity, StartAndArriveActivity.class);
@@ -367,7 +452,6 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         boolean isVenupuntureCapturedForAllBen = true, isBarcodeScanforAllben = true;
         int VenupuntureScanRemainingPosition = 0, BarcodeScanRemainingbenPosition = 0;
         String barcode = "", confirmBarcode = "";
-
         if (beneficaryWiseArylst != null && beneficaryWiseArylst.size() > 0) {
             for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
                 if (StringUtils.isNull(beneficaryWiseArylst.get(i).getVenepuncture())) {
@@ -516,14 +600,14 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
             DisplayDotsBelowViewpager();
         }
 
-        BarcodeScanviewpager.setCurrentItem(Currentposition);
+        BarcodeScanviewpager.setCurrentItem(Currentposition, true);
         mAdapter.setOnItemClickListener(new ScanBarcodeViewPagerAdapter.OnClickListeners() {
             @Override
             public void onBarcodeScanClicked(String SampleType, int BenID, int barcodePosition, int BenPosition) {
                 SampleTypeToScan = SampleType;
                 BenIDToScan = BenID;
                 BarcodepositionToScan = barcodePosition;
-                BenPositionForScan = BenPosition;
+                i = BenPosition;
                 isRescan = false;
                 if (BuildConfig.DEBUG) {
 //                       OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
@@ -535,12 +619,22 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onBarcodeScanClickedConfirm(String SampleType, int BenID, int barcodePosition, int BenPosition) {
+            public void onBarcodeScanClickedConfirm(String SampleType, int BenID, int barcodePosition, int BenPosition, String strbenCode) {
                 SampleTypeToScan = SampleType;
                 BenIDToScan = BenID;
                 BarcodepositionToScan = barcodePosition;
-                BenPositionForScan = BenPosition;
-                isRescan = true;
+                i = BenPosition;
+                EnteredbenCode = strbenCode;
+
+                for (int i = 0; i < beneficaryWiseArylst.get(Currentposition).getSampleType().size(); i++) {
+                    String sampleTypeToCheck = beneficaryWiseArylst.get(Currentposition).getSampleType().get(i).getSampleType();
+                    if (InputUtils.CheckEqualIgnoreCase(sampleTypeToCheck, SampleTypeToScan)) {
+                        beneficaryWiseArylst.get(Currentposition).getBarcodedtl().get(i).setBenCode(EnteredbenCode);
+                    }
+                }
+                isRescan = false; //TODO setting this to false due multipatient vial scan swap task
+
+
                 if (BuildConfig.DEBUG) {
                     //  OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
                     EnterBarocodeManually();
@@ -620,6 +714,11 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
             public void onImageShow(String venepuncture, int benId, int position, int flag) {
                 BottomSheetController bottomSheetController = new BottomSheetController(mActivity, ScanBarcodeWoeActivity.this, venepuncture, false, benId, position, flag);
                 bottomSheetController.SetBottomSheet(mActivity);
+            }
+
+            @Override
+            public void getBenCode(int samplePos, int benposition, String benCode) {
+                beneficaryWiseArylst.get(benposition).getBarcodedtl().get(samplePos).setBenCode(benCode);
             }
         });
 
@@ -765,27 +864,33 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (BarcodeScanviewpager.getAdapter().getCount() > 1) {
-                    for (int i = 0; i < dotsCount; i++) {
-                        dots[i].setImageDrawable(mActivity.getResources().getDrawable(R.drawable.nonselecteditem_dot));
+
+                if (validateBenCode()) {
+                    if (BarcodeScanviewpager.getAdapter().getCount() > 1) {
+                        for (int i = 0; i < dotsCount; i++) {
+                            dots[i].setImageDrawable(mActivity.getResources().getDrawable(R.drawable.nonselecteditem_dot));
+                        }
+                        dots[position].setImageDrawable(mActivity.getResources().getDrawable(R.drawable.selecteditem_dot));
+                        page = position;
+                        BarcodepositionToScan = position;
                     }
-                    dots[position].setImageDrawable(mActivity.getResources().getDrawable(R.drawable.selecteditem_dot));
-                    page = position;
-                }
 
-                spn_ben.setSelection(position);
+                    spn_ben.setSelection(position);
 
-                if (position == 0) {
-                    btn_Previous.setVisibility(View.INVISIBLE);
-                } else {
-                    btn_Previous.setVisibility(View.VISIBLE);
-                }
-                if (position == beneficaryWiseArylst.size() - 1) {
-                    btn_Next.setVisibility(View.GONE);
-                    btn_Proceed.setVisibility(View.VISIBLE);
-                } else {
-                    btn_Next.setVisibility(View.VISIBLE);
-                    btn_Proceed.setVisibility(View.GONE);
+                    i = position;
+
+                    if (position == 0) {
+                        btn_Previous.setVisibility(View.INVISIBLE);
+                    } else {
+                        btn_Previous.setVisibility(View.VISIBLE);
+                    }
+                    if (position == beneficaryWiseArylst.size() - 1) {
+                        btn_Next.setVisibility(View.GONE);
+                        btn_Proceed.setVisibility(View.VISIBLE);
+                    } else {
+                        btn_Next.setVisibility(View.VISIBLE);
+                        btn_Proceed.setVisibility(View.GONE);
+                    }
                 }
 
             }
@@ -927,6 +1032,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                             }
                             ImageFlag = 0;
                         } else {
+                            fileName = BenBarcodePicimagefile.getAbsoluteFile().toString();
                             for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
                                 if (beneficaryWiseArylst.get(i).getBenId() == BenIDToCaptureVenuPhoto && i == PositionToStoreVenuPhoto) {
                                     beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(BundleConstants.VenepunctureImage_path);
@@ -1070,7 +1176,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                                 }
 
                             }
-                            InitViewpager(BenPositionForScan);
+                            InitViewpager(i);
                         }
                     }).show();
         } catch (Exception e) {
@@ -1097,12 +1203,12 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                                 Toast.makeText(mActivity, "Invalid barcode", Toast.LENGTH_SHORT).show();
                             } else {
                                 if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                                    if (beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl() != null) {
-                                        for (int i = 0; i < beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().size(); i++) {
+                                    if (beneficaryWiseArylst.get(i).getBarcodedtl() != null) {
+                                        for (int i = 0; i < beneficaryWiseArylst.get(i).getBarcodedtl().size(); i++) {
                                             //size 4
-                                            if (!InputUtils.isNull(beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).getSamplType())
+                                            if (!InputUtils.isNull(beneficaryWiseArylst.get(i).getBarcodedtl().get(i).getSamplType())
                                                     && !InputUtils.isNull(SampleTypeToScan)
-                                                    && SampleTypeToScan.equals(beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).getSamplType())
+                                                    && SampleTypeToScan.equals(beneficaryWiseArylst.get(i).getBarcodedtl().get(i).getSamplType())
                                                     && BarcodepositionToScan == i) {
 
                                                 for (BeneficiaryDetailsModel bdm : beneficaryWiseArylst) {
@@ -1118,16 +1224,18 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                                                     }
                                                 }
                                                 if (isRescan) {
-                                                    beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).setRescanBarcode(scanned_barcode);
+                                                    beneficaryWiseArylst.get(i).getBarcodedtl().get(i).setRescanBarcode(scanned_barcode);
                                                 } else {
-                                                    beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                                                    beneficaryWiseArylst.get(i).getBarcodedtl().get(i).setRescanBarcode(scanned_barcode);
+                                                    beneficaryWiseArylst.get(i).getBarcodedtl().get(i).setBarcode(scanned_barcode);
+
                                                 }
-                                                beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).setBenId(BenIDToScan);
+                                                beneficaryWiseArylst.get(i).getBarcodedtl().get(i).setBenId(BenIDToScan);
 
                                                 break;
                                             }
                                         }
-                                        InitViewpager(BenPositionForScan);
+                                        InitViewpager(i);
                                     } else {
                                         Toast.makeText(mActivity, "Failed to update scanned barcode value", Toast.LENGTH_SHORT).show();
                                     }
