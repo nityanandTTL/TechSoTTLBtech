@@ -2,14 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.7">
-<<<<<<< HEAD
-=======
-      <module name="Btech.app" target="11" />
-      <module name="btech_github.app" target="11" />
-      <module name="Btech_Post_checkout.app" target="11" />
-      <module name="Btech_test_filter.app" target="11" />
-      <module name="Btech_vial_swap_task.app" target="11" />
->>>>>>> origin/multipatient_vial_scan
       <module name="TechSoBTechApp.app" target="11" />
     </bytecodeTargetLevel>
   </component>

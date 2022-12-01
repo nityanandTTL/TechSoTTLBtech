@@ -359,7 +359,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                         String currentBarcode = beneficaryWiseArylst.get(i).getBarcodedtl().get(j).getBarcode();
                         String currentSampleType = beneficaryWiseArylst.get(i).getBarcodedtl().get(j).getSamplType();
                         String currentBenCode = beneficaryWiseArylst.get(i).getBarcodedtl().get(j).getBenCode();
-                        String currentBenName = beneficaryWiseArylst.get(i).getName();
+                        String currentBenName = beneficaryWiseArylst.get(i).getName().replaceAll("[^a-zA-Z]", "").toUpperCase();
                         if (InputUtils.isNull(currentSampleType) || InputUtils.isNull(currentBenCode) || InputUtils.isNull(currentBarcode)) {
                             beneficaryWiseArylst.get(i).getBarcodedtl().get(j).setIsBenCodeCorrect(false);
                             InitViewpager(i);
@@ -393,7 +393,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         if (!beneficaryWiseArylst.isEmpty()) {
 
             if (!validateNullCheck()) {
-                String currentBenName = beneficaryWiseArylst.get(currenBenPosition).getName().replace(" ", "");
+                String currentBenName = beneficaryWiseArylst.get(currenBenPosition).getName().replaceAll("[^a-zA-Z]", "").toUpperCase();
                 boolean isAnyInvalid = false;
                 for (int i = 0; i < beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl().size(); i++) {
                     String currentBarcode = beneficaryWiseArylst.get(currenBenPosition).getBarcodedtl().get(i).getBarcode();
@@ -632,7 +632,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 if (BuildConfig.DEBUG) {
                     //  OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
                     /*EnterBarocodeManually();*/
-                    OpenScanBarcodeScreen();
+                    EnterBarocodeManually();
 //                   OpenScanBarcodeScreen();
                 } else {
                     OpenScanBarcodeScreen();
@@ -1235,8 +1235,6 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                                                     break;
                                                 }
 
-                                            } else {
-                                                Toast.makeText(mActivity, "No sample to scan", Toast.LENGTH_SHORT).show();
                                             }
                                             //size 4
                                             /*if (!InputUtils.isNull(beneficaryWiseArylst.get(i).getBarcodedtl().get(i).getSamplType())
