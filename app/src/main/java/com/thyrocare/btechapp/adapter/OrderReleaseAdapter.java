@@ -107,7 +107,7 @@ OrderReleaseAdapter extends RecyclerView.Adapter<OrderReleaseAdapter.MyViewHolde
             }
         });
 
-       /* if (pePartner && (remarksArray.get(position).getRemarks().contains("reschedule") || remarksArray.get(position).getRemarks().contains("cancel"))) {
+        /*if (pePartner && (remarksArray.get(position).getRemarks().contains("reschedule") || remarksArray.get(position).getRemarks().contains("cancel"))) {
             holder.ll_tripartyCall.setVisibility(View.VISIBLE);
             holder.iv_regularreshcedule.setVisibility(View.GONE);
         } else {

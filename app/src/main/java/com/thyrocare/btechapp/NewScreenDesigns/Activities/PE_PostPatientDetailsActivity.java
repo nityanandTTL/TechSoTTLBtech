@@ -193,8 +193,6 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
-
-//                finish();
             }
         });
 
@@ -370,7 +368,6 @@ public class PE_PostPatientDetailsActivity extends AppCompatActivity {
                     modelClass.setCount(1);
                     modelClass.setProjID(benSampleType.get(j).getProjId());
                     modelClass.setTestname(benSampleType.get(j).getTests());
-                    modelClass.setTestType(benSampleType.get(j).getTestType());
                     patientMapModel.add(modelClass);
                 }
             }
